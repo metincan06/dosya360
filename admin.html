@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dosya360 — Admin Paneli</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0B1629;--navy2:#1A2B47;--gold:#C9A84C;--gold2:#E8C96A;--bg:#F4F5F7;--surface:#fff;--border:#E5E7EB;--text:#111827;--muted:#6B7280;--hint:#9CA3AF}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+
+/* GİRİŞ EKRANI */
+.login-screen{position:fixed;inset:0;background:#0B1629;display:flex;align-items:center;justify-content:center;z-index:9999}
+.login-box{width:100%;max-width:380px}
+.login-logo{text-align:center;margin-bottom:28px}
+.login-logo-text{font-size:26px;font-weight:700;color:#C9A84C;letter-spacing:1px}
+.login-logo-sub{font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px}
+.login-card{background:#1A2B47;border-radius:16px;padding:28px;border:0.5px solid rgba(201,168,76,0.2)}
+.login-title{font-size:15px;font-weight:500;color:#fff;margin-bottom:20px}
+.lfield{margin-bottom:14px}
+.lfield label{font-size:12px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px}
+.lfield input{width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-size:13px;outline:none;font-family:inherit}
+.lfield input:focus{border-color:rgba(201,168,76,0.5)}
+.login-btn{width:100%;padding:11px;background:#C9A84C;color:#0B1629;border:none;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;font-family:inherit;margin-top:4px}
+.login-btn:disabled{opacity:0.5;cursor:not-allowed}
+.login-error{background:rgba(239,68,68,0.15);border:0.5px solid rgba(239,68,68,0.3);border-radius:8px;padding:9px 12px;font-size:12px;color:#FCA5A5;margin-bottom:12px;display:none}
+
+/* ANA PANEL */
+.admin-app{display:none;flex-direction:column;min-height:100vh}
+.topbar{background:#0B1629;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(201,168,76,0.15)}
+.topbar-logo{font-size:16px;font-weight:700;color:#C9A84C;display:flex;align-items:center;gap:8px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-user{font-size:12px;color:rgba(255,255,255,0.5)}
+.topbar-btn{padding:6px 14px;border-radius:7px;font-size:12px;cursor:pointer;border:none;font-family:inherit;font-weight:500}
+.topbar-btn.refresh{background:rgba(201,168,76,0.15);color:#C9A84C}
+.topbar-btn.logout{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6)}
+.content{padding:24px;flex:1}
+
+/* METRİKLER */
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px}
+.mc{background:#fff;border:0.5px solid var(--border);border-radius:10px;padding:16px}
+.mc-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px}
+.mc-val{font-size:26px;font-weight:600;color:var(--text);margin-bottom:2px}
+.mc-label{font-size:11px;color:var(--muted)}
+
+/* TABLO */
+.section-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.search-bar{display:flex;align-items:center;gap:8px;background:#fff;border:0.5px solid var(--border);border-radius:8px;padding:8px 12px;margin-bottom:14px;max-width:340px}
+.search-bar input{border:none;outline:none;font-size:13px;flex:1;background:transparent;color:var(--text)}
+.table-wrap{background:#fff;border:0.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{padding:10px 16px;text-align:left;font-size:11px;font-weight:500;color:var(--hint);background:#F9FAFB;border-bottom:0.5px solid var(--border)}
+td{padding:11px 16px;border-bottom:0.5px solid #F9FAFB;color:var(--text);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500}
+.badge-green{background:#F0FDF4;color:#15803D}
+.badge-red{background:#FEF2F2;color:#B91C1C}
+.badge-blue{background:#EFF6FF;color:#1D4ED8}
+.badge-gray{background:#F9FAFB;color:#374151}
+.action-btn{padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;border:none;font-family:inherit;font-weight:500;transition:all .15s}
+.btn-freeze{background:#FEF2F2;color:#B91C1C}
+.btn-activate{background:#F0FDF4;color:#15803D}
+.btn-freeze:hover{background:#FEE2E2}
+.btn-activate:hover{background:#DCFCE7}
+
+/* DETAY MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:14px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:0.5px solid var(--border)}
+.modal-head h3{font-size:15px;font-weight:500}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--hint);font-size:22px}
+.modal-body{padding:20px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.detail-item{background:#F9FAFB;border-radius:8px;padding:12px}
+.detail-label{font-size:10px;color:var(--hint);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+.detail-value{font-size:13px;font-weight:500;color:var(--text)}
+.mini-stat{background:#F9FAFB;border-radius:8px;padding:12px;text-align:center}
+.mini-stat-val{font-size:22px;font-weight:600;color:var(--text)}
+.mini-stat-label{font-size:11px;color:var(--muted);margin-top:2px}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+
+/* SPINNER */
+.spinner{display:flex;justify-content:center;padding:40px}
+.spinner-circle{width:28px;height:28px;border:2.5px solid var(--border);border-top-color:#C9A84C;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* BOŞ */
+.empty{text-align:center;padding:48px 20px;color:var(--muted)}
+.empty i{font-size:36px;color:var(--hint);margin-bottom:10px;display:block}
+
+/* FOOTER */
+.admin-footer{text-align:center;padding:16px;font-size:12px;color:var(--hint);border-top:0.5px solid var(--border);background:#fff}
+</style>
+</head>
+<body>
+
+<!-- GİRİŞ EKRANI -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-text">⚖ Dosya360</div>
+      <div class="login-logo-sub">Admin Paneli — Yetkisiz erişim yasaktır</div>
+    </div>
+    <div class="login-card">
+      <div class="login-title">🔐 Admin Girişi</div>
+      <div class="login-error" id="login-error"></div>
+      <div class="lfield"><label>E-posta</label><input type="email" id="login-email" placeholder="info@otukenmedya.com" value="info@otukenmedya.com"></div>
+      <div class="lfield"><label>Şifre</label><input type="password" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')adminGiris()"></div>
+      <button class="login-btn" id="login-btn" onclick="adminGiris()">Giriş Yap</button>
+    </div>
+  </div>
+</div>
+
+<!-- ANA PANEL -->
+<div class="admin-app" id="admin-app">
+  <div class="topbar">
+    <div class="topbar-logo">⚖ Dosya360 <span style="font-size:11px;color:rgba(255,255,255,0.4);font-weight:400;margin-left:6px">Admin Paneli</span></div>
+    <div class="topbar-right">
+      <span class="topbar-user" id="admin-user-email"></span>
+      <button class="topbar-btn refresh" onclick="veriYukle()"><i class="ti ti-refresh"></i> Yenile</button>
+      <button class="topbar-btn logout" onclick="cikisYap()"><i class="ti ti-logout"></i> Çıkış</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- METRİKLER -->
+    <div class="metrics">
+      <div class="mc">
+        <div class="mc-icon" style="background:#EFF6FF;color:#1D4ED8"><i class="ti ti-users"></i></div>
+        <div class="mc-val" id="m-toplam">—</div>
+        <div class="mc-label">Toplam Kullanıcı</div>
+      </div>
+      <div class="mc">
+        <div class="mc-icon" style="background:#F0FDF4;color:#15803D"><i class="ti ti-user-check"></i></div>
+        <div class="mc-val" id="m-aktif">—</div>
+        <div class="mc-label">Aktif Hesap</div>
+      </div>
+      <div class="mc">
+        <div class="mc-icon" style="background:#FEF2F2;color:#B91C1C"><i class="ti ti-user-x"></i></div>
+        <div class="mc-val" id="m-pasif">—</div>
+        <div class="mc-label">Pasif Hesap</div>
+      </div>
+      <div class="mc">
+        <div class="mc-icon" style="background:#FFFBEB;color:#B45309"><i class="ti ti-calendar-plus"></i></div>
+        <div class="mc-val" id="m-buay">—</div>
+        <div class="mc-label">Bu Ay Kayıt</div>
+      </div>
+      <div class="mc">
+        <div class="mc-icon" style="background:#F5F3FF;color:#6D28D9"><i class="ti ti-clock"></i></div>
+        <div class="mc-val" id="m-bugun">—</div>
+        <div class="mc-label">Bugün Kayıt</div>
+      </div>
+    </div>
+
+    <!-- KULLANICI TABLOSU -->
+    <div class="section-title">
+      <span>👤 Kayıtlı Kullanıcılar</span>
+      <span id="kullanici-sayisi" style="font-size:13px;color:var(--muted);font-weight:400"></span>
+    </div>
+    <div class="search-bar">
+      <i class="ti ti-search" style="color:var(--hint)"></i>
+      <input type="text" placeholder="E-posta veya büro adı ara..." oninput="aramaYap(this.value)">
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>E-posta</th>
+            <th>Büro Adı</th>
+            <th>Avukat</th>
+            <th>Kayıt Tarihi</th>
+            <th>Son Giriş</th>
+            <th>Durum</th>
+            <th>İşlem</th>
+          </tr>
+        </thead>
+        <tbody id="kullanici-tbody">
+          <tr><td colspan="8"><div class="spinner"><div class="spinner-circle"></div></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SON AKTİVİTE -->
+    <div class="section-title">
+      <span>📋 Son Kayıt Olan Kullanıcılar</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>E-posta</th>
+            <th>Büro Adı</th>
+            <th>Kayıt Tarihi</th>
+            <th>Durum</th>
+          </tr>
+        </thead>
+        <tbody id="son-tbody">
+          <tr><td colspan="4"><div class="spinner"><div class="spinner-circle"></div></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="admin-footer">⚖ Dosya360 Admin Paneli — Bir <a href="https://otukenmedya.com" style="color:#C9A84C">Ötüken Medya</a> yazılımıdır</div>
+</div>
+
+<!-- KULLANICI DETAY MODAL -->
+<div class="modal-overlay" id="detay-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modal-baslik">Kullanıcı Detayı</h3>
+      <button class="modal-close" onclick="modalKapat()">×</button>
+    </div>
+    <div class="modal-body" id="modal-icerik"></div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://gzyqwbvvorgepazjpkjt.supabase.co'
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6eXF3YnZ2b3JnZXBhempwa2p0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzNjgwNjgsImV4cCI6MjA5OTk0NDA2OH0.H1aVkbCLciXCGbkvsG0jPmYkm5IBXhwstwVkM490-gI'
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+
+const ADMIN_EMAIL = 'info@otukenmedya.com'
+let tumKullanicilar = []
+
+// ── GİRİŞ ──────────────────────────────────────────────────
+async function adminGiris() {
+  const email = document.getElementById('login-email').value.trim()
+  const sifre = document.getElementById('login-password').value
+  const btn = document.getElementById('login-btn')
+  const hataEl = document.getElementById('login-error')
+  hataEl.style.display = 'none'
+  btn.disabled = true; btn.textContent = 'Giriş yapılıyor...'
+
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: sifre })
+    if (error) throw error
+    if (email !== ADMIN_EMAIL) throw new Error('Bu panel sadece admin kullanıcısına özeldir.')
+    panelAc(email)
+  } catch(err) {
+    let msg = err.message
+    if (msg.includes('Invalid login')) msg = 'E-posta veya şifre hatalı'
+    hataEl.textContent = msg
+    hataEl.style.display = 'block'
+    btn.disabled = false; btn.textContent = 'Giriş Yap'
+  }
+}
+
+function panelAc(email) {
+  document.getElementById('login-screen').style.display = 'none'
+  document.getElementById('admin-app').style.display = 'flex'
+  document.getElementById('admin-user-email').textContent = email
+  veriYukle()
+}
+
+async function cikisYap() {
+  await sb.auth.signOut()
+  location.reload()
+}
+
+// ── VERİ YÜKLEme ──────────────────────────────────────────
+async function veriYukle() {
+  const { data: kullanicilar, error } = await sb
+    .from('kullanici_profil')
+    .select('*')
+    .neq('rol', 'admin')
+    .order('created_at', { ascending: false })
+
+  if (error) { console.error(error); return }
+  tumKullanicilar = kullanicilar || []
+  metrikleriGuncelle()
+  tabloRender(tumKullanicilar)
+  sonKayitlariRender()
+}
+
+function metrikleriGuncelle() {
+  const bugun = new Date().toISOString().slice(0, 10)
+  const buay = new Date().toISOString().slice(0, 7)
+  const aktif = tumKullanicilar.filter(k => k.aktif)
+  const pasif = tumKullanicilar.filter(k => !k.aktif)
+  const buAyKayit = tumKullanicilar.filter(k => k.created_at?.startsWith(buay))
+  const bugunKayit = tumKullanicilar.filter(k => k.created_at?.startsWith(bugun))
+
+  document.getElementById('m-toplam').textContent = tumKullanicilar.length
+  document.getElementById('m-aktif').textContent = aktif.length
+  document.getElementById('m-pasif').textContent = pasif.length
+  document.getElementById('m-buay').textContent = buAyKayit.length
+  document.getElementById('m-bugun').textContent = bugunKayit.length
+  document.getElementById('kullanici-sayisi').textContent = `${tumKullanicilar.length} kullanıcı`
+}
+
+function tabloRender(liste) {
+  const tbody = document.getElementById('kullanici-tbody')
+  if (!liste.length) {
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty"><i class="ti ti-users"></i>Henüz kayıtlı kullanıcı yok</div></td></tr>'
+    return
+  }
+  tbody.innerHTML = liste.map((k, i) => `
+    <tr>
+      <td style="color:var(--hint);font-size:12px">${i + 1}</td>
+      <td><strong>${k.email || '—'}</strong></td>
+      <td>${k.buro_adi || '—'}</td>
+      <td>${k.avukat_adi || '—'}</td>
+      <td style="color:var(--muted);font-size:12px">${k.created_at ? tarihFormat(k.created_at) : '—'}</td>
+      <td style="color:var(--muted);font-size:12px">${k.updated_at ? tarihFormat(k.updated_at) : '—'}</td>
+      <td><span class="badge ${k.aktif ? 'badge-green' : 'badge-red'}">${k.aktif ? '✓ Aktif' : '✗ Pasif'}</span></td>
+      <td style="display:flex;gap:6px">
+        <button class="action-btn ${k.aktif ? 'btn-freeze' : 'btn-activate'}" onclick="durumDegistir('${k.id}',${k.aktif})">
+          ${k.aktif ? 'Dondur' : 'Aktif Et'}
+        </button>
+        <button class="action-btn" style="background:#EFF6FF;color:#1D4ED8" onclick="detayGoster('${k.id}')">Detay</button>
+      </td>
+    </tr>
+  `).join('')
+}
+
+function sonKayitlariRender() {
+  const tbody = document.getElementById('son-tbody')
+  const son10 = tumKullanicilar.slice(0, 10)
+  if (!son10.length) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--hint)">Kayıt yok</td></tr>'
+    return
+  }
+  tbody.innerHTML = son10.map(k => `
+    <tr>
+      <td>${k.email || '—'}</td>
+      <td>${k.buro_adi || '—'}</td>
+      <td style="color:var(--muted);font-size:12px">${k.created_at ? tarihFormat(k.created_at) : '—'}</td>
+      <td><span class="badge ${k.aktif ? 'badge-green' : 'badge-red'}">${k.aktif ? '✓ Aktif' : '✗ Pasif'}</span></td>
+    </tr>
+  `).join('')
+}
+
+// ── ARAMA ─────────────────────────────────────────────────
+function aramaYap(q) {
+  q = q.toLowerCase()
+  const filtre = !q ? tumKullanicilar : tumKullanicilar.filter(k =>
+    (k.email || '').toLowerCase().includes(q) ||
+    (k.buro_adi || '').toLowerCase().includes(q) ||
+    (k.avukat_adi || '').toLowerCase().includes(q)
+  )
+  tabloRender(filtre)
+}
+
+// ── DURUM DEĞİŞTİR ────────────────────────────────────────
+async function durumDegistir(id, mevcutDurum) {
+  const yeniDurum = !mevcutDurum
+  const onay = confirm(`Bu kullanıcıyı ${yeniDurum ? 'aktif etmek' : 'dondurmak'} istediğinize emin misiniz?`)
+  if (!onay) return
+  await sb.from('kullanici_profil').update({ aktif: yeniDurum }).eq('id', id)
+  await veriYukle()
+}
+
+// ── DETAY MODAL ───────────────────────────────────────────
+function detayGoster(id) {
+  const k = tumKullanicilar.find(x => x.id === id)
+  if (!k) return
+  document.getElementById('modal-baslik').textContent = k.email || 'Kullanıcı Detayı'
+  document.getElementById('modal-icerik').innerHTML = `
+    <div class="detail-grid">
+      <div class="detail-item"><div class="detail-label">E-posta</div><div class="detail-value">${k.email || '—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Büro Adı</div><div class="detail-value">${k.buro_adi || '—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Avukat Adı</div><div class="detail-value">${k.avukat_adi || '—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Telefon</div><div class="detail-value">${k.telefon || '—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Kayıt Tarihi</div><div class="detail-value">${k.created_at ? tarihFormat(k.created_at) : '—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Hesap Durumu</div><div class="detail-value"><span class="badge ${k.aktif ? 'badge-green' : 'badge-red'}">${k.aktif ? '✓ Aktif' : '✗ Pasif'}</span></div></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="action-btn ${k.aktif ? 'btn-freeze' : 'btn-activate'}" style="padding:8px 18px;font-size:13px" onclick="durumDegistir('${k.id}',${k.aktif});modalKapat()">
+        ${k.aktif ? '🔒 Hesabı Dondur' : '✅ Hesabı Aktif Et'}
+      </button>
+    </div>
+  `
+  document.getElementById('detay-modal').classList.add('open')
+}
+
+function modalKapat() {
+  document.getElementById('detay-modal').classList.remove('open')
+}
+document.getElementById('detay-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('detay-modal')) modalKapat()
+})
+
+// ── YARDIMCI ──────────────────────────────────────────────
+function tarihFormat(iso) {
+  return new Date(iso).toLocaleString('tr-TR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' })
+}
+
+// ── BAŞLAT ────────────────────────────────────────────────
+sb.auth.getSession().then(({ data: { session } }) => {
+  if (session?.user?.email === ADMIN_EMAIL) {
+    panelAc(session.user.email)
+  }
+})
+</script>
+</body>
+</html>

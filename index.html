@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dosya360 — Türkiye'nin Yapay Zekâ Destekli Hukuk İşletim Sistemi</title>
+<meta name="description" content="Dosya360, avukatlık büroları için yapay zekâ destekli hukuk yönetim sistemi. UYAP entegrasyonlu, bulut tabanlı dava takip programı. Müvekkil yönetimi, duruşma takibi ve WhatsApp bildirimleri.">
+<meta name="keywords" content="hukuk bürosu yönetim sistemi, dava takip programı, yapay zekâ destekli hukuk yazılımı, UYAP entegrasyonlu hukuk programı, bulut tabanlı hukuk yazılımı, avukat crm, avukatlık programı, müvekkil yönetimi">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Ötüken Medya">
+<link rel="canonical" href="https://dosya360.com">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖</text></svg>">
+<meta property="og:title" content="Dosya360 — Yapay Zekâ Destekli Hukuk İşletim Sistemi">
+<meta property="og:description" content="Dava yönetimi, müvekkil takibi, UYAP erişimi ve yapay zekâ asistanı tek platformda.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dosya360.com">
+<meta property="og:site_name" content="Dosya360">
+<meta property="og:locale" content="tr_TR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dosya360 — Hukuk Bürosu Yönetim Sistemi">
+<meta name="twitter:description" content="UYAP entegrasyonlu, yapay zekâ destekli, bulut tabanlı hukuk yazılımı.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Dosya360","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"Avukatlık büroları için yapay zekâ destekli hukuk bürosu yönetim sistemi. UYAP entegrasyonlu dava takip programı.","url":"https://dosya360.com","author":{"@type":"Organization","name":"Ötüken Medya","url":"https://otukenmedya.com"},"offers":{"@type":"Offer","price":"1500","priceCurrency":"TRY"},"inLanguage":"tr"}</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0B1629;--navy2:#1A2B47;--gold:#C9A84C;--gold2:#E8C96A;--bg:#F8F9FC;--surface:#fff;--border:#E5E7EB;--text:#111827;--muted:#6B7280;--hint:#9CA3AF;--green:#15803D;--red:#B91C1C}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+.container{max-width:1140px;margin:0 auto;padding:0 24px}
+
+/* NAV */
+nav{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(201,168,76,0.12)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-logo{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:600;color:var(--gold);letter-spacing:.5px}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:13px;color:rgba(255,255,255,0.65);transition:color .15s}
+.nav-links a:hover{color:#fff}
+.nav-cta{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .15s;font-family:inherit;text-decoration:none}
+.btn-ghost{background:transparent;color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.2)}
+.btn-ghost:hover{background:rgba(255,255,255,0.08)}
+.btn-gold{background:var(--gold);color:var(--navy)}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-navy{background:var(--navy);color:var(--gold)}
+.btn-navy:hover{background:var(--navy2)}
+.btn-lg{padding:13px 28px;font-size:14px;border-radius:10px}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#060E1E 0%,#0B1629 50%,#1A2B47 100%);padding:96px 0 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-120px;right:-120px;width:480px;height:480px;border-radius:50%;background:rgba(201,168,76,0.05)}
+.hero::after{content:'';position:absolute;bottom:-80px;left:-80px;width:320px;height:320px;border-radius:50%;background:rgba(201,168,76,0.03)}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.25);border-radius:20px;padding:5px 14px;font-size:11px;color:var(--gold);margin-bottom:18px;font-weight:500;letter-spacing:.03em}
+.hero-title{font-size:44px;font-weight:600;color:#fff;line-height:1.12;margin-bottom:18px;letter-spacing:-.5px}
+.hero-title span{color:var(--gold)}
+.hero-sub{font-size:16px;color:rgba(255,255,255,0.58);margin-bottom:32px;line-height:1.75;max-width:440px}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:40px}
+.hero-stats{display:flex;gap:28px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.08)}
+.hs-num{font-size:24px;font-weight:600;color:var(--gold)}
+.hs-label{font-size:11px;color:rgba(255,255,255,0.4);margin-top:1px}
+.hero-visual{background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.15);border-radius:18px;padding:22px;backdrop-filter:blur(10px)}
+.hv-bar{display:flex;gap:5px;margin-bottom:18px}
+.hv-dot{width:9px;height:9px;border-radius:50%}
+.hv-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:9px;margin-bottom:8px}
+.hv-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.hv-name{font-size:12px;color:rgba(255,255,255,0.8);font-weight:500}
+.hv-meta{font-size:10px;color:rgba(255,255,255,0.35)}
+.hv-tag{font-size:10px;padding:2px 8px;border-radius:9px;margin-left:auto;font-weight:500;white-space:nowrap}
+.hv-alert{background:rgba(239,68,68,0.12);border:0.5px solid rgba(239,68,68,0.25);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:8px;margin-top:4px}
+
+/* TRUST BAR */
+.trust-bar{background:#fff;border-bottom:1px solid var(--border);padding:16px 0}
+.trust-inner{display:flex;align-items:center;justify-content:center;gap:36px;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);font-weight:500}
+.trust-item i{color:var(--gold)}
+
+/* SECTIONS */
+.section{padding:88px 0}
+.section-bg{background:var(--surface)}
+.section-label{display:inline-flex;align-items:center;gap:6px;background:rgba(11,22,41,0.06);border-radius:20px;padding:4px 13px;font-size:11px;color:var(--navy);font-weight:500;margin-bottom:12px;letter-spacing:.03em}
+.section-title{font-size:34px;font-weight:600;color:var(--text);margin-bottom:12px;line-height:1.2;letter-spacing:-.3px}
+.section-sub{font-size:15px;color:var(--muted);max-width:520px;line-height:1.7}
+.section-head{margin-bottom:52px}
+
+/* FEATURES */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feat-card{border:1px solid var(--border);border-radius:14px;padding:26px;transition:all .2s;background:var(--surface)}
+.feat-card:hover{border-color:rgba(201,168,76,0.4);box-shadow:0 8px 32px rgba(0,0,0,0.06);transform:translateY(-2px)}
+.feat-icon{width:44px;height:44px;border-radius:11px;background:var(--navy);display:flex;align-items:center;justify-content:center;margin-bottom:16px;color:var(--gold);font-size:20px}
+.feat-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px}
+.feat-desc{font-size:13px;color:var(--muted);line-height:1.7}
+
+/* HOW */
+.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.how-steps{display:flex;flex-direction:column;gap:0}
+.how-step{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--border)}
+.how-step:last-child{border-bottom:none}
+.how-num{width:36px;height:36px;border-radius:50%;background:var(--navy);color:var(--gold);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.how-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.how-desc{font-size:13px;color:var(--muted);line-height:1.6}
+.how-visual{background:var(--navy);border-radius:18px;padding:26px}
+.hw-label{font-size:10px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.hw-panel{background:rgba(255,255,255,0.05);border-radius:10px;padding:14px;margin-bottom:10px}
+.hw-stat-row{display:flex;gap:12px;margin-bottom:12px}
+.hw-stat{flex:1;background:rgba(255,255,255,0.05);border-radius:8px;padding:12px}
+.hw-stat-val{font-size:18px;font-weight:600;margin-bottom:2px}
+.hw-stat-lbl{font-size:10px;color:rgba(255,255,255,0.35)}
+.hw-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+.hw-row:last-child{border-bottom:none}
+.hw-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.hw-text{font-size:11px;color:rgba(255,255,255,0.65);flex:1}
+.hw-val{font-size:11px;font-weight:500}
+
+/* PRICING */
+.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px;margin:0 auto}
+.plan-card{border:1.5px solid var(--border);border-radius:18px;padding:30px;position:relative;background:var(--surface)}
+.plan-card.pop{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.pop-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--navy);font-size:10px;font-weight:700;padding:3px 14px;border-radius:20px;white-space:nowrap}
+.plan-name{font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:500}
+.plan-price{font-size:36px;font-weight:600;color:var(--text);letter-spacing:-.5px}
+.plan-price span{font-size:14px;font-weight:400;color:var(--muted)}
+.plan-period{font-size:12px;color:var(--hint);margin-bottom:6px}
+.plan-users{font-size:12px;color:#374151;background:var(--bg);padding:7px 11px;border-radius:7px;margin-bottom:16px;display:flex;align-items:center;gap:6px}
+.plan-feats{list-style:none;margin-bottom:24px}
+.plan-feats li{font-size:13px;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.plan-feats li:last-child{border-bottom:none}
+.plan-feats li i{color:var(--gold);font-size:14px;flex-shrink:0}
+.plan-btn{width:100%;padding:11px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .15s}
+.plan-btn-navy{background:var(--navy);color:var(--gold)}
+.plan-btn-navy:hover{background:var(--navy2)}
+.plan-btn-gold{background:var(--gold);color:var(--navy)}
+.plan-btn-gold:hover{background:var(--gold2)}
+
+/* FAQ */
+.faq-list{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+.faq-item{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.faq-q{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:14px;font-weight:500;color:var(--text);transition:background .15s}
+.faq-q:hover{background:var(--bg)}
+.faq-q i{color:var(--muted);font-size:18px;flex-shrink:0;transition:transform .2s}
+.faq-a{padding:0 20px 16px;font-size:13px;color:var(--muted);line-height:1.7;display:none}
+.faq-item.open .faq-a{display:block}
+.faq-item.open .faq-q i{transform:rotate(180deg)}
+
+/* CTA */
+.cta-section{background:linear-gradient(135deg,var(--navy),var(--navy2));padding:88px 0}
+.cta-inner{text-align:center;max-width:580px;margin:0 auto}
+.cta-title{font-size:38px;font-weight:600;color:#fff;margin-bottom:14px;letter-spacing:-.3px}
+.cta-sub{font-size:16px;color:rgba(255,255,255,0.55);margin-bottom:32px;line-height:1.7}
+.cta-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.2)}
+.modal-top{background:var(--navy);padding:24px 28px 20px}
+.modal-logo{font-size:18px;font-weight:600;color:var(--gold);margin-bottom:3px}
+.modal-sub{font-size:12px;color:rgba(255,255,255,0.38)}
+.modal-tabs{display:flex;border-bottom:1px solid var(--border)}
+.mtab{flex:1;padding:13px;text-align:center;font-size:13px;font-weight:500;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .15s;font-family:inherit;background:none;border-top:none;border-left:none;border-right:none}
+.mtab.active{color:var(--navy);border-bottom-color:var(--gold)}
+.modal-body{padding:24px 28px}
+.mfield{margin-bottom:14px}
+.mfield label{display:block;font-size:11px;font-weight:600;color:#374151;margin-bottom:5px;letter-spacing:.02em}
+.mfield input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;color:var(--text);outline:none;font-family:inherit;transition:border .15s}
+.mfield input:focus{border-color:var(--gold)}
+.mfield input.error{border-color:var(--red)}
+.msub-btn{width:100%;padding:12px;background:var(--navy);color:var(--gold);border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;margin-top:4px}
+.msub-btn:hover{background:var(--navy2)}
+.msub-btn:disabled{opacity:0.5;cursor:not-allowed}
+.m-error{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:9px 12px;font-size:12px;color:var(--red);margin-bottom:12px;display:none}
+.m-success{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:9px 12px;font-size:12px;color:var(--green);margin-bottom:12px;display:none}
+.mfooter{text-align:center;font-size:12px;color:var(--hint);margin-top:14px}
+.mfooter span{color:var(--navy);cursor:pointer;font-weight:500}
+
+/* FOOTER */
+footer{background:var(--navy);padding:52px 0 28px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.footer-logo{font-size:17px;font-weight:600;color:var(--gold);margin-bottom:10px}
+.footer-desc{font-size:13px;color:rgba(255,255,255,0.38);line-height:1.7}
+.footer-col h4{font-size:12px;font-weight:600;color:rgba(255,255,255,0.65);margin-bottom:14px;letter-spacing:.03em}
+.footer-col a{display:block;font-size:13px;color:rgba(255,255,255,0.38);margin-bottom:8px;transition:color .15s}
+.footer-col a:hover{color:rgba(255,255,255,0.75)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid rgba(255,255,255,0.07)}
+.footer-bottom-text{font-size:12px;color:rgba(255,255,255,0.28)}
+
+/* MOBILE */
+@media(max-width:768px){
+  .hero-inner,.how-grid{grid-template-columns:1fr}
+  .hero-visual,.how-visual{display:none}
+  .hero-title{font-size:32px}
+  .feat-grid,.plan-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
+  .trust-inner{gap:16px}
+  .section-title{font-size:26px}
+  .cta-title{font-size:28px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <div class="nav-inner">
+      <div class="nav-logo">⚖ Dosya360</div>
+      <div class="nav-links">
+        <a href="#ozellikler">Özellikler</a>
+        <a href="#nasil-calisir">Nasıl Çalışır</a>
+        <a href="#fiyatlar">Fiyatlar</a>
+        <a href="#sss">SSS</a>
+        <a href="mailto:info@otukenmedya.com">İletişim</a>
+      </div>
+      <div class="nav-cta">
+        <button class="btn btn-ghost" onclick="modalAc('giris')">Giriş Yap</button>
+        <button class="btn btn-gold" onclick="modalAc('kayit')">Ücretsiz Dene</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">🚀 Türkiye'nin #1 Hukuk CRM'i</div>
+        <h1 class="hero-title">Yapay Zekâ Destekli<br><span>Hukuk İşletim</span><br>Sistemi</h1>
+        <p class="hero-sub">Dava yönetimi, müvekkil takibi, UYAP entegrasyonu ve yapay zekâ asistanı — Türkiye'nin avukatlık büroları için tasarlanmış bulut tabanlı hukuk yazılımı.</p>
+        <div class="hero-btns">
+          <button class="btn btn-gold btn-lg" onclick="modalAc('kayit')"><i class="ti ti-rocket"></i>14 Gün Ücretsiz Dene</button>
+          <button class="btn btn-ghost btn-lg" onclick="modalAc('giris')"><i class="ti ti-login"></i>Giriş Yap</button>
+        </div>
+        <div class="hero-stats">
+          <div><div class="hs-num">10+</div><div class="hs-label">Modül</div></div>
+          <div><div class="hs-num">7/24</div><div class="hs-label">Erişim</div></div>
+          <div><div class="hs-num">%100</div><div class="hs-label">Web Tabanlı</div></div>
+          <div><div class="hs-num">UYAP</div><div class="hs-label">Entegrasyonu</div></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hv-bar">
+          <div class="hv-dot" style="background:#FF5F57"></div>
+          <div class="hv-dot" style="background:#FFBD2E"></div>
+          <div class="hv-dot" style="background:#28CA41"></div>
+          <span style="font-size:11px;color:rgba(255,255,255,0.25);margin-left:8px">dosya360.com</span>
+        </div>
+        <div class="hv-row">
+          <div class="hv-icon" style="background:rgba(59,130,246,0.15);color:#60A5FA">⚖</div>
+          <div style="flex:1"><div class="hv-name">Gökdemir — İcra Takibi</div><div class="hv-meta">Ankara 5. İcra · 2026/0142</div></div>
+          <span class="hv-tag" style="background:rgba(139,92,246,0.2);color:#A78BFA">Duruşma</span>
+        </div>
+        <div class="hv-row">
+          <div class="hv-icon" style="background:rgba(201,168,76,0.15);color:#C9A84C">⚖</div>
+          <div style="flex:1"><div class="hv-name">Yılmaz — İş Hukuku</div><div class="hv-meta">Ankara 12. İş · 2026/0089</div></div>
+          <span class="hv-tag" style="background:rgba(34,197,94,0.2);color:#4ADE80">Karar</span>
+        </div>
+        <div class="hv-row">
+          <div class="hv-icon" style="background:rgba(239,68,68,0.15);color:#F87171">⚖</div>
+          <div style="flex:1"><div class="hv-name">Demir — Ticaret</div><div class="hv-meta">Ankara Tic. 2. · 2025/3341</div></div>
+          <span class="hv-tag" style="background:rgba(251,146,60,0.2);color:#FB923C">İstinaf</span>
+        </div>
+        <div class="hv-alert">
+          <span style="font-size:15px">⚠️</span>
+          <div style="font-size:11px;color:#FCA5A5"><strong>YZ Asistan:</strong> Gökdemir'in duruşması yarın 09:00 — hatırlatma gönderilsin mi?</div>
+        </div>
+        <div style="margin-top:12px;background:rgba(201,168,76,0.1);border:0.5px solid rgba(201,168,76,0.25);border-radius:9px;padding:10px 12px">
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:4px">UYAP HIZLI ERİŞİM</div>
+          <div style="display:flex;gap:8px">
+            <span style="font-size:11px;color:#C9A84C;background:rgba(201,168,76,0.1);padding:4px 8px;border-radius:5px">Avukat UYAP ↗</span>
+            <span style="font-size:11px;color:#C9A84C;background:rgba(201,168,76,0.1);padding:4px 8px;border-radius:5px">Vatandaş UYAP ↗</span>
+            <span style="font-size:11px;color:#C9A84C;background:rgba(201,168,76,0.1);padding:4px 8px;border-radius:5px">E-Tebligat ↗</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="container">
+    <div class="trust-inner">
+      <div class="trust-item"><i class="ti ti-shield-check"></i>SSL Güvenli</div>
+      <div class="trust-item"><i class="ti ti-cloud"></i>Bulut Tabanlı</div>
+      <div class="trust-item"><i class="ti ti-device-mobile"></i>Mobil Uyumlu</div>
+      <div class="trust-item"><i class="ti ti-scale"></i>UYAP Entegrasyonu</div>
+      <div class="trust-item"><i class="ti ti-sparkles"></i>Yapay Zekâ Destekli</div>
+      <div class="trust-item"><i class="ti ti-lock"></i>KVKK Uyumlu</div>
+    </div>
+  </div>
+</div>
+
+<!-- ÖZELLİKLER -->
+<section class="section section-bg" id="ozellikler">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label">✨ Özellikler</div>
+      <h2 class="section-title">Hukuk Büronuzun İhtiyacı Olan Her Şey</h2>
+      <p class="section-sub">Türkiye'nin avukatlık büroları için özel olarak tasarlanmış, 10+ modüllü hukuk bürosu yönetim sistemi.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-icon"><i class="ti ti-users"></i></div>
+        <div class="feat-title">Müvekkil Yönetimi</div>
+        <div class="feat-desc">TC kimlik, iletişim bilgileri, dava geçmişi ve belgeler tek müvekkil kartında. Arama ve filtreleme tam anlık.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><i class="ti ti-briefcase"></i></div>
+        <div class="feat-title">Dava Takip Programı</div>
+        <div class="feat-desc">Dosya numarası, mahkeme, duruşma tarihleri ve durum takibi. Hiçbir dava gözden kaçmaz.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><i class="ti ti-calendar"></i></div>
+        <div class="feat-title">Akıllı Takvim</div>
+        <div class="feat-desc">Duruşma tarihleri 7 gün önceden renk kodlu uyarı. Tek tıkla müvekkile WhatsApp hatırlatması.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><i class="ti ti-sparkles"></i></div>
+        <div class="feat-title">Yapay Zekâ Asistanı</div>
+        <div class="feat-desc">Dosyalarınıza doğal dilde soru sorun. "Bu ay tahsilatım ne kadar?" gibi sorular için anlık cevap.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><i class="ti ti-scale"></i></div>
+        <div class="feat-title">UYAP Entegrasyonu</div>
+        <div class="feat-desc">Avukat UYAP, Vatandaş UYAP ve E-Tebligat'a tek tıkla erişin. Ayrı sekme açmanız gerekmiyor.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><i class="ti ti-coin"></i></div>
+        <div class="feat-title">Finans Takibi</div>
+        <div class="feat-desc">Tahsilat, masraf ve harç takibi. Aylık gelir-gider raporu otomatik hazırlanır, PDF olarak alınır.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><i class="ti ti-folders"></i></div>
+        <div class="feat-title">Belge Yönetimi</div>
+        <div class="feat-desc">Dilekçe, karar, bilirkişi raporu ve vekaletler kategorilere göre arşivlenir. Bulut depolama.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><i class="ti ti-brand-whatsapp"></i></div>
+        <div class="feat-title">WhatsApp Bildirimleri</div>
+        <div class="feat-desc">Müvekkillere duruşma hatırlatması tek tıkla. Mesaj şablonları hazır, siz sadece gönderin.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><i class="ti ti-checkbox"></i></div>
+        <div class="feat-title">Görev Yönetimi</div>
+        <div class="feat-desc">Personele görev atayın, öncelik belirleyin, son tarihleri takip edin. Hiçbir iş yarım kalmaz.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NASIL ÇALIŞIR -->
+<section class="section" id="nasil-calisir">
+  <div class="container">
+    <div class="how-grid">
+      <div>
+        <div class="section-label">⚡ Kolay Kurulum</div>
+        <h2 class="section-title">3 Adımda Başlayın</h2>
+        <div class="how-steps" style="margin-top:28px">
+          <div class="how-step">
+            <div class="how-num">1</div>
+            <div><div class="how-title">Kayıt Olun</div><div class="how-desc">E-posta ve şifrenizle 30 saniyede hesap oluşturun. Kredi kartı gerekmez, kurulum yok.</div></div>
+          </div>
+          <div class="how-step">
+            <div class="how-num">2</div>
+            <div><div class="how-title">Büronuzu Kurun</div><div class="how-desc">Büro adı, avukat bilgileri ve WhatsApp numaranızı girin. 5 dakika yeterli.</div></div>
+          </div>
+          <div class="how-step">
+            <div class="how-num" style="background:var(--gold);color:var(--navy)">3</div>
+            <div><div class="how-title">Kullanmaya Başlayın</div><div class="how-desc">Müvekkil ve dava ekleyin. Sistem hemen çalışmaya başlar.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="how-visual">
+        <div style="display:flex;gap:5px;margin-bottom:18px">
+          <div style="width:9px;height:9px;border-radius:50%;background:#FF5F57"></div>
+          <div style="width:9px;height:9px;border-radius:50%;background:#FFBD2E"></div>
+          <div style="width:9px;height:9px;border-radius:50%;background:#28CA41"></div>
+        </div>
+        <div class="hw-panel">
+          <div class="hw-label">Bu ay özet</div>
+          <div class="hw-stat-row">
+            <div class="hw-stat"><div class="hw-stat-val" style="color:#4ADE80">₺68.400</div><div class="hw-stat-lbl">Tahsilat</div></div>
+            <div class="hw-stat"><div class="hw-stat-val" style="color:#C9A84C">47</div><div class="hw-stat-lbl">Açık Dava</div></div>
+            <div class="hw-stat"><div class="hw-stat-val" style="color:#F87171">5</div><div class="hw-stat-lbl">Görev</div></div>
+          </div>
+        </div>
+        <div class="hw-panel">
+          <div class="hw-label">Yaklaşan duruşmalar</div>
+          <div class="hw-row"><div class="hw-dot" style="background:#EF4444"></div><div class="hw-text">Gökdemir — Ankara 3. Asliye</div><div class="hw-val" style="color:#F87171">Yarın</div></div>
+          <div class="hw-row"><div class="hw-dot" style="background:#F59E0B"></div><div class="hw-text">Yılmaz — İcra Mahkemesi</div><div class="hw-val" style="color:#FCD34D">3 gün</div></div>
+          <div class="hw-row"><div class="hw-dot" style="background:#22C55E"></div><div class="hw-text">Demir — BAM 2. HD</div><div class="hw-val" style="color:#4ADE80">7 gün</div></div>
+        </div>
+        <div style="background:rgba(201,168,76,0.12);border:0.5px solid rgba(201,168,76,0.25);border-radius:8px;padding:10px 12px">
+          <div style="font-size:10px;color:#C9A84C;font-weight:500;margin-bottom:4px">🤖 YZ ASISTAN</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.65)">"Bu ay tahsilatım ne kadar?" → ₺68.400 · 12 işlem</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FİYATLAR -->
+<section class="section section-bg" id="fiyatlar">
+  <div class="container">
+    <div class="section-head" style="text-align:center">
+      <div class="section-label" style="margin:0 auto 12px">💰 Fiyatlar</div>
+      <h2 class="section-title">Büronuza Uygun Plan</h2>
+      <p class="section-sub" style="margin:0 auto">Tüm planlar 14 gün ücretsiz deneme içerir. Kredi kartı gerekmez.</p>
+    </div>
+    <div class="plan-grid">
+      <div class="plan-card">
+        <div class="plan-name">Başlangıç</div>
+        <div class="plan-price">₺1.500 <span>/ay</span></div>
+        <div class="plan-period">Yıllık: ₺13.500 (2 ay bedava)</div>
+        <div class="plan-users"><i class="ti ti-users" style="color:var(--gold)"></i>En fazla 3 kullanıcı</div>
+        <ul class="plan-feats">
+          <li><i class="ti ti-check"></i>Tüm modüller</li>
+          <li><i class="ti ti-check"></i>Sınırsız müvekkil & dava</li>
+          <li><i class="ti ti-check"></i>WhatsApp bildirimleri</li>
+          <li><i class="ti ti-check"></i>UYAP erişimi</li>
+          <li><i class="ti ti-check"></i>E-posta desteği</li>
+        </ul>
+        <button class="plan-btn plan-btn-navy" onclick="modalAc('kayit')">Başlayın</button>
+      </div>
+      <div class="plan-card pop">
+        <div class="pop-badge">⭐ En Popüler</div>
+        <div class="plan-name">Büyüme</div>
+        <div class="plan-price">₺3.500 <span>/ay</span></div>
+        <div class="plan-period">Yıllık: ₺28.000 (2 ay bedava)</div>
+        <div class="plan-users"><i class="ti ti-users" style="color:var(--gold)"></i>En fazla 10 kullanıcı</div>
+        <ul class="plan-feats">
+          <li><i class="ti ti-check"></i>Başlangıç + her şey</li>
+          <li><i class="ti ti-check"></i>Yapay Zekâ Asistanı</li>
+          <li><i class="ti ti-check"></i>PDF dışa aktarma</li>
+          <li><i class="ti ti-check"></i>Öncelikli destek</li>
+          <li><i class="ti ti-check"></i>Özel onboarding</li>
+        </ul>
+        <button class="plan-btn plan-btn-gold" onclick="modalAc('kayit')">Başlayın</button>
+      </div>
+      <div class="plan-card">
+        <div class="plan-name">Kurumsal</div>
+        <div class="plan-price" style="font-size:26px;padding-top:4px">Özel</div>
+        <div class="plan-period">Size özel teklif</div>
+        <div class="plan-users"><i class="ti ti-users" style="color:var(--gold)"></i>Sınırsız kullanıcı</div>
+        <ul class="plan-feats">
+          <li><i class="ti ti-check"></i>Büyüme + her şey</li>
+          <li><i class="ti ti-check"></i>Özel entegrasyonlar</li>
+          <li><i class="ti ti-check"></i>API erişimi</li>
+          <li><i class="ti ti-check"></i>7/24 telefon desteği</li>
+          <li><i class="ti ti-check"></i>SLA garantisi</li>
+        </ul>
+        <a href="https://wa.me/905304621769?text=Kurumsal%20paket%20hakkında%20bilgi%20almak%20istiyorum" target="_blank" class="plan-btn plan-btn-navy" style="display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none"><i class="ti ti-brand-whatsapp"></i>İletişime Geç</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SSS -->
+<section class="section" id="sss">
+  <div class="container">
+    <div class="section-head" style="text-align:center">
+      <div class="section-label" style="margin:0 auto 12px">❓ SSS</div>
+      <h2 class="section-title">Sık Sorulan Sorular</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Kurulum gerekiyor mu? <i class="ti ti-chevron-down"></i></div>
+        <div class="faq-a">Hayır. Dosya360 tamamen web tabanlı bir hukuk bürosu yönetim sistemidir. Tarayıcıdan açılır, hiçbir şey yüklemeniz gerekmez. Telefon ve bilgisayardan çalışır.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">UYAP entegrasyonu nasıl çalışıyor? <i class="ti ti-chevron-down"></i></div>
+        <div class="faq-a">Dosya360 içinden Avukat UYAP, Vatandaş UYAP ve E-Tebligat paneline tek tıkla erişebilirsiniz. UYAP'a giriş yine kendi e-imzanız veya şifrenizle yapılır.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Mevcut verilerimi taşıyabilir miyim? <i class="ti ti-chevron-down"></i></div>
+        <div class="faq-a">Excel veya kağıttan manuel aktarım yapabilirsiniz. İlk kurulumda size ücretsiz destek sağlıyoruz.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Verilerim güvende mi? <i class="ti ti-chevron-down"></i></div>
+        <div class="faq-a">Verileriniz Avrupa sunucularında şifreli olarak saklanır. Her büro kendi verisini görür, başkasının müvekkiline erişilemez. KVKK uyumlu altyapı kullanılmaktadır.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">İptal edersem verilerim ne olur? <i class="ti ti-chevron-down"></i></div>
+        <div class="faq-a">Aboneliğinizi iptal etmeniz durumunda verileriniz 30 gün boyunca saklanır. Bu süre içinde dışa aktarabilirsiniz.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Yapay zekâ asistanı ne yapıyor? <i class="ti ti-chevron-down"></i></div>
+        <div class="faq-a">Dosyalarınıza doğal dilde sorular sorabilirsiniz. "Bu ay tahsilatım ne kadar?", "Yarın hangi duruşmalarım var?", "Hangi müvekkilimin ödemesi gecikiyor?" gibi sorulara anlık cevap alırsınız.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-inner">
+      <h2 class="cta-title">Büronuzu Bugün Dijitalleştirin</h2>
+      <p class="cta-sub">14 gün ücretsiz deneyin. Kredi kartı gerekmez, kurulum yok, bağlayıcılık yok.</p>
+      <div class="cta-btns">
+        <button class="btn btn-gold btn-lg" onclick="modalAc('kayit')"><i class="ti ti-rocket"></i>Ücretsiz Başlayın</button>
+        <a href="https://wa.me/905304621769?text=Dosya360%20demo%20talep%20ediyorum" target="_blank" class="btn btn-ghost btn-lg"><i class="ti ti-brand-whatsapp"></i>Demo Talep Et</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">⚖ Dosya360</div>
+        <div class="footer-desc">Türkiye'nin avukatlık büroları için tasarlanmış yapay zekâ destekli hukuk bürosu yönetim sistemi. UYAP entegrasyonlu, bulut tabanlı dava takip programı.</div>
+      </div>
+      <div class="footer-col">
+        <h4>Ürün</h4>
+        <a href="#ozellikler">Özellikler</a>
+        <a href="#fiyatlar">Fiyatlar</a>
+        <a href="#nasil-calisir">Nasıl Çalışır</a>
+        <a href="#sss">SSS</a>
+      </div>
+      <div class="footer-col">
+        <h4>Destek</h4>
+        <a href="mailto:info@otukenmedya.com">Destek</a>
+        <a href="mailto:info@otukenmedya.com">İletişim</a>
+        <a href="https://wa.me/905304621769" target="_blank">WhatsApp</a>
+      </div>
+      <div class="footer-col">
+        <h4>Hukuki</h4>
+        <a href="#">Gizlilik Politikası</a>
+        <a href="#">Kullanım Şartları</a>
+        <a href="#">KVKK</a>
+        <a href="#">Çerez Politikası</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-bottom-text">© 2026 Dosya360. Bir <a href="https://otukenmedya.com" style="color:var(--gold)">Ötüken Medya</a> yazılımıdır.</div>
+      <div class="footer-bottom-text">info@otukenmedya.com · +90 530 462 17 69</div>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)modalKapat()">
+  <div class="modal">
+    <div class="modal-top">
+      <div class="modal-logo">⚖ Dosya360</div>
+      <div class="modal-sub">Hukuk Bürosu Yönetim Sistemi</div>
+    </div>
+    <div style="display:flex;border-bottom:1px solid var(--border)">
+      <button class="mtab active" id="tab-giris" onclick="tabSec('giris')">Giriş Yap</button>
+      <button class="mtab" id="tab-kayit" onclick="tabSec('kayit')">Kayıt Ol</button>
+    </div>
+    <div class="modal-body">
+      <div class="m-error" id="m-error"></div>
+      <div class="m-success" id="m-success"></div>
+      <div id="form-giris">
+        <div class="mfield"><label>E-POSTA</label><input type="email" id="g-email" placeholder="avukat@buro.com" autocomplete="email"></div>
+        <div class="mfield"><label>ŞİFRE</label><input type="password" id="g-sifre" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')girisYap()"></div>
+        <button class="msub-btn" id="g-btn" onclick="girisYap()">Giriş Yap</button>
+        <div class="mfooter">Hesabınız yok mu? <span onclick="tabSec('kayit')">Kayıt Olun</span></div>
+      </div>
+      <div id="form-kayit" style="display:none">
+        <div class="mfield"><label>AD SOYAD</label><input type="text" id="k-ad" placeholder="Av. Ad Soyad"></div>
+        <div class="mfield"><label>BÜRO ADI</label><input type="text" id="k-buro" placeholder="Hukuk Bürosu"></div>
+        <div class="mfield"><label>E-POSTA</label><input type="email" id="k-email" placeholder="avukat@buro.com" autocomplete="email"></div>
+        <div class="mfield"><label>ŞİFRE</label><input type="password" id="k-sifre" placeholder="En az 6 karakter" autocomplete="new-password" onkeydown="if(event.key==='Enter')kayitOl()"></div>
+        <button class="msub-btn" id="k-btn" onclick="kayitOl()">Ücretsiz Hesap Oluştur</button>
+        <div class="mfooter">Zaten hesabınız var mı? <span onclick="tabSec('giris')">Giriş Yapın</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SB_URL = 'https://gzyqwbvvorgepazjpkjt.supabase.co'
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6eXF3YnZ2b3JnZXBhempwa2p0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzNjgwNjgsImV4cCI6MjA5OTk0NDA2OH0.H1aVkbCLciXCGbkvsG0jPmYkm5IBXhwstwVkM490-gI'
+const sb = supabase.createClient(SB_URL, SB_KEY)
+
+// Oturum varsa SADECE nav butonunu degistir (otomatik yonlendirme YOK)
+sb.auth.getSession().then(async ({ data: { session } }) => {
+  if (!session) return
+  const nav = document.querySelector('.nav-cta')
+  if (nav) nav.innerHTML = '<button class="btn btn-ghost" onclick="cikisYap()">Çıkış</button><button class="btn btn-gold" onclick="panelGit()">Panele Git</button>'
+})
+
+async function panelGit() {
+  const { data: { session } } = await sb.auth.getSession()
+  if (!session) { modalAc('giris'); return }
+  window.location.href = await hedefSayfa(session.user.id)
+}
+
+async function cikisYap() { await sb.auth.signOut(); location.reload() }
+
+// Tek merkezden hedef belirle
+async function hedefSayfa(uid) {
+  const { data: p } = await sb.from('kullanici_profil').select('rol').eq('id', uid).maybeSingle()
+  return p?.rol === 'admin' ? 'admin.html' : 'uygulama.html'
+}
+
+function modalAc(tab) { document.getElementById('modal').classList.add('open'); tabSec(tab) }
+function modalKapat() { document.getElementById('modal').classList.remove('open') }
+function tabSec(t) {
+  document.getElementById('form-giris').style.display = t==='giris'?'block':'none'
+  document.getElementById('form-kayit').style.display = t==='kayit'?'block':'none'
+  document.getElementById('tab-giris').className = 'mtab'+(t==='giris'?' active':'')
+  document.getElementById('tab-kayit').className = 'mtab'+(t==='kayit'?' active':'')
+  document.getElementById('m-error').style.display = 'none'
+  document.getElementById('m-success').style.display = 'none'
+}
+function hata(m) { const e=document.getElementById('m-error'); e.textContent=m; e.style.display='block'; document.getElementById('m-success').style.display='none' }
+function basari(m) { const e=document.getElementById('m-success'); e.textContent=m; e.style.display='block'; document.getElementById('m-error').style.display='none' }
+
+async function girisYap() {
+  const email = document.getElementById('g-email').value.trim()
+  const sifre = document.getElementById('g-sifre').value
+  if (!email||!sifre) { hata('E-posta ve şifre zorunludur'); return }
+  const btn = document.getElementById('g-btn')
+  btn.disabled=true; btn.textContent='Giriş yapılıyor...'
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: sifre })
+    if (error) throw error
+    window.location.href = await hedefSayfa(data.user.id)
+  } catch(err) {
+    let m = err.message
+    if (m.includes('Invalid login')) m = 'E-posta veya şifre hatalı'
+    hata(m); btn.disabled=false; btn.textContent='Giriş Yap'
+  }
+}
+
+async function kayitOl() {
+  const ad = document.getElementById('k-ad').value.trim()
+  const buro = document.getElementById('k-buro').value.trim()
+  const email = document.getElementById('k-email').value.trim()
+  const sifre = document.getElementById('k-sifre').value
+  if (!email||!sifre) { hata('E-posta ve şifre zorunludur'); return }
+  if (sifre.length < 6) { hata('Şifre en az 6 karakter olmalı'); return }
+  const btn = document.getElementById('k-btn')
+  btn.disabled=true; btn.textContent='Hesap oluşturuluyor...'
+  try {
+    const { data, error } = await sb.auth.signUp({ email, password: sifre })
+    if (error) throw error
+    if (!data.session) { await sb.auth.signInWithPassword({ email, password: sifre }) }
+    const { data: { session } } = await sb.auth.getSession()
+    const uid = session?.user?.id || data.user?.id
+    if (uid) {
+      await sb.from('kullanici_profil').upsert({ id: uid, email, avukat_adi: ad, buro_adi: buro || null, rol: 'kullanici', kurulum_tamam: false })
+    }
+    window.location.href = 'uygulama.html'
+  } catch(err) {
+    let m = err.message
+    if (m.includes('already registered')) m = 'Bu e-posta zaten kayıtlı'
+    hata(m); btn.disabled=false; btn.textContent='Ücretsiz Hesap Oluştur'
+  }
+}
+
+function toggleFaq(el) { el.classList.toggle('open') }
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'))
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior:'smooth' }) }
+  })
+})
+</script>
+</body>
+</html>

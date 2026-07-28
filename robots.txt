@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Allow: /index.html
+Disallow: /uygulama.html
+Disallow: /admin.html
+Disallow: /onboarding.html
+
+Sitemap: https://dosya360.com/sitemap.xml
