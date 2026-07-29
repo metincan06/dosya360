@@ -612,6 +612,35 @@ function tabSec(t) {
   document.getElementById('m-success').style.display = 'none'
 }
 function hata(m) { const e=document.getElementById('m-error'); e.textContent=m; e.style.display='block'; document.getElementById('m-success').style.display='none' }
+
+// Supabase hatalarini okunabilir Turkce mesaja cevir
+function hataCoz(err) {
+  console.error('Dosya360 hata:', err)
+  const ham = (err && (err.message || err.error_description || err.msg)) || ''
+  const kod = (err && (err.code || err.error || '')) + ''
+  const durum = (err && err.status) || 0
+  const t = (ham + ' ' + kod).toLowerCase()
+
+  if (t.includes('already registered') || t.includes('already been registered') || kod === 'user_already_exists')
+    return 'Bu e-posta zaten kayıtlı. Giriş yapmayı deneyin.'
+  if (t.includes('invalid login') || kod === 'invalid_credentials')
+    return 'E-posta veya şifre hatalı.'
+  if (t.includes('rate limit') || t.includes('too many') || durum === 429)
+    return 'Çok fazla deneme yapıldı. Lütfen bir saat sonra tekrar deneyin.'
+  if (t.includes('email address') && t.includes('invalid'))
+    return 'Geçersiz e-posta adresi.'
+  if (t.includes('password') && (t.includes('short') || t.includes('least')))
+    return 'Şifre en az 6 karakter olmalı.'
+  if (t.includes('database error') || t.includes('unexpected_failure') || durum >= 500)
+    return 'Sunucu tarafında bir sorun oluştu. Birazdan tekrar deneyin.'
+  if (t.includes('failed to fetch') || t.includes('networkerror'))
+    return 'İnternet bağlantısı kurulamadı.'
+  if (t.includes('not confirmed'))
+    return 'E-posta adresiniz doğrulanmamış.'
+
+  const detay = ham && ham !== '{}' ? ham : (durum ? 'kod ' + durum : 'bilinmeyen hata')
+  return 'Kayıt tamamlanamadı (' + detay + '). Sorun sürerse info@otukenmedya.com adresine yazın.'
+}
 function basari(m) { const e=document.getElementById('m-success'); e.textContent=m; e.style.display='block'; document.getElementById('m-error').style.display='none' }
 
 async function girisYap() {
@@ -625,9 +654,7 @@ async function girisYap() {
     if (error) throw error
     window.location.href = await hedefSayfa(data.user.id)
   } catch(err) {
-    let m = err.message
-    if (m.includes('Invalid login')) m = 'E-posta veya şifre hatalı'
-    hata(m); btn.disabled=false; btn.textContent='Giriş Yap'
+    hata(hataCoz(err)); btn.disabled=false; btn.textContent='Giriş Yap'
   }
 }
 
@@ -647,13 +674,13 @@ async function kayitOl() {
     const { data: { session } } = await sb.auth.getSession()
     const uid = session?.user?.id || data.user?.id
     if (uid) {
-      await sb.from('kullanici_profil').upsert({ id: uid, email, avukat_adi: ad, buro_adi: buro || null, rol: 'kullanici', kurulum_tamam: false })
+      const { error: pErr } = await sb.from('kullanici_profil')
+        .upsert({ id: uid, email, avukat_adi: ad, buro_adi: buro || null, rol: 'kullanici', kurulum_tamam: false })
+      if (pErr) console.warn('Profil yazilamadi (trigger olusturmus olabilir):', pErr)
     }
     window.location.href = 'uygulama.html'
   } catch(err) {
-    let m = err.message
-    if (m.includes('already registered')) m = 'Bu e-posta zaten kayıtlı'
-    hata(m); btn.disabled=false; btn.textContent='Ücretsiz Hesap Oluştur'
+    hata(hataCoz(err)); btn.disabled=false; btn.textContent='Ücretsiz Hesap Oluştur'
   }
 }
 
