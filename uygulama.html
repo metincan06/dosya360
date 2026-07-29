@@ -1257,7 +1257,6 @@ async function kuDavetGonder() {
   btn.disabled = false; btn.textContent = 'Davet Linki Oluştur'
 }
 
-function showModal(type) { document.getElementById('m-'+type)?.classList.add('open') }
 
 
 function renderUpgrade(abone) {
@@ -1709,10 +1708,6 @@ async function toggleKullanici(id, mevcutDurum){
   adminYukle()
 }
 
-async function authCikis(){
-  await sb.auth.signOut()
-  location.reload()
-}
 
 // Uygulama başlangıçta gizle
 document.querySelector('.app').style.display = 'none'
