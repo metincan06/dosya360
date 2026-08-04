@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
 <title>Dosya360 — Avukatlık Bürosu CRM</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
@@ -821,7 +822,7 @@ async function saveMuvekkil() {
   const mvs=DB.muvekkiller
   mvs.push(yeni || { id:Date.now(), ...kayit, tarih:new Date().toISOString() })
   DB.saveMv(mvs); ['mv-ad','mv-soyad','mv-tc','mv-tel','mv-email','mv-il','mv-not'].forEach(clear)
-  closeModal('muvekkil'); renderAll()
+  logla('muvekkil_ekle', ad+' '+soyad); closeModal('muvekkil'); renderAll()
 }
 
 // Supabase'deki muvekkilleri yerel cache'e cek
@@ -836,7 +837,7 @@ function saveDava() {
   const mvId=val('dv-mv'); const mv=DB.muvekkiller.find(m=>m.id==mvId)
   const dvs=DB.davalar; dvs.push({ id:Date.now(), dosyaNo:no, muvekkil:mv?mv.ad+' '+mv.soyad:'—', muvekkılId:mvId, muvekkılTel:mv?.tel||'', mahkeme:val('dv-mhk'), tur:val('dv-tur'), karsiTaraf:val('dv-kt'), tarih:val('dv-tarih'), durum:val('dv-durum'), not:val('dv-not'), durusmaTarihi:val('dv-durusma-tarihi'), durusmaSaati:val('dv-durusma-saati') })
   DB.saveDv(dvs); ['dv-no','dv-mhk','dv-tur','dv-kt','dv-not','dv-durusma-tarihi','dv-durusma-saati'].forEach(clear)
-  closeModal('dava'); renderAll()
+  logla('dava_ekle', val('dv-no')); closeModal('dava'); renderAll()
 }
 
 function saveGorev() {
@@ -844,7 +845,7 @@ function saveGorev() {
   const dvId=val('gv-dava'); const dv=DB.davalar.find(d=>d.id==dvId)
   const gvs=DB.gorevler; gvs.push({ id:Date.now(), baslik, tarih:val('gv-tarih'), oncelik:val('gv-oncelik'), dava:dv?dv.dosyaNo:'—', durum:'bekliyor' })
   DB.saveGv(gvs); clear('gv-baslik'); clear('gv-tarih')
-  closeModal('gorev'); renderAll()
+  logla('gorev_ekle', val('gv-baslik')); closeModal('gorev'); renderAll()
 }
 
 function saveEtkinlik() {
@@ -852,7 +853,7 @@ function saveEtkinlik() {
   const dvId=val('et-dava'); const dv=DB.davalar.find(d=>d.id==dvId)
   const ets=DB.etkinlikler; ets.push({ id:Date.now(), baslik, tarih, tur:val('et-tur'), dava:dv?dv.dosyaNo:'', not:val('et-not') })
   DB.saveEt(ets); clear('et-baslik'); clear('et-tarih'); clear('et-not')
-  closeModal('etkinlik'); renderCal()
+  logla('etkinlik_ekle', baslik); closeModal('etkinlik'); renderCal()
 }
 
 function saveFinans() {
@@ -860,7 +861,7 @@ function saveFinans() {
   const mvId=val('fn-mv'); const mv=DB.muvekkiller.find(m=>m.id==mvId)
   const fns=DB.finanslar; fns.push({ id:Date.now(), tur:val('fn-tur'), tutar, muvekkil:mv?mv.ad+' '+mv.soyad:'—', tarih:val('fn-tarih')||new Date().toISOString().split('T')[0], aciklama:val('fn-aciklama') })
   DB.saveFn(fns); clear('fn-tutar'); clear('fn-aciklama')
-  closeModal('finans'); renderAll()
+  logla('finans_ekle', val('fn-tutar')); closeModal('finans'); renderAll()
 }
 
 function saveBelge() {
@@ -868,7 +869,7 @@ function saveBelge() {
   const dvId=val('bl-dava'); const dv=DB.davalar.find(d=>d.id==dvId)
   const bls=DB.belgeler; bls.push({ id:Date.now(), ad, kategori:val('bl-kat'), dava:dv?dv.dosyaNo:'—', tarih:new Date().toISOString() })
   DB.saveBl(bls); clear('bl-ad')
-  closeModal('belge'); renderBl()
+  logla('belge_ekle', ad); closeModal('belge'); renderBl()
 }
 
 function saveIletisim() {
@@ -876,7 +877,7 @@ function saveIletisim() {
   const mvId=val('il-mv'); const mv=DB.muvekkiller.find(m=>m.id==mvId)
   const ils=DB.iletisimler; ils.push({ id:Date.now(), muvekkil:mv?mv.ad+' '+mv.soyad:'—', kanal:val('il-kanal'), mesaj, tarih:new Date().toISOString() })
   DB.saveIl(ils); clear('il-mesaj')
-  closeModal('iletisim'); renderIl()
+  logla('iletisim_ekle', val('il-kanal')); closeModal('iletisim'); renderIl()
 }
 
 // ── RENDER ────────────────────────────────────────────────────
@@ -1326,6 +1327,16 @@ function loadSettings(){
   if(s.buroAdi) document.getElementById('buro-adi-logo').textContent=s.buroAdi
   updateWaTest(s.whatsapp)
 }
+// ── ISLEM GUNLUGU ──────────────────────────────────────────
+function logla(islem, detay){
+  try{
+    if(!window.sb || !sbUser) return
+    window.sb.from('islem_gunlugu').insert({
+      buro_id: sbUser.id, islem: islem, detay: (detay||'').slice(0,200)
+    }).then(function(){}, function(){})
+  }catch(e){}
+}
+
 // ── KURULUM KARTI (onboarding yerine) ──────────────────────
 function kurulumKartiKontrol(profil){
   const eksik = !profil?.buro_adi || !profil?.avukat_adi
@@ -1503,6 +1514,7 @@ async function uygulamaAc(user) {
   kurulumKartiKontrol(profil)
   
   loadSettings(); await muvekkilleriYukle(); renderAll(); setTimeout(abonelikYukle, 500)
+  logla('giris', user.email)
 }
 
 async function authCikis() {

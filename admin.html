@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
 <title>Dosya360 — Admin Paneli</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -39,7 +40,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .content{padding:24px;flex:1}
 
 /* METRİKLER */
-.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px}
+.metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:24px}
 .mc{background:#fff;border:0.5px solid var(--border);border-radius:10px;padding:16px}
 .mc-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px}
 .mc-val{font-size:26px;font-weight:600;color:var(--text);margin-bottom:2px}
@@ -154,6 +155,11 @@ tr:hover td{background:#FAFAFA}
         <div class="mc-val" id="m-bugun">—</div>
         <div class="mc-label">Bugün Kayıt</div>
       </div>
+      <div class="mc">
+        <div class="mc-icon" style="background:#FEF2F2;color:#B91C1C"><i class="ti ti-alert-triangle"></i></div>
+        <div class="mc-val" id="m-bitiyor">—</div>
+        <div class="mc-label">30 Günde Bitiyor</div>
+      </div>
     </div>
 
     <!-- KULLANICI TABLOSU -->
@@ -172,22 +178,46 @@ tr:hover td{background:#FAFAFA}
             <th>#</th>
             <th>E-posta</th>
             <th>Büro Adı</th>
-            <th>Avukat</th>
-            <th>Kayıt Tarihi</th>
-            <th>Son Giriş</th>
+            <th>Abonelik</th>
+            <th>Kullanım</th>
+            <th>Son İşlem</th>
+            <th>Kayıt</th>
             <th>Durum</th>
             <th>İşlem</th>
           </tr>
         </thead>
         <tbody id="kullanici-tbody">
-          <tr><td colspan="8"><div class="spinner"><div class="spinner-circle"></div></div></td></tr>
+          <tr><td colspan="9"><div class="spinner"><div class="spinner-circle"></div></div></td></tr>
         </tbody>
       </table>
     </div>
 
-    <!-- SON AKTİVİTE -->
+    <!-- İŞLEM GÜNLÜĞÜ -->
     <div class="section-title">
-      <span>📋 Son Kayıt Olan Kullanıcılar</span>
+      <span>📋 İşlem Günlüğü</span>
+      <select id="log-filtre" onchange="gunlukRender()" style="font-size:12px;padding:6px 10px;border:0.5px solid var(--border);border-radius:7px;background:#fff;color:var(--text);font-family:inherit;font-weight:400">
+        <option value="">Tüm kullanıcılar</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Zaman</th>
+            <th>Büro</th>
+            <th>İşlem</th>
+            <th>Detay</th>
+          </tr>
+        </thead>
+        <tbody id="log-tbody">
+          <tr><td colspan="4"><div class="spinner"><div class="spinner-circle"></div></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SON KAYITLAR -->
+    <div class="section-title">
+      <span>🆕 Son Kayıt Olan Kullanıcılar</span>
     </div>
     <div class="table-wrap">
       <table>
@@ -227,6 +257,9 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
 
 const ADMIN_EMAIL = 'info@otukenmedya.com'
 let tumKullanicilar = []
+let aboneMap = {}
+let sayacMap = {}
+let tumLoglar = []
 
 // ── GİRİŞ ──────────────────────────────────────────────────
 async function adminGiris() {
@@ -273,9 +306,84 @@ async function veriYukle() {
 
   if (error) { console.error(error); return }
   tumKullanicilar = kullanicilar || []
+
+  // Abonelikler
+  const { data: abn } = await sb.from('abonelikler').select('*').order('created_at', { ascending: false })
+  aboneMap = {}
+  ;(abn || []).forEach(a => { if (!aboneMap[a.buro_id]) aboneMap[a.buro_id] = a })
+
+  // Islem gunlugu (son 500)
+  const { data: log } = await sb.from('islem_gunlugu')
+    .select('*').order('created_at', { ascending: false }).limit(500)
+  tumLoglar = log || []
+
+  sayacMap = {}
+  tumLoglar.forEach(l => {
+    if (!sayacMap[l.buro_id]) sayacMap[l.buro_id] = { muvekkil:0, dava:0, gorev:0, belge:0, giris:0, toplam:0, son:null }
+    const s = sayacMap[l.buro_id]
+    s.toplam++
+    if (!s.son) s.son = l.created_at
+    if (l.islem === 'muvekkil_ekle') s.muvekkil++
+    else if (l.islem === 'dava_ekle') s.dava++
+    else if (l.islem === 'gorev_ekle') s.gorev++
+    else if (l.islem === 'belge_ekle') s.belge++
+    else if (l.islem === 'giris') s.giris++
+  })
+
   metrikleriGuncelle()
   tabloRender(tumKullanicilar)
   sonKayitlariRender()
+  gunlukRender()
+}
+
+// ── ABONELIK YARDIMCILARI ─────────────────────────────────
+function kalanGun(bitis){
+  if(!bitis) return null
+  return Math.ceil((new Date(bitis) - new Date()) / 86400000)
+}
+
+function aboneRozet(a){
+  if(!a) return '<span class="badge badge-gray">Abonelik yok</span>'
+  if(a.durum === 'bekliyor') return '<span class="badge" style="background:#FFFBEB;color:#B45309">Ödeme bekliyor</span>'
+  if(a.durum !== 'aktif') return '<span class="badge badge-red">'+a.durum+'</span>'
+  const k = kalanGun(a.bitis_tarihi)
+  if(k === null) return '<span class="badge badge-green">'+a.paket_adi+'</span>'
+  if(k < 0)  return '<span class="badge badge-red">Süresi doldu</span>'
+  if(k <= 7) return '<span class="badge badge-red">'+a.paket_adi+' · '+k+' gün</span>'
+  if(k <= 30) return '<span class="badge" style="background:#FFFBEB;color:#B45309">'+a.paket_adi+' · '+k+' gün</span>'
+  return '<span class="badge badge-green">'+a.paket_adi+' · '+k+' gün</span>'
+}
+
+const ISLEM_ADI = {
+  giris:'🔑 Giriş yaptı', muvekkil_ekle:'👤 Müvekkil ekledi', dava_ekle:'⚖️ Dava ekledi',
+  gorev_ekle:'✅ Görev ekledi', etkinlik_ekle:'📅 Etkinlik ekledi', belge_ekle:'📁 Belge ekledi',
+  finans_ekle:'💰 Finans kaydı', iletisim_ekle:'💬 İletişim kaydı'
+}
+
+function gunlukRender(){
+  const tbody = document.getElementById('log-tbody')
+  if(!tbody) return
+  const filtre = document.getElementById('log-filtre')?.value || ''
+  const liste = (filtre ? tumLoglar.filter(l => l.buro_id === filtre) : tumLoglar).slice(0, 100)
+  if(!liste.length){
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:28px;color:var(--hint)">Henüz işlem kaydı yok</td></tr>'
+    return
+  }
+  tbody.innerHTML = liste.map(l => {
+    const k = tumKullanicilar.find(u => u.id === l.buro_id)
+    return '<tr>' +
+      '<td style="color:var(--muted);font-size:12px;white-space:nowrap">' + tarihFormat(l.created_at) + '</td>' +
+      '<td><strong>' + (k?.buro_adi || k?.email || '—') + '</strong></td>' +
+      '<td>' + (ISLEM_ADI[l.islem] || l.islem) + '</td>' +
+      '<td style="color:var(--muted);font-size:12px">' + (l.detay || '—') + '</td>' +
+    '</tr>'
+  }).join('')
+
+  const sel = document.getElementById('log-filtre')
+  if(sel && sel.options.length <= 1){
+    sel.innerHTML = '<option value="">Tüm kullanıcılar</option>' +
+      tumKullanicilar.map(u => '<option value="'+u.id+'">'+(u.buro_adi||u.email)+'</option>').join('')
+  }
 }
 
 function metrikleriGuncelle() {
@@ -292,22 +400,34 @@ function metrikleriGuncelle() {
   document.getElementById('m-buay').textContent = buAyKayit.length
   document.getElementById('m-bugun').textContent = bugunKayit.length
   document.getElementById('kullanici-sayisi').textContent = `${tumKullanicilar.length} kullanıcı`
+
+  let bitiyor = 0
+  Object.values(aboneMap).forEach(a => {
+    if (a.durum !== 'aktif') return
+    const k = kalanGun(a.bitis_tarihi)
+    if (k !== null && k >= 0 && k <= 30) bitiyor++
+  })
+  const el = document.getElementById('m-bitiyor')
+  if (el) el.textContent = bitiyor
 }
 
 function tabloRender(liste) {
   const tbody = document.getElementById('kullanici-tbody')
   if (!liste.length) {
-    tbody.innerHTML = '<tr><td colspan="8"><div class="empty"><i class="ti ti-users"></i>Henüz kayıtlı kullanıcı yok</div></td></tr>'
+    tbody.innerHTML = '<tr><td colspan="9"><div class="empty"><i class="ti ti-users"></i>Henüz kayıtlı kullanıcı yok</div></td></tr>'
     return
   }
-  tbody.innerHTML = liste.map((k, i) => `
+  tbody.innerHTML = liste.map((k, i) => {
+    const s = sayacMap[k.id] || { muvekkil:0, dava:0, toplam:0, son:null }
+    return `
     <tr>
       <td style="color:var(--hint);font-size:12px">${i + 1}</td>
-      <td><strong>${k.email || '—'}</strong></td>
+      <td><strong>${k.email || '—'}</strong><div style="font-size:11px;color:var(--hint)">${k.avukat_adi || ''}</div></td>
       <td>${k.buro_adi || '—'}</td>
-      <td>${k.avukat_adi || '—'}</td>
-      <td style="color:var(--muted);font-size:12px">${k.created_at ? tarihFormat(k.created_at) : '—'}</td>
-      <td style="color:var(--muted);font-size:12px">${k.updated_at ? tarihFormat(k.updated_at) : '—'}</td>
+      <td>${aboneRozet(aboneMap[k.id])}</td>
+      <td style="font-size:12px;color:var(--muted);white-space:nowrap">👤 ${s.muvekkil} · ⚖️ ${s.dava}<div style="font-size:11px;color:var(--hint)">${s.toplam} işlem</div></td>
+      <td style="color:var(--muted);font-size:12px;white-space:nowrap">${s.son ? tarihFormat(s.son) : '—'}</td>
+      <td style="color:var(--muted);font-size:12px;white-space:nowrap">${k.created_at ? tarihFormat(k.created_at) : '—'}</td>
       <td><span class="badge ${k.aktif ? 'badge-green' : 'badge-red'}">${k.aktif ? '✓ Aktif' : '✗ Pasif'}</span></td>
       <td style="display:flex;gap:6px">
         <button class="action-btn ${k.aktif ? 'btn-freeze' : 'btn-activate'}" onclick="durumDegistir('${k.id}',${k.aktif})">
@@ -316,7 +436,7 @@ function tabloRender(liste) {
         <button class="action-btn" style="background:#EFF6FF;color:#1D4ED8" onclick="detayGoster('${k.id}')">Detay</button>
       </td>
     </tr>
-  `).join('')
+  `}).join('')
 }
 
 function sonKayitlariRender() {
@@ -369,6 +489,17 @@ function detayGoster(id) {
       <div class="detail-item"><div class="detail-label">Telefon</div><div class="detail-value">${k.telefon || '—'}</div></div>
       <div class="detail-item"><div class="detail-label">Kayıt Tarihi</div><div class="detail-value">${k.created_at ? tarihFormat(k.created_at) : '—'}</div></div>
       <div class="detail-item"><div class="detail-label">Hesap Durumu</div><div class="detail-value"><span class="badge ${k.aktif ? 'badge-green' : 'badge-red'}">${k.aktif ? '✓ Aktif' : '✗ Pasif'}</span></div></div>
+    </div>
+    <div class="stats-grid">
+      <div class="mini-stat"><div class="mini-stat-val">${(sayacMap[k.id]||{}).muvekkil||0}</div><div class="mini-stat-label">Müvekkil</div></div>
+      <div class="mini-stat"><div class="mini-stat-val">${(sayacMap[k.id]||{}).dava||0}</div><div class="mini-stat-label">Dava</div></div>
+      <div class="mini-stat"><div class="mini-stat-val">${(sayacMap[k.id]||{}).toplam||0}</div><div class="mini-stat-label">Toplam İşlem</div></div>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-item"><div class="detail-label">Abonelik</div><div class="detail-value">${aboneRozet(aboneMap[k.id])}</div></div>
+      <div class="detail-item"><div class="detail-label">Bitiş Tarihi</div><div class="detail-value">${aboneMap[k.id]?.bitis_tarihi ? new Date(aboneMap[k.id].bitis_tarihi).toLocaleDateString('tr-TR') : '—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Kullanıcı Hakkı</div><div class="detail-value">${aboneMap[k.id]?.max_kullanici ?? '—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Son İşlem</div><div class="detail-value">${(sayacMap[k.id]||{}).son ? tarihFormat(sayacMap[k.id].son) : '—'}</div></div>
     </div>
     <div style="display:flex;gap:10px;margin-top:8px">
       <button class="action-btn ${k.aktif ? 'btn-freeze' : 'btn-activate'}" style="padding:8px 18px;font-size:13px" onclick="durumDegistir('${k.id}',${k.aktif});modalKapat()">
