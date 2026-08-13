@@ -5,34 +5,55 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Dosya360 — Davet Kabul</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0B1629;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.card{background:#1A2B47;border-radius:20px;padding:36px;width:100%;max-width:420px;border:0.5px solid rgba(201,168,76,0.2)}
-.logo{text-align:center;font-size:22px;font-weight:700;color:#C9A84C;margin-bottom:6px}
+.card{background:#1A2B47;border-radius:5px;padding:36px;width:100%;max-width:420px;border:0.5px solid rgba(201,168,76,0.2)}
+.logo{text-align:center;font-size:22px;font-weight:600;color:#C9A84C;margin-bottom:6px}
 .logo-sub{text-align:center;font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:28px}
 .title{font-size:18px;font-weight:600;color:#fff;margin-bottom:6px}
 .sub{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:24px;line-height:1.6}
 .field{margin-bottom:14px}
 .field label{font-size:12px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px}
-.field input{width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-size:13px;outline:none;font-family:inherit}
+.field input{width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:5px;color:#fff;font-size:13px;outline:none;font-family:inherit}
 .field input:focus{border-color:rgba(201,168,76,0.5)}
-.btn{width:100%;padding:12px;background:#C9A84C;color:#0B1629;border:none;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;font-family:inherit}
+.btn{width:100%;padding:12px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;font-family:inherit}
 .btn:disabled{opacity:0.5;cursor:not-allowed}
-.error{background:rgba(239,68,68,0.15);border:0.5px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px;font-size:12px;color:#FCA5A5;margin-bottom:14px;display:none}
+.error{background:rgba(239,68,68,0.15);border:0.5px solid rgba(239,68,68,0.3);border-radius:5px;padding:10px;font-size:12px;color:#FCA5A5;margin-bottom:14px;display:none}
 .success{text-align:center;padding:20px 0}
 .success-icon{font-size:48px;margin-bottom:14px}
 .success-title{font-size:18px;font-weight:600;color:#fff;margin-bottom:8px}
 .success-sub{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:20px}
+
+/* ── Tipografi ve yuzey rafinasyonu ─────────────────────── */
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  font-feature-settings:'cv02','cv03','cv04','tnum';
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  letter-spacing:-0.006em;
+}
+h1,h2,h3,h4,.card-title,.section-title{letter-spacing:-0.018em}
+/* Sayilar hizali dizilsin */
+.mc-val,.stat-num,.plan-price,.hw-stat-val,.mini-stat-val,td{font-variant-numeric:tabular-nums}
+/* Kenarliklar tek tonda */
+:root{--border:#E4E7EC;--hairline:#F0F1F3}
+table td{border-bottom:1px solid var(--hairline)}
+/* Odak halkasi - erisilebilirlik */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid #C9A84C;outline-offset:1px;border-radius:3px
+}
+/* Gecisler tek egride */
+.navitem,.btn,.tbtn,button,.plan-card,.feat-card{transition:background-color .12s ease,border-color .12s ease,color .12s ease}
 </style>
 </head>
 <body>
 <div class="card">
-  <div class="logo">⚖ Dosya360</div>
+  <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.125em;flex-shrink:0"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg> Dosya360</div>
   <div class="logo-sub">Avukatlık Bürosu Yönetim Sistemi</div>
   <div id="main-content">
-    <div class="title">🎉 Davet Aldınız!</div>
+    <div class="title">Davet Aldınız</div>
     <div class="sub" id="davet-sub">Büronuza katılmak için şifrenizi oluşturun.</div>
     <div class="error" id="error-box"></div>
     <div class="field">
@@ -94,7 +115,7 @@ async function davetKabul() {
 
     document.getElementById('main-content').innerHTML = `
       <div class="success">
-        <div class="success-icon">🎉</div>
+        <div class="success-icon"><i class="ti ti-circle-check" style="color:#C9A84C"></i></div>
         <div class="success-title">Hoş Geldiniz!</div>
         <div class="success-sub">Hesabınız oluşturuldu. Şimdi sisteme giriş yapabilirsiniz.</div>
         <button class="btn" onclick="window.location.href='uygulama.html'">Uygulamaya Git →</button>

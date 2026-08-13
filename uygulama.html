@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Dosya360 — Avukatlık Bürosu CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -32,13 +35,13 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 .navitem:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
 .navitem.active{background:rgba(201,168,76,.18);color:var(--gold2)}
 .navitem i{font-size:17px;flex-shrink:0}
-.nbadge{margin-left:auto;background:rgba(201,168,76,.25);color:var(--gold2);font-size:10px;padding:1px 7px;border-radius:10px;flex-shrink:0}
+.nbadge{margin-left:auto;background:rgba(201,168,76,.25);color:var(--gold2);font-size:10px;padding:1px 7px;border-radius:5px;flex-shrink:0}
 .sidebar-bottom{padding:10px 8px;border-top:0.5px solid rgba(255,255,255,.08)}
 .collapse-btn{width:100%;padding:7px;background:rgba(255,255,255,.05);border:none;border-radius:6px;color:rgba(255,255,255,.3);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;gap:6px}
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .topbar{height:52px;background:var(--surface);border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:10px;flex-shrink:0}
 .page-title{font-size:16px;font-weight:500;flex:1}
-.tbtn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:13px;cursor:pointer;border:0.5px solid var(--border);background:var(--surface);color:var(--muted);transition:all .15s}
+.tbtn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:5px;font-size:13px;cursor:pointer;border:0.5px solid var(--border);background:var(--surface);color:var(--muted);transition:all .15s}
 .tbtn:hover{background:var(--bg)}
 .tbtn.primary{background:var(--navy);color:var(--gold);border:none}
 .tbtn.primary:hover{background:var(--navy2)}
@@ -46,18 +49,18 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 .panel{display:none}.panel.active{display:block}
 
 /* CARDS */
-.card{background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:16px}
+.card{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:16px 20px;margin-bottom:16px}
 .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .card-title{font-size:14px;font-weight:500}
 .card-link{font-size:12px;color:var(--gold);cursor:pointer}
 .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.mc{background:var(--surface);border:0.5px solid var(--border);border-radius:10px;padding:16px}
+.mc{background:var(--surface);border:0.5px solid var(--border);border-radius:5px;padding:16px}
 .mc-label{font-size:11px;color:var(--muted);margin-bottom:6px}
 .mc-val{font-size:26px;font-weight:500}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
 
 /* TABLE */
-.tbl-wrap{background:var(--surface);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px}
+.tbl-wrap{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:16px}
 .tbl{width:100%;border-collapse:collapse;font-size:13px}
 .tbl th{padding:10px 14px;text-align:left;font-size:11px;font-weight:500;color:var(--hint);background:var(--bg);border-bottom:0.5px solid var(--border)}
 .tbl td{padding:10px 14px;border-bottom:0.5px solid #F9FAFB;color:var(--text)}
@@ -65,7 +68,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 .tbl tr:hover td{background:#FAFAFA;cursor:pointer}
 
 /* BADGES */
-.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:500}
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:500}
 .bb{background:#EFF6FF;color:#1D4ED8}.bg{background:#F0FDF4;color:#15803D}
 .ba{background:#FFFBEB;color:#B45309}.br{background:#FEF2F2;color:#B91C1C}
 .bp{background:#F5F3FF;color:#6D28D9}.bgr{background:#F9FAFB;color:#374151}
@@ -73,7 +76,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 /* FORMS */
 .field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
 .field label{font-size:12px;font-weight:500;color:#374151}
-.field input,.field select,.field textarea{padding:9px 12px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);outline:none;background:var(--surface)}
+.field input,.field select,.field textarea{padding:9px 12px;border:0.5px solid var(--border);border-radius:5px;font-size:13px;color:var(--text);outline:none;background:var(--surface)}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold)}
 .field textarea{resize:vertical}
 .field2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -81,7 +84,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 /* MODAL */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
 .overlay.open{display:flex}
-.modal{background:var(--surface);border-radius:14px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto}
+.modal{background:var(--surface);border-radius:6px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto}
 .modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:0.5px solid var(--border)}
 .modal-head h3{font-size:15px;font-weight:500}
 .modal-close{background:none;border:none;cursor:pointer;color:var(--hint);font-size:22px;line-height:1}
@@ -89,7 +92,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 .modal-footer{display:flex;justify-content:flex-end;gap:8px;padding-top:14px;border-top:0.5px solid var(--border);margin-top:14px}
 
 /* LIST ITEMS */
-.list-item{background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s}
+.list-item{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s}
 .list-item:hover{border-color:rgba(201,168,76,.4)}
 .avatar{width:40px;height:40px;border-radius:50%;background:#EFF6FF;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#1D4ED8;flex-shrink:0}
 .li-name{font-size:13px;font-weight:500}
@@ -98,12 +101,12 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 .del-btn:hover{color:var(--red);background:#FEF2F2}
 
 /* SEARCH */
-.search-bar{display:flex;align-items:center;gap:8px;background:var(--surface);border:0.5px solid var(--border);border-radius:8px;padding:8px 12px;margin-bottom:14px}
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--surface);border:0.5px solid var(--border);border-radius:5px;padding:8px 12px;margin-bottom:14px}
 .search-bar input{border:none;outline:none;font-size:13px;flex:1;background:transparent}
 
 /* FILTERS */
 .filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.fbtn{padding:6px 13px;border-radius:20px;font-size:12px;cursor:pointer;border:0.5px solid var(--border);background:var(--surface);color:var(--muted);transition:all .15s}
+.fbtn{padding:6px 13px;border-radius:5px;font-size:12px;cursor:pointer;border:0.5px solid var(--border);background:var(--surface);color:var(--muted);transition:all .15s}
 .fbtn.active{background:var(--navy);color:var(--gold);border-color:var(--navy)}
 
 /* TASK CHECK */
@@ -116,20 +119,20 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 .msg{max-width:85%}
 .msg.user{align-self:flex-end}
 .msg.bot{align-self:flex-start}
-.msg-bubble{padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;white-space:pre-line}
+.msg-bubble{padding:10px 14px;border-radius:6px;font-size:13px;line-height:1.6;white-space:pre-line}
 .msg.user .msg-bubble{background:var(--navy);color:var(--gold2);border-bottom-right-radius:3px}
 .msg.bot .msg-bubble{background:var(--bg);color:var(--text);border-bottom-left-radius:3px}
 .ai-sugg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.sg{padding:5px 10px;border-radius:20px;font-size:11px;cursor:pointer;border:0.5px solid rgba(201,168,76,.3);background:rgba(201,168,76,.07);color:#854F0B;transition:all .15s}
+.sg{padding:5px 10px;border-radius:5px;font-size:11px;cursor:pointer;border:0.5px solid rgba(201,168,76,.3);background:rgba(201,168,76,.07);color:#854F0B;transition:all .15s}
 .sg:hover{background:rgba(201,168,76,.15)}
 .ai-input-row{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border)}
-.ai-input{flex:1;border:0.5px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;outline:none}
+.ai-input{flex:1;border:0.5px solid var(--border);border-radius:5px;padding:9px 12px;font-size:13px;outline:none}
 .ai-input:focus{border-color:var(--gold)}
-.send-btn{width:38px;height:38px;background:var(--navy);border:none;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--gold);font-size:18px}
+.send-btn{width:38px;height:38px;background:var(--navy);border:none;border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--gold);font-size:18px}
 .dots{display:flex;gap:4px;align-items:center;padding:4px 0}
 .dots span{width:6px;height:6px;border-radius:50%;background:var(--hint);animation:dt 1.2s infinite}
 .dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
-@keyframes dt{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+@keyframes dt{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1}}
 
 /* EMPTY */
 .empty{text-align:center;padding:48px 20px;color:var(--muted)}
@@ -139,15 +142,15 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 
 /* FIN */
 .fin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
-.fin-card{background:var(--surface);border:0.5px solid var(--border);border-radius:10px;padding:16px}
-.fin-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px}
+.fin-card{background:var(--surface);border:0.5px solid var(--border);border-radius:5px;padding:16px}
+.fin-icon{width:36px;height:36px;border-radius:5px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px}
 .fin-amount{font-size:22px;font-weight:500;margin-bottom:2px}
 .fin-label{font-size:11px;color:var(--muted)}
 
 /* CAL */
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:8px}
 .cdh{font-size:10px;text-align:center;color:var(--hint);font-weight:500;padding:4px 0}
-.cd{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;border-radius:7px;cursor:pointer;position:relative;transition:all .15s}
+.cd{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;border-radius:4px;cursor:pointer;position:relative;transition:all .15s}
 .cd:hover{background:var(--bg)}
 .cd.today{background:var(--navy);color:var(--gold);font-weight:500}
 .cd.has-ev::after{content:'';position:absolute;bottom:3px;width:4px;height:4px;border-radius:50%;background:var(--gold)}
@@ -164,7 +167,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
   .field2{grid-template-columns:1fr}
   .mobile-menu-btn{display:flex!important}
 }
-.mobile-menu-btn{display:none;align-items:center;justify-content:center;width:36px;height:36px;background:none;border:0.5px solid var(--border);border-radius:8px;cursor:pointer;color:var(--muted);margin-right:4px}
+.mobile-menu-btn{display:none;align-items:center;justify-content:center;width:36px;height:36px;background:none;border:0.5px solid var(--border);border-radius:5px;cursor:pointer;color:var(--muted);margin-right:4px}
 </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
@@ -173,18 +176,18 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
     .auth-logo{text-align:center;margin-bottom:32px}
     .auth-logo-text{font-size:28px;font-weight:600;color:#C9A84C;letter-spacing:2px}
     .auth-logo-sub{font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px}
-    .auth-card{background:#1A2B47;border-radius:16px;padding:32px;border:0.5px solid rgba(201,168,76,0.2)}
+    .auth-card{background:#1A2B47;border-radius:5px;padding:32px;border:0.5px solid rgba(201,168,76,0.2)}
     .auth-title{font-size:16px;font-weight:500;color:#fff;margin-bottom:24px}
     .auth-field{margin-bottom:14px}
     .auth-field label{font-size:12px;color:rgba(255,255,255,0.5);display:block;margin-bottom:6px}
-    .auth-field input{width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-size:14px;outline:none;font-family:inherit}
+    .auth-field input{width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:5px;color:#fff;font-size:14px;outline:none;font-family:inherit}
     .auth-field input:focus{border-color:rgba(201,168,76,0.5)}
-    .auth-btn{width:100%;padding:12px;background:#C9A84C;color:#0B1629;border:none;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;margin-top:8px;font-family:inherit}
+    .auth-btn{width:100%;padding:12px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;margin-top:8px;font-family:inherit}
     .auth-btn:disabled{opacity:0.5;cursor:not-allowed}
     .auth-switch{text-align:center;margin-top:18px;font-size:13px;color:rgba(255,255,255,0.4)}
     .auth-switch span{color:#C9A84C;cursor:pointer;font-weight:500}
-    .auth-error{background:rgba(239,68,68,0.15);border:0.5px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#FCA5A5;margin-bottom:14px;display:none}
-    .auth-success{background:rgba(34,197,94,0.15);border:0.5px solid rgba(34,197,94,0.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#86EFAC;margin-bottom:14px;display:none}
+    .auth-error{background:rgba(239,68,68,0.15);border:0.5px solid rgba(239,68,68,0.3);border-radius:5px;padding:10px 14px;font-size:13px;color:#FCA5A5;margin-bottom:14px;display:none}
+    .auth-success{background:rgba(34,197,94,0.15);border:0.5px solid rgba(34,197,94,0.3);border-radius:5px;padding:10px 14px;font-size:13px;color:#86EFAC;margin-bottom:14px;display:none}
     
     /* ADMİN PANELİ */
     .admin-panel{position:fixed;inset:0;background:#F4F5F7;z-index:8888;display:none;flex-direction:column}
@@ -192,17 +195,66 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
     .admin-title{color:#C9A84C;font-size:16px;font-weight:600}
     .admin-content{flex:1;overflow-y:auto;padding:24px}
     .admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
-    .admin-stat{background:#fff;border:0.5px solid #E5E7EB;border-radius:10px;padding:16px}
+    .admin-stat{background:#fff;border:0.5px solid #E5E7EB;border-radius:5px;padding:16px}
     .admin-stat-label{font-size:11px;color:#6B7280;margin-bottom:4px}
     .admin-stat-val{font-size:26px;font-weight:500;color:#111827}
-    .admin-table{background:#fff;border:0.5px solid #E5E7EB;border-radius:12px;overflow:hidden}
+    .admin-table{background:#fff;border:0.5px solid #E5E7EB;border-radius:6px;overflow:hidden}
     .admin-table table{width:100%;border-collapse:collapse;font-size:13px}
     .admin-table th{padding:10px 16px;text-align:left;font-size:11px;font-weight:500;color:#9CA3AF;background:#F9FAFB;border-bottom:0.5px solid #E5E7EB}
     .admin-table td{padding:11px 16px;border-bottom:0.5px solid #F3F4F6;color:#374151}
     .toggle-btn{padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;border:none;font-weight:500}
     .toggle-btn.aktif{background:#FEF2F2;color:#B91C1C}
     .toggle-btn.pasif{background:#F0FDF4;color:#15803D}
-  </style>
+  
+/* ── Tipografi ve yuzey rafinasyonu ─────────────────────── */
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  font-feature-settings:'cv02','cv03','cv04','tnum';
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  letter-spacing:-0.006em;
+}
+h1,h2,h3,h4,.card-title,.section-title{letter-spacing:-0.018em}
+/* Sayilar hizali dizilsin */
+.mc-val,.stat-num,.plan-price,.hw-stat-val,.mini-stat-val,td{font-variant-numeric:tabular-nums}
+/* Kenarliklar tek tonda */
+:root{--border:#E4E7EC;--hairline:#F0F1F3}
+table td{border-bottom:1px solid var(--hairline)}
+/* Odak halkasi - erisilebilirlik */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid #C9A84C;outline-offset:1px;border-radius:3px
+}
+/* Gecisler tek egride */
+.navitem,.btn,.tbtn,button,.plan-card,.feat-card{transition:background-color .12s ease,border-color .12s ease,color .12s ease}
+
+/* ── Kenar cubugu yogunlugu ─────────────────────────────── */
+.navitem{
+  display:flex;align-items:center;gap:10px;
+  padding:7px 12px;margin:1px 8px;border-radius:5px;
+  font-size:13.5px;font-weight:450;color:rgba(255,255,255,.62);
+  cursor:pointer;text-decoration:none;position:relative;line-height:1.35
+}
+.navitem i{font-size:17px;width:18px;text-align:center;flex-shrink:0;opacity:.8}
+.navitem:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.92)}
+.navitem:hover i{opacity:1}
+.navitem.active{background:rgba(201,168,76,.11);color:#E8C96A;font-weight:500}
+.navitem.active i{opacity:1;color:#C9A84C}
+.navitem.active::before{
+  content:'';position:absolute;left:-8px;top:6px;bottom:6px;
+  width:2px;background:#C9A84C;border-radius:0 2px 2px 0
+}
+.nav-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nbadge{
+  font-size:11px;font-weight:500;padding:1px 6px;border-radius:3px;
+  background:rgba(255,255,255,.09);color:rgba(255,255,255,.55);
+  font-variant-numeric:tabular-nums
+}
+.navitem.active .nbadge{background:rgba(201,168,76,.18);color:#E8C96A}
+.navsec{
+  font-size:10.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  color:rgba(255,255,255,.32);padding:16px 20px 5px;white-space:nowrap;overflow:hidden
+}
+.navsec:first-of-type{padding-top:8px}
+</style>
 </head>
 <body>
 
@@ -211,21 +263,21 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 <div id="giris-ekrani" style="position:fixed;inset:0;background:#0B1629;display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px">
   <div style="width:100%;max-width:380px">
     <div style="text-align:center;margin-bottom:28px">
-      <div style="font-size:26px;font-weight:700;color:#C9A84C;letter-spacing:1px">⚖ Dosya360</div>
+      <div style="font-size:26px;font-weight:600;color:#C9A84C;letter-spacing:.2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.125em;flex-shrink:0"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg> Dosya360</div>
       <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px">Avukatlık Bürosu Yönetim Sistemi</div>
     </div>
-    <div style="background:#1A2B47;border-radius:16px;padding:28px;border:0.5px solid rgba(201,168,76,0.2)">
+    <div style="background:#1A2B47;border-radius:5px;padding:28px;border:0.5px solid rgba(201,168,76,0.2)">
       <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:20px">Giriş Yap</div>
-      <div id="giris-hata" style="background:rgba(239,68,68,0.15);border:0.5px solid rgba(239,68,68,0.3);border-radius:8px;padding:9px 12px;font-size:12px;color:#FCA5A5;margin-bottom:14px;display:none"></div>
+      <div id="giris-hata" style="background:rgba(239,68,68,0.15);border:0.5px solid rgba(239,68,68,0.3);border-radius:5px;padding:9px 12px;font-size:12px;color:#FCA5A5;margin-bottom:14px;display:none"></div>
       <div style="margin-bottom:12px">
         <label style="font-size:12px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px">E-posta</label>
-        <input type="email" id="giris-email" placeholder="avukat@buro.com" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-size:13px;outline:none;font-family:inherit">
+        <input type="email" id="giris-email" placeholder="avukat@buro.com" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:5px;color:#fff;font-size:13px;outline:none;font-family:inherit">
       </div>
       <div style="margin-bottom:16px">
         <label style="font-size:12px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px">Şifre</label>
-        <input type="password" id="giris-sifre" placeholder="••••••••" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-size:13px;outline:none;font-family:inherit" onkeydown="if(event.key==='Enter')girisYap()">
+        <input type="password" id="giris-sifre" placeholder="••••••••" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:5px;color:#fff;font-size:13px;outline:none;font-family:inherit" onkeydown="if(event.key==='Enter')girisYap()">
       </div>
-      <button id="giris-btn" onclick="girisYap()" style="width:100%;padding:12px;background:#C9A84C;color:#0B1629;border:none;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;font-family:inherit">Giriş Yap</button>
+      <button id="giris-btn" onclick="girisYap()" style="width:100%;padding:12px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;font-family:inherit">Giriş Yap</button>
       <div style="text-align:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,0.4)">
         Hesabınız yok mu? <a href="index.html" style="color:#C9A84C;font-weight:500">Ana sayfaya git</a>
       </div>
@@ -246,25 +298,25 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
   </div>
   <nav class="nav">
     <div class="navsec" id="ns1">Ana Menü</div>
-    <a class="navitem active" onclick="sp('anasayfa',this)"><i class="ti ti-layout-dashboard"></i><span class="nav-label">🏠 Anasayfa</span></a>
-    <a class="navitem" onclick="sp('muvekkiller',this)"><i class="ti ti-users"></i><span class="nav-label">👤 Müvekkiller</span><span class="nbadge" id="nb-mv">0</span></a>
-    <a class="navitem" onclick="sp('davalar',this)"><i class="ti ti-briefcase"></i><span class="nav-label">⚖️ Davalar</span><span class="nbadge" id="nb-dv">0</span></a>
+    <a class="navitem active" onclick="sp('anasayfa',this)"><i class="ti ti-layout-dashboard"></i><span class="nav-label">Anasayfa</span></a>
+    <a class="navitem" onclick="sp('muvekkiller',this)"><i class="ti ti-users"></i><span class="nav-label">Müvekkiller</span><span class="nbadge" id="nb-mv">0</span></a>
+    <a class="navitem" onclick="sp('davalar',this)"><i class="ti ti-briefcase"></i><span class="nav-label">Davalar</span><span class="nbadge" id="nb-dv">0</span></a>
     <div class="navsec" id="ns2">Takip</div>
-    <a class="navitem" onclick="sp('takvim',this)"><i class="ti ti-calendar"></i><span class="nav-label">📅 Takvim</span></a>
-    <a class="navitem" onclick="sp('gorevler',this)"><i class="ti ti-checkbox"></i><span class="nav-label">✅ Görevler</span><span class="nbadge" id="nb-gv">0</span></a>
-    <a class="navitem" onclick="sp('belgeler',this)"><i class="ti ti-folders"></i><span class="nav-label">📁 Belgeler</span></a>
+    <a class="navitem" onclick="sp('takvim',this)"><i class="ti ti-calendar"></i><span class="nav-label">Takvim</span></a>
+    <a class="navitem" onclick="sp('gorevler',this)"><i class="ti ti-checkbox"></i><span class="nav-label">Görevler</span><span class="nbadge" id="nb-gv">0</span></a>
+    <a class="navitem" onclick="sp('belgeler',this)"><i class="ti ti-folders"></i><span class="nav-label">Belgeler</span></a>
     <div class="navsec" id="ns3">Mali & İletişim</div>
-    <a class="navitem" onclick="sp('finans',this)"><i class="ti ti-coin"></i><span class="nav-label">💰 Finans</span></a>
-    <a class="navitem" onclick="sp('iletisim',this)"><i class="ti ti-message-2"></i><span class="nav-label">💬 İletişim</span></a>
+    <a class="navitem" onclick="sp('finans',this)"><i class="ti ti-coin"></i><span class="nav-label">Finans</span></a>
+    <a class="navitem" onclick="sp('iletisim',this)"><i class="ti ti-message-2"></i><span class="nav-label">İletişim</span></a>
     <div class="navsec" id="ns4">Yapay Zekâ</div>
     <a class="navitem" onclick="sp('yapay-zeka',this)"><i class="ti ti-sparkles"></i><span class="nav-label">YZ Asistan</span></a>
-    <a class="navitem" onclick="sp('ayarlar',this)"><i class="ti ti-settings"></i><span class="nav-label">⚙️ Ayarlar</span></a>
-    <a class="navitem" onclick="sp('abonelik',this)"><i class="ti ti-credit-card"></i><span class="nav-label">💳 Abonelik</span></a>
-    <a class="navitem" onclick="sp('kullanici-yonetimi',this)"><i class="ti ti-user-plus"></i><span class="nav-label">👥 Kullanıcılar</span></a>
+    <a class="navitem" onclick="sp('ayarlar',this)"><i class="ti ti-settings"></i><span class="nav-label">Ayarlar</span></a>
+    <a class="navitem" onclick="sp('abonelik',this)"><i class="ti ti-credit-card"></i><span class="nav-label">Abonelik</span></a>
+    <a class="navitem" onclick="sp('kullanici-yonetimi',this)"><i class="ti ti-user-plus"></i><span class="nav-label">Kullanıcılar</span></a>
     <div class="navsec" id="ns5">UYAP</div>
-    <a class="navitem" href="https://avukat.uyap.gov.tr" target="_blank"><i class="ti ti-scale"></i><span class="nav-label">🔗 Avukat UYAP ↗</span></a>
-    <a class="navitem" href="https://vatandas.uyap.gov.tr" target="_blank"><i class="ti ti-user-check"></i><span class="nav-label">🔗 Vatandaş UYAP ↗</span></a>
-    <a class="navitem" href="https://ebilisim.uyap.gov.tr" target="_blank"><i class="ti ti-file-certificate"></i><span class="nav-label">📨 E-Tebligat ↗</span></a>
+    <a class="navitem" href="https://avukat.uyap.gov.tr" target="_blank"><i class="ti ti-scale"></i><span class="nav-label">Avukat UYAP</span></a>
+    <a class="navitem" href="https://vatandas.uyap.gov.tr" target="_blank"><i class="ti ti-user-check"></i><span class="nav-label">Vatandaş UYAP</span></a>
+    <a class="navitem" href="https://ebilisim.uyap.gov.tr" target="_blank"><i class="ti ti-file-certificate"></i><span class="nav-label">E-Tebligat</span></a>
   </nav>
   <div class="sidebar-bottom">
     <button class="collapse-btn" onclick="toggleSidebar()"><i class="ti ti-layout-sidebar-left-collapse" id="col-icon"></i><span id="col-label">Daralt</span></button>
@@ -275,8 +327,9 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 <div class="main">
   <div class="topbar">
     <button class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="ti ti-menu-2"></i></button>
-    <div class="page-title" id="page-title">🏠 Anasayfa</div>
-    <div style="display:flex;gap:8px">
+    <div class="page-title" id="page-title">Anasayfa</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span id="senkron-rozet" style="font-size:11.5px;color:#9CA3AF;display:flex;align-items:center;gap:5px;white-space:nowrap" title="Bulut senkronizasyon durumu"><i class="ti ti-cloud"></i></span>
       <button class="tbtn" onclick="showModal('muvekkil')"><i class="ti ti-user-plus"></i>Müvekkil Ekle</button>
       <button class="tbtn primary" onclick="showModal('dava')"><i class="ti ti-plus"></i>Yeni Dava</button>
     </div>
@@ -288,17 +341,17 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 
     <!-- DASHBOARD -->
     <div class="panel active" id="panel-anasayfa" >
-      <div id="kurulum-karti" style="display:none;align-items:center;gap:14px;background:linear-gradient(135deg,#0B1629,#1A2B47);border-radius:14px;padding:18px 20px;margin-bottom:20px">
-        <div style="width:44px;height:44px;border-radius:12px;background:rgba(201,168,76,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">⚙️</div>
+      <div id="kurulum-karti" style="display:none;align-items:center;gap:14px;background:#0B1629;border-radius:6px;padding:18px 20px;margin-bottom:20px">
+        <div style="width:44px;height:44px;border-radius:6px;background:rgba(201,168,76,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="ti ti-settings"></i></div>
         <div style="flex:1">
           <div style="font-size:14px;font-weight:600;color:#fff">Büro bilgilerinizi tamamlayın</div>
           <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px">Büro adı ve avukat adınızı girin — 30 saniye sürer.</div>
         </div>
-        <button onclick="kurulumaGit()" style="padding:9px 18px;background:#C9A84C;color:#0B1629;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">Şimdi Tamamla →</button>
+        <button onclick="kurulumaGit()" style="padding:9px 18px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">Şimdi Tamamla →</button>
       </div>
       <!-- YAKLAŞAN DURUŞMALAR KARTI -->
       <div class="card" id="yaklasan-kart" style="display:none;border:1.5px solid #FECACA;background:#FEF2F2;margin-bottom:16px">
-        <div class="card-head"><div class="card-title" style="color:#B91C1C">⚠ Yaklaşan Duruşmalar (7 gün içinde)</div></div>
+        <div class="card-head"><div class="card-title" style="color:#B91C1C">Yaklaşan Duruşmalar (7 gün içinde)</div></div>
         <div id="yaklasan-liste"></div>
       </div>
       <div class="metrics">
@@ -326,7 +379,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
     <!-- MÜVEKKİLLER -->
     <div class="panel" id="panel-muvekkiller">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h1 style="font-size:20px;font-weight:600">👤 Müvekkiller</h1>
+        <h1 style="font-size:20px;font-weight:600">Müvekkiller</h1>
         <button class="tbtn primary" onclick="showModal('muvekkil')"><i class="ti ti-plus"></i>Yeni Müvekkil</button>
       </div>
       <div class="search-bar"><i class="ti ti-search" style="color:var(--hint)"></i><input type="text" placeholder="Ad, telefon veya TC ile ara..." oninput="renderMv(this.value)"></div>
@@ -336,7 +389,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
     <!-- DAVALAR -->
     <div class="panel" id="panel-davalar">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h1 style="font-size:20px;font-weight:600">⚖️ Davalar</h1>
+        <h1 style="font-size:20px;font-weight:600">Davalar</h1>
         <button class="tbtn primary" onclick="showModal('dava')"><i class="ti ti-plus"></i>Yeni Dava</button>
       </div>
       <div class="filters" id="dava-filters"></div>
@@ -346,7 +399,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
     <!-- TAKVİM -->
     <div class="panel" id="panel-takvim">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h1 style="font-size:20px;font-weight:600">📅 Takvim</h1>
+        <h1 style="font-size:20px;font-weight:600">Takvim</h1>
         <button class="tbtn primary" onclick="showModal('etkinlik')"><i class="ti ti-plus"></i>Etkinlik Ekle</button>
       </div>
       <div class="grid2">
@@ -374,7 +427,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
     <!-- GÖREVLER -->
     <div class="panel" id="panel-gorevler">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h1 style="font-size:20px;font-weight:600">✅ Görevler</h1>
+        <h1 style="font-size:20px;font-weight:600">Görevler</h1>
         <button class="tbtn primary" onclick="showModal('gorev')"><i class="ti ti-plus"></i>Yeni Görev</button>
       </div>
       <div class="filters">
@@ -388,7 +441,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
     <!-- BELGELER -->
     <div class="panel" id="panel-belgeler">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h1 style="font-size:20px;font-weight:600">📁 Belgeler</h1>
+        <h1 style="font-size:20px;font-weight:600">Belgeler</h1>
         <button class="tbtn primary" onclick="showModal('belge')"><i class="ti ti-upload"></i>Belge Ekle</button>
       </div>
       <div id="list-bl"></div>
@@ -397,7 +450,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
     <!-- FİNANS -->
     <div class="panel" id="panel-finans">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h1 style="font-size:20px;font-weight:600">💰 Finans</h1>
+        <h1 style="font-size:20px;font-weight:600">Finans</h1>
         <button class="tbtn primary" onclick="showModal('finans')"><i class="ti ti-plus"></i>Yeni İşlem</button>
       </div>
       <div class="fin-grid">
@@ -440,7 +493,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 
     <!-- AYARLAR -->
     <div class="panel" id="panel-ayarlar">
-      <h1 style="font-size:20px;font-weight:600;margin-bottom:16px">⚙️ Ayarlar</h1>
+      <h1 style="font-size:20px;font-weight:600;margin-bottom:16px">Ayarlar</h1>
       <div class="card" style="max-width:500px">
         <div class="card-title" style="margin-bottom:14px">Büro Bilgileri</div>
         <div class="field"><label>Büro Adı</label><input type="text" id="set-buro" placeholder="Hukuk Bürosu" oninput="saveSetting('buroAdi',this.value)"></div>
@@ -450,31 +503,31 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
         <div class="field" style="margin-top:8px;padding-top:14px;border-top:0.5px solid var(--border)">
           <label>WhatsApp Numarası <span style="color:var(--muted);font-weight:400">(müvekkil kartlarında görünür)</span></label>
           <div style="display:flex;gap:8px;align-items:center">
-            <span style="padding:9px 12px;background:var(--bg);border:0.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--muted);white-space:nowrap">+90</span>
+            <span style="padding:9px 12px;background:var(--bg);border:0.5px solid var(--border);border-radius:5px;font-size:13px;color:var(--muted);white-space:nowrap">+90</span>
             <input type="tel" id="set-wa" placeholder="532 000 0000" maxlength="13" oninput="saveSetting('whatsapp',this.value)">
           </div>
           <p style="font-size:11px;color:var(--muted);margin-top:5px">Örnek: 5321234567 (başında 0 olmadan)</p>
         </div>
         <div id="wa-test-wrap" style="display:none;margin-top:8px">
-          <a id="wa-test-link" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#25D366;color:#fff;border-radius:8px;font-size:13px;font-weight:500;text-decoration:none">
+          <a id="wa-test-link" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#25D366;color:#fff;border-radius:5px;font-size:13px;font-weight:500;text-decoration:none">
             <i class="ti ti-brand-whatsapp"></i> WhatsApp'ı Test Et
           </a>
         </div>
-        <button id="kurulum-kaydet-btn" onclick="kurulumKaydet()" style="width:100%;margin-top:16px;padding:11px;background:#0B1629;color:#C9A84C;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Bilgileri Kaydet</button>
+        <button id="kurulum-kaydet-btn" onclick="kurulumKaydet()" style="width:100%;margin-top:16px;padding:11px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Bilgileri Kaydet</button>
         <p style="font-size:12px;color:var(--muted);margin-top:10px">Büro adı ve avukat adı hesabınıza kaydedilir. Diğer alanlar otomatik saklanır.</p>
       </div>
-    <div style="text-align:center;padding:28px 0 8px;font-size:12px;color:var(--hint);border-top:0.5px solid var(--border);margin-top:28px">⚖️ <strong style="color:var(--muted)">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:var(--gold);text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır &nbsp;·&nbsp; v3.0</div>
-      <div style="text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:24px">⚖️ <strong style="color:#6B7280">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#C9A84C;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır</div>
+    <div style="text-align:center;padding:28px 0 8px;font-size:12px;color:var(--hint);border-top:0.5px solid var(--border);margin-top:28px"><strong style="color:var(--muted)">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:var(--gold);text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır &nbsp;·&nbsp; v3.0</div>
+      <div style="text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:24px"><strong style="color:#6B7280">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#C9A84C;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır</div>
     </div>
 
 
     <!-- ABONELİK PANELİ -->
     <div class="panel" id="panel-abonelik">
-      <h1 style="font-size:20px;font-weight:600;margin-bottom:20px">💳 Abonelik</h1>
+      <h1 style="font-size:20px;font-weight:600;margin-bottom:20px">Abonelik</h1>
 
       <!-- Mevcut abonelik durumu -->
-      <div id="abone-durum-kart" style="background:#fff;border:0.5px solid var(--border);border-radius:12px;padding:18px;margin-bottom:20px;display:flex;align-items:center;gap:14px">
-        <div id="abone-ikon" style="width:44px;height:44px;border-radius:12px;background:#FFFBEB;color:#B45309;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">⏳</div>
+      <div id="abone-durum-kart" style="background:#fff;border:0.5px solid var(--border);border-radius:6px;padding:18px;margin-bottom:20px;display:flex;align-items:center;gap:14px">
+        <div id="abone-ikon" style="width:44px;height:44px;border-radius:6px;background:#FFFBEB;color:#B45309;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="ti ti-clock"></i></div>
         <div style="flex:1">
           <div id="abone-baslik" style="font-size:14px;font-weight:600;color:var(--text)">Aktif abonelik yok</div>
           <div id="abone-alt" style="font-size:12px;color:var(--muted);margin-top:2px">Aşağıdan bir paket seçerek başlayın.</div>
@@ -494,57 +547,57 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
 
         <!-- Başlangıç -->
-        <div style="background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:24px">
+        <div style="background:#fff;border:1.5px solid var(--border);border-radius:5px;padding:24px">
           <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Başlangıç</div>
-          <div id="ab-f-baslangic" style="font-size:32px;font-weight:700;color:var(--text)">₺1.500 <span style="font-size:13px;font-weight:400;color:var(--muted)">/ay</span></div>
+          <div id="ab-f-baslangic" style="font-size:32px;font-weight:600;color:var(--text)">₺1.500 <span style="font-size:13px;font-weight:400;color:var(--muted)">/ay</span></div>
           <div id="ab-p-baslangic" style="font-size:11px;color:var(--hint);margin-bottom:14px">Aylık ödeme</div>
-          <div style="background:#F9FAFB;border-radius:8px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:6px"><span style="color:#C9A84C">👥</span> En fazla <strong>3 kullanıcı</strong></div>
+          <div style="background:#F9FAFB;border-radius:5px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:6px"><i class="ti ti-users" style="color:#C9A84C"></i> En fazla <strong>3 kullanıcı</strong></div>
           <ul style="list-style:none;margin-bottom:20px;font-size:12px;color:var(--muted)">
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><span style="color:#C9A84C">✓</span>Tüm modüller</li>
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><span style="color:#C9A84C">✓</span>Sınırsız müvekkil & dava</li>
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><span style="color:#C9A84C">✓</span>WhatsApp bildirimleri</li>
-            <li style="padding:5px 0;display:flex;align-items:center;gap:6px"><span style="color:#C9A84C">✓</span>E-posta desteği</li>
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Tüm modüller</li>
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Sınırsız müvekkil & dava</li>
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>WhatsApp bildirimleri</li>
+            <li style="padding:5px 0;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>E-posta desteği</li>
           </ul>
-          <button onclick="abPaketSec('Başlangıç',3)" style="width:100%;padding:11px;background:#0B1629;color:#C9A84C;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Seç & Satın Al</button>
+          <button onclick="abPaketSec('Başlangıç',3)" style="width:100%;padding:11px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Seç & Satın Al</button>
         </div>
 
         <!-- Büyüme -->
-        <div style="background:#fff;border:1.5px solid #C9A84C;border-radius:16px;padding:24px;position:relative;box-shadow:0 0 0 1px #C9A84C">
-          <div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#C9A84C;color:#0B1629;font-size:11px;font-weight:700;padding:3px 14px;border-radius:20px;white-space:nowrap">⭐ En Popüler</div>
+        <div style="background:#fff;border:1.5px solid #C9A84C;border-radius:5px;padding:24px;position:relative;box-shadow:0 0 0 1px #C9A84C">
+          <div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#C9A84C;color:#0B1629;font-size:11px;font-weight:600;padding:3px 14px;border-radius:5px;white-space:nowrap">⭐ En Popüler</div>
           <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Büyüme</div>
-          <div id="ab-f-buyume" style="font-size:32px;font-weight:700;color:var(--text)">₺3.500 <span style="font-size:13px;font-weight:400;color:var(--muted)">/ay</span></div>
+          <div id="ab-f-buyume" style="font-size:32px;font-weight:600;color:var(--text)">₺3.500 <span style="font-size:13px;font-weight:400;color:var(--muted)">/ay</span></div>
           <div id="ab-p-buyume" style="font-size:11px;color:var(--hint);margin-bottom:14px">Aylık ödeme</div>
-          <div style="background:#F9FAFB;border-radius:8px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:6px"><span style="color:#C9A84C">👥</span> En fazla <strong>10 kullanıcı</strong></div>
+          <div style="background:#F9FAFB;border-radius:5px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:6px"><i class="ti ti-users" style="color:#C9A84C"></i> En fazla <strong>10 kullanıcı</strong></div>
           <ul style="list-style:none;margin-bottom:20px;font-size:12px;color:var(--muted)">
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><span style="color:#C9A84C">✓</span>Başlangıç + her şey</li>
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><span style="color:#C9A84C">✓</span>YZ Asistan</li>
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><span style="color:#C9A84C">✓</span>Personel yönetimi</li>
-            <li style="padding:5px 0;display:flex;align-items:center;gap:6px"><span style="color:#C9A84C">✓</span>Öncelikli destek</li>
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Başlangıç + her şey</li>
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>YZ Asistan</li>
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Personel yönetimi</li>
+            <li style="padding:5px 0;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Öncelikli destek</li>
           </ul>
-          <button onclick="abPaketSec('Büyüme',10)" style="width:100%;padding:11px;background:#C9A84C;color:#0B1629;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Seç & Satın Al</button>
+          <button onclick="abPaketSec('Büyüme',10)" style="width:100%;padding:11px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Seç & Satın Al</button>
         </div>
 
         <!-- Kurumsal -->
-        <div style="background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:24px">
+        <div style="background:#fff;border:1.5px solid var(--border);border-radius:5px;padding:24px">
           <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Kurumsal</div>
-          <div style="font-size:32px;font-weight:700;color:var(--text)">Özel</div>
+          <div style="font-size:32px;font-weight:600;color:var(--text)">Özel</div>
           <div style="font-size:11px;color:var(--hint);margin-bottom:14px">Size özel teklif</div>
-          <div style="background:#F9FAFB;border-radius:8px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:6px"><span style="color:#C9A84C">👥</span> <strong>Sınırsız</strong> kullanıcı</div>
+          <div style="background:#F9FAFB;border-radius:5px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:6px"><i class="ti ti-users" style="color:#C9A84C"></i> <strong>Sınırsız</strong> kullanıcı</div>
           <ul style="list-style:none;margin-bottom:20px;font-size:12px;color:var(--muted)">
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><span style="color:#C9A84C">✓</span>Büyüme + her şey</li>
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><span style="color:#C9A84C">✓</span>Özel entegrasyonlar</li>
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><span style="color:#C9A84C">✓</span>API erişimi</li>
-            <li style="padding:5px 0;display:flex;align-items:center;gap:6px"><span style="color:#C9A84C">✓</span>7/24 destek</li>
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Büyüme + her şey</li>
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Özel entegrasyonlar</li>
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>API erişimi</li>
+            <li style="padding:5px 0;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>7/24 destek</li>
           </ul>
-          <a href="https://wa.me/905304621769?text=Kurumsal%20paket%20hakkında%20bilgi%20almak%20istiyorum" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:11px;background:#0B1629;color:#C9A84C;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none"><i class="ti ti-brand-whatsapp"></i>WhatsApp İletişim</a>
+          <a href="https://wa.me/905304621769?text=Kurumsal%20paket%20hakkında%20bilgi%20almak%20istiyorum" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:11px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none"><i class="ti ti-brand-whatsapp"></i>WhatsApp İletişim</a>
         </div>
 
       </div>
 
       <!-- Banka bilgileri -->
-      <div style="background:#fff;border:0.5px solid var(--border);border-radius:12px;padding:18px">
+      <div style="background:#fff;border:0.5px solid var(--border);border-radius:6px;padding:18px">
         <div style="font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="ti ti-building-bank" style="color:var(--muted)"></i> Havale / EFT Bilgileri</div>
-        <div style="background:#F9FAFB;border-radius:8px;padding:14px">
+        <div style="background:#F9FAFB;border-radius:5px;padding:14px">
           <div style="font-size:13px;font-weight:600;margin-bottom:8px">Enpara</div>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
             <span style="font-size:11px;color:var(--hint)">Hesap Sahibi</span>
@@ -558,30 +611,30 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
             </div>
           </div>
         </div>
-        <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:10px;margin-top:10px;font-size:12px;color:#92400E">
-          ⚠️ Havale açıklamasına <strong>e-posta adresinizi</strong> yazınız. Ödeme onaylandıktan sonra 1 iş günü içinde aktif edilir.
+        <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:5px;padding:10px;margin-top:10px;font-size:12px;color:#92400E">
+          Havale açıklamasına <strong>e-posta adresinizi</strong> yazınız. Ödeme onaylandıktan sonra 1 iş günü içinde aktif edilir.
         </div>
       </div>
     </div>
 
     <!-- KULLANICI YÖNETİMİ PANELİ -->
     <div class="panel" id="panel-kullanici-yonetimi">
-      <h1 style="font-size:20px;font-weight:600;margin-bottom:6px">👥 Kullanıcı Yönetimi</h1>
+      <h1 style="font-size:20px;font-weight:600;margin-bottom:6px">Kullanıcı Yönetimi</h1>
       <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Büronuzdaki kullanıcıları yönetin ve yeni üyeler davet edin.</p>
 
-      <div id="ku-abone-uyari" style="background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:14px;margin-bottom:16px;display:none">
-        <div style="font-size:13px;color:#B91C1C;font-weight:500">⚠️ Aktif abonelik gerekli</div>
+      <div id="ku-abone-uyari" style="background:#FEF2F2;border:1px solid #FECACA;border-radius:5px;padding:14px;margin-bottom:16px;display:none">
+        <div style="font-size:13px;color:#B91C1C;font-weight:500">Aktif abonelik gerekli</div>
         <div style="font-size:12px;color:#6B7280;margin-top:4px">Kullanıcı eklemek için önce abonelik sayfasından bir paket seçmelisiniz.</div>
-        <button onclick="sp('abonelik',document.querySelector('[onclick*=abonelik]'))" style="margin-top:10px;padding:7px 14px;background:#0B1629;color:#C9A84C;border:none;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer">Abonelik Sayfasına Git →</button>
+        <button onclick="sp('abonelik',document.querySelector('[onclick*=abonelik]'))" style="margin-top:10px;padding:7px 14px;background:#0B1629;color:#C9A84C;border:none;border-radius:4px;font-size:12px;font-weight:500;cursor:pointer">Abonelik Sayfasına Git →</button>
       </div>
 
       <div id="ku-aktif-wrap">
-        <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border:0.5px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border:0.5px solid var(--border);border-radius:6px;padding:14px 18px;margin-bottom:16px">
           <div>
             <div style="font-size:13px;font-weight:600" id="ku-paket-adi">—</div>
             <div style="font-size:11px;color:var(--muted);margin-top:2px" id="ku-kullanici-sayisi">— / — kullanıcı</div>
           </div>
-          <button id="ku-davet-btn" onclick="kuDavetAc()" style="display:flex;align-items:center;gap:6px;padding:9px 16px;background:#0B1629;color:#C9A84C;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">
+          <button id="ku-davet-btn" onclick="kuDavetAc()" style="display:flex;align-items:center;gap:6px;padding:9px 16px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">
             <i class="ti ti-user-plus"></i> Kullanıcı Davet Et
           </button>
         </div>
@@ -595,18 +648,18 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
     <!-- DAVET MODAL -->
     <div class="overlay" id="m-davet">
       <div class="modal">
-        <div class="modal-head"><h3>👤 Kullanıcı Davet Et</h3><button class="modal-close" onclick="closeModal('davet')">❌</button></div>
+        <div class="modal-head"><h3>Kullanıcı Davet Et</h3><button class="modal-close" onclick="closeModal('davet')"><i class="ti ti-x"></i></button></div>
         <div class="modal-body">
           <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Davet etmek istediğiniz kişinin e-posta adresini girin. Sisteme katılmaları için bir link oluşturulacaktır.</p>
           <div class="field"><label>E-posta Adresi *</label><input type="email" id="ku-davet-email" placeholder="avukat@buro.com"></div>
-          <div class="field"><label>Rol</label><select id="ku-davet-rol" style="width:100%;padding:9px 12px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;outline:none;font-family:inherit;background:#fff;color:var(--text)">
+          <div class="field"><label>Rol</label><select id="ku-davet-rol" style="width:100%;padding:9px 12px;border:0.5px solid var(--border);border-radius:5px;font-size:13px;outline:none;font-family:inherit;background:#fff;color:var(--text)">
             <option value="avukat">Avukat</option>
             <option value="stajyer">Stajyer</option>
             <option value="sekreter">Sekreter</option>
             <option value="muhasebe">Muhasebe</option>
           </select></div>
-          <div id="ku-link-wrap" style="display:none;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:12px;margin-bottom:14px">
-            <div style="font-size:12px;color:#15803D;font-weight:500;margin-bottom:6px">✓ Davet linki oluşturuldu!</div>
+          <div id="ku-link-wrap" style="display:none;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:5px;padding:12px;margin-bottom:14px">
+            <div style="font-size:12px;color:#15803D;font-weight:500;margin-bottom:6px">Davet linki oluşturuldu</div>
             <div id="ku-link-text" style="font-size:11px;color:#374151;word-break:break-all;background:#fff;padding:8px;border-radius:6px;margin-bottom:6px"></div>
             <div style="display:flex;gap:8px">
               <button onclick="navigator.clipboard.writeText(document.getElementById('ku-link-text').textContent);alert('Kopyalandı!')" style="padding:5px 12px;background:#15803D;color:#fff;border:none;border-radius:5px;font-size:12px;cursor:pointer">Linki Kopyala</button>
@@ -629,7 +682,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 
 <!-- MODALS -->
 <div class="overlay" id="m-muvekkil"><div class="modal">
-  <div class="modal-head"><h3>Yeni Müvekkil</h3><button class="modal-close" onclick="closeModal('muvekkil')">❌</button></div>
+  <div class="modal-head"><h3>Yeni Müvekkil</h3><button class="modal-close" onclick="closeModal('muvekkil')"><i class="ti ti-x"></i></button></div>
   <div class="modal-body">
     <div class="field2"><div class="field"><label>Ad *</label><input type="text" id="mv-ad" placeholder="Ad"></div><div class="field"><label>Soyad *</label><input type="text" id="mv-soyad" placeholder="Soyad"></div></div>
     <div class="field2"><div class="field"><label>TC No</label><input type="text" id="mv-tc" placeholder="12345678901" maxlength="11"></div><div class="field"><label>Telefon</label><input type="text" id="mv-tel" placeholder="0500 000 0000"></div></div>
@@ -641,7 +694,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 </div></div>
 
 <div class="overlay" id="m-dava"><div class="modal">
-  <div class="modal-head"><h3>Yeni Dava</h3><button class="modal-close" onclick="closeModal('dava')">❌</button></div>
+  <div class="modal-head"><h3>Yeni Dava</h3><button class="modal-close" onclick="closeModal('dava')"><i class="ti ti-x"></i></button></div>
   <div class="modal-body">
     <div class="field2"><div class="field"><label>Dosya No *</label><input type="text" id="dv-no" placeholder="2026/0001"></div><div class="field"><label>Müvekkil</label><select id="dv-mv"></select></div></div>
     <div class="field2"><div class="field"><label>Mahkeme</label><input type="text" id="dv-mhk" placeholder="Ankara 3. Asliye Hukuk"></div><div class="field"><label>Dava Türü</label><input type="text" id="dv-tur" placeholder="İcra Takibi"></div></div>
@@ -651,14 +704,14 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
       <option value="durusma_bekliyor">Duruşma Bekleniyor</option><option value="karar_asamasi">Karar Aşaması</option>
       <option value="istinaf">İstinaf</option><option value="temyiz">Temyiz</option><option value="sonuclandi">Sonuçlandı</option>
     </select></div>
-    <div class="field2"><div class="field"><label>📅 Sonraki Duruşma Tarihi</label><input type="date" id="dv-durusma-tarihi"></div><div class="field"><label>Duruşma Saati</label><input type="time" id="dv-durusma-saati" placeholder="09:00"></div></div>
+    <div class="field2"><div class="field"><label>Sonraki Duruşma Tarihi</label><input type="date" id="dv-durusma-tarihi"></div><div class="field"><label>Duruşma Saati</label><input type="time" id="dv-durusma-saati" placeholder="09:00"></div></div>
     <div class="field"><label>Notlar</label><textarea id="dv-not" rows="3" placeholder="Dava notları..."></textarea></div>
     <div class="modal-footer"><button class="tbtn" onclick="closeModal('dava')">İptal</button><button class="tbtn primary" onclick="saveDava()">Dava Ekle</button></div>
   </div>
 </div></div>
 
 <div class="overlay" id="m-gorev"><div class="modal">
-  <div class="modal-head"><h3>Yeni Görev</h3><button class="modal-close" onclick="closeModal('gorev')">❌</button></div>
+  <div class="modal-head"><h3>Yeni Görev</h3><button class="modal-close" onclick="closeModal('gorev')"><i class="ti ti-x"></i></button></div>
   <div class="modal-body">
     <div class="field"><label>Görev *</label><input type="text" id="gv-baslik" placeholder="Dilekçe hazırla..."></div>
     <div class="field2"><div class="field"><label>Son Tarih</label><input type="date" id="gv-tarih"></div><div class="field"><label>Öncelik</label><select id="gv-oncelik"><option value="normal">Normal</option><option value="yuksek">Yüksek</option><option value="kritik">Kritik</option></select></div></div>
@@ -668,7 +721,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 </div></div>
 
 <div class="overlay" id="m-etkinlik"><div class="modal">
-  <div class="modal-head"><h3>Etkinlik / Duruşma Ekle</h3><button class="modal-close" onclick="closeModal('etkinlik')">❌</button></div>
+  <div class="modal-head"><h3>Etkinlik / Duruşma Ekle</h3><button class="modal-close" onclick="closeModal('etkinlik')"><i class="ti ti-x"></i></button></div>
   <div class="modal-body">
     <div class="field"><label>Başlık *</label><input type="text" id="et-baslik" placeholder="Duruşma başlığı..."></div>
     <div class="field2"><div class="field"><label>Tarih & Saat *</label><input type="datetime-local" id="et-tarih"></div><div class="field"><label>Tür</label><select id="et-tur"><option value="durusma">Duruşma</option><option value="toplanti">Toplantı</option><option value="son_tarih">Son Tarih</option><option value="diger">Diğer</option></select></div></div>
@@ -679,7 +732,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 </div></div>
 
 <div class="overlay" id="m-finans"><div class="modal">
-  <div class="modal-head"><h3>Mali İşlem</h3><button class="modal-close" onclick="closeModal('finans')">❌</button></div>
+  <div class="modal-head"><h3>Mali İşlem</h3><button class="modal-close" onclick="closeModal('finans')"><i class="ti ti-x"></i></button></div>
   <div class="modal-body">
     <div class="field2"><div class="field"><label>Tür</label><select id="fn-tur"><option value="tahsilat">Tahsilat</option><option value="masraf">Masraf</option><option value="harc">Harç</option><option value="fatura">Fatura</option></select></div><div class="field"><label>Tutar (₺) *</label><input type="number" id="fn-tutar" placeholder="0"></div></div>
     <div class="field2"><div class="field"><label>Müvekkil</label><select id="fn-mv"></select></div><div class="field"><label>Tarih</label><input type="date" id="fn-tarih"></div></div>
@@ -689,7 +742,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 </div></div>
 
 <div class="overlay" id="m-belge"><div class="modal">
-  <div class="modal-head"><h3>Belge Ekle</h3><button class="modal-close" onclick="closeModal('belge')">❌</button></div>
+  <div class="modal-head"><h3>Belge Ekle</h3><button class="modal-close" onclick="closeModal('belge')"><i class="ti ti-x"></i></button></div>
   <div class="modal-body">
     <div class="field"><label>Belge Adı *</label><input type="text" id="bl-ad" placeholder="Dilekçe_v1.pdf"></div>
     <div class="field2"><div class="field"><label>Kategori</label><select id="bl-kat"><option value="dilekce">Dilekçe</option><option value="karar">Mahkeme Kararı</option><option value="bilirkisi">Bilirkişi Raporu</option><option value="vekalet">Vekalet</option><option value="sozlesme">Sözleşme</option><option value="fatura">Fatura</option><option value="diger">Diğer</option></select></div><div class="field"><label>İlgili Dava</label><select id="bl-dava"></select></div></div>
@@ -698,7 +751,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 </div></div>
 
 <div class="overlay" id="m-iletisim"><div class="modal">
-  <div class="modal-head"><h3>İletişim Kaydı</h3><button class="modal-close" onclick="closeModal('iletisim')">❌</button></div>
+  <div class="modal-head"><h3>İletişim Kaydı</h3><button class="modal-close" onclick="closeModal('iletisim')"><i class="ti ti-x"></i></button></div>
   <div class="modal-body">
     <div class="field2"><div class="field"><label>Müvekkil</label><select id="il-mv"></select></div><div class="field"><label>Kanal</label><select id="il-kanal"><option value="whatsapp">WhatsApp</option><option value="email">E-posta</option><option value="sms">SMS</option><option value="telefon">Telefon</option></select></div></div>
     <div class="field"><label>Mesaj *</label><textarea id="il-mesaj" rows="4" placeholder="Görüşme içeriği..."></textarea></div>
@@ -714,6 +767,9 @@ const STORE = {
   getObj: k => JSON.parse(localStorage.getItem('ln_'+k)||'{}'),
   setObj: (k,v) => localStorage.setItem('ln_'+k, JSON.stringify(v))
 }
+const TUR = { mv:'muvekkil', dv:'dava', gv:'gorev', et:'etkinlik', fn:'finans', bl:'belge', il:'iletisim' }
+
+// Yerel onbellek anlik okunur, Supabase arka planda senkronlanir
 const DB = {
   get muvekkiller(){ return STORE.get('mv') },
   get davalar(){ return STORE.get('dv') },
@@ -723,10 +779,98 @@ const DB = {
   get belgeler(){ return STORE.get('bl') },
   get iletisimler(){ return STORE.get('il') },
   get ayarlar(){ return STORE.getObj('set') },
-  saveMv(d){ STORE.set('mv',d) }, saveDv(d){ STORE.set('dv',d) },
-  saveGv(d){ STORE.set('gv',d) }, saveEt(d){ STORE.set('et',d) },
-  saveFn(d){ STORE.set('fn',d) }, saveBl(d){ STORE.set('bl',d) },
-  saveIl(d){ STORE.set('il',d) }, saveSet(d){ STORE.setObj('set',d) }
+  saveMv(d){ STORE.set('mv',d); senkronla('mv',d) },
+  saveDv(d){ STORE.set('dv',d); senkronla('dv',d) },
+  saveGv(d){ STORE.set('gv',d); senkronla('gv',d) },
+  saveEt(d){ STORE.set('et',d); senkronla('et',d) },
+  saveFn(d){ STORE.set('fn',d); senkronla('fn',d) },
+  saveBl(d){ STORE.set('bl',d); senkronla('bl',d) },
+  saveIl(d){ STORE.set('il',d); senkronla('il',d) },
+  saveSet(d){ STORE.setObj('set',d); ayarSenkronla(d) }
+}
+
+// ── SUPABASE SENKRONU ────────────────────────────────────────
+let senkronDurum = 'bekliyor'
+
+function senkronGoster(durum, mesaj){
+  senkronDurum = durum
+  const el = document.getElementById('senkron-rozet')
+  if(!el) return
+  const renk = { kaydedildi:'#15803D', kaydediliyor:'#B45309', hata:'#B91C1C' }[durum] || '#9CA3AF'
+  const ikon = { kaydedildi:'ti-cloud-check', kaydediliyor:'ti-cloud-upload', hata:'ti-cloud-off' }[durum] || 'ti-cloud'
+  el.style.color = renk
+  el.innerHTML = '<i class="ti '+ikon+'"></i> '+(mesaj||'')
+}
+
+async function senkronla(anahtar, liste){
+  if(!window.sb || !sbUser) return
+  const tur = TUR[anahtar]
+  senkronGoster('kaydediliyor','Kaydediliyor')
+  try{
+    const buro = await buroIdAl()
+    const satirlar = (liste||[]).map(function(x){
+      return { tur: tur, id: String(x.id), buro_id: buro, veri: x, updated_at: new Date().toISOString() }
+    })
+    if(satirlar.length){
+      const { error } = await window.sb.from('dosya_kayitlari').upsert(satirlar, { onConflict:'buro_id,tur,id' })
+      if(error) throw error
+    }
+    const kalanlar = (liste||[]).map(function(x){ return String(x.id) })
+    let sil = window.sb.from('dosya_kayitlari').delete().eq('buro_id', buro).eq('tur', tur)
+    if(kalanlar.length) sil = sil.not('id','in','('+kalanlar.map(function(i){return '"'+i+'"'}).join(',')+')')
+    await sil
+    senkronGoster('kaydedildi','Kaydedildi')
+  }catch(e){
+    console.error('Senkron hatasi:', e)
+    senkronGoster('hata','Kaydedilemedi')
+  }
+}
+
+async function ayarSenkronla(ayar){
+  if(!window.sb || !sbUser) return
+  try{
+    const buro = await buroIdAl()
+    await window.sb.from('buro_ayarlari').upsert(
+      { buro_id: buro, veri: ayar, updated_at: new Date().toISOString() }, { onConflict:'buro_id' })
+  }catch(e){ console.error('Ayar senkron hatasi:', e) }
+}
+
+let _buroId = null
+async function buroIdAl(){
+  if(_buroId) return _buroId
+  const { data } = await window.sb.from('buro_uyeleri').select('buro_id').eq('kullanici_id', sbUser.id).limit(1).maybeSingle()
+  _buroId = data ? data.buro_id : sbUser.id
+  return _buroId
+}
+
+// Girişte Supabase'deki veriyi onbellege cek
+async function verileriYukle(){
+  if(!window.sb || !sbUser) return
+  try{
+    const buro = await buroIdAl()
+    const { data, error } = await window.sb.from('dosya_kayitlari')
+      .select('tur,id,veri').eq('buro_id', buro)
+    if(error) throw error
+
+    const kova = { mv:[], dv:[], gv:[], et:[], fn:[], bl:[], il:[] }
+    const ters = {}
+    Object.keys(TUR).forEach(function(k){ ters[TUR[k]] = k })
+    ;(data||[]).forEach(function(r){
+      const k = ters[r.tur]
+      if(k && r.veri) kova[k].push(r.veri)
+    })
+    Object.keys(kova).forEach(function(k){
+      if(kova[k].length) STORE.set(k, kova[k])
+    })
+
+    const { data: ay } = await window.sb.from('buro_ayarlari').select('veri').eq('buro_id', buro).maybeSingle()
+    if(ay && ay.veri && Object.keys(ay.veri).length) STORE.setObj('set', ay.veri)
+
+    senkronGoster('kaydedildi','Güncel')
+  }catch(e){
+    console.error('Veri yukleme hatasi:', e)
+    senkronGoster('hata','Çevrimdışı')
+  }
 }
 
 const DURUM = { on_inceleme:'Ön İnceleme', bilirkisi:'Bilirkişi', durusma_bekliyor:'Duruşma Bekleniyor', karar_asamasi:'Karar Aşaması', istinaf:'İstinaf', temyiz:'Temyiz', sonuclandi:'Sonuçlandı' }
@@ -736,8 +880,8 @@ let gvFiltre = 'hepsi'
 let calDate = new Date(); let calSel = new Date()
 
 // ── PANEL GEÇİŞ ──────────────────────────────────────────────
-const TITLES = { anasayfa:'🏠 Anasayfa', muvekkiller:'Müvekkiller', davalar:'Davalar', takvim:'Takvim', gorevler:'Görevler', belgeler:'Belgeler', finans:'Finans', iletisim:'İletişim', 'yapay-zeka':'YZ Asistanı', ayarlar:'Ayarlar' }
-const FOOTER_HTML = '<div style="text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:28px">⚖️ <strong style=\"color:#6B7280\">Dosya360</strong> — Bir <a href=\"https://otukenmedya.com\" target=\"_blank\" style=\"color:#C9A84C;text-decoration:none;font-weight:500\">Ötüken Medya</a> yazılımıdır</div>';
+const TITLES = { anasayfa:' Anasayfa', muvekkiller:'Müvekkiller', davalar:'Davalar', takvim:'Takvim', gorevler:'Görevler', belgeler:'Belgeler', finans:'Finans', iletisim:'İletişim', 'yapay-zeka':'YZ Asistanı', ayarlar:'Ayarlar' }
+const FOOTER_HTML = '<div style="text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:28px"><strong style=\"color:#6B7280\">Dosya360</strong> — Bir <a href=\"https://otukenmedya.com\" target=\"_blank\" style=\"color:#C9A84C;text-decoration:none;font-weight:500\">Ötüken Medya</a> yazılımıdır</div>';
 
 function addFooter(panelId){
   const p = document.getElementById('panel-'+panelId)
@@ -746,7 +890,7 @@ function addFooter(panelId){
   if(existing) return
   const div = document.createElement('div')
   div.className = 'ln-footer'
-  div.innerHTML = '⚖️ <strong style="color:#6B7280">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#C9A84C;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır'
+  div.innerHTML = '<strong style="color:#6B7280">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#C9A84C;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır'
   div.style.cssText = 'text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:28px'
   p.appendChild(div)
 }
@@ -785,16 +929,8 @@ function toggleSidebar() {
 // ── MODAL ──────────────────────────────────────────────────────
 async function showModal(type) {
   // Supabase'den güncel veri çek
-  let mvs = DB.muvekkiller
-  let dvs = DB.davalar
-  if(window.sb && sbUser) {
-    try {
-      const { data: sbMv } = await window.sb.from('muvekkiller').select('*').eq('buro_id', sbUser.id).order('ad')
-      if(sbMv && sbMv.length > 0) mvs = sbMv
-      const { data: sbDv } = await window.sb.from('davalar').select('*').eq('buro_id', sbUser.id).order('created_at', {ascending:false})
-      if(sbDv && sbDv.length > 0) dvs = sbDv.map(d => ({...d, dosyaNo: d.dosya_no}))
-    } catch(e) {}
-  }
+  const mvs = DB.muvekkiller
+  const dvs = DB.davalar
   if(type==='dava'||type==='gorev'||type==='etkinlik'||type==='finans'||type==='belge'||type==='iletisim') {
     if(type==='dava') { const sel=document.getElementById('dv-mv'); sel.innerHTML='<option value="">Seçiniz</option>'+mvs.map(m=>`<option value="${m.id}">${m.ad} ${m.soyad}</option>`).join('') }
     if(type==='gorev') { const s=document.getElementById('gv-dava'); s.innerHTML='<option value="">Seçiniz</option>'+dvs.map(d=>`<option value="${d.id}">${d.dosyaNo||d.dosya_no}</option>`).join('') }
@@ -809,28 +945,17 @@ function closeModal(type) { document.getElementById('m-'+type).classList.remove(
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open') }))
 
 // ── KAYDET ────────────────────────────────────────────────────
-async function saveMuvekkil() {
+function saveMuvekkil() {
   const ad=val('mv-ad'), soyad=val('mv-soyad')
   if(!ad||!soyad) return alert('Ad ve soyad zorunludur!')
-  const kayit={ ad, soyad, tc:val('mv-tc'), tel:val('mv-tel'), email:val('mv-email'), il:val('mv-il'), tur:val('mv-tur'), not:val('mv-not') }
-  let yeni=null
-  if(window.sb && sbUser){
-    const { data, error } = await window.sb.from('muvekkiller').insert({ ...kayit, buro_id: sbUser.id }).select().single()
-    if(error) return alert('Kaydedilemedi: '+error.message)
-    yeni=data
-  }
   const mvs=DB.muvekkiller
-  mvs.push(yeni || { id:Date.now(), ...kayit, tarih:new Date().toISOString() })
+  mvs.push({ id:Date.now(), ad, soyad, tc:val('mv-tc'), tel:val('mv-tel'), email:val('mv-email'),
+             il:val('mv-il'), tur:val('mv-tur'), not:val('mv-not'), tarih:new Date().toISOString() })
   DB.saveMv(mvs); ['mv-ad','mv-soyad','mv-tc','mv-tel','mv-email','mv-il','mv-not'].forEach(clear)
   logla('muvekkil_ekle', ad+' '+soyad); closeModal('muvekkil'); renderAll()
 }
 
-// Supabase'deki muvekkilleri yerel cache'e cek
-async function muvekkilleriYukle(){
-  if(!window.sb || !sbUser) return
-  const { data } = await window.sb.from('muvekkiller').select('*').eq('buro_id', sbUser.id).order('ad')
-  if(data) DB.saveMv(data)
-}
+
 
 function saveDava() {
   const no=val('dv-no'); if(!no) return alert('Dosya no zorunludur!')
@@ -896,7 +1021,7 @@ function renderMv(q=''){
       ${avatar(m.ad,m.soyad)}
       <div style="flex:1"><div class="li-name">${m.ad} ${m.soyad}</div><div class="li-meta">${m.tel||m.email||'İletişim yok'} · ${m.tur||'bireysel'}</div></div>
       ${badge(m.tur==='kurumsal'?'bb':'bp',m.tur==='kurumsal'?'Kurumsal':'Bireysel')}
-      ${m.tel ? `<button onclick="waAc('${m.tel}',event)" title="WhatsApp'ta aç" style="background:#25D366;border:none;border-radius:7px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0"><i class="ti ti-brand-whatsapp" style="color:#fff;font-size:17px"></i></button>` : ''}
+      ${m.tel ? `<button onclick="waAc('${m.tel}',event)" title="WhatsApp'ta aç" style="background:#25D366;border:none;border-radius:4px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0"><i class="ti ti-brand-whatsapp" style="color:#fff;font-size:17px"></i></button>` : ''}
       <button class="del-btn" onclick="delMv(${m.id},event)"><i class="ti ti-trash"></i></button>
     </div>`).join('')
 }
@@ -926,7 +1051,7 @@ function renderGv(){
   el.innerHTML=gvs.map(g=>`
     <div class="list-item">
       <div class="check ${g.durum==='tamamlandi'?'done':''}" onclick="toggleGv(${g.id})">${g.durum==='tamamlandi'?'<i class="ti ti-check" style="font-size:12px"></i>':''}</div>
-      <div style="flex:1"><div class="li-name" style="${g.durum==='tamamlandi'?'text-decoration:line-through;color:var(--hint)':''}">${g.baslik}</div><div class="li-meta">${g.dava!=='—'?'📁 '+g.dava+' · ':''} ${g.tarih||'Tarih yok'}</div></div>
+      <div style="flex:1"><div class="li-name" style="${g.durum==='tamamlandi'?'text-decoration:line-through;color:var(--hint)':''}">${g.baslik}</div><div class="li-meta">${g.dava!=='—'?g.dava+' · ':''} ${g.tarih||'Tarih yok'}</div></div>
       ${badge(ONCELIK_CLS[g.oncelik]||'bgr',g.oncelik)}
       <button class="del-btn" onclick="delGv(${g.id},event)"><i class="ti ti-trash"></i></button>
     </div>`).join('')
@@ -1011,7 +1136,7 @@ function renderCalDay(){
   el.innerHTML=ets.map(e=>`
     <div style="border-left:3px solid var(--gold);padding:10px 12px;background:var(--bg);border-radius:0 8px 8px 0;margin-bottom:8px">
       <div style="font-size:13px;font-weight:500">${e.baslik}</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:2px">${new Date(e.tarih).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}${e.dava?' · 📁 '+e.dava:''}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">${new Date(e.tarih).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}${e.dava?' · '+e.dava:''}</div>
     </div>`).join('')
 }
 
@@ -1049,8 +1174,8 @@ function renderAI(){
 function renderRisk(){
   const gvs=DB.gorevler.filter(g=>g.durum!=='tamamlandi'&&g.tarih&&new Date(g.tarih)<new Date())
   const el=document.getElementById('ai-risk')
-  if(!gvs.length){ el.innerHTML='<div style="font-size:12px;color:var(--green)">✓ Gecikmiş görev yok.</div>'; return }
-  el.innerHTML=gvs.map(g=>`<div style="padding:8px;background:#FEF2F2;border-radius:6px;font-size:12px;color:var(--red);margin-bottom:6px">⚠ ${g.baslik} — ${g.tarih}</div>`).join('')
+  if(!gvs.length){ el.innerHTML='<div style="font-size:12px;color:var(--green)">Gecikmiş görev yok.</div>'; return }
+  el.innerHTML=gvs.map(g=>`<div style="padding:8px;background:#FEF2F2;border-radius:6px;font-size:12px;color:var(--red);margin-bottom:6px">${g.baslik} — ${g.tarih}</div>`).join('')
 }
 
 function sendAI(){
@@ -1101,7 +1226,7 @@ async function abonelikYukle() {
     const badge = document.getElementById('abone-badge')
 
     if (!data) {
-      ikon.textContent = '📦'
+      ikon.innerHTML = '<i class="ti ti-package"></i>'
       ikon.style.background = '#F9FAFB'
       baslik.textContent = 'Aktif abonelik yok'
       alt.textContent = 'Aşağıdan bir paket seçerek başlayın.'
@@ -1109,18 +1234,18 @@ async function abonelikYukle() {
     }
 
     if (data.durum === 'aktif') {
-      ikon.textContent = '✓'
+      ikon.innerHTML = '<i class="ti ti-check"></i>'
       ikon.style.background = '#F0FDF4'
       ikon.style.color = '#15803D'
       baslik.textContent = `${data.paket_adi} Paketi — Aktif`
       alt.textContent = `Bitiş: ${data.bitis_tarihi ? new Date(data.bitis_tarihi).toLocaleDateString('tr-TR') : 'Belirtilmemiş'} · Max ${data.max_kullanici} kullanıcı`
-      badge.innerHTML = '<span style="background:#F0FDF4;color:#15803D;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500">✓ Aktif</span>'
+      badge.innerHTML = '<span style="background:#F0FDF4;color:#15803D;padding:4px 12px;border-radius:5px;font-size:12px;font-weight:500">Aktif</span>'
     } else if (data.durum === 'bekliyor') {
       ikon.textContent = '⏳'
       ikon.style.background = '#FFFBEB'
       baslik.textContent = `${data.paket_adi} — Ödeme Bekleniyor`
       alt.textContent = 'Ödemeniz onaylandıktan sonra aktif edilecektir.'
-      badge.innerHTML = '<span style="background:#FFFBEB;color:#B45309;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500">⏳ Bekliyor</span>'
+      badge.innerHTML = '<span style="background:#FFFBEB;color:#B45309;padding:4px 12px;border-radius:5px;font-size:12px;font-weight:500">⏳ Bekliyor</span>'
     }
 
     // Kullanıcı yönetimi
@@ -1165,17 +1290,17 @@ async function kuYukle(abone) {
   let html = ''
   uyeler?.forEach(u => {
     const init = (u.kullanici_profil?.avukat_adi || u.kullanici_profil?.email || '?')[0].toUpperCase()
-    html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#F9FAFB;border-radius:8px">
+    html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#F9FAFB;border-radius:5px">
       <div style="width:32px;height:32px;border-radius:50%;background:#0B1629;color:#C9A84C;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0">${init}</div>
       <div style="flex:1"><div style="font-size:13px;font-weight:500">${u.kullanici_profil?.avukat_adi || '—'}</div><div style="font-size:11px;color:var(--muted)">${u.kullanici_profil?.email || '—'}</div></div>
-      <span style="font-size:11px;padding:3px 9px;border-radius:10px;background:#F0FDF4;color:#15803D;font-weight:500">✓ Aktif</span>
+      <span style="font-size:11px;padding:3px 9px;border-radius:5px;background:#F0FDF4;color:#15803D;font-weight:500">Aktif</span>
     </div>`
   })
   davetler?.forEach(d => {
-    html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#F9FAFB;border-radius:8px">
+    html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#F9FAFB;border-radius:5px">
       <div style="width:32px;height:32px;border-radius:50%;background:#FFFBEB;color:#B45309;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">?</div>
       <div style="flex:1"><div style="font-size:13px;font-weight:500">${d.email}</div><div style="font-size:11px;color:var(--muted)">Davet gönderildi</div></div>
-      <span style="font-size:11px;padding:3px 9px;border-radius:10px;background:#FFFBEB;color:#B45309;font-weight:500">⏳ Bekleniyor</span>
+      <span style="font-size:11px;padding:3px 9px;border-radius:5px;background:#FFFBEB;color:#B45309;font-weight:500">⏳ Bekleniyor</span>
     </div>`
   })
   liste.innerHTML = html
@@ -1220,7 +1345,7 @@ async function abPaketSec(paket, max) {
       durum: 'bekliyor'
     })
 
-    const mesaj = `🔔 YENİ ÖDEME BİLDİRİMİ\n\nE-posta: ${sbUser.email}\nPaket: ${paket} — ${abPeriyotSec === 'aylik' ? 'Aylık' : 'Yıllık'}\nTutar: ₺${fiyat.toLocaleString('tr-TR')}${etiket}\n\nLütfen IBAN'a havale yapıp bu mesajı yanıtlayın.`
+    const mesaj = `YENİ ÖDEME BİLDİRİMİ\n\nE-posta: ${sbUser.email}\nPaket: ${paket} — ${abPeriyotSec === 'aylik' ? 'Aylık' : 'Yıllık'}\nTutar: ₺${fiyat.toLocaleString('tr-TR')}${etiket}\n\nLütfen IBAN'a havale yapıp bu mesajı yanıtlayın.`
     window.open('https://wa.me/905304621769?text=' + encodeURIComponent(mesaj), '_blank')
 
     alert('Talebiniz alındı! Ödemenizi yaptıktan sonra ekibimiz en kısa sürede onaylayacaktır.')
@@ -1275,13 +1400,13 @@ function renderUpgrade(abone) {
   plansSection.innerHTML = `
     <div style="margin-bottom:20px">
       <div style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:14px">Mevcut Paketiniz</div>
-      <div style="background:var(--surface-1);border:1.5px solid #C9A84C;border-radius:14px;padding:20px;display:flex;align-items:center;gap:14px">
-        <div style="width:44px;height:44px;border-radius:12px;background:#F0FDF4;display:flex;align-items:center;justify-content:center;font-size:20px">✓</div>
+      <div style="background:var(--surface-1);border:1.5px solid #C9A84C;border-radius:6px;padding:20px;display:flex;align-items:center;gap:14px">
+        <div style="width:44px;height:44px;border-radius:6px;background:#F0FDF4;display:flex;align-items:center;justify-content:center;font-size:20px"><i class="ti ti-check"></i></div>
         <div style="flex:1">
           <div style="font-size:15px;font-weight:500;color:var(--text-primary)">${abone.paket_adi} Paketi — ${yillikMi?'Yıllık':'Aylık'}</div>
           <div style="font-size:13px;color:var(--text-secondary);margin-top:2px">Max ${abone.max_kullanici} kullanıcı · ${abone.bitis_tarihi?'Bitiş: '+new Date(abone.bitis_tarihi).toLocaleDateString('tr-TR'):'Süresiz'}</div>
         </div>
-        <span style="background:#F0FDF4;color:#15803D;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500">Aktif</span>
+        <span style="background:#F0FDF4;color:#15803D;padding:4px 12px;border-radius:5px;font-size:12px;font-weight:500">Aktif</span>
       </div>
     </div>
 
@@ -1289,28 +1414,28 @@ function renderUpgrade(abone) {
     <div style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:14px">Yükseltme Seçenekleri</div>
     <div style="display:grid;grid-template-columns:${upgrade.fiyatAylik?'1fr 1fr':'1fr'};gap:14px">
       ${upgrade.fiyatAylik && !yillikMi ? `
-      <div style="background:var(--surface-1);border:0.5px solid var(--border);border-radius:14px;padding:20px">
+      <div style="background:var(--surface-1);border:0.5px solid var(--border);border-radius:6px;padding:20px">
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">${upgrade.sonraki} — Aylık</div>
         <div style="font-size:26px;font-weight:500;color:var(--text-primary);margin-bottom:4px">₺${upgrade.fiyatAylik.toLocaleString('tr-TR')} <span style="font-size:13px;font-weight:400;color:var(--text-secondary)">/ay</span></div>
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:14px">Max ${upgrade.maxKullanici} kullanıcı</div>
-        <button onclick="abPaketSec('${upgrade.sonraki}',${upgrade.maxKullanici})" style="width:100%;padding:10px;background:#0B1629;color:#C9A84C;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">Yükselt</button>
+        <button onclick="abPaketSec('${upgrade.sonraki}',${upgrade.maxKullanici})" style="width:100%;padding:10px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">Yükselt</button>
       </div>` : ''}
       ${upgrade.fiyatYillik ? `
-      <div style="background:var(--surface-1);border:1.5px solid #C9A84C;border-radius:14px;padding:20px;position:relative">
-        <div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:#C9A84C;color:#0B1629;font-size:10px;font-weight:700;padding:3px 12px;border-radius:20px;white-space:nowrap">Önerilen</div>
+      <div style="background:var(--surface-1);border:1.5px solid #C9A84C;border-radius:6px;padding:20px;position:relative">
+        <div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:#C9A84C;color:#0B1629;font-size:10px;font-weight:600;padding:3px 12px;border-radius:5px;white-space:nowrap">Önerilen</div>
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">${upgrade.sonraki} — Yıllık</div>
         <div style="font-size:26px;font-weight:500;color:var(--text-primary);margin-bottom:4px">₺${upgrade.fiyatYillik.toLocaleString('tr-TR')} <span style="font-size:13px;font-weight:400;color:var(--text-secondary)">/yıl</span></div>
         <div style="font-size:12px;color:#15803D;margin-bottom:14px;font-weight:500">2 ay bedava · Max ${upgrade.maxKullanici} kullanıcı</div>
-        <button onclick="abPaketSec('${upgrade.sonraki}',${upgrade.maxKullanici})" style="width:100%;padding:10px;background:#C9A84C;color:#0B1629;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Yükselt</button>
+        <button onclick="abPaketSec('${upgrade.sonraki}',${upgrade.maxKullanici})" style="width:100%;padding:10px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Yükselt</button>
       </div>` : `
-      <div style="background:var(--surface-1);border:0.5px solid var(--border);border-radius:14px;padding:20px">
+      <div style="background:var(--surface-1);border:0.5px solid var(--border);border-radius:6px;padding:20px">
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">Kurumsal</div>
         <div style="font-size:22px;font-weight:500;color:var(--text-primary);margin-bottom:4px">Özel teklif</div>
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:14px">Sınırsız kullanıcı, özel destek</div>
-        <a href="https://wa.me/905304621769?text=Kurumsal%20paket%20için%20teklif%20almak%20istiyorum" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px;background:#0B1629;color:#C9A84C;border:none;border-radius:8px;font-size:13px;font-weight:500;text-decoration:none">WhatsApp ile İletişim</a>
+        <a href="https://wa.me/905304621769?text=Kurumsal%20paket%20için%20teklif%20almak%20istiyorum" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:500;text-decoration:none">WhatsApp ile İletişim</a>
       </div>`}
     </div>` : `
-    <div style="background:var(--bg-success);border:0.5px solid var(--border-success);border-radius:12px;padding:16px;text-align:center">
+    <div style="background:var(--bg-success);border:0.5px solid var(--border-success);border-radius:6px;padding:16px;text-align:center">
       <div style="font-size:14px;font-weight:500;color:var(--text-success);margin-bottom:4px">En üst paketin kullanıcısısınız!</div>
       <div style="font-size:13px;color:var(--text-secondary)">Kurumsal pakette sınırsız kullanıcı ve tüm özellikler dahil.</div>
     </div>`}
@@ -1367,7 +1492,7 @@ async function kurulumKaydet(){
     }
     document.getElementById('buro-adi-logo').textContent = buro
     const k = document.getElementById('kurulum-karti'); if(k) k.style.display='none'
-    btn.textContent = '✓ Kaydedildi'
+    btn.textContent = 'Kaydedildi'
     setTimeout(()=>{ btn.disabled=false; btn.textContent='Bilgileri Kaydet' }, 2000)
   }catch(e){
     alert('Hata: '+e.message)
@@ -1414,7 +1539,7 @@ function renderAll(){
   document.getElementById('s-mv').textContent=mv.length
   document.getElementById('s-dv').textContent=dv.filter(d=>d.durum!=='sonuclandi').length
   document.getElementById('s-gv').textContent=gv.filter(g=>g.durum!=='tamamlandi').length
-  renderMv(); renderDv(); renderGv(); renderDash(); uyariKontrol(); setTimeout(()=>{ document.querySelectorAll('.panel').forEach(p=>{ if(!p.querySelector('.ln-footer')){ const d=document.createElement('div'); d.className='ln-footer'; d.innerHTML='⚖️ <strong style="color:#6B7280">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#C9A84C;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır'; d.style.cssText='text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:28px'; p.appendChild(d) } }) },200)
+  renderMv(); renderDv(); renderGv(); renderDash(); uyariKontrol(); setTimeout(()=>{ document.querySelectorAll('.panel').forEach(p=>{ if(!p.querySelector('.ln-footer')){ const d=document.createElement('div'); d.className='ln-footer'; d.innerHTML='<strong style="color:#6B7280">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#C9A84C;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır'; d.style.cssText='text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:28px'; p.appendChild(d) } }) },200)
 }
 
 // ── UYARI SİSTEMİ ─────────────────────────────────────────────
@@ -1448,8 +1573,8 @@ function uyariKontrol(){
     const kalan = Math.ceil((t-bugun)/(1000*60*60*24))
     const renk = kalan<=1?'#B91C1C':kalan<=3?'#B45309':'#1D4ED8'
     const bg = kalan<=1?'#FEE2E2':kalan<=3?'#FEF3C7':'#DBEAFE'
-    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:${bg};border-radius:8px;font-size:13px">
-      <span style="font-size:16px">${kalan<=1?'🔴':kalan<=3?'🟡':'🔵'}</span>
+    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:${bg};border-radius:5px;font-size:13px">
+      <span style="width:6px;height:6px;border-radius:50%;flex-shrink:0;background:${kalan<=1?'#DC2626':kalan<=3?'#D97706':'#2563EB'}"></span>
       <div style="flex:1"><strong style="color:${renk}">${d.dosyaNo} — ${d.muvekkil}</strong> · ${d.mahkeme||'Mahkeme belirtilmemiş'}</div>
       <div style="font-size:12px;color:${renk};font-weight:600">${kalan===0?'BUGÜN':kalan===1?'YARIN':kalan+' gün kaldı'}</div>
       <div style="font-size:12px;color:#374151">${t.toLocaleDateString('tr-TR')}${d.durusmaSaati?' '+d.durusmaSaati:''}</div>
@@ -1457,7 +1582,7 @@ function uyariKontrol(){
     </div>`
   }).join('')
 
-  banner.innerHTML = `<div style="font-size:13px;font-weight:600;color:#B91C1C;margin-bottom:4px">⚠ ${yaklasan.length} yaklaşan duruşma var (7 gün içinde)</div>` + bannerHTML
+  banner.innerHTML = `<div style="font-size:13px;font-weight:600;color:#B91C1C;margin-bottom:4px">${yaklasan.length} yaklaşan duruşma var (7 gün içinde)</div>` + bannerHTML
   liste.innerHTML = bannerHTML
 }
 
@@ -1496,24 +1621,28 @@ async function uygulamaAc(user) {
   sbUser = user
   
   // Profil kontrolü
-  const { data: profil } = await sb.from('kullanici_profil').select('buro_adi,avukat_adi,rol,kurulum_tamam').eq('id', user.id).maybeSingle()
+  const { data: profil } = await sb.from('kullanici_profil')
+    .select('buro_adi,avukat_adi,telefon,rol,kurulum_tamam').eq('id', user.id).maybeSingle()
 
   if(profil?.rol === 'admin') { window.location.href = 'admin.html'; return }
 
-  
   document.getElementById('giris-ekrani').style.display = 'none'
   document.getElementById('ana-uygulama').style.display = 'flex'
-  
-  if (profil?.buro_adi) {
-    document.getElementById('buro-adi-logo').textContent = profil.buro_adi
-    saveSetting('buroAdi', profil.buro_adi)
-  }
-  if (profil?.avukat_adi) saveSetting('avukatAdi', profil.avukat_adi)
-  if (profil?.telefon) saveSetting('telefon', profil.telefon)
-  saveSetting('email', user.email)
+
+  // Once buluttan cek, sonra profil bilgilerini uygula
+  await verileriYukle()
+
+  const ayar = DB.ayarlar
+  if (profil?.buro_adi)   ayar.buroAdi   = profil.buro_adi
+  if (profil?.avukat_adi) ayar.avukatAdi = profil.avukat_adi
+  if (profil?.telefon)    ayar.telefon   = profil.telefon
+  ayar.email = user.email
+  DB.saveSet(ayar)
+
+  if (profil?.buro_adi) document.getElementById('buro-adi-logo').textContent = profil.buro_adi
   kurulumKartiKontrol(profil)
-  
-  loadSettings(); await muvekkilleriYukle(); renderAll(); setTimeout(abonelikYukle, 500)
+
+  loadSettings(); renderAll(); setTimeout(abonelikYukle, 500)
   logla('giris', user.email)
 }
 
@@ -1537,7 +1666,7 @@ sb.auth.getSession().then(async ({ data: { session } }) => {
 <div class="auth-screen" id="auth-screen">
   <div class="auth-box">
     <div class="auth-logo">
-      <div class="auth-logo-text">⚖ Dosya360</div>
+      <div class="auth-logo-text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.125em;flex-shrink:0"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg> Dosya360</div>
       <div class="auth-logo-sub">Avukatlık Bürosu Yönetim Sistemi</div>
     </div>
     <div class="auth-card">
@@ -1561,7 +1690,7 @@ sb.auth.getSession().then(async ({ data: { session } }) => {
         <span id="auth-switch-text">Hesabınız yok mu?</span>
         <span onclick="toggleAuthMode()"> <span id="auth-switch-link">Kayıt Ol</span></span>
       </div>
-      <div style="text-align:center;margin-top:16px;font-size:11px;color:rgba(255,255,255,0.2)">⚖️ Dosya360 — Bir Ötüken Medya yazılımıdır</div>
+      <div style="text-align:center;margin-top:16px;font-size:11px;color:rgba(255,255,255,0.2)">Dosya360 — Bir Ötüken Medya yazılımıdır</div>
     </div>
   </div>
 </div>
@@ -1569,11 +1698,11 @@ sb.auth.getSession().then(async ({ data: { session } }) => {
 <!-- ADMİN PANELİ -->
 <div class="admin-panel" id="admin-panel">
   <div class="admin-topbar">
-    <div class="admin-title">⚖ Dosya360 — Admin Paneli</div>
+    <div class="admin-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.125em;flex-shrink:0"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg> Dosya360 — Admin Paneli</div>
     <div style="display:flex;gap:10px;align-items:center">
       <span style="color:rgba(255,255,255,0.5);font-size:13px" id="admin-email"></span>
-      <button onclick="goApp()" style="padding:7px 14px;background:rgba(201,168,76,0.2);color:#C9A84C;border:none;border-radius:8px;cursor:pointer;font-size:13px">Uygulamaya Geç</button>
-      <button onclick="authCikis()" style="padding:7px 14px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);border:none;border-radius:8px;cursor:pointer;font-size:13px">Çıkış</button>
+      <button onclick="goApp()" style="padding:7px 14px;background:rgba(201,168,76,0.2);color:#C9A84C;border:none;border-radius:5px;cursor:pointer;font-size:13px">Uygulamaya Geç</button>
+      <button onclick="authCikis()" style="padding:7px 14px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);border:none;border-radius:5px;cursor:pointer;font-size:13px">Çıkış</button>
     </div>
   </div>
   <div class="admin-content">
@@ -1710,7 +1839,7 @@ async function adminYukle(){
       <td>${k.email||'—'}</td>
       <td>${k.buro_adi||'—'}</td>
       <td>${k.created_at ? new Date(k.created_at).toLocaleDateString('tr-TR') : '—'}</td>
-      <td><span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;background:${k.aktif?'#F0FDF4':'#FEF2F2'};color:${k.aktif?'#15803D':'#B91C1C'}">${k.aktif?'✓ Aktif':'✗ Pasif'}</span></td>
+      <td><span style="padding:3px 10px;border-radius:5px;font-size:11px;font-weight:500;background:${k.aktif?'#F0FDF4':'#FEF2F2'};color:${k.aktif?'#15803D':'#B91C1C'}">${k.aktif?'Aktif':'Pasif'}</span></td>
       <td><button class="toggle-btn ${k.aktif?'aktif':'pasif'}" onclick="toggleKullanici('${k.id}',${k.aktif})">${k.aktif?'Dondur':'Aktif Et'}</button></td>
     </tr>`).join('')
 }

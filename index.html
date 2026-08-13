@@ -9,7 +9,7 @@
 <meta name="robots" content="index, follow">
 <meta name="author" content="Ötüken Medya">
 <link rel="canonical" href="https://dosya360.com">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C9A84C' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z'/></svg>">
 <meta property="og:title" content="Dosya360 — Yapay Zekâ Destekli Hukuk İşletim Sistemi">
 <meta property="og:description" content="Dava yönetimi, müvekkil takibi, UYAP erişimi ve yapay zekâ asistanı tek platformda.">
 <meta property="og:type" content="website">
@@ -20,6 +20,9 @@
 <meta name="twitter:title" content="Dosya360 — Hukuk Bürosu Yönetim Sistemi">
 <meta name="twitter:description" content="UYAP entegrasyonlu, yapay zekâ destekli, bulut tabanlı hukuk yazılımı.">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Dosya360","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"Avukatlık büroları için yapay zekâ destekli hukuk bürosu yönetim sistemi. UYAP entegrasyonlu dava takip programı.","url":"https://dosya360.com","author":{"@type":"Organization","name":"Ötüken Medya","url":"https://otukenmedya.com"},"offers":{"@type":"Offer","price":"1500","priceCurrency":"TRY"},"inLanguage":"tr"}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -37,21 +40,21 @@ nav{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1px s
 .nav-links a{font-size:13px;color:rgba(255,255,255,0.65);transition:color .15s}
 .nav-links a:hover{color:#fff}
 .nav-cta{display:flex;gap:8px}
-.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .15s;font-family:inherit;text-decoration:none}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;border-radius:5px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .15s;font-family:inherit;text-decoration:none}
 .btn-ghost{background:transparent;color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.2)}
 .btn-ghost:hover{background:rgba(255,255,255,0.08)}
 .btn-gold{background:var(--gold);color:var(--navy)}
-.btn-gold:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-gold:hover{background:var(--gold2)}
 .btn-navy{background:var(--navy);color:var(--gold)}
 .btn-navy:hover{background:var(--navy2)}
-.btn-lg{padding:13px 28px;font-size:14px;border-radius:10px}
+.btn-lg{padding:13px 28px;font-size:14px;border-radius:5px}
 
 /* HERO */
-.hero{background:linear-gradient(135deg,#060E1E 0%,#0B1629 50%,#1A2B47 100%);padding:96px 0 80px;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-120px;right:-120px;width:480px;height:480px;border-radius:50%;background:rgba(201,168,76,0.05)}
-.hero::after{content:'';position:absolute;bottom:-80px;left:-80px;width:320px;height:320px;border-radius:50%;background:rgba(201,168,76,0.03)}
+.hero{background:#0B1629;padding:96px 0 80px;position:relative;overflow:hidden}
+
+
 .hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;position:relative;z-index:1}
-.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.25);border-radius:20px;padding:5px 14px;font-size:11px;color:var(--gold);margin-bottom:18px;font-weight:500;letter-spacing:.03em}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.25);border-radius:5px;padding:5px 14px;font-size:11px;color:var(--gold);margin-bottom:18px;font-weight:500;letter-spacing:.03em}
 .hero-title{font-size:44px;font-weight:600;color:#fff;line-height:1.12;margin-bottom:18px;letter-spacing:-.5px}
 .hero-title span{color:var(--gold)}
 .hero-sub{font-size:16px;color:rgba(255,255,255,0.58);margin-bottom:32px;line-height:1.75;max-width:440px}
@@ -59,15 +62,15 @@ nav{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1px s
 .hero-stats{display:flex;gap:28px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.08)}
 .hs-num{font-size:24px;font-weight:600;color:var(--gold)}
 .hs-label{font-size:11px;color:rgba(255,255,255,0.4);margin-top:1px}
-.hero-visual{background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.15);border-radius:18px;padding:22px;backdrop-filter:blur(10px)}
+.hero-visual{background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.15);border-radius:5px;padding:22px;backdrop-filter:blur(10px)}
 .hv-bar{display:flex;gap:5px;margin-bottom:18px}
 .hv-dot{width:9px;height:9px;border-radius:50%}
-.hv-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:9px;margin-bottom:8px}
-.hv-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.hv-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:5px;margin-bottom:8px}
+.hv-icon{width:30px;height:30px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
 .hv-name{font-size:12px;color:rgba(255,255,255,0.8);font-weight:500}
 .hv-meta{font-size:10px;color:rgba(255,255,255,0.35)}
-.hv-tag{font-size:10px;padding:2px 8px;border-radius:9px;margin-left:auto;font-weight:500;white-space:nowrap}
-.hv-alert{background:rgba(239,68,68,0.12);border:0.5px solid rgba(239,68,68,0.25);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:8px;margin-top:4px}
+.hv-tag{font-size:10px;padding:2px 8px;border-radius:5px;margin-left:auto;font-weight:500;white-space:nowrap}
+.hv-alert{background:rgba(239,68,68,0.12);border:0.5px solid rgba(239,68,68,0.25);border-radius:5px;padding:10px 12px;display:flex;align-items:center;gap:8px;margin-top:4px}
 
 /* TRUST BAR */
 .trust-bar{background:#fff;border-bottom:1px solid var(--border);padding:16px 0}
@@ -78,16 +81,16 @@ nav{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1px s
 /* SECTIONS */
 .section{padding:88px 0}
 .section-bg{background:var(--surface)}
-.section-label{display:inline-flex;align-items:center;gap:6px;background:rgba(11,22,41,0.06);border-radius:20px;padding:4px 13px;font-size:11px;color:var(--navy);font-weight:500;margin-bottom:12px;letter-spacing:.03em}
+.section-label{display:inline-flex;align-items:center;gap:6px;background:rgba(11,22,41,0.06);border-radius:5px;padding:4px 13px;font-size:11px;color:var(--navy);font-weight:500;margin-bottom:12px;letter-spacing:.03em}
 .section-title{font-size:34px;font-weight:600;color:var(--text);margin-bottom:12px;line-height:1.2;letter-spacing:-.3px}
 .section-sub{font-size:15px;color:var(--muted);max-width:520px;line-height:1.7}
 .section-head{margin-bottom:52px}
 
 /* FEATURES */
 .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.feat-card{border:1px solid var(--border);border-radius:14px;padding:26px;transition:all .2s;background:var(--surface)}
-.feat-card:hover{border-color:rgba(201,168,76,0.4);box-shadow:0 8px 32px rgba(0,0,0,0.06);transform:translateY(-2px)}
-.feat-icon{width:44px;height:44px;border-radius:11px;background:var(--navy);display:flex;align-items:center;justify-content:center;margin-bottom:16px;color:var(--gold);font-size:20px}
+.feat-card{border:1px solid var(--border);border-radius:6px;padding:26px;transition:all .2s;background:var(--surface)}
+.feat-card:hover{border-color:rgba(201,168,76,0.4);box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.feat-icon{width:44px;height:44px;border-radius:6px;background:var(--navy);display:flex;align-items:center;justify-content:center;margin-bottom:16px;color:var(--gold);font-size:20px}
 .feat-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px}
 .feat-desc{font-size:13px;color:var(--muted);line-height:1.7}
 
@@ -96,14 +99,14 @@ nav{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1px s
 .how-steps{display:flex;flex-direction:column;gap:0}
 .how-step{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--border)}
 .how-step:last-child{border-bottom:none}
-.how-num{width:36px;height:36px;border-radius:50%;background:var(--navy);color:var(--gold);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.how-num{width:36px;height:36px;border-radius:50%;background:var(--navy);color:var(--gold);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
 .how-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
 .how-desc{font-size:13px;color:var(--muted);line-height:1.6}
-.how-visual{background:var(--navy);border-radius:18px;padding:26px}
+.how-visual{background:var(--navy);border-radius:5px;padding:26px}
 .hw-label{font-size:10px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
-.hw-panel{background:rgba(255,255,255,0.05);border-radius:10px;padding:14px;margin-bottom:10px}
+.hw-panel{background:rgba(255,255,255,0.05);border-radius:5px;padding:14px;margin-bottom:10px}
 .hw-stat-row{display:flex;gap:12px;margin-bottom:12px}
-.hw-stat{flex:1;background:rgba(255,255,255,0.05);border-radius:8px;padding:12px}
+.hw-stat{flex:1;background:rgba(255,255,255,0.05);border-radius:5px;padding:12px}
 .hw-stat-val{font-size:18px;font-weight:600;margin-bottom:2px}
 .hw-stat-lbl{font-size:10px;color:rgba(255,255,255,0.35)}
 .hw-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
@@ -114,19 +117,19 @@ nav{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1px s
 
 /* PRICING */
 .plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px;margin:0 auto}
-.plan-card{border:1.5px solid var(--border);border-radius:18px;padding:30px;position:relative;background:var(--surface)}
+.plan-card{border:1.5px solid var(--border);border-radius:5px;padding:30px;position:relative;background:var(--surface)}
 .plan-card.pop{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
-.pop-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--navy);font-size:10px;font-weight:700;padding:3px 14px;border-radius:20px;white-space:nowrap}
+.pop-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--navy);font-size:10px;font-weight:600;padding:3px 14px;border-radius:5px;white-space:nowrap}
 .plan-name{font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:500}
 .plan-price{font-size:36px;font-weight:600;color:var(--text);letter-spacing:-.5px}
 .plan-price span{font-size:14px;font-weight:400;color:var(--muted)}
 .plan-period{font-size:12px;color:var(--hint);margin-bottom:6px}
-.plan-users{font-size:12px;color:#374151;background:var(--bg);padding:7px 11px;border-radius:7px;margin-bottom:16px;display:flex;align-items:center;gap:6px}
+.plan-users{font-size:12px;color:#374151;background:var(--bg);padding:7px 11px;border-radius:4px;margin-bottom:16px;display:flex;align-items:center;gap:6px}
 .plan-feats{list-style:none;margin-bottom:24px}
 .plan-feats li{font-size:13px;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
 .plan-feats li:last-child{border-bottom:none}
 .plan-feats li i{color:var(--gold);font-size:14px;flex-shrink:0}
-.plan-btn{width:100%;padding:11px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .15s}
+.plan-btn{width:100%;padding:11px;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .15s}
 .plan-btn-navy{background:var(--navy);color:var(--gold)}
 .plan-btn-navy:hover{background:var(--navy2)}
 .plan-btn-gold{background:var(--gold);color:var(--navy)}
@@ -134,7 +137,7 @@ nav{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1px s
 
 /* FAQ */
 .faq-list{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
-.faq-item{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.faq-item{border:1px solid var(--border);border-radius:6px;overflow:hidden;background:var(--surface)}
 .faq-q{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:14px;font-weight:500;color:var(--text);transition:background .15s}
 .faq-q:hover{background:var(--bg)}
 .faq-q i{color:var(--muted);font-size:18px;flex-shrink:0;transition:transform .2s}
@@ -143,7 +146,7 @@ nav{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1px s
 .faq-item.open .faq-q i{transform:rotate(180deg)}
 
 /* CTA */
-.cta-section{background:linear-gradient(135deg,var(--navy),var(--navy2));padding:88px 0}
+.cta-section{background:var(--navy));padding:88px 0}
 .cta-inner{text-align:center;max-width:580px;margin:0 auto}
 .cta-title{font-size:38px;font-weight:600;color:#fff;margin-bottom:14px;letter-spacing:-.3px}
 .cta-sub{font-size:16px;color:rgba(255,255,255,0.55);margin-bottom:32px;line-height:1.7}
@@ -152,7 +155,7 @@ nav{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1px s
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.open{display:flex}
-.modal{background:#fff;border-radius:20px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.2)}
+.modal{background:#fff;border-radius:5px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 8px 24px rgba(16,24,40,.10)}
 .modal-top{background:var(--navy);padding:24px 28px 20px}
 .modal-logo{font-size:18px;font-weight:600;color:var(--gold);margin-bottom:3px}
 .modal-sub{font-size:12px;color:rgba(255,255,255,0.38)}
@@ -162,14 +165,14 @@ nav{background:var(--navy);position:sticky;top:0;z-index:100;border-bottom:1px s
 .modal-body{padding:24px 28px}
 .mfield{margin-bottom:14px}
 .mfield label{display:block;font-size:11px;font-weight:600;color:#374151;margin-bottom:5px;letter-spacing:.02em}
-.mfield input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;color:var(--text);outline:none;font-family:inherit;transition:border .15s}
+.mfield input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:5px;font-size:13px;color:var(--text);outline:none;font-family:inherit;transition:border .15s}
 .mfield input:focus{border-color:var(--gold)}
 .mfield input.error{border-color:var(--red)}
-.msub-btn{width:100%;padding:12px;background:var(--navy);color:var(--gold);border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;margin-top:4px}
+.msub-btn{width:100%;padding:12px;background:var(--navy);color:var(--gold);border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;margin-top:4px}
 .msub-btn:hover{background:var(--navy2)}
 .msub-btn:disabled{opacity:0.5;cursor:not-allowed}
-.m-error{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:9px 12px;font-size:12px;color:var(--red);margin-bottom:12px;display:none}
-.m-success{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:9px 12px;font-size:12px;color:var(--green);margin-bottom:12px;display:none}
+.m-error{background:#FEF2F2;border:1px solid #FECACA;border-radius:5px;padding:9px 12px;font-size:12px;color:var(--red);margin-bottom:12px;display:none}
+.m-success{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:5px;padding:9px 12px;font-size:12px;color:var(--green);margin-bottom:12px;display:none}
 .mfooter{text-align:center;font-size:12px;color:var(--hint);margin-top:14px}
 .mfooter span{color:var(--navy);cursor:pointer;font-weight:500}
 
@@ -196,6 +199,26 @@ footer{background:var(--navy);padding:52px 0 28px}
   .section-title{font-size:26px}
   .cta-title{font-size:28px}
 }
+
+/* ── Tipografi ve yuzey rafinasyonu ─────────────────────── */
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  font-feature-settings:'cv02','cv03','cv04','tnum';
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  letter-spacing:-0.006em;
+}
+h1,h2,h3,h4,.card-title,.section-title{letter-spacing:-0.018em}
+/* Sayilar hizali dizilsin */
+.mc-val,.stat-num,.plan-price,.hw-stat-val,.mini-stat-val,td{font-variant-numeric:tabular-nums}
+/* Kenarliklar tek tonda */
+:root{--border:#E4E7EC;--hairline:#F0F1F3}
+table td{border-bottom:1px solid var(--hairline)}
+/* Odak halkasi - erisilebilirlik */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid #C9A84C;outline-offset:1px;border-radius:3px
+}
+/* Gecisler tek egride */
+.navitem,.btn,.tbtn,button,.plan-card,.feat-card{transition:background-color .12s ease,border-color .12s ease,color .12s ease}
 </style>
 </head>
 <body>
@@ -204,7 +227,7 @@ footer{background:var(--navy);padding:52px 0 28px}
 <nav>
   <div class="container">
     <div class="nav-inner">
-      <div class="nav-logo">⚖ Dosya360</div>
+      <div class="nav-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.125em;flex-shrink:0"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg> Dosya360</div>
       <div class="nav-links">
         <a href="#ozellikler">Özellikler</a>
         <a href="#nasil-calisir">Nasıl Çalışır</a>
@@ -225,7 +248,7 @@ footer{background:var(--navy);padding:52px 0 28px}
   <div class="container">
     <div class="hero-inner">
       <div>
-        <div class="hero-badge">🚀 Türkiye'nin #1 Hukuk CRM'i</div>
+        <div class="hero-badge">Avukatlık büroları için geliştirildi</div>
         <h1 class="hero-title">Yapay Zekâ Destekli<br><span>Hukuk İşletim</span><br>Sistemi</h1>
         <p class="hero-sub">Dava yönetimi, müvekkil takibi, UYAP entegrasyonu ve yapay zekâ asistanı — Türkiye'nin avukatlık büroları için tasarlanmış bulut tabanlı hukuk yazılımı.</p>
         <div class="hero-btns">
@@ -247,25 +270,25 @@ footer{background:var(--navy);padding:52px 0 28px}
           <span style="font-size:11px;color:rgba(255,255,255,0.25);margin-left:8px">dosya360.com</span>
         </div>
         <div class="hv-row">
-          <div class="hv-icon" style="background:rgba(59,130,246,0.15);color:#60A5FA">⚖</div>
+          <div class="hv-icon" style="background:rgba(59,130,246,0.15);color:#60A5FA"><i class="ti ti-gavel"></i></div>
           <div style="flex:1"><div class="hv-name">Gökdemir — İcra Takibi</div><div class="hv-meta">Ankara 5. İcra · 2026/0142</div></div>
           <span class="hv-tag" style="background:rgba(139,92,246,0.2);color:#A78BFA">Duruşma</span>
         </div>
         <div class="hv-row">
-          <div class="hv-icon" style="background:rgba(201,168,76,0.15);color:#C9A84C">⚖</div>
+          <div class="hv-icon" style="background:rgba(201,168,76,0.15);color:#C9A84C"><i class="ti ti-gavel"></i></div>
           <div style="flex:1"><div class="hv-name">Yılmaz — İş Hukuku</div><div class="hv-meta">Ankara 12. İş · 2026/0089</div></div>
           <span class="hv-tag" style="background:rgba(34,197,94,0.2);color:#4ADE80">Karar</span>
         </div>
         <div class="hv-row">
-          <div class="hv-icon" style="background:rgba(239,68,68,0.15);color:#F87171">⚖</div>
+          <div class="hv-icon" style="background:rgba(239,68,68,0.15);color:#F87171"><i class="ti ti-gavel"></i></div>
           <div style="flex:1"><div class="hv-name">Demir — Ticaret</div><div class="hv-meta">Ankara Tic. 2. · 2025/3341</div></div>
           <span class="hv-tag" style="background:rgba(251,146,60,0.2);color:#FB923C">İstinaf</span>
         </div>
         <div class="hv-alert">
-          <span style="font-size:15px">⚠️</span>
+          <i class="ti ti-alert-triangle" style="font-size:15px;color:#F87171"></i>
           <div style="font-size:11px;color:#FCA5A5"><strong>YZ Asistan:</strong> Gökdemir'in duruşması yarın 09:00 — hatırlatma gönderilsin mi?</div>
         </div>
-        <div style="margin-top:12px;background:rgba(201,168,76,0.1);border:0.5px solid rgba(201,168,76,0.25);border-radius:9px;padding:10px 12px">
+        <div style="margin-top:12px;background:rgba(201,168,76,0.1);border:0.5px solid rgba(201,168,76,0.25);border-radius:5px;padding:10px 12px">
           <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:4px">UYAP HIZLI ERİŞİM</div>
           <div style="display:flex;gap:8px">
             <span style="font-size:11px;color:#C9A84C;background:rgba(201,168,76,0.1);padding:4px 8px;border-radius:5px">Avukat UYAP ↗</span>
@@ -296,7 +319,7 @@ footer{background:var(--navy);padding:52px 0 28px}
 <section class="section section-bg" id="ozellikler">
   <div class="container">
     <div class="section-head">
-      <div class="section-label">✨ Özellikler</div>
+      <div class="section-label">Özellikler</div>
       <h2 class="section-title">Hukuk Büronuzun İhtiyacı Olan Her Şey</h2>
       <p class="section-sub">Türkiye'nin avukatlık büroları için özel olarak tasarlanmış, 10+ modüllü hukuk bürosu yönetim sistemi.</p>
     </div>
@@ -355,7 +378,7 @@ footer{background:var(--navy);padding:52px 0 28px}
   <div class="container">
     <div class="how-grid">
       <div>
-        <div class="section-label">⚡ Kolay Kurulum</div>
+        <div class="section-label">Kurulum</div>
         <h2 class="section-title">3 Adımda Başlayın</h2>
         <div class="how-steps" style="margin-top:28px">
           <div class="how-step">
@@ -392,8 +415,8 @@ footer{background:var(--navy);padding:52px 0 28px}
           <div class="hw-row"><div class="hw-dot" style="background:#F59E0B"></div><div class="hw-text">Yılmaz — İcra Mahkemesi</div><div class="hw-val" style="color:#FCD34D">3 gün</div></div>
           <div class="hw-row"><div class="hw-dot" style="background:#22C55E"></div><div class="hw-text">Demir — BAM 2. HD</div><div class="hw-val" style="color:#4ADE80">7 gün</div></div>
         </div>
-        <div style="background:rgba(201,168,76,0.12);border:0.5px solid rgba(201,168,76,0.25);border-radius:8px;padding:10px 12px">
-          <div style="font-size:10px;color:#C9A84C;font-weight:500;margin-bottom:4px">🤖 YZ ASISTAN</div>
+        <div style="background:rgba(201,168,76,0.12);border:0.5px solid rgba(201,168,76,0.25);border-radius:5px;padding:10px 12px">
+          <div style="font-size:10px;color:#C9A84C;font-weight:500;margin-bottom:4px">YZ ASİSTAN</div>
           <div style="font-size:12px;color:rgba(255,255,255,0.65)">"Bu ay tahsilatım ne kadar?" → ₺68.400 · 12 işlem</div>
         </div>
       </div>
@@ -405,7 +428,7 @@ footer{background:var(--navy);padding:52px 0 28px}
 <section class="section section-bg" id="fiyatlar">
   <div class="container">
     <div class="section-head" style="text-align:center">
-      <div class="section-label" style="margin:0 auto 12px">💰 Fiyatlar</div>
+      <div class="section-label" style="margin:0 auto 12px">Fiyatlar</div>
       <h2 class="section-title">Büronuza Uygun Plan</h2>
       <p class="section-sub" style="margin:0 auto">Tüm planlar 14 gün ücretsiz deneme içerir. Kredi kartı gerekmez.</p>
     </div>
@@ -461,7 +484,7 @@ footer{background:var(--navy);padding:52px 0 28px}
 <section class="section" id="sss">
   <div class="container">
     <div class="section-head" style="text-align:center">
-      <div class="section-label" style="margin:0 auto 12px">❓ SSS</div>
+      <div class="section-label" style="margin:0 auto 12px">Sık Sorulan Sorular</div>
       <h2 class="section-title">Sık Sorulan Sorular</h2>
     </div>
     <div class="faq-list">
@@ -512,7 +535,7 @@ footer{background:var(--navy);padding:52px 0 28px}
   <div class="container">
     <div class="footer-grid">
       <div>
-        <div class="footer-logo">⚖ Dosya360</div>
+        <div class="footer-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.125em;flex-shrink:0"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg> Dosya360</div>
         <div class="footer-desc">Türkiye'nin avukatlık büroları için tasarlanmış yapay zekâ destekli hukuk bürosu yönetim sistemi. UYAP entegrasyonlu, bulut tabanlı dava takip programı.</div>
       </div>
       <div class="footer-col">
@@ -547,7 +570,7 @@ footer{background:var(--navy);padding:52px 0 28px}
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)modalKapat()">
   <div class="modal">
     <div class="modal-top">
-      <div class="modal-logo">⚖ Dosya360</div>
+      <div class="modal-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.125em;flex-shrink:0"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg> Dosya360</div>
       <div class="modal-sub">Hukuk Bürosu Yönetim Sistemi</div>
     </div>
     <div style="display:flex;border-bottom:1px solid var(--border)">
