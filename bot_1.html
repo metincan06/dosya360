@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Web Asistanı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0B1629;--navy2:#1A2B47;--gold:#C9A84C;--gold2:#E8C96A;
+      --bg:#F8F9FC;--yzy:#fff;--kenar:#E4E7EC;--metin:#111827;--soluk:#6B7280;--silik:#9CA3AF}
+html,body{height:100%;background:transparent}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+     -webkit-font-smoothing:antialiased;letter-spacing:-.006em;display:flex;
+     flex-direction:column;justify-content:flex-end;overflow:hidden}
+body.sol{align-items:flex-start}
+body.sag{align-items:flex-end}
+
+/* ── Kapalı düğme ── */
+#dugme{display:flex;align-items:center;gap:9px;background:var(--navy);color:var(--gold2);
+       padding:0 18px;height:48px;border-radius:24px;cursor:pointer;font-size:13.5px;
+       font-weight:500;border:none;font-family:inherit;white-space:nowrap;
+       box-shadow:0 4px 16px rgba(11,22,41,.22)}
+#dugme:hover{background:var(--navy2)}
+#dugme i{font-size:19px}
+
+/* ── Panel ── */
+#panel{display:none;flex-direction:column;width:100%;height:100%;background:var(--yzy);
+       border:1px solid var(--kenar);border-radius:10px;overflow:hidden;
+       box-shadow:0 12px 40px rgba(16,24,40,.16)}
+#panel.acik{display:flex}
+
+.ust{background:var(--navy);padding:13px 15px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.ust-ad{font-size:13.5px;color:var(--gold2);font-weight:500}
+.ust-alt{display:flex;align-items:center;gap:5px;margin-top:2px}
+.nokta{width:6px;height:6px;border-radius:50%;background:#5DCAA5;flex-shrink:0}
+.ust-durum{font-size:11px;color:rgba(255,255,255,.48)}
+.kapat{background:none;border:none;color:rgba(255,255,255,.5);font-size:19px;cursor:pointer;
+       padding:2px;margin-left:auto;line-height:1}
+.kapat:hover{color:#fff}
+
+.bilgi{padding:9px 15px;background:var(--bg);border-bottom:1px solid var(--kenar);flex-shrink:0}
+.bilgi-sat{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--soluk);margin-bottom:3px}
+.bilgi-sat:last-child{margin-bottom:0}
+.bilgi-sat i{font-size:13px;flex-shrink:0;color:var(--silik)}
+
+.akis{flex:1;overflow-y:auto;padding:14px 15px;display:flex;flex-direction:column;gap:9px}
+.akis::-webkit-scrollbar{width:5px}
+.akis::-webkit-scrollbar-thumb{background:#D8DBE0;border-radius:3px}
+
+.balon{max-width:84%;padding:9px 12px;border-radius:9px;font-size:13px;line-height:1.6;
+       white-space:pre-wrap;word-break:break-word}
+.bot{background:var(--bg);color:var(--metin);align-self:flex-start;border-bottom-left-radius:3px}
+.ben{background:var(--navy);color:#fff;align-self:flex-end;border-bottom-right-radius:3px}
+
+.yaziyor{display:flex;gap:3px;align-self:flex-start;background:var(--bg);
+         padding:11px 13px;border-radius:9px;border-bottom-left-radius:3px}
+.yaziyor span{width:5px;height:5px;border-radius:50%;background:var(--silik);animation:zipla 1.2s infinite}
+.yaziyor span:nth-child(2){animation-delay:.15s}
+.yaziyor span:nth-child(3){animation-delay:.3s}
+@keyframes zipla{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+
+.secenekler{padding:0 15px 12px;display:flex;flex-direction:column;gap:5px;flex-shrink:0}
+.sec{text-align:left;padding:9px 12px;background:var(--yzy);border:1px solid var(--kenar);
+     border-radius:6px;font-size:12.5px;color:var(--metin);cursor:pointer;font-family:inherit;
+     line-height:1.4}
+.sec:hover{background:var(--bg);border-color:#D0D5DD}
+.sec.vurgu{border-color:var(--gold);color:#8A6D1F;font-weight:500}
+
+.form{padding:0 15px 12px;flex-shrink:0}
+.form input,.form select,.form textarea{width:100%;padding:9px 11px;margin-bottom:7px;
+  border:1px solid var(--kenar);border-radius:6px;font-size:12.5px;font-family:inherit;
+  color:var(--metin);background:var(--yzy);outline:none}
+.form input:focus,.form select:focus,.form textarea:focus{border-color:var(--gold)}
+.onay{display:flex;gap:8px;align-items:flex-start;font-size:11px;color:var(--soluk);
+      margin-bottom:9px;cursor:pointer;line-height:1.5}
+.onay input{width:auto;margin:2px 0 0;flex-shrink:0}
+.hata{font-size:11.5px;color:#B42318;margin-bottom:7px;display:none}
+.gonder{width:100%;padding:10px;background:var(--navy);color:var(--gold2);border:none;
+        border-radius:6px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.gonder:hover{background:var(--navy2)}
+.gonder:disabled{opacity:.55;cursor:not-allowed}
+.geri{width:100%;padding:8px;background:none;border:none;color:var(--soluk);font-size:12px;
+      cursor:pointer;font-family:inherit;margin-top:5px}
+
+.kisayol{display:flex;gap:5px;padding:0 15px 10px;flex-shrink:0}
+.ks{flex:1;text-align:center;padding:7px 3px;border:1px solid var(--kenar);border-radius:6px;
+    font-size:10.5px;color:var(--soluk);cursor:pointer;background:var(--yzy);text-decoration:none;
+    display:block;line-height:1.3}
+.ks:hover{background:var(--bg)}
+.ks i{font-size:15px;display:block;margin-bottom:2px;color:var(--silik)}
+
+.uyari{padding:8px 15px;background:#FFFBEB;border-top:1px solid #FDE68A;font-size:10.5px;
+       color:#92400E;line-height:1.5;flex-shrink:0}
+.imza{padding:7px 15px;border-top:1px solid var(--kenar);text-align:center;font-size:10px;
+      color:var(--silik);flex-shrink:0}
+.imza a{color:var(--silik);text-decoration:none}
+.imza a:hover{color:var(--soluk)}
+
+.basarili{text-align:center;padding:26px 15px}
+.basarili i{font-size:34px;color:#12805C}
+.basarili-b{font-size:14px;color:var(--metin);margin:10px 0 5px;font-weight:500}
+.basarili-a{font-size:12.5px;color:var(--soluk);line-height:1.6}
+.gizle{display:none!important}
+</style>
+</head>
+<body>
+
+<button id="dugme" onclick="ac()">
+  <i class="ti ti-message-circle" aria-hidden="true"></i><span id="dugme-yazi">Size yardımcı olalım</span>
+</button>
+
+<div id="panel">
+  <div class="ust">
+    <div style="min-width:0">
+      <div class="ust-ad" id="p-ad">Asistan</div>
+      <div class="ust-alt"><span class="nokta" id="p-nokta"></span><span class="ust-durum" id="p-durum"></span></div>
+    </div>
+    <button class="kapat" onclick="kapat()" aria-label="Kapat"><i class="ti ti-x"></i></button>
+  </div>
+
+  <div class="bilgi gizle" id="p-bilgi"></div>
+
+  <div class="akis" id="akis"></div>
+
+  <div class="secenekler gizle" id="secenekler"></div>
+
+  <div class="form gizle" id="form">
+    <input id="f-ad" placeholder="Ad soyad" autocomplete="name">
+    <input id="f-tel" placeholder="0500 000 00 00" inputmode="tel" autocomplete="tel">
+    <select id="f-konu"><option value="">Konu seçiniz</option></select>
+    <textarea id="f-not" rows="2" placeholder="Kısa açıklama (isteğe bağlı)"></textarea>
+    <label class="onay"><input type="checkbox" id="f-kvkk">
+      <span>İletişim bilgilerimin başvurumun değerlendirilmesi amacıyla işlenmesine izin veriyorum.</span></label>
+    <div class="hata" id="f-hata"></div>
+    <button class="gonder" id="f-btn" onclick="basvuruGonder()">Talebi gönder</button>
+    <button class="geri" onclick="menuyeDon()">Geri</button>
+  </div>
+
+  <div class="kisayol gizle" id="kisayol"></div>
+  <div class="uyari gizle" id="p-uyari">Bu asistan genel bilgilendirme sağlar. Somut durumunuz için avukata danışmanız gerekir.</div>
+  <div class="imza">Dosya360 ile güçlendirilmiştir</div>
+</div>
+
+<script>
+var SB_URL = 'https://gzyqwbvvorgepazjpkjt.supabase.co';
+var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6eXF3YnZ2b3JnZXBhempwa2p0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzNjgwNjgsImV4cCI6MjA5OTk0NDA2OH0.H1aVkbCLciXCGbkvsG0jPmYkm5IBXhwstwVkM490-gI';
+var sb = supabase.createClient(SB_URL, SB_KEY);
+
+var p = new URLSearchParams(location.search);
+var BURO = p.get('buro') || '';
+var HOST = (p.get('host') || '').toLowerCase();
+var URL_ = p.get('url') || '';
+document.body.className = p.get('konum') === 'sol' ? 'sol' : 'sag';
+
+var ayar = null, bilgiler = [], gorusmeId = null, mesajSayisi = 0, hazir = false;
+
+function ust(tip){ try{ parent.postMessage({ kaynak:'d360', tip:tip }, '*'); }catch(e){} }
+function el(id){ return document.getElementById(id); }
+function goster(id, ac){ el(id).classList.toggle('gizle', !ac); }
+function kacir(){ var a = el('akis'); a.scrollTop = a.scrollHeight; }
+
+function balon(metin, ben){
+  var d = document.createElement('div');
+  d.className = 'balon ' + (ben ? 'ben' : 'bot');
+  d.textContent = metin;
+  el('akis').appendChild(d); kacir();
+}
+
+function yaziyorAc(){
+  var d = document.createElement('div');
+  d.className = 'yaziyor'; d.id = 'yaziyor';
+  d.innerHTML = '<span></span><span></span><span></span>';
+  el('akis').appendChild(d); kacir();
+}
+function yaziyorKapat(){ var y = el('yaziyor'); if(y) y.remove(); }
+
+function botDer(metin, sonra){
+  yaziyorAc();
+  setTimeout(function(){ yaziyorKapat(); balon(metin, false); if(sonra) sonra(); },
+    Math.min(200 + metin.length * 9, 900));
+}
+
+/* ── Açılış ─────────────────────────────────────────── */
+async function yukle(){
+  if(!BURO) return;
+  try{
+    var a = await sb.from('ai_ayarlar').select('*').eq('buro_id', BURO).eq('aktif', true).maybeSingle();
+    if(!a.data) return;
+    ayar = a.data;
+
+    var izin = ayar.izinli_alanlar || [];
+    if(izin.length){
+      var uygun = izin.some(function(d){
+        d = String(d).toLowerCase().replace(/^www\./,'');
+        var h = HOST.replace(/^www\./,'');
+        return h === d || h.endsWith('.' + d);
+      });
+      if(!uygun){ ust('gizle'); return; }
+    }
+
+    var b = await sb.from('ai_bilgi').select('*').eq('buro_id', BURO).eq('aktif', true)
+              .order('kategori').order('sira');
+    bilgiler = b.data || [];
+
+    el('dugme-yazi').textContent = 'Size yardımcı olalım';
+    el('p-ad').textContent = ayar.bot_adi || 'Asistan';
+    durumYaz();
+    bilgiSeridi();
+    kisayollar();
+    goster('p-uyari', true);
+    hazir = true;
+  }catch(e){ /* sessiz */ }
+}
+
+function durumYaz(){
+  var s = ayar.calisma_saatleri || '';
+  var m = s.match(/(\d{1,2})[:.](\d{2})\s*[-–]\s*(\d{1,2})[:.](\d{2})/);
+  if(!m){ el('p-durum').textContent = s || 'Mesajınızı bırakabilirsiniz'; return; }
+  var simdi = new Date(), dk = simdi.getHours()*60 + simdi.getMinutes();
+  var bas = (+m[1])*60 + (+m[2]), bit = (+m[3])*60 + (+m[4]);
+  var hafta = simdi.getDay() >= 1 && simdi.getDay() <= 5;
+  var acik = hafta && dk >= bas && dk < bit;
+  el('p-nokta').style.background = acik ? '#5DCAA5' : '#98A2B3';
+  el('p-durum').textContent = acik ? ('Şu an açık · ' + m[3] + ':' + m[4] + "'e kadar")
+                                   : 'Şu an kapalı · mesajınızı bırakabilirsiniz';
+}
+
+function bilgiSeridi(){
+  var s = '';
+  if(ayar.adres)            s += sat('ti-map-pin', ayar.adres);
+  if(ayar.calisma_saatleri) s += sat('ti-clock', ayar.calisma_saatleri);
+  if(ayar.uzmanlik)         s += sat('ti-briefcase', ayar.uzmanlik);
+  if(!s) return;
+  el('p-bilgi').innerHTML = s; goster('p-bilgi', true);
+}
+function sat(ikon, metin){
+  return '<div class="bilgi-sat"><i class="ti ' + ikon + '"></i><span>' + kacisli(metin) + '</span></div>';
+}
+function kacisli(t){ var d = document.createElement('div'); d.textContent = t == null ? '' : t; return d.innerHTML; }
+
+function kisayollar(){
+  var h = '', tel = (ayar.telefon||'').replace(/\D/g,''), wa = (ayar.whatsapp||'').replace(/\D/g,'');
+  if(tel) h += '<a class="ks" href="tel:' + tel + '" target="_blank"><i class="ti ti-phone"></i>Ara</a>';
+  if(wa)  h += '<a class="ks" href="https://wa.me/9' + wa + '" target="_blank"><i class="ti ti-brand-whatsapp"></i>WhatsApp</a>';
+  if(ayar.eposta) h += '<a class="ks" href="mailto:' + ayar.eposta + '"><i class="ti ti-mail"></i>E-posta</a>';
+  if(ayar.adres)  h += '<a class="ks" href="https://maps.google.com/?q=' + encodeURIComponent(ayar.adres) + '" target="_blank"><i class="ti ti-map-2"></i>Yol tarifi</a>';
+  if(!h) return;
+  el('kisayol').innerHTML = h; goster('kisayol', true);
+}
+
+/* ── Menü ───────────────────────────────────────────── */
+function menu(){
+  goster('form', false);
+  var sss = bilgiler.filter(function(b){ return b.kategori === 'sss'; }).slice(0, 5);
+  var digerleri = bilgiler.filter(function(b){ return b.kategori !== 'sss'; }).slice(0, 3);
+  var liste = sss.concat(digerleri);
+
+  var h = liste.map(function(b, i){
+    return '<button class="sec" onclick="cevapla(' + bilgiler.indexOf(b) + ')">' + kacisli(b.baslik) + '</button>';
+  }).join('');
+  h += '<button class="sec vurgu" onclick="formAc()">Bir avukatla görüşmek istiyorum</button>';
+  el('secenekler').innerHTML = h;
+  goster('secenekler', true);
+}
+
+function cevapla(i){
+  var b = bilgiler[i]; if(!b) return;
+  balon(b.baslik, true);
+  goster('secenekler', false);
+  mesajSayisi += 2;
+  botDer(b.icerik, function(){
+    el('secenekler').innerHTML =
+        '<button class="sec vurgu" onclick="formAc()">Bir avukatla görüşmek istiyorum</button>'
+      + '<button class="sec" onclick="menu()">Başka bir soru</button>';
+    goster('secenekler', true);
+  });
+}
+
+function menuyeDon(){ goster('form', false); menu(); }
+
+function formAc(){
+  goster('secenekler', false);
+  balon('Bir avukatla görüşmek istiyorum', true);
+  mesajSayisi += 2;
+  botDer('Sizi arayabilmemiz için birkaç bilgi alalım.', function(){
+    var alanlar = (ayar.uzmanlik || '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+    var sec = el('f-konu');
+    sec.innerHTML = '<option value="">Konu seçiniz</option>'
+      + alanlar.map(function(a){ return '<option>' + kacisli(a) + '</option>'; }).join('')
+      + '<option>Diğer</option>';
+    goster('form', true);
+    kacir();
+  });
+}
+
+async function basvuruGonder(){
+  var ad = el('f-ad').value.trim(), tel = el('f-tel').value.trim();
+  var h = el('f-hata');
+  if(!ad || !tel){ h.textContent = 'Ad ve telefon gerekli.'; h.style.display = 'block'; return; }
+  if(tel.replace(/\D/g,'').length < 10){ h.textContent = 'Geçerli bir telefon numarası girin.'; h.style.display = 'block'; return; }
+  if(!el('f-kvkk').checked){ h.textContent = 'Devam etmek için onay kutusunu işaretleyin.'; h.style.display = 'block'; return; }
+  h.style.display = 'none';
+
+  var btn = el('f-btn'); btn.disabled = true; btn.textContent = 'Gönderiliyor...';
+  try{
+    if(!gorusmeId){
+      var g = await sb.from('ai_gorusmeler')
+        .insert({ buro_id: BURO, kaynak_url: URL_, mesaj_sayisi: mesajSayisi, basvuru_var: true })
+        .select('id').single();
+      gorusmeId = g.data ? g.data.id : null;
+    }
+    var r = await sb.from('ai_basvurular').insert({
+      buro_id: BURO, gorusme_id: gorusmeId,
+      ad_soyad: ad, telefon: tel,
+      konu: el('f-konu').value || null,
+      aciklama: el('f-not').value.trim() || null,
+      kvkk_onay: true, kaynak_url: URL_
+    });
+    if(r.error) throw r.error;
+
+    goster('form', false); goster('secenekler', false); goster('kisayol', false);
+    el('akis').innerHTML = '<div class="basarili">'
+      + '<i class="ti ti-circle-check"></i>'
+      + '<div class="basarili-b">Talebiniz alındı</div>'
+      + '<div class="basarili-a">En kısa sürede sizinle iletişime geçeceğiz.</div></div>';
+  }catch(e){
+    h.textContent = 'Gönderilemedi. Lütfen tekrar deneyin veya telefonla ulaşın.';
+    h.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Talebi gönder';
+  }
+}
+
+/* ── Aç / kapat ─────────────────────────────────────── */
+function ac(){
+  if(!hazir) return;
+  el('dugme').style.display = 'none';
+  el('panel').classList.add('acik');
+  ust('ac');
+  if(!el('akis').children.length){
+    botDer(ayar.karsilama || 'Merhaba, size nasıl yardımcı olabiliriz?', menu);
+  }
+}
+
+function kapat(){
+  el('panel').classList.remove('acik');
+  el('dugme').style.display = 'flex';
+  ust('kapat');
+}
+
+yukle();
+</script>
+</body>
+</html>

@@ -1,0 +1,2298 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Dosya360 — Avukatlık Bürosu CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B1629;--navy2:#1A2B47;--gold:#C9A84C;--gold2:#E8C96A;
+  --bg:#F4F5F7;--surface:#fff;--border:#E5E7EB;
+  --text:#111827;--muted:#6B7280;--hint:#9CA3AF;
+  --green:#15803D;--red:#B91C1C;--amber:#B45309;--blue:#1D4ED8;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+input,select,textarea,button{font-family:inherit;font-size:inherit}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* LAYOUT */
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:220px;background:var(--navy);display:flex;flex-direction:column;flex-shrink:0;transition:width 0.2s}
+.sidebar.collapsed{width:60px}
+.logo{padding:18px 16px 12px;border-bottom:0.5px solid rgba(201,168,76,0.25);display:flex;align-items:center;gap:10px;overflow:hidden}
+.logo-icon{color:var(--gold);font-size:20px;flex-shrink:0}
+.logo-text{font-size:14px;font-weight:600;color:var(--gold);white-space:nowrap}
+.logo-sub{font-size:10px;color:rgba(255,255,255,0.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav{padding:10px 8px;flex:1;overflow-y:auto;overflow-x:hidden}
+.navsec{font-size:10px;font-weight:500;color:rgba(255,255,255,0.3);letter-spacing:.08em;text-transform:uppercase;padding:8px 8px 4px;white-space:nowrap;overflow:hidden}
+.navitem{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:6px;cursor:pointer;font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:1px;transition:all .15s;white-space:nowrap;overflow:hidden;text-decoration:none}
+.navitem:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
+.navitem.active{background:rgba(201,168,76,.18);color:var(--gold2)}
+.navitem i{font-size:17px;flex-shrink:0}
+.nbadge{margin-left:auto;background:rgba(201,168,76,.25);color:var(--gold2);font-size:10px;padding:1px 7px;border-radius:5px;flex-shrink:0}
+.sidebar-bottom{padding:10px 8px;border-top:0.5px solid rgba(255,255,255,.08)}
+.collapse-btn{width:100%;padding:7px;background:rgba(255,255,255,.05);border:none;border-radius:6px;color:rgba(255,255,255,.3);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;gap:6px}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:52px;background:var(--surface);border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:10px;flex-shrink:0}
+.page-title{font-size:16px;font-weight:500;flex:1}
+.tbtn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:5px;font-size:13px;cursor:pointer;border:0.5px solid var(--border);background:var(--surface);color:var(--muted);transition:all .15s}
+.tbtn:hover{background:var(--bg)}
+.tbtn.primary{background:var(--navy);color:var(--gold);border:none}
+.tbtn.primary:hover{background:var(--navy2)}
+.content{flex:1;overflow-y:auto;padding:24px;background:var(--bg)}
+.panel{display:none}.panel.active{display:block}
+
+/* CARDS */
+.card{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:16px 20px;margin-bottom:16px}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:500}
+.card-link{font-size:12px;color:var(--gold);cursor:pointer}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.mc{background:var(--surface);border:0.5px solid var(--border);border-radius:5px;padding:16px}
+.mc-label{font-size:11px;color:var(--muted);margin-bottom:6px}
+.mc-val{font-size:26px;font-weight:500}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+
+/* TABLE */
+.tbl-wrap{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:16px}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{padding:10px 14px;text-align:left;font-size:11px;font-weight:500;color:var(--hint);background:var(--bg);border-bottom:0.5px solid var(--border)}
+.tbl td{padding:10px 14px;border-bottom:0.5px solid #F9FAFB;color:var(--text)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#FAFAFA;cursor:pointer}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:500}
+.bb{background:#EFF6FF;color:#1D4ED8}.bg{background:#F0FDF4;color:#15803D}
+.ba{background:#FFFBEB;color:#B45309}.br{background:#FEF2F2;color:#B91C1C}
+.bp{background:#F5F3FF;color:#6D28D9}.bgr{background:#F9FAFB;color:#374151}
+
+/* FORMS */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.field label{font-size:12px;font-weight:500;color:#374151}
+.field input,.field select,.field textarea{padding:9px 12px;border:0.5px solid var(--border);border-radius:5px;font-size:13px;color:var(--text);outline:none;background:var(--surface)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold)}
+.field textarea{resize:vertical}
+.field2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.overlay.open{display:flex}
+.modal{background:var(--surface);border-radius:6px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:0.5px solid var(--border)}
+.modal-head h3{font-size:15px;font-weight:500}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--hint);font-size:22px;line-height:1}
+.modal-body{padding:20px}
+.modal-footer{display:flex;justify-content:flex-end;gap:8px;padding-top:14px;border-top:0.5px solid var(--border);margin-top:14px}
+
+/* LIST ITEMS */
+.list-item{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s}
+.list-item:hover{border-color:rgba(201,168,76,.4)}
+.avatar{width:40px;height:40px;border-radius:50%;background:#EFF6FF;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#1D4ED8;flex-shrink:0}
+.li-name{font-size:13px;font-weight:500}
+.li-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.del-btn{margin-left:auto;background:none;border:none;color:var(--hint);cursor:pointer;padding:6px;border-radius:6px;font-size:16px}
+.del-btn:hover{color:var(--red);background:#FEF2F2}
+
+/* SEARCH */
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--surface);border:0.5px solid var(--border);border-radius:5px;padding:8px 12px;margin-bottom:14px}
+.search-bar input{border:none;outline:none;font-size:13px;flex:1;background:transparent}
+
+/* FILTERS */
+.filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.fbtn{padding:6px 13px;border-radius:5px;font-size:12px;cursor:pointer;border:0.5px solid var(--border);background:var(--surface);color:var(--muted);transition:all .15s}
+.fbtn.active{background:var(--navy);color:var(--gold);border-color:var(--navy)}
+
+/* TASK CHECK */
+.check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.check.done{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+
+/* AI */
+.ai-wrap{display:grid;grid-template-columns:1fr 280px;gap:16px}
+.ai-messages{flex:1;overflow-y:auto;padding:4px 0;display:flex;flex-direction:column;gap:12px;max-height:400px}
+.msg{max-width:85%}
+.msg.user{align-self:flex-end}
+.msg.bot{align-self:flex-start}
+.msg-bubble{padding:10px 14px;border-radius:6px;font-size:13px;line-height:1.6;white-space:pre-line}
+.msg.user .msg-bubble{background:var(--navy);color:var(--gold2);border-bottom-right-radius:3px}
+.msg.bot .msg-bubble{background:var(--bg);color:var(--text);border-bottom-left-radius:3px}
+.ai-sugg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.sg{padding:5px 10px;border-radius:5px;font-size:11px;cursor:pointer;border:0.5px solid rgba(201,168,76,.3);background:rgba(201,168,76,.07);color:#854F0B;transition:all .15s}
+.sg:hover{background:rgba(201,168,76,.15)}
+.ai-input-row{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border)}
+.ai-input{flex:1;border:0.5px solid var(--border);border-radius:5px;padding:9px 12px;font-size:13px;outline:none}
+.ai-input:focus{border-color:var(--gold)}
+.send-btn{width:38px;height:38px;background:var(--navy);border:none;border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--gold);font-size:18px}
+.dots{display:flex;gap:4px;align-items:center;padding:4px 0}
+.dots span{width:6px;height:6px;border-radius:50%;background:var(--hint);animation:dt 1.2s infinite}
+.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
+@keyframes dt{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1}}
+
+/* EMPTY */
+.empty{text-align:center;padding:48px 20px;color:var(--muted)}
+.empty i{font-size:36px;color:var(--hint);margin-bottom:10px;display:block}
+.empty-title{font-size:15px;font-weight:500;color:#374151;margin-bottom:6px}
+.empty-sub{font-size:13px;margin-bottom:18px}
+
+/* FIN */
+.fin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.fin-card{background:var(--surface);border:0.5px solid var(--border);border-radius:5px;padding:16px}
+.fin-icon{width:36px;height:36px;border-radius:5px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px}
+.fin-amount{font-size:22px;font-weight:500;margin-bottom:2px}
+.fin-label{font-size:11px;color:var(--muted)}
+
+/* CAL */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:8px}
+.cdh{font-size:10px;text-align:center;color:var(--hint);font-weight:500;padding:4px 0}
+.cd{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;border-radius:4px;cursor:pointer;position:relative;transition:all .15s}
+.cd:hover{background:var(--bg)}
+.cd.today{background:var(--navy);color:var(--gold);font-weight:500}
+.cd.has-ev::after{content:'';position:absolute;bottom:3px;width:4px;height:4px;border-radius:50%;background:var(--gold)}
+.cd.other-m{color:var(--hint)}
+
+/* MOBILE */
+@media(max-width:768px){
+  .sidebar{position:fixed;z-index:100;height:100vh;transform:translateX(-100%);transition:transform .3s}
+  .sidebar.open{transform:translateX(0)}
+  .metrics{grid-template-columns:1fr 1fr}
+  .grid2{grid-template-columns:1fr}
+  .ai-wrap{grid-template-columns:1fr}
+  .fin-grid{grid-template-columns:1fr 1fr}
+  .field2{grid-template-columns:1fr}
+  .mobile-menu-btn{display:flex!important}
+}
+.mobile-menu-btn{display:none;align-items:center;justify-content:center;width:36px;height:36px;background:none;border:0.5px solid var(--border);border-radius:5px;cursor:pointer;color:var(--muted);margin-right:4px}
+</style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://gzyqwbvvorgepazjpkjt.supabase.co'
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6eXF3YnZ2b3JnZXBhempwa2p0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzNjgwNjgsImV4cCI6MjA5OTk0NDA2OH0.H1aVkbCLciXCGbkvsG0jPmYkm5IBXhwstwVkM490-gI'
+window.sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+var sb = window.sb
+</script>
+  <style>
+    .auth-screen{position:fixed;inset:0;background:#0B1629;display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
+    .auth-box{width:100%;max-width:400px}
+    .auth-logo{text-align:center;margin-bottom:32px}
+    .auth-logo-text{font-size:28px;font-weight:600;color:#C9A84C;letter-spacing:2px}
+    .auth-logo-sub{font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px}
+    .auth-card{background:#1A2B47;border-radius:5px;padding:32px;border:0.5px solid rgba(201,168,76,0.2)}
+    .auth-title{font-size:16px;font-weight:500;color:#fff;margin-bottom:24px}
+    .auth-field{margin-bottom:14px}
+    .auth-field label{font-size:12px;color:rgba(255,255,255,0.5);display:block;margin-bottom:6px}
+    .auth-field input{width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:5px;color:#fff;font-size:14px;outline:none;font-family:inherit}
+    .auth-field input:focus{border-color:rgba(201,168,76,0.5)}
+    .auth-btn{width:100%;padding:12px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;margin-top:8px;font-family:inherit}
+    .auth-btn:disabled{opacity:0.5;cursor:not-allowed}
+    .auth-switch{text-align:center;margin-top:18px;font-size:13px;color:rgba(255,255,255,0.4)}
+    .auth-switch span{color:#C9A84C;cursor:pointer;font-weight:500}
+    .auth-error{background:rgba(239,68,68,0.15);border:0.5px solid rgba(239,68,68,0.3);border-radius:5px;padding:10px 14px;font-size:13px;color:#FCA5A5;margin-bottom:14px;display:none}
+    .auth-success{background:rgba(34,197,94,0.15);border:0.5px solid rgba(34,197,94,0.3);border-radius:5px;padding:10px 14px;font-size:13px;color:#86EFAC;margin-bottom:14px;display:none}
+    
+    /* ADMİN PANELİ */
+    .admin-panel{position:fixed;inset:0;background:#F4F5F7;z-index:8888;display:none;flex-direction:column}
+    .admin-topbar{background:#0B1629;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+    .admin-title{color:#C9A84C;font-size:16px;font-weight:600}
+    .admin-content{flex:1;overflow-y:auto;padding:24px}
+    .admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+    .admin-stat{background:#fff;border:0.5px solid #E5E7EB;border-radius:5px;padding:16px}
+    .admin-stat-label{font-size:11px;color:#6B7280;margin-bottom:4px}
+    .admin-stat-val{font-size:26px;font-weight:500;color:#111827}
+    .admin-table{background:#fff;border:0.5px solid #E5E7EB;border-radius:6px;overflow:hidden}
+    .admin-table table{width:100%;border-collapse:collapse;font-size:13px}
+    .admin-table th{padding:10px 16px;text-align:left;font-size:11px;font-weight:500;color:#9CA3AF;background:#F9FAFB;border-bottom:0.5px solid #E5E7EB}
+    .admin-table td{padding:11px 16px;border-bottom:0.5px solid #F3F4F6;color:#374151}
+    .toggle-btn{padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;border:none;font-weight:500}
+    .toggle-btn.aktif{background:#FEF2F2;color:#B91C1C}
+    .toggle-btn.pasif{background:#F0FDF4;color:#15803D}
+  
+/* ── Tipografi ve yuzey rafinasyonu ─────────────────────── */
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  font-feature-settings:'cv02','cv03','cv04','tnum';
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  letter-spacing:-0.006em;
+}
+h1,h2,h3,h4,.card-title,.section-title{letter-spacing:-0.018em}
+/* Sayilar hizali dizilsin */
+.mc-val,.stat-num,.plan-price,.hw-stat-val,.mini-stat-val,td{font-variant-numeric:tabular-nums}
+/* Kenarliklar tek tonda */
+:root{--border:#E4E7EC;--hairline:#F0F1F3}
+table td{border-bottom:1px solid var(--hairline)}
+/* Odak halkasi - erisilebilirlik */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid #C9A84C;outline-offset:1px;border-radius:3px
+}
+/* Gecisler tek egride */
+.navitem,.btn,.tbtn,button,.plan-card,.feat-card{transition:background-color .12s ease,border-color .12s ease,color .12s ease}
+
+/* ── Kenar cubugu yogunlugu ─────────────────────────────── */
+.navitem{
+  display:flex;align-items:center;gap:10px;
+  padding:7px 12px;margin:1px 8px;border-radius:5px;
+  font-size:13.5px;font-weight:450;color:rgba(255,255,255,.62);
+  cursor:pointer;text-decoration:none;position:relative;line-height:1.35
+}
+.navitem i{font-size:17px;width:18px;text-align:center;flex-shrink:0;opacity:.8}
+.navitem:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.92)}
+.navitem:hover i{opacity:1}
+.navitem.active{background:rgba(201,168,76,.11);color:#E8C96A;font-weight:500}
+.navitem.active i{opacity:1;color:#C9A84C}
+.navitem.active::before{
+  content:'';position:absolute;left:-8px;top:6px;bottom:6px;
+  width:2px;background:#C9A84C;border-radius:0 2px 2px 0
+}
+.nav-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nbadge{
+  font-size:11px;font-weight:500;padding:1px 6px;border-radius:3px;
+  background:rgba(255,255,255,.09);color:rgba(255,255,255,.55);
+  font-variant-numeric:tabular-nums
+}
+.navitem.active .nbadge{background:rgba(201,168,76,.18);color:#E8C96A}
+.navsec{
+  font-size:10.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  color:rgba(255,255,255,.32);padding:16px 20px 5px;white-space:nowrap;overflow:hidden
+}
+.navsec:first-of-type{padding-top:8px}
+
+.ai-tab{padding:9px 14px;background:none;border:none;border-bottom:2px solid transparent;font-size:13.5px;color:var(--muted);cursor:pointer;font-family:inherit;margin-bottom:-1px}
+.ai-tab.active{color:var(--text);border-bottom-color:#C9A84C;font-weight:500}
+.bs-durum{padding:3px 9px;border-radius:4px;font-size:11.5px;font-weight:500}
+</style>
+</head>
+<body>
+
+
+<!-- GİRİŞ EKRANI -->
+<div id="giris-ekrani" style="position:fixed;inset:0;background:#0B1629;display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px">
+  <div style="width:100%;max-width:380px">
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="font-size:26px;font-weight:600;color:#C9A84C;letter-spacing:.2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.125em;flex-shrink:0"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg> Dosya360</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px">Avukatlık Bürosu Yönetim Sistemi</div>
+    </div>
+    <div style="background:#1A2B47;border-radius:5px;padding:28px;border:0.5px solid rgba(201,168,76,0.2)">
+      <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:20px">Giriş Yap</div>
+      <div id="giris-hata" style="background:rgba(239,68,68,0.15);border:0.5px solid rgba(239,68,68,0.3);border-radius:5px;padding:9px 12px;font-size:12px;color:#FCA5A5;margin-bottom:14px;display:none"></div>
+      <div style="margin-bottom:12px">
+        <label style="font-size:12px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px">E-posta</label>
+        <input type="email" id="giris-email" placeholder="avukat@buro.com" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:5px;color:#fff;font-size:13px;outline:none;font-family:inherit">
+      </div>
+      <div style="margin-bottom:16px">
+        <label style="font-size:12px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px">Şifre</label>
+        <input type="password" id="giris-sifre" placeholder="••••••••" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:5px;color:#fff;font-size:13px;outline:none;font-family:inherit" onkeydown="if(event.key==='Enter')girisYap()">
+      </div>
+      <button id="giris-btn" onclick="girisYap()" style="width:100%;padding:12px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;font-family:inherit">Giriş Yap</button>
+      <div style="text-align:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,0.4)">
+        Hesabınız yok mu? <a href="index.html" style="color:#C9A84C;font-weight:500">Ana sayfaya git</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app" style="display:none" id="ana-uygulama">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="logo">
+    <i class="ti ti-scale logo-icon"></i>
+    <div id="logo-texts">
+      <div class="logo-text">Dosya360</div>
+      <div class="logo-sub" id="buro-adi-logo">Avukatlık CRM</div>
+    </div>
+  </div>
+  <nav class="nav">
+    <div class="navsec" id="ns1">Ana Menü</div>
+    <a class="navitem active" onclick="sp('anasayfa',this)"><i class="ti ti-layout-dashboard"></i><span class="nav-label">Anasayfa</span></a>
+    <a class="navitem" onclick="sp('muvekkiller',this)"><i class="ti ti-users"></i><span class="nav-label">Müvekkiller</span><span class="nbadge" id="nb-mv">0</span></a>
+    <a class="navitem" onclick="sp('davalar',this)"><i class="ti ti-briefcase"></i><span class="nav-label">Davalar</span><span class="nbadge" id="nb-dv">0</span></a>
+    <div class="navsec" id="ns2">Takip</div>
+    <a class="navitem" onclick="sp('takvim',this)"><i class="ti ti-calendar"></i><span class="nav-label">Takvim</span></a>
+    <a class="navitem" onclick="sp('gorevler',this)"><i class="ti ti-checkbox"></i><span class="nav-label">Görevler</span><span class="nbadge" id="nb-gv">0</span></a>
+    <a class="navitem" onclick="sp('belgeler',this)"><i class="ti ti-folders"></i><span class="nav-label">Belgeler</span></a>
+    <div class="navsec" id="ns3">Mali & İletişim</div>
+    <a class="navitem" onclick="sp('finans',this)"><i class="ti ti-coin"></i><span class="nav-label">Finans</span></a>
+    <a class="navitem" onclick="sp('iletisim',this)"><i class="ti ti-message-2"></i><span class="nav-label">İletişim</span></a>
+    <div class="navsec" id="ns4">Yapay Zekâ</div>
+    <a class="navitem" onclick="sp('yapay-zeka',this)"><i class="ti ti-sparkles"></i><span class="nav-label">YZ Asistan</span></a>
+    <a class="navitem" onclick="sp('ayarlar',this)"><i class="ti ti-settings"></i><span class="nav-label">Ayarlar</span></a>
+    <a class="navitem" onclick="sp('abonelik',this)"><i class="ti ti-credit-card"></i><span class="nav-label">Abonelik</span></a>
+    <a class="navitem" onclick="sp('kullanici-yonetimi',this)"><i class="ti ti-user-plus"></i><span class="nav-label">Kullanıcılar</span></a>
+    <a class="navitem" onclick="sp('ai-asistan',this)"><i class="ti ti-robot"></i><span class="nav-label">Web Asistanı</span></a>
+    <a class="navitem" onclick="sp('ai-basvuru',this)"><i class="ti ti-inbox"></i><span class="nav-label">Başvurular</span><span class="nbadge" id="basvuru-rozet" style="display:none">0</span></a>
+    <div class="navsec" id="ns5">UYAP</div>
+    <a class="navitem" href="https://avukat.uyap.gov.tr" target="_blank"><i class="ti ti-scale"></i><span class="nav-label">Avukat UYAP</span></a>
+    <a class="navitem" href="https://vatandas.uyap.gov.tr" target="_blank"><i class="ti ti-user-check"></i><span class="nav-label">Vatandaş UYAP</span></a>
+    <a class="navitem" href="https://ebilisim.uyap.gov.tr" target="_blank"><i class="ti ti-file-certificate"></i><span class="nav-label">E-Tebligat</span></a>
+  </nav>
+  <div class="sidebar-bottom">
+    <button class="collapse-btn" onclick="toggleSidebar()"><i class="ti ti-layout-sidebar-left-collapse" id="col-icon"></i><span id="col-label">Daralt</span></button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <button class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="ti ti-menu-2"></i></button>
+    <div class="page-title" id="page-title">Anasayfa</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span id="senkron-rozet" style="font-size:11.5px;color:#9CA3AF;display:flex;align-items:center;gap:5px;white-space:nowrap" title="Bulut senkronizasyon durumu"><i class="ti ti-cloud"></i></span>
+      <button class="tbtn" onclick="showModal('muvekkil')"><i class="ti ti-user-plus"></i>Müvekkil Ekle</button>
+      <button class="tbtn primary" onclick="showModal('dava')"><i class="ti ti-plus"></i>Yeni Dava</button>
+    </div>
+  </div>
+
+  <!-- UYARI BANNER -->
+  <div id="uyari-banner" style="display:none;flex-direction:column;gap:6px;padding:10px 20px;background:#FEF2F2;border-bottom:0.5px solid #FECACA;max-height:160px;overflow-y:auto"></div>
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="panel active" id="panel-anasayfa" >
+      <div id="kurulum-karti" style="display:none;align-items:center;gap:14px;background:#0B1629;border-radius:6px;padding:18px 20px;margin-bottom:20px">
+        <div style="width:44px;height:44px;border-radius:6px;background:rgba(201,168,76,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="ti ti-settings"></i></div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:600;color:#fff">Büro bilgilerinizi tamamlayın</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px">Büro adı ve avukat adınızı girin — 30 saniye sürer.</div>
+        </div>
+        <button onclick="kurulumaGit()" style="padding:9px 18px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">Şimdi Tamamla →</button>
+      </div>
+      <!-- YAKLAŞAN DURUŞMALAR KARTI -->
+      <div class="card" id="yaklasan-kart" style="display:none;border:1.5px solid #FECACA;background:#FEF2F2;margin-bottom:16px">
+        <div class="card-head"><div class="card-title" style="color:#B91C1C">Yaklaşan Duruşmalar (7 gün içinde)</div></div>
+        <div id="yaklasan-liste"></div>
+      </div>
+      <div class="metrics">
+        <div class="mc"><div class="mc-label">Müvekkil</div><div class="mc-val" id="s-mv">0</div></div>
+        <div class="mc"><div class="mc-label">Açık Dava</div><div class="mc-val" id="s-dv">0</div></div>
+        <div class="mc"><div class="mc-label">Bekleyen Görev</div><div class="mc-val" id="s-gv">0</div></div>
+        <div class="mc"><div class="mc-label">Bu Ay Tahsilat</div><div class="mc-val" id="s-th">₺0</div></div>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div class="card-head"><div class="card-title">Son Müvekkiller</div><div class="card-link" onclick="sp('muvekkiller',null)">Tümü →</div></div>
+          <div id="d-mv"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">Bekleyen Görevler</div><div class="card-link" onclick="sp('gorevler',null)">Tümü →</div></div>
+          <div id="d-gv"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Son Davalar</div><div class="card-link" onclick="sp('davalar',null)">Tümü →</div></div>
+        <div id="d-dv"></div>
+      </div>
+    </div>
+
+    <!-- MÜVEKKİLLER -->
+    <div class="panel" id="panel-muvekkiller">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h1 style="font-size:20px;font-weight:600">Müvekkiller</h1>
+        <button class="tbtn primary" onclick="showModal('muvekkil')"><i class="ti ti-plus"></i>Yeni Müvekkil</button>
+      </div>
+      <div class="search-bar"><i class="ti ti-search" style="color:var(--hint)"></i><input type="text" placeholder="Ad, telefon veya TC ile ara..." oninput="renderMv(this.value)"></div>
+      <div id="list-mv"></div>
+    </div>
+
+    <!-- DAVALAR -->
+    <div class="panel" id="panel-davalar">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h1 style="font-size:20px;font-weight:600">Davalar</h1>
+        <button class="tbtn primary" onclick="showModal('dava')"><i class="ti ti-plus"></i>Yeni Dava</button>
+      </div>
+      <div class="filters" id="dava-filters"></div>
+      <div id="list-dv"></div>
+    </div>
+
+    <!-- TAKVİM -->
+    <div class="panel" id="panel-takvim">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h1 style="font-size:20px;font-weight:600">Takvim</h1>
+        <button class="tbtn primary" onclick="showModal('etkinlik')"><i class="ti ti-plus"></i>Etkinlik Ekle</button>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title" id="cal-title"></div>
+            <div style="display:flex;gap:6px">
+              <button class="tbtn" style="padding:5px 9px" onclick="calPrev()"><i class="ti ti-chevron-left"></i></button>
+              <button class="tbtn" style="padding:5px 9px;font-size:11px" onclick="calToday()">Bugün</button>
+              <button class="tbtn" style="padding:5px 9px" onclick="calNext()"><i class="ti ti-chevron-right"></i></button>
+            </div>
+          </div>
+          <div class="cal-grid">
+            <div class="cdh">Pzt</div><div class="cdh">Sal</div><div class="cdh">Çar</div><div class="cdh">Per</div><div class="cdh">Cum</div><div class="cdh">Cmt</div><div class="cdh">Paz</div>
+          </div>
+          <div class="cal-grid" id="cal-days"></div>
+        </div>
+        <div class="card">
+          <div class="card-title" id="cal-sel-title" style="margin-bottom:12px"></div>
+          <div id="cal-events"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GÖREVLER -->
+    <div class="panel" id="panel-gorevler">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h1 style="font-size:20px;font-weight:600">Görevler</h1>
+        <button class="tbtn primary" onclick="showModal('gorev')"><i class="ti ti-plus"></i>Yeni Görev</button>
+      </div>
+      <div class="filters">
+        <div class="fbtn active" onclick="gvFiltre='hepsi';renderGv();setFilter(this)">Tümü</div>
+        <div class="fbtn" onclick="gvFiltre='bekliyor';renderGv();setFilter(this)">Bekliyor</div>
+        <div class="fbtn" onclick="gvFiltre='tamamlandi';renderGv();setFilter(this)">Tamamlandı</div>
+      </div>
+      <div id="list-gv"></div>
+    </div>
+
+    <!-- BELGELER -->
+    <div class="panel" id="panel-belgeler">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h1 style="font-size:20px;font-weight:600">Belgeler</h1>
+        <button class="tbtn primary" onclick="showModal('belge')"><i class="ti ti-upload"></i>Belge Ekle</button>
+      </div>
+      <div id="list-bl"></div>
+    </div>
+
+    <!-- FİNANS -->
+    <div class="panel" id="panel-finans">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h1 style="font-size:20px;font-weight:600">Finans</h1>
+        <button class="tbtn primary" onclick="showModal('finans')"><i class="ti ti-plus"></i>Yeni İşlem</button>
+      </div>
+      <div class="fin-grid">
+        <div class="fin-card"><div class="fin-icon" style="background:#F0FDF4;color:#15803D"><i class="ti ti-trending-up"></i></div><div class="fin-amount" id="f-tahsilat">₺0</div><div class="fin-label">Bu ay tahsilat</div></div>
+        <div class="fin-card"><div class="fin-icon" style="background:#FFFBEB;color:#B45309"><i class="ti ti-clock"></i></div><div class="fin-amount" id="f-bekleyen">₺0</div><div class="fin-label">Bekleyen alacak</div></div>
+        <div class="fin-card"><div class="fin-icon" style="background:#FEF2F2;color:#B91C1C"><i class="ti ti-receipt"></i></div><div class="fin-amount" id="f-masraf">₺0</div><div class="fin-label">Bu ay masraf</div></div>
+      </div>
+      <div id="list-fn"></div>
+    </div>
+
+    <!-- İLETİŞİM -->
+    <div class="panel" id="panel-iletisim">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h1 style="font-size:20px;font-weight:600">İletişim Merkezi</h1>
+        <button class="tbtn primary" onclick="showModal('iletisim')"><i class="ti ti-plus"></i>Kayıt Ekle</button>
+      </div>
+      <div id="list-il"></div>
+    </div>
+
+    <!-- YAPAY ZEKA -->
+    <div class="panel" id="panel-yapay-zeka">
+      <h1 style="font-size:20px;font-weight:600;margin-bottom:16px"><i class="ti ti-sparkles" style="color:var(--gold)"></i> YZ Asistan</h1>
+      <div class="ai-wrap">
+        <div class="card" style="display:flex;flex-direction:column">
+          <div class="ai-sugg" id="ai-sugg"></div>
+          <div class="ai-messages" id="ai-msgs"></div>
+          <div class="ai-input-row">
+            <input class="ai-input" type="text" id="ai-inp" placeholder='Örn: "Bugün ne var?" veya "Bekleyen görevleri listele"' onkeydown="if(event.key==='Enter')sendAI()">
+            <button class="send-btn" onclick="sendAI()"><i class="ti ti-send"></i></button>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:10px"><i class="ti ti-shield-check" style="color:var(--muted)"></i> Risk Analizi</div>
+            <div id="ai-risk"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AYARLAR -->
+    <div class="panel" id="panel-ayarlar">
+      <h1 style="font-size:20px;font-weight:600;margin-bottom:16px">Ayarlar</h1>
+      <div class="card" style="max-width:500px">
+        <div class="card-title" style="margin-bottom:14px">Büro Bilgileri</div>
+        <div class="field"><label>Büro Adı</label><input type="text" id="set-buro" placeholder="Hukuk Bürosu" oninput="saveSetting('buroAdi',this.value)"></div>
+        <div class="field"><label>Avukat Adı</label><input type="text" id="set-avukat" placeholder="Av. Ad Soyad" oninput="saveSetting('avukatAdi',this.value)"></div>
+        <div class="field"><label>Telefon</label><input type="text" id="set-tel" placeholder="0312 000 0000" oninput="saveSetting('telefon',this.value)"></div>
+        <div class="field"><label>E-posta</label><input type="email" id="set-email" placeholder="buro@ornek.com" oninput="saveSetting('email',this.value)"></div>
+        <div class="field" style="margin-top:8px;padding-top:14px;border-top:0.5px solid var(--border)">
+          <label>WhatsApp Numarası <span style="color:var(--muted);font-weight:400">(müvekkil kartlarında görünür)</span></label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span style="padding:9px 12px;background:var(--bg);border:0.5px solid var(--border);border-radius:5px;font-size:13px;color:var(--muted);white-space:nowrap">+90</span>
+            <input type="tel" id="set-wa" placeholder="532 000 0000" maxlength="13" oninput="saveSetting('whatsapp',this.value)">
+          </div>
+          <p style="font-size:11px;color:var(--muted);margin-top:5px">Örnek: 5321234567 (başında 0 olmadan)</p>
+        </div>
+        <div id="wa-test-wrap" style="display:none;margin-top:8px">
+          <a id="wa-test-link" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#25D366;color:#fff;border-radius:5px;font-size:13px;font-weight:500;text-decoration:none">
+            <i class="ti ti-brand-whatsapp"></i> WhatsApp'ı Test Et
+          </a>
+        </div>
+        <div style="margin-top:26px;padding-top:20px;border-top:1px solid var(--border)">
+          <div style="font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:4px">Şifre değiştir</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px">En az 6 karakter. Değişiklikten sonra oturumunuz açık kalır.</div>
+          <div id="sifre-mesaj" style="display:none;font-size:12.5px;padding:9px 12px;border-radius:5px;margin-bottom:12px"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div class="field"><label>YENİ ŞİFRE</label><input type="password" id="sifre-yeni" placeholder="••••••••" autocomplete="new-password"></div>
+            <div class="field"><label>YENİ ŞİFRE TEKRAR</label><input type="password" id="sifre-yeni2" placeholder="••••••••" autocomplete="new-password"></div>
+          </div>
+          <button id="sifre-btn" onclick="sifreDegistir()" style="padding:10px 20px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:13.5px;font-weight:500;color:var(--text);cursor:pointer;font-family:inherit">Şifreyi güncelle</button>
+        </div>
+
+        <button id="kurulum-kaydet-btn" onclick="kurulumKaydet()" style="width:100%;margin-top:16px;padding:11px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Bilgileri Kaydet</button>
+        <p style="font-size:12px;color:var(--muted);margin-top:10px">Büro adı ve avukat adı hesabınıza kaydedilir. Diğer alanlar otomatik saklanır.</p>
+      </div>
+    <div style="text-align:center;padding:28px 0 8px;font-size:12px;color:var(--hint);border-top:0.5px solid var(--border);margin-top:28px"><strong style="color:var(--muted)">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:var(--gold);text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır &nbsp;·&nbsp; v3.0</div>
+      <div style="text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:24px"><strong style="color:#6B7280">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#C9A84C;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır</div>
+    </div>
+
+
+    <!-- ABONELİK PANELİ -->
+    <div class="panel" id="panel-abonelik">
+      <h1 style="font-size:20px;font-weight:600;margin-bottom:20px">Abonelik</h1>
+
+      <!-- Mevcut abonelik durumu -->
+      <div id="abone-durum-kart" style="background:#fff;border:0.5px solid var(--border);border-radius:6px;padding:18px;margin-bottom:20px;display:flex;align-items:center;gap:14px">
+        <div id="abone-ikon" style="width:44px;height:44px;border-radius:6px;background:#FFFBEB;color:#B45309;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="ti ti-clock"></i></div>
+        <div style="flex:1">
+          <div id="abone-baslik" style="font-size:14px;font-weight:600;color:var(--text)">Aktif abonelik yok</div>
+          <div id="abone-alt" style="font-size:12px;color:var(--muted);margin-top:2px">Aşağıdan bir paket seçerek başlayın.</div>
+        </div>
+        <div id="abone-badge"></div>
+      </div>
+
+      <!-- Periyot toggle -->
+      <div style="display:flex;justify-content:center;margin-bottom:24px">
+        <div style="display:inline-flex;background:#F3F4F6;border-radius:50px;padding:4px">
+          <button id="ab-btn-aylik" onclick="abPeriyot('aylik')" style="padding:8px 24px;border-radius:50px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:inherit;background:#0B1629;color:#C9A84C;transition:all .2s">Aylık</button>
+          <button id="ab-btn-yillik" onclick="abPeriyot('yillik')" style="padding:8px 24px;border-radius:50px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:inherit;background:transparent;color:var(--muted);transition:all .2s">Yıllık — 2 ay bedava!</button>
+        </div>
+      </div>
+
+      <!-- Paketler -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+
+        <!-- Başlangıç -->
+        <div style="background:#fff;border:1.5px solid var(--border);border-radius:5px;padding:24px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Başlangıç</div>
+          <div id="ab-f-baslangic" style="font-size:32px;font-weight:600;color:var(--text)">₺1.500 <span style="font-size:13px;font-weight:400;color:var(--muted)">/ay</span></div>
+          <div id="ab-p-baslangic" style="font-size:11px;color:var(--hint);margin-bottom:14px">Aylık ödeme</div>
+          <div style="background:#F9FAFB;border-radius:5px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:6px"><i class="ti ti-users" style="color:#C9A84C"></i> En fazla <strong>3 kullanıcı</strong></div>
+          <ul style="list-style:none;margin-bottom:20px;font-size:12px;color:var(--muted)">
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Tüm modüller</li>
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Sınırsız müvekkil & dava</li>
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>WhatsApp bildirimleri</li>
+            <li style="padding:5px 0;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>E-posta desteği</li>
+          </ul>
+          <button onclick="abPaketSec('Başlangıç',3)" style="width:100%;padding:11px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Seç & Satın Al</button>
+        </div>
+
+        <!-- Büyüme -->
+        <div style="background:#fff;border:1.5px solid #C9A84C;border-radius:5px;padding:24px;position:relative;box-shadow:0 0 0 1px #C9A84C">
+          <div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#C9A84C;color:#0B1629;font-size:11px;font-weight:600;padding:3px 14px;border-radius:5px;white-space:nowrap">⭐ En Popüler</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Büyüme</div>
+          <div id="ab-f-buyume" style="font-size:32px;font-weight:600;color:var(--text)">₺3.500 <span style="font-size:13px;font-weight:400;color:var(--muted)">/ay</span></div>
+          <div id="ab-p-buyume" style="font-size:11px;color:var(--hint);margin-bottom:14px">Aylık ödeme</div>
+          <div style="background:#F9FAFB;border-radius:5px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:6px"><i class="ti ti-users" style="color:#C9A84C"></i> En fazla <strong>10 kullanıcı</strong></div>
+          <ul style="list-style:none;margin-bottom:20px;font-size:12px;color:var(--muted)">
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Başlangıç + her şey</li>
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>YZ Asistan</li>
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Personel yönetimi</li>
+            <li style="padding:5px 0;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Öncelikli destek</li>
+          </ul>
+          <button onclick="abPaketSec('Büyüme',10)" style="width:100%;padding:11px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Seç & Satın Al</button>
+        </div>
+
+        <!-- Kurumsal -->
+        <div style="background:#fff;border:1.5px solid var(--border);border-radius:5px;padding:24px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Kurumsal</div>
+          <div style="font-size:32px;font-weight:600;color:var(--text)">Özel</div>
+          <div style="font-size:11px;color:var(--hint);margin-bottom:14px">Size özel teklif</div>
+          <div style="background:#F9FAFB;border-radius:5px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:6px"><i class="ti ti-users" style="color:#C9A84C"></i> <strong>Sınırsız</strong> kullanıcı</div>
+          <ul style="list-style:none;margin-bottom:20px;font-size:12px;color:var(--muted)">
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Büyüme + her şey</li>
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Özel entegrasyonlar</li>
+            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>API erişimi</li>
+            <li style="padding:5px 0;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>7/24 destek</li>
+          </ul>
+          <a href="https://wa.me/905304621769?text=Kurumsal%20paket%20hakkında%20bilgi%20almak%20istiyorum" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:11px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none"><i class="ti ti-brand-whatsapp"></i>WhatsApp İletişim</a>
+        </div>
+
+      </div>
+
+      <!-- Banka bilgileri -->
+      <div style="background:#fff;border:0.5px solid var(--border);border-radius:6px;padding:18px">
+        <div style="font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="ti ti-building-bank" style="color:var(--muted)"></i> Havale / EFT Bilgileri</div>
+        <div style="background:#F9FAFB;border-radius:5px;padding:14px">
+          <div style="font-size:13px;font-weight:600;margin-bottom:8px">Enpara</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <span style="font-size:11px;color:var(--hint)">Hesap Sahibi</span>
+            <span style="font-size:13px;font-weight:500">Metin Can Akçil</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:11px;color:var(--hint)">IBAN</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span id="ab-iban" style="font-size:12px;font-weight:500;font-family:monospace">TR16 0015 7000 0000 0098 9101 48</span>
+              <button onclick="navigator.clipboard.writeText(document.getElementById('ab-iban').textContent);alert('IBAN kopyalandı!')" style="padding:3px 10px;background:#E5E7EB;border:none;border-radius:5px;font-size:11px;cursor:pointer">Kopyala</button>
+            </div>
+          </div>
+        </div>
+        <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:5px;padding:10px;margin-top:10px;font-size:12px;color:#92400E">
+          Havale açıklamasına <strong>e-posta adresinizi</strong> yazınız. Ödeme onaylandıktan sonra 1 iş günü içinde aktif edilir.
+        </div>
+      </div>
+    </div>
+
+
+    <!-- WEB ASISTANI -->
+    <div class="panel" id="panel-ai-asistan">
+      <div id="ai-paket-uyari" style="display:none;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:16px 18px;margin-bottom:20px">
+        <div style="font-size:14px;font-weight:600;color:#92400E;margin-bottom:4px">Bu özellik mevcut paketinizde bulunmuyor</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Web Asistanı, Büyüme ve Kurumsal paketlerde sunulmaktadır.</div>
+        <button onclick="sp('abonelik',null)" style="padding:8px 16px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">Paketleri görüntüle</button>
+      </div>
+
+      <div id="ai-icerik" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin-bottom:20px">
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--text)">Asistan durumu</div>
+            <div style="font-size:12.5px;color:var(--muted);margin-top:2px" id="ai-durum-metin">Yükleniyor...</div>
+          </div>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" id="ai-aktif" onchange="aiDurumDegistir()" style="width:auto">
+            <span style="font-size:13px;color:var(--text)">Etkin</span>
+          </label>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">
+          <div class="mc"><div class="mc-val" id="ai-m-gorusme">—</div><div class="mc-label">Toplam görüşme</div></div>
+          <div class="mc"><div class="mc-val" id="ai-m-ay">—</div><div class="mc-label">Bu ay</div></div>
+          <div class="mc"><div class="mc-val" id="ai-m-basvuru">—</div><div class="mc-label">Başvuru</div></div>
+          <div class="mc"><div class="mc-val" id="ai-m-oran">—</div><div class="mc-label">Başvuru oranı</div></div>
+        </div>
+
+        <div style="display:flex;gap:8px;border-bottom:1px solid var(--border);margin-bottom:20px">
+          <button class="ai-tab active" onclick="aiSekme('ayar',this)">Ayarlar</button>
+          <button class="ai-tab" onclick="aiSekme('bilgi',this)">Bilgi bankası</button>
+          <button class="ai-tab" onclick="aiSekme('kod',this)">Sitenize ekleyin</button>
+        </div>
+
+        <div id="ai-sekme-ayar">
+          <div class="card" style="padding:20px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div class="field"><label>ASİSTAN ADI</label><input id="ai-bot-adi" placeholder="Dijital Asistan"></div>
+              <div class="field"><label>KONUŞMA TONU</label><select id="ai-ton"><option value="resmi">Resmî</option><option value="samimi">Samimi</option><option value="kisa">Kısa ve net</option></select></div>
+            </div>
+            <div class="field"><label>KARŞILAMA MESAJI</label><textarea id="ai-karsilama" rows="2" placeholder="Merhaba, size nasıl yardımcı olabiliriz?"></textarea></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div class="field"><label>TELEFON</label><input id="ai-telefon" placeholder="0312 000 00 00"></div>
+              <div class="field"><label>WHATSAPP</label><input id="ai-whatsapp" placeholder="5301234567"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div class="field"><label>E-POSTA</label><input id="ai-eposta" placeholder="info@buro.com"></div>
+              <div class="field"><label>ÇALIŞMA SAATLERİ</label><input id="ai-saatler" placeholder="Hafta içi 09:00 - 18:00"></div>
+            </div>
+            <div class="field"><label>ADRES</label><input id="ai-adres" placeholder="Kızılay, Çankaya / Ankara"></div>
+            <div class="field"><label>UZMANLIK ALANLARI</label><input id="ai-uzmanlik" placeholder="İş hukuku, icra, aile hukuku"></div>
+            <div class="field"><label>İZİNLİ ALAN ADLARI</label><input id="ai-alanlar" placeholder="ornekhukuk.com, www.ornekhukuk.com">
+              <p style="font-size:11px;color:var(--hint);margin-top:5px">Asistan yalnızca bu adreslerde çalışır. Virgülle ayırın.</p></div>
+            <div id="ai-mesaj" style="display:none;font-size:12.5px;padding:9px 12px;border-radius:5px;margin-bottom:12px"></div>
+            <button id="ai-kaydet-btn" onclick="aiAyarKaydet()" style="padding:10px 20px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit">Ayarları kaydet</button>
+          </div>
+        </div>
+
+        <div id="ai-sekme-bilgi" style="display:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div style="font-size:12.5px;color:var(--muted)">Asistan yalnızca buradaki bilgilerden yanıt verir. Girmediğiniz konuda görüş bildirmez.</div>
+            <button onclick="bilgiModalAc()" style="padding:8px 16px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap"><i class="ti ti-plus"></i> Bilgi ekle</button>
+          </div>
+          <div id="ai-bilgi-liste" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+
+        <div id="ai-sekme-kod" style="display:none">
+          <div class="card" style="padding:20px">
+            <div style="font-size:14px;font-weight:600;margin-bottom:6px">Kodu web sitenize ekleyin</div>
+            <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px">Aşağıdaki satırı sitenizin her sayfasında, kapanış &lt;/body&gt; etiketinden hemen önce ekleyin.</div>
+            <div style="background:#0B1629;border-radius:5px;padding:14px;font-family:ui-monospace,monospace;font-size:12px;color:#E8C96A;word-break:break-all;margin-bottom:10px" id="ai-embed-kod">—</div>
+            <button onclick="embedKopyala()" style="padding:9px 18px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:13px;font-weight:500;color:var(--text);cursor:pointer;font-family:inherit"><i class="ti ti-copy"></i> Kodu kopyala</button>
+            <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+              <div style="font-size:13px;font-weight:600;margin-bottom:8px">WordPress</div>
+              <div style="font-size:12.5px;color:var(--muted);line-height:1.7;margin-bottom:14px">Eklentiler bölümünden <strong>WPCode</strong> eklentisini kurun. Code Snippets → Header &amp; Footer bölümüne yapıştırın. Tema dosyasına eklemeyin, tema güncellemesinde silinir.</div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:8px">Wix</div>
+              <div style="font-size:12.5px;color:var(--muted);line-height:1.7">Ayarlar → Custom Code → Add Custom Code. Tüm sayfalar ve Body - end seçin. <strong>Ücretsiz Wix planlarında özel kod eklenemez</strong>, en az Core planı gerekir.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BASVURULAR -->
+    <div class="panel" id="panel-ai-basvuru">
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap" id="basvuru-filtre"></div>
+      <div id="basvuru-liste" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+
+    <!-- BILGI MODAL -->
+    <div class="overlay" id="m-bilgi">
+      <div class="modal">
+        <div class="modal-head"><h3>Bilgi ekle</h3><button class="modal-close" onclick="closeModal('bilgi')"><i class="ti ti-x"></i></button></div>
+        <div class="modal-body">
+          <input type="hidden" id="bilgi-id">
+          <div class="field"><label>KATEGORİ</label><select id="bilgi-kategori">
+            <option value="sss">Sık sorulan soru</option>
+            <option value="buro">Büro hakkında</option>
+            <option value="hizmet">Hizmet alanı</option>
+            <option value="ozel">Özel bilgi</option>
+          </select></div>
+          <div class="field"><label>BAŞLIK / SORU</label><input id="bilgi-baslik" placeholder="Çalışma saatleriniz nedir?"></div>
+          <div class="field"><label>İÇERİK / CEVAP</label><textarea id="bilgi-icerik" rows="4" placeholder="Hafta içi 09:00 - 18:00 arası açığız."></textarea></div>
+          <div class="modal-footer">
+            <button class="tbtn" onclick="closeModal('bilgi')">Vazgeç</button>
+            <button class="tbtn primary" onclick="bilgiKaydet()">Kaydet</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KULLANICI YÖNETİMİ PANELİ -->
+    <div class="panel" id="panel-kullanici-yonetimi">
+      <h1 style="font-size:20px;font-weight:600;margin-bottom:6px">Kullanıcı Yönetimi</h1>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Büronuzdaki kullanıcıları yönetin ve yeni üyeler davet edin.</p>
+
+      <div id="ku-abone-uyari" style="background:#FEF2F2;border:1px solid #FECACA;border-radius:5px;padding:14px;margin-bottom:16px;display:none">
+        <div style="font-size:13px;color:#B91C1C;font-weight:500">Aktif abonelik gerekli</div>
+        <div style="font-size:12px;color:#6B7280;margin-top:4px">Kullanıcı eklemek için önce abonelik sayfasından bir paket seçmelisiniz.</div>
+        <button onclick="sp('abonelik',document.querySelector('[onclick*=abonelik]'))" style="margin-top:10px;padding:7px 14px;background:#0B1629;color:#C9A84C;border:none;border-radius:4px;font-size:12px;font-weight:500;cursor:pointer">Abonelik Sayfasına Git →</button>
+      </div>
+
+      <div id="ku-aktif-wrap">
+        <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border:0.5px solid var(--border);border-radius:6px;padding:14px 18px;margin-bottom:16px">
+          <div>
+            <div style="font-size:13px;font-weight:600" id="ku-paket-adi">—</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px" id="ku-kullanici-sayisi">— / — kullanıcı</div>
+          </div>
+          <button id="ku-davet-btn" onclick="kuDavetAc()" style="display:flex;align-items:center;gap:6px;padding:9px 16px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">
+            <i class="ti ti-user-plus"></i> Kullanıcı Davet Et
+          </button>
+        </div>
+
+        <div id="ku-liste" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+          <div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">Yükleniyor...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAVET MODAL -->
+    <div class="overlay" id="m-davet">
+      <div class="modal">
+        <div class="modal-head"><h3>Kullanıcı Davet Et</h3><button class="modal-close" onclick="closeModal('davet')"><i class="ti ti-x"></i></button></div>
+        <div class="modal-body">
+          <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Davet etmek istediğiniz kişinin e-posta adresini girin. Sisteme katılmaları için bir link oluşturulacaktır.</p>
+          <div class="field"><label>E-posta Adresi *</label><input type="email" id="ku-davet-email" placeholder="avukat@buro.com"></div>
+          <div class="field"><label>Rol</label><select id="ku-davet-rol" style="width:100%;padding:9px 12px;border:0.5px solid var(--border);border-radius:5px;font-size:13px;outline:none;font-family:inherit;background:#fff;color:var(--text)">
+            <option value="avukat">Avukat</option>
+            <option value="stajyer">Stajyer</option>
+            <option value="sekreter">Sekreter</option>
+            <option value="muhasebe">Muhasebe</option>
+          </select></div>
+          <div id="ku-link-wrap" style="display:none;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:5px;padding:12px;margin-bottom:14px">
+            <div style="font-size:12px;color:#15803D;font-weight:500;margin-bottom:6px">Davet linki oluşturuldu</div>
+            <div id="ku-link-text" style="font-size:11px;color:#374151;word-break:break-all;background:#fff;padding:8px;border-radius:6px;margin-bottom:6px"></div>
+            <div style="display:flex;gap:8px">
+              <button onclick="navigator.clipboard.writeText(document.getElementById('ku-link-text').textContent);alert('Kopyalandı!')" style="padding:5px 12px;background:#15803D;color:#fff;border:none;border-radius:5px;font-size:12px;cursor:pointer">Linki Kopyala</button>
+              <a id="ku-wa-link" href="#" target="_blank" style="display:flex;align-items:center;gap:4px;padding:5px 12px;background:#25D366;color:#fff;border:none;border-radius:5px;font-size:12px;text-decoration:none"><i class="ti ti-brand-whatsapp"></i>WhatsApp ile Gönder</a>
+            </div>
+            <p style="font-size:11px;color:var(--muted);margin-top:6px">Bu linki kişiye WhatsApp veya e-posta ile gönderin. 7 gün geçerlidir.</p>
+          </div>
+          <div class="modal-footer">
+            <button class="tbtn" onclick="closeModal('davet')">Kapat</button>
+            <button class="tbtn primary" id="ku-davet-submit-btn" onclick="kuDavetGonder()"><i class="ti ti-link"></i> Davet Linki Oluştur</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+</div>
+
+<!-- MODALS -->
+<div class="overlay" id="m-muvekkil"><div class="modal">
+  <div class="modal-head"><h3>Yeni Müvekkil</h3><button class="modal-close" onclick="closeModal('muvekkil')"><i class="ti ti-x"></i></button></div>
+  <div class="modal-body">
+    <div class="field2"><div class="field"><label>Ad *</label><input type="text" id="mv-ad" placeholder="Ad"></div><div class="field"><label>Soyad *</label><input type="text" id="mv-soyad" placeholder="Soyad"></div></div>
+    <div class="field2"><div class="field"><label>TC No</label><input type="text" id="mv-tc" placeholder="12345678901" maxlength="11"></div><div class="field"><label>Telefon</label><input type="text" id="mv-tel" placeholder="0500 000 0000"></div></div>
+    <div class="field2"><div class="field"><label>E-posta</label><input type="email" id="mv-email" placeholder="ad@ornek.com"></div><div class="field"><label>İl</label><input type="text" id="mv-il" placeholder="Ankara"></div></div>
+    <div class="field"><label>Tür</label><select id="mv-tur"><option value="bireysel">Bireysel</option><option value="kurumsal">Kurumsal</option></select></div>
+    <div class="field"><label>Notlar</label><textarea id="mv-not" rows="3" placeholder="Müvekkil hakkında notlar..."></textarea></div>
+    <div class="modal-footer"><button class="tbtn" onclick="closeModal('muvekkil')">İptal</button><button class="tbtn primary" onclick="saveMuvekkil()">Müvekkil Ekle</button></div>
+  </div>
+</div></div>
+
+<div class="overlay" id="m-dava"><div class="modal">
+  <div class="modal-head"><h3>Yeni Dava</h3><button class="modal-close" onclick="closeModal('dava')"><i class="ti ti-x"></i></button></div>
+  <div class="modal-body">
+    <div class="field2"><div class="field"><label>Dosya No *</label><input type="text" id="dv-no" placeholder="2026/0001"></div><div class="field"><label>Müvekkil</label><select id="dv-mv"></select></div></div>
+    <div class="field2"><div class="field"><label>Mahkeme</label><input type="text" id="dv-mhk" placeholder="Ankara 3. Asliye Hukuk"></div><div class="field"><label>Dava Türü</label><input type="text" id="dv-tur" placeholder="İcra Takibi"></div></div>
+    <div class="field2"><div class="field"><label>Karşı Taraf</label><input type="text" id="dv-kt" placeholder="Ad Soyad"></div><div class="field"><label>Açılış Tarihi</label><input type="date" id="dv-tarih"></div></div>
+    <div class="field"><label>Durum</label><select id="dv-durum">
+      <option value="on_inceleme">Ön İnceleme</option><option value="bilirkisi">Bilirkişi Aşaması</option>
+      <option value="durusma_bekliyor">Duruşma Bekleniyor</option><option value="karar_asamasi">Karar Aşaması</option>
+      <option value="istinaf">İstinaf</option><option value="temyiz">Temyiz</option><option value="sonuclandi">Sonuçlandı</option>
+    </select></div>
+    <div class="field2"><div class="field"><label>Sonraki Duruşma Tarihi</label><input type="date" id="dv-durusma-tarihi"></div><div class="field"><label>Duruşma Saati</label><input type="time" id="dv-durusma-saati" placeholder="09:00"></div></div>
+    <div class="field"><label>Notlar</label><textarea id="dv-not" rows="3" placeholder="Dava notları..."></textarea></div>
+    <div class="modal-footer"><button class="tbtn" onclick="closeModal('dava')">İptal</button><button class="tbtn primary" onclick="saveDava()">Dava Ekle</button></div>
+  </div>
+</div></div>
+
+<div class="overlay" id="m-gorev"><div class="modal">
+  <div class="modal-head"><h3>Yeni Görev</h3><button class="modal-close" onclick="closeModal('gorev')"><i class="ti ti-x"></i></button></div>
+  <div class="modal-body">
+    <div class="field"><label>Görev *</label><input type="text" id="gv-baslik" placeholder="Dilekçe hazırla..."></div>
+    <div class="field2"><div class="field"><label>Son Tarih</label><input type="date" id="gv-tarih"></div><div class="field"><label>Öncelik</label><select id="gv-oncelik"><option value="normal">Normal</option><option value="yuksek">Yüksek</option><option value="kritik">Kritik</option></select></div></div>
+    <div class="field"><label>İlgili Dava</label><select id="gv-dava"></select></div>
+    <div class="modal-footer"><button class="tbtn" onclick="closeModal('gorev')">İptal</button><button class="tbtn primary" onclick="saveGorev()">Görev Ekle</button></div>
+  </div>
+</div></div>
+
+<div class="overlay" id="m-etkinlik"><div class="modal">
+  <div class="modal-head"><h3>Etkinlik / Duruşma Ekle</h3><button class="modal-close" onclick="closeModal('etkinlik')"><i class="ti ti-x"></i></button></div>
+  <div class="modal-body">
+    <div class="field"><label>Başlık *</label><input type="text" id="et-baslik" placeholder="Duruşma başlığı..."></div>
+    <div class="field2"><div class="field"><label>Tarih & Saat *</label><input type="datetime-local" id="et-tarih"></div><div class="field"><label>Tür</label><select id="et-tur"><option value="durusma">Duruşma</option><option value="toplanti">Toplantı</option><option value="son_tarih">Son Tarih</option><option value="diger">Diğer</option></select></div></div>
+    <div class="field"><label>İlgili Dava</label><select id="et-dava"></select></div>
+    <div class="field"><label>Notlar</label><textarea id="et-not" rows="2" placeholder="Notlar..."></textarea></div>
+    <div class="modal-footer"><button class="tbtn" onclick="closeModal('etkinlik')">İptal</button><button class="tbtn primary" onclick="saveEtkinlik()">Ekle</button></div>
+  </div>
+</div></div>
+
+<div class="overlay" id="m-finans"><div class="modal">
+  <div class="modal-head"><h3>Mali İşlem</h3><button class="modal-close" onclick="closeModal('finans')"><i class="ti ti-x"></i></button></div>
+  <div class="modal-body">
+    <div class="field2"><div class="field"><label>Tür</label><select id="fn-tur"><option value="tahsilat">Tahsilat</option><option value="masraf">Masraf</option><option value="harc">Harç</option><option value="fatura">Fatura</option></select></div><div class="field"><label>Tutar (₺) *</label><input type="number" id="fn-tutar" placeholder="0"></div></div>
+    <div class="field2"><div class="field"><label>Müvekkil</label><select id="fn-mv"></select></div><div class="field"><label>Tarih</label><input type="date" id="fn-tarih"></div></div>
+    <div class="field"><label>Açıklama</label><input type="text" id="fn-aciklama" placeholder="İşlem açıklaması..."></div>
+    <div class="modal-footer"><button class="tbtn" onclick="closeModal('finans')">İptal</button><button class="tbtn primary" onclick="saveFinans()">İşlem Ekle</button></div>
+  </div>
+</div></div>
+
+<div class="overlay" id="m-belge"><div class="modal">
+  <div class="modal-head"><h3>Belge Ekle</h3><button class="modal-close" onclick="closeModal('belge')"><i class="ti ti-x"></i></button></div>
+  <div class="modal-body">
+    <div class="field"><label>Belge Adı *</label><input type="text" id="bl-ad" placeholder="Dilekçe_v1.pdf"></div>
+    <div class="field2"><div class="field"><label>Kategori</label><select id="bl-kat"><option value="dilekce">Dilekçe</option><option value="karar">Mahkeme Kararı</option><option value="bilirkisi">Bilirkişi Raporu</option><option value="vekalet">Vekalet</option><option value="sozlesme">Sözleşme</option><option value="fatura">Fatura</option><option value="diger">Diğer</option></select></div><div class="field"><label>İlgili Dava</label><select id="bl-dava"></select></div></div>
+    <div class="modal-footer"><button class="tbtn" onclick="closeModal('belge')">İptal</button><button class="tbtn primary" onclick="saveBelge()">Ekle</button></div>
+  </div>
+</div></div>
+
+<div class="overlay" id="m-iletisim"><div class="modal">
+  <div class="modal-head"><h3>İletişim Kaydı</h3><button class="modal-close" onclick="closeModal('iletisim')"><i class="ti ti-x"></i></button></div>
+  <div class="modal-body">
+    <div class="field2"><div class="field"><label>Müvekkil</label><select id="il-mv"></select></div><div class="field"><label>Kanal</label><select id="il-kanal"><option value="whatsapp">WhatsApp</option><option value="email">E-posta</option><option value="sms">SMS</option><option value="telefon">Telefon</option></select></div></div>
+    <div class="field"><label>Mesaj *</label><textarea id="il-mesaj" rows="4" placeholder="Görüşme içeriği..."></textarea></div>
+    <div class="modal-footer"><button class="tbtn" onclick="closeModal('iletisim')">İptal</button><button class="tbtn primary" onclick="saveIletisim()">Kaydet</button></div>
+  </div>
+</div></div>
+
+<script>
+// ── VERİ KATMANI ──────────────────────────────────────────────
+const STORE = {
+  get: k => JSON.parse(localStorage.getItem('ln_'+k)||'[]'),
+  set: (k,v) => localStorage.setItem('ln_'+k, JSON.stringify(v)),
+  getObj: k => JSON.parse(localStorage.getItem('ln_'+k)||'{}'),
+  setObj: (k,v) => localStorage.setItem('ln_'+k, JSON.stringify(v))
+}
+const TUR = { mv:'muvekkil', dv:'dava', gv:'gorev', et:'etkinlik', fn:'finans', bl:'belge', il:'iletisim' }
+
+// Yerel onbellek anlik okunur, Supabase arka planda senkronlanir
+const DB = {
+  get muvekkiller(){ return STORE.get('mv') },
+  get davalar(){ return STORE.get('dv') },
+  get gorevler(){ return STORE.get('gv') },
+  get etkinlikler(){ return STORE.get('et') },
+  get finanslar(){ return STORE.get('fn') },
+  get belgeler(){ return STORE.get('bl') },
+  get iletisimler(){ return STORE.get('il') },
+  get ayarlar(){ return STORE.getObj('set') },
+  saveMv(d){ STORE.set('mv',d); senkronla('mv',d) },
+  saveDv(d){ STORE.set('dv',d); senkronla('dv',d) },
+  saveGv(d){ STORE.set('gv',d); senkronla('gv',d) },
+  saveEt(d){ STORE.set('et',d); senkronla('et',d) },
+  saveFn(d){ STORE.set('fn',d); senkronla('fn',d) },
+  saveBl(d){ STORE.set('bl',d); senkronla('bl',d) },
+  saveIl(d){ STORE.set('il',d); senkronla('il',d) },
+  saveSet(d){ STORE.setObj('set',d); ayarSenkronla(d) }
+}
+
+// ── SUPABASE SENKRONU ────────────────────────────────────────
+let senkronDurum = 'bekliyor'
+
+function senkronGoster(durum, mesaj){
+  senkronDurum = durum
+  const el = document.getElementById('senkron-rozet')
+  if(!el) return
+  const renk = { kaydedildi:'#15803D', kaydediliyor:'#B45309', hata:'#B91C1C' }[durum] || '#9CA3AF'
+  const ikon = { kaydedildi:'ti-cloud-check', kaydediliyor:'ti-cloud-upload', hata:'ti-cloud-off' }[durum] || 'ti-cloud'
+  el.style.color = renk
+  el.innerHTML = '<i class="ti '+ikon+'"></i> '+(mesaj||'')
+}
+
+async function senkronla(anahtar, liste){
+  if(!window.sb || !sbUser) return
+  const tur = TUR[anahtar]
+  senkronGoster('kaydediliyor','Kaydediliyor')
+  try{
+    const buro = await buroIdAl()
+    const satirlar = (liste||[]).map(function(x){
+      return { tur: tur, id: String(x.id), buro_id: buro, veri: x, updated_at: new Date().toISOString() }
+    })
+    if(satirlar.length){
+      const { error } = await window.sb.from('dosya_kayitlari').upsert(satirlar, { onConflict:'buro_id,tur,id' })
+      if(error) throw error
+    }
+    const kalanlar = (liste||[]).map(function(x){ return String(x.id) })
+    let sil = window.sb.from('dosya_kayitlari').delete().eq('buro_id', buro).eq('tur', tur)
+    if(kalanlar.length) sil = sil.not('id','in','('+kalanlar.map(function(i){return '"'+i+'"'}).join(',')+')')
+    await sil
+    senkronGoster('kaydedildi','Kaydedildi')
+  }catch(e){
+    console.error('Senkron hatasi:', e)
+    senkronGoster('hata','Kaydedilemedi')
+  }
+}
+
+async function ayarSenkronla(ayar){
+  if(!window.sb || !sbUser) return
+  try{
+    const buro = await buroIdAl()
+    await window.sb.from('buro_ayarlari').upsert(
+      { buro_id: buro, veri: ayar, updated_at: new Date().toISOString() }, { onConflict:'buro_id' })
+  }catch(e){ console.error('Ayar senkron hatasi:', e) }
+}
+
+let _buroId = null
+async function buroIdAl(){
+  if(_buroId) return _buroId
+  const { data } = await window.sb.from('buro_uyeleri').select('buro_id').eq('kullanici_id', sbUser.id).limit(1).maybeSingle()
+  _buroId = data ? data.buro_id : sbUser.id
+  return _buroId
+}
+
+// Girişte Supabase'deki veriyi onbellege cek
+async function verileriYukle(){
+  if(!window.sb || !sbUser) return
+  try{
+    const buro = await buroIdAl()
+    const { data, error } = await window.sb.from('dosya_kayitlari')
+      .select('tur,id,veri').eq('buro_id', buro)
+    if(error) throw error
+
+    const kova = { mv:[], dv:[], gv:[], et:[], fn:[], bl:[], il:[] }
+    const ters = {}
+    Object.keys(TUR).forEach(function(k){ ters[TUR[k]] = k })
+    ;(data||[]).forEach(function(r){
+      const k = ters[r.tur]
+      if(k && r.veri) kova[k].push(r.veri)
+    })
+    Object.keys(kova).forEach(function(k){
+      if(kova[k].length) STORE.set(k, kova[k])
+    })
+
+    const { data: ay } = await window.sb.from('buro_ayarlari').select('veri').eq('buro_id', buro).maybeSingle()
+    if(ay && ay.veri && Object.keys(ay.veri).length) STORE.setObj('set', ay.veri)
+
+    senkronGoster('kaydedildi','Güncel')
+  }catch(e){
+    console.error('Veri yukleme hatasi:', e)
+    senkronGoster('hata','Çevrimdışı')
+  }
+}
+
+const DURUM = { on_inceleme:'Ön İnceleme', bilirkisi:'Bilirkişi', durusma_bekliyor:'Duruşma Bekleniyor', karar_asamasi:'Karar Aşaması', istinaf:'İstinaf', temyiz:'Temyiz', sonuclandi:'Sonuçlandı' }
+const DURUM_CLS = { on_inceleme:'bb', bilirkisi:'ba', durusma_bekliyor:'bp', karar_asamasi:'bgr', istinaf:'br', temyiz:'br', sonuclandi:'bg' }
+const ONCELIK_CLS = { normal:'bb', yuksek:'ba', kritik:'br' }
+let gvFiltre = 'hepsi'
+let calDate = new Date(); let calSel = new Date()
+
+// ── PANEL GEÇİŞ ──────────────────────────────────────────────
+const TITLES = { anasayfa:'Anasayfa', muvekkiller:'Müvekkiller', davalar:'Davalar', takvim:'Takvim', gorevler:'Görevler', belgeler:'Belgeler', finans:'Finans', iletisim:'İletişim', 'yapay-zeka':'YZ Asistanı', ayarlar:'Ayarlar', abonelik:'Abonelik', 'kullanici-yonetimi':'Kullanıcı Yönetimi', 'ai-asistan':'Web Asistanı', 'ai-basvuru':'Başvurular' }
+const FOOTER_HTML = '<div style="text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:28px"><strong style=\"color:#6B7280\">Dosya360</strong> — Bir <a href=\"https://otukenmedya.com\" target=\"_blank\" style=\"color:#C9A84C;text-decoration:none;font-weight:500\">Ötüken Medya</a> yazılımıdır</div>';
+
+function addFooter(panelId){
+  const p = document.getElementById('panel-'+panelId)
+  if(!p) return
+  const existing = p.querySelector('.ln-footer')
+  if(existing) return
+  const div = document.createElement('div')
+  div.className = 'ln-footer'
+  div.innerHTML = '<strong style="color:#6B7280">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#C9A84C;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır'
+  div.style.cssText = 'text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:28px'
+  p.appendChild(div)
+}
+
+function sp(id, el) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'))
+  document.querySelectorAll('.navitem').forEach(n=>n.classList.remove('active'))
+  document.getElementById('panel-'+id).classList.add('active')
+  if(el) el.classList.add('active')
+  document.getElementById('page-title').textContent = TITLES[id]||id
+  document.getElementById('sidebar').classList.remove('open')
+  setTimeout(()=>addFooter(id), 100)
+  if(id==='anasayfa') renderDash()
+  if(id==='abonelik') abonelikYukle()
+  if(id==='ai-asistan') aiYukle()
+  if(id==='ai-basvuru') basvuruYukle()
+  if(id==='kullanici-yonetimi') abonelikYukle()
+  if(id==='davalar') renderDv()
+  if(id==='gorevler') renderGv()
+  if(id==='belgeler') renderBl()
+  if(id==='finans') renderFn()
+  if(id==='iletisim') renderIl()
+  if(id==='takvim') renderCal()
+  if(id==='yapay-zeka') renderAI()
+  if(id==='ayarlar') loadSettings()
+}
+
+// ── SİDEBAR COLLAPSE ──────────────────────────────────────────
+let collapsed = false
+function toggleSidebar() {
+  collapsed = !collapsed
+  const sidebar = document.getElementById('sidebar')
+  sidebar.classList.toggle('collapsed', collapsed)
+  document.querySelectorAll('.nav-label,.navsec,.logo-texts,#logo-texts,#col-label').forEach(el=>el.style.display=collapsed?'none':'')
+  document.getElementById('col-icon').className = collapsed ? 'ti ti-layout-sidebar-left-expand' : 'ti ti-layout-sidebar-left-collapse'
+}
+
+// ── MODAL ──────────────────────────────────────────────────────
+async function showModal(type) {
+  // Supabase'den güncel veri çek
+  const mvs = DB.muvekkiller
+  const dvs = DB.davalar
+  if(type==='dava'||type==='gorev'||type==='etkinlik'||type==='finans'||type==='belge'||type==='iletisim') {
+    if(type==='dava') { const sel=document.getElementById('dv-mv'); sel.innerHTML='<option value="">Seçiniz</option>'+mvs.map(m=>`<option value="${m.id}">${m.ad} ${m.soyad}</option>`).join('') }
+    if(type==='gorev') { const s=document.getElementById('gv-dava'); s.innerHTML='<option value="">Seçiniz</option>'+dvs.map(d=>`<option value="${d.id}">${d.dosyaNo||d.dosya_no}</option>`).join('') }
+    if(type==='etkinlik') { const s=document.getElementById('et-dava'); s.innerHTML='<option value="">Seçiniz</option>'+dvs.map(d=>`<option value="${d.id}">${d.dosyaNo||d.dosya_no}</option>`).join('') }
+    if(type==='finans') { const s=document.getElementById('fn-mv'); s.innerHTML='<option value="">Seçiniz</option>'+mvs.map(m=>`<option value="${m.id}">${m.ad} ${m.soyad}</option>`).join(''); document.getElementById('fn-tarih').value=new Date().toISOString().split('T')[0] }
+    if(type==='belge') { const s=document.getElementById('bl-dava'); s.innerHTML='<option value="">Seçiniz</option>'+dvs.map(d=>`<option value="${d.id}">${d.dosyaNo||d.dosya_no}</option>`).join('') }
+    if(type==='iletisim') { const s=document.getElementById('il-mv'); s.innerHTML='<option value="">Seçiniz</option>'+mvs.map(m=>`<option value="${m.id}">${m.ad} ${m.soyad}</option>`).join('') }
+  }
+  document.getElementById('m-'+type).classList.add('open')
+}
+function closeModal(type) { document.getElementById('m-'+type).classList.remove('open') }
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open') }))
+
+// ── KAYDET ────────────────────────────────────────────────────
+function saveMuvekkil() {
+  const ad=val('mv-ad'), soyad=val('mv-soyad')
+  if(!ad||!soyad) return alert('Ad ve soyad zorunludur!')
+  const mvs=DB.muvekkiller
+  mvs.push({ id:Date.now(), ad, soyad, tc:val('mv-tc'), tel:val('mv-tel'), email:val('mv-email'),
+             il:val('mv-il'), tur:val('mv-tur'), not:val('mv-not'), tarih:new Date().toISOString() })
+  DB.saveMv(mvs); ['mv-ad','mv-soyad','mv-tc','mv-tel','mv-email','mv-il','mv-not'].forEach(clear)
+  logla('muvekkil_ekle', ad+' '+soyad); closeModal('muvekkil'); renderAll()
+}
+
+
+
+function saveDava() {
+  const no=val('dv-no'); if(!no) return alert('Dosya no zorunludur!')
+  const mvId=val('dv-mv'); const mv=DB.muvekkiller.find(m=>m.id==mvId)
+  const dvs=DB.davalar; dvs.push({ id:Date.now(), dosyaNo:no, muvekkil:mv?mv.ad+' '+mv.soyad:'—', muvekkılId:mvId, muvekkılTel:mv?.tel||'', mahkeme:val('dv-mhk'), tur:val('dv-tur'), karsiTaraf:val('dv-kt'), tarih:val('dv-tarih'), durum:val('dv-durum'), not:val('dv-not'), durusmaTarihi:val('dv-durusma-tarihi'), durusmaSaati:val('dv-durusma-saati') })
+  DB.saveDv(dvs); ['dv-no','dv-mhk','dv-tur','dv-kt','dv-not','dv-durusma-tarihi','dv-durusma-saati'].forEach(clear)
+  logla('dava_ekle', val('dv-no')); closeModal('dava'); renderAll()
+}
+
+function saveGorev() {
+  const baslik=val('gv-baslik'); if(!baslik) return alert('Görev başlığı zorunludur!')
+  const dvId=val('gv-dava'); const dv=DB.davalar.find(d=>d.id==dvId)
+  const gvs=DB.gorevler; gvs.push({ id:Date.now(), baslik, tarih:val('gv-tarih'), oncelik:val('gv-oncelik'), dava:dv?dv.dosyaNo:'—', durum:'bekliyor' })
+  DB.saveGv(gvs); clear('gv-baslik'); clear('gv-tarih')
+  logla('gorev_ekle', val('gv-baslik')); closeModal('gorev'); renderAll()
+}
+
+function saveEtkinlik() {
+  const baslik=val('et-baslik'), tarih=val('et-tarih'); if(!baslik||!tarih) return alert('Başlık ve tarih zorunludur!')
+  const dvId=val('et-dava'); const dv=DB.davalar.find(d=>d.id==dvId)
+  const ets=DB.etkinlikler; ets.push({ id:Date.now(), baslik, tarih, tur:val('et-tur'), dava:dv?dv.dosyaNo:'', not:val('et-not') })
+  DB.saveEt(ets); clear('et-baslik'); clear('et-tarih'); clear('et-not')
+  logla('etkinlik_ekle', baslik); closeModal('etkinlik'); renderCal()
+}
+
+function saveFinans() {
+  const tutar=parseFloat(val('fn-tutar')); if(!tutar) return alert('Tutar giriniz!')
+  const mvId=val('fn-mv'); const mv=DB.muvekkiller.find(m=>m.id==mvId)
+  const fns=DB.finanslar; fns.push({ id:Date.now(), tur:val('fn-tur'), tutar, muvekkil:mv?mv.ad+' '+mv.soyad:'—', tarih:val('fn-tarih')||new Date().toISOString().split('T')[0], aciklama:val('fn-aciklama') })
+  DB.saveFn(fns); clear('fn-tutar'); clear('fn-aciklama')
+  logla('finans_ekle', val('fn-tutar')); closeModal('finans'); renderAll()
+}
+
+function saveBelge() {
+  const ad=val('bl-ad'); if(!ad) return alert('Belge adı giriniz!')
+  const dvId=val('bl-dava'); const dv=DB.davalar.find(d=>d.id==dvId)
+  const bls=DB.belgeler; bls.push({ id:Date.now(), ad, kategori:val('bl-kat'), dava:dv?dv.dosyaNo:'—', tarih:new Date().toISOString() })
+  DB.saveBl(bls); clear('bl-ad')
+  logla('belge_ekle', ad); closeModal('belge'); renderBl()
+}
+
+function saveIletisim() {
+  const mesaj=val('il-mesaj'); if(!mesaj) return alert('Mesaj giriniz!')
+  const mvId=val('il-mv'); const mv=DB.muvekkiller.find(m=>m.id==mvId)
+  const ils=DB.iletisimler; ils.push({ id:Date.now(), muvekkil:mv?mv.ad+' '+mv.soyad:'—', kanal:val('il-kanal'), mesaj, tarih:new Date().toISOString() })
+  DB.saveIl(ils); clear('il-mesaj')
+  logla('iletisim_ekle', val('il-kanal')); closeModal('iletisim'); renderIl()
+}
+
+// ── RENDER ────────────────────────────────────────────────────
+function val(id){ return document.getElementById(id)?.value?.trim()||'' }
+function clear(id){ const el=document.getElementById(id); if(el) el.value='' }
+function avatar(ad,soyad){ return `<div class="avatar">${(ad[0]||'?')+(soyad[0]||'?')}</div>` }
+function badge(cls,text){ return `<span class="badge ${cls}">${text}</span>` }
+function empty(icon,title,sub){ return `<div class="empty"><i class="ti ti-${icon}"></i><div class="empty-title">${title}</div><div class="empty-sub">${sub}</div></div>` }
+
+function renderMv(q=''){
+  const list=DB.muvekkiller.filter(m=>!q||(m.ad+m.soyad+m.tel+m.tc).toLowerCase().includes(q.toLowerCase()))
+  const el=document.getElementById('list-mv')
+  if(!list.length){ el.innerHTML=empty('users','Müvekkil bulunamadı','Yeni müvekkil ekleyerek başlayın.'); return }
+  el.innerHTML=list.map(m=>`
+    <div class="list-item">
+      ${avatar(m.ad,m.soyad)}
+      <div style="flex:1"><div class="li-name">${m.ad} ${m.soyad}</div><div class="li-meta">${m.tel||m.email||'İletişim yok'} · ${m.tur||'bireysel'}</div></div>
+      ${badge(m.tur==='kurumsal'?'bb':'bp',m.tur==='kurumsal'?'Kurumsal':'Bireysel')}
+      ${m.tel ? `<button onclick="waAc('${m.tel}',event)" title="WhatsApp'ta aç" style="background:#25D366;border:none;border-radius:4px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0"><i class="ti ti-brand-whatsapp" style="color:#fff;font-size:17px"></i></button>` : ''}
+      <button class="del-btn" onclick="delMv(${m.id},event)"><i class="ti ti-trash"></i></button>
+    </div>`).join('')
+}
+
+
+function renderDv(filtre=''){
+  const dvs = filtre ? DB.davalar.filter(d=>d.durum===filtre) : DB.davalar
+  const el=document.getElementById('list-dv')
+  // filtre butonları
+  const durumlar=[...new Set(DB.davalar.map(d=>d.durum))]
+  document.getElementById('dava-filters').innerHTML=
+    `<div class="fbtn active" onclick="renderDv();setFilter(this)">Tümü (${DB.davalar.length})</div>`+
+    durumlar.map(d=>`<div class="fbtn" onclick="renderDv('${d}');setFilter(this)">${DURUM[d]}</div>`).join('')
+  if(!dvs.length){ el.innerHTML=empty('briefcase','Dava bulunamadı','Yeni dava ekleyerek başlayın.'); return }
+  el.innerHTML=`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Dosya No</th><th>Müvekkil</th><th>Mahkeme</th><th>Dava Türü</th><th>Durum</th><th></th></tr></thead><tbody>`+
+    dvs.map(d=>`<tr><td style="font-weight:600">${d.dosyaNo}</td><td>${d.muvekkil}</td><td>${d.mahkeme||'—'}</td><td>${d.tur||'—'}</td><td>${badge(DURUM_CLS[d.durum],DURUM[d.durum])}</td><td><button class="del-btn" onclick="delDv(${d.id},event)"><i class="ti ti-trash"></i></button></td></tr>`).join('')
+    +`</tbody></table></div>`
+}
+
+
+function renderGv(){
+  const gvs=DB.gorevler.filter(g=>gvFiltre==='hepsi'||g.durum===gvFiltre)
+  const el=document.getElementById('list-gv')
+  if(!gvs.length){ el.innerHTML=empty('checkbox','Görev bulunamadı','Yeni görev ekleyin.'); return }
+  el.innerHTML=gvs.map(g=>`
+    <div class="list-item">
+      <div class="check ${g.durum==='tamamlandi'?'done':''}" onclick="toggleGv(${g.id})">${g.durum==='tamamlandi'?'<i class="ti ti-check" style="font-size:12px"></i>':''}</div>
+      <div style="flex:1"><div class="li-name" style="${g.durum==='tamamlandi'?'text-decoration:line-through;color:var(--hint)':''}">${g.baslik}</div><div class="li-meta">${g.dava!=='—'?g.dava+' · ':''} ${g.tarih||'Tarih yok'}</div></div>
+      ${badge(ONCELIK_CLS[g.oncelik]||'bgr',g.oncelik)}
+      <button class="del-btn" onclick="delGv(${g.id},event)"><i class="ti ti-trash"></i></button>
+    </div>`).join('')
+}
+
+function toggleGv(id){ const gvs=DB.gorevler; const g=gvs.find(x=>x.id===id); if(g) g.durum=g.durum==='tamamlandi'?'bekliyor':'tamamlandi'; DB.saveGv(gvs); renderAll() }
+
+function renderBl(){
+  const bls=DB.belgeler; const el=document.getElementById('list-bl')
+  if(!bls.length){ el.innerHTML=empty('folders','Belge bulunamadı','Belge ekleyerek başlayın.'); return }
+  el.innerHTML=`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Belge Adı</th><th>Kategori</th><th>İlgili Dava</th><th>Tarih</th><th></th></tr></thead><tbody>`+
+    bls.map(b=>`<tr><td><i class="ti ti-file" style="color:var(--hint);margin-right:6px"></i>${b.ad}</td><td>${badge('bb',b.kategori)}</td><td>${b.dava}</td><td>${b.tarih?new Date(b.tarih).toLocaleDateString('tr-TR'):'—'}</td><td><button class="del-btn" onclick="delBl(${b.id},event)"><i class="ti ti-trash"></i></button></td></tr>`).join('')
+    +`</tbody></table></div>`
+}
+
+function renderFn(){
+  const fns=DB.finanslar
+  const ay=new Date().toISOString().slice(0,7)
+  const tahsilat=fns.filter(f=>f.tur==='tahsilat'&&f.tarih?.startsWith(ay)).reduce((s,f)=>s+f.tutar,0)
+  const masraf=fns.filter(f=>f.tur==='masraf'&&f.tarih?.startsWith(ay)).reduce((s,f)=>s+f.tutar,0)
+  const bekleyen=fns.filter(f=>f.tur==='fatura').reduce((s,f)=>s+f.tutar,0)
+  document.getElementById('f-tahsilat').textContent='₺'+tahsilat.toLocaleString('tr-TR')
+  document.getElementById('f-masraf').textContent='₺'+masraf.toLocaleString('tr-TR')
+  document.getElementById('f-bekleyen').textContent='₺'+bekleyen.toLocaleString('tr-TR')
+  const el=document.getElementById('list-fn')
+  if(!fns.length){ el.innerHTML=empty('coin','Mali işlem yok','Yeni işlem ekleyin.'); return }
+  el.innerHTML=`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Tarih</th><th>Müvekkil</th><th>Açıklama</th><th>Tür</th><th>Tutar</th><th></th></tr></thead><tbody>`+
+    [...fns].reverse().map(f=>`<tr><td>${f.tarih||'—'}</td><td>${f.muvekkil}</td><td>${f.aciklama||'—'}</td><td>${badge(f.tur==='tahsilat'?'bg':f.tur==='masraf'||f.tur==='harc'?'br':'ba',f.tur)}</td><td style="font-weight:600;color:${f.tur==='tahsilat'?'var(--green)':'var(--red)'}">${f.tur==='tahsilat'?'+':'-'}₺${f.tutar.toLocaleString('tr-TR')}</td><td><button class="del-btn" onclick="delFn(${f.id},event)"><i class="ti ti-trash"></i></button></td></tr>`).join('')
+    +`</tbody></table></div>`
+}
+
+function renderIl(){
+  const ils=DB.iletisimler; const el=document.getElementById('list-il')
+  if(!ils.length){ el.innerHTML=empty('message-2','İletişim kaydı yok','Müvekkil görüşmelerinizi kaydedin.'); return }
+  const ICON={whatsapp:'brand-whatsapp',email:'mail',sms:'device-mobile',telefon:'phone'}
+  el.innerHTML=[...ils].reverse().map(i=>`
+    <div class="list-item">
+      <i class="ti ti-${ICON[i.kanal]||'message'}" style="font-size:22px;color:var(--gold)"></i>
+      <div style="flex:1"><div class="li-name">${i.muvekkil} <span style="font-size:11px;color:var(--muted)">· ${i.kanal}</span></div><div class="li-meta">${i.mesaj}</div></div>
+      <div style="font-size:11px;color:var(--hint)">${i.tarih?new Date(i.tarih).toLocaleDateString('tr-TR'):''}</div>
+      <button class="del-btn" onclick="delIl(${i.id},event)"><i class="ti ti-trash"></i></button>
+    </div>`).join('')
+}
+
+// ── TAKVİM ────────────────────────────────────────────────────
+const AYLAR=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık']
+function calPrev(){ calDate=new Date(calDate.getFullYear(),calDate.getMonth()-1,1); renderCal() }
+function calNext(){ calDate=new Date(calDate.getFullYear(),calDate.getMonth()+1,1); renderCal() }
+function calToday(){ calDate=new Date(); calSel=new Date(); renderCal() }
+function renderCal(){
+  document.getElementById('cal-title').textContent=AYLAR[calDate.getMonth()]+' '+calDate.getFullYear()
+  const y=calDate.getFullYear(), m=calDate.getMonth()
+  const first=new Date(y,m,1), last=new Date(y,m+1,0)
+  let start=new Date(first); let dow=(start.getDay()||7)-1; start.setDate(start.getDate()-dow)
+  const ets=DB.etkinlikler; const today=new Date(); const days=[]
+  for(let i=0;i<42;i++){
+    const d=new Date(start); d.setDate(start.getDate()+i)
+    if(i>=35&&d.getMonth()!==m) break
+    days.push(d)
+  }
+  const el=document.getElementById('cal-days')
+  el.innerHTML=days.map(d=>{
+    const isToday=d.toDateString()===today.toDateString()
+    const isSel=d.toDateString()===calSel.toDateString()
+    const otherM=d.getMonth()!==m
+    const hasEv=ets.some(e=>e.tarih&&new Date(e.tarih).toDateString()===d.toDateString())
+    const ds=d.toDateString()
+    return `<div class="cd ${isToday?'today':''} ${hasEv?'has-ev':''} ${otherM?'other-m':''} ${isSel&&!isToday?'selected':''}" onclick="calSelDay('${ds}')" style="${isSel&&!isToday?'background:var(--bg);border:1.5px solid var(--gold)':''}">${d.getDate()}</div>`
+  }).join('')
+  renderCalDay()
+}
+function calSelDay(ds){ calSel=new Date(ds); renderCal() }
+function renderCalDay(){
+  const ets=DB.etkinlikler.filter(e=>e.tarih&&new Date(e.tarih).toDateString()===calSel.toDateString())
+  document.getElementById('cal-sel-title').textContent=calSel.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'})
+  const el=document.getElementById('cal-events')
+  if(!ets.length){ el.innerHTML='<div style="text-align:center;padding:20px 0;color:var(--hint);font-size:13px">Bu gün için etkinlik yok.</div>'; return }
+  el.innerHTML=ets.map(e=>`
+    <div style="border-left:3px solid var(--gold);padding:10px 12px;background:var(--bg);border-radius:0 8px 8px 0;margin-bottom:8px">
+      <div style="font-size:13px;font-weight:500">${e.baslik}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">${new Date(e.tarih).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}${e.dava?' · '+e.dava:''}</div>
+    </div>`).join('')
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────
+function renderDash(){
+  const mv=DB.muvekkiller, dv=DB.davalar, gv=DB.gorevler, fn=DB.finanslar
+  const ay=new Date().toISOString().slice(0,7)
+  const tahsilat=fn.filter(f=>f.tur==='tahsilat'&&f.tarih?.startsWith(ay)).reduce((s,f)=>s+f.tutar,0)
+  document.getElementById('s-mv').textContent=mv.length
+  document.getElementById('s-dv').textContent=dv.filter(d=>d.durum!=='sonuclandi').length
+  document.getElementById('s-gv').textContent=gv.filter(g=>g.durum!=='tamamlandi').length
+  document.getElementById('s-th').textContent='₺'+tahsilat.toLocaleString('tr-TR')
+  const dmv=document.getElementById('d-mv')
+  if(!mv.length) dmv.innerHTML='<div style="text-align:center;padding:20px 0;color:var(--hint);font-size:13px">Henüz müvekkil yok.</div>'
+  else dmv.innerHTML=mv.slice(-3).reverse().map(m=>`<div class="list-item" style="margin-bottom:6px">${avatar(m.ad,m.soyad)}<div><div class="li-name">${m.ad} ${m.soyad}</div><div class="li-meta">${m.tel||'—'}</div></div></div>`).join('')
+  const dgv=document.getElementById('d-gv')
+  const bGv=gv.filter(g=>g.durum!=='tamamlandi').slice(0,4)
+  if(!bGv.length) dgv.innerHTML='<div style="text-align:center;padding:20px 0;color:var(--hint);font-size:13px">Bekleyen görev yok.</div>'
+  else dgv.innerHTML=bGv.map(g=>`<div class="list-item" style="margin-bottom:6px"><div class="check" onclick="toggleGv(${g.id})"></div><div style="flex:1"><div class="li-name">${g.baslik}</div><div class="li-meta">${g.tarih||'Tarih yok'}</div></div></div>`).join('')
+  const ddv=document.getElementById('d-dv')
+  if(!dv.length) ddv.innerHTML='<div style="text-align:center;padding:20px 0;color:var(--hint);font-size:13px">Henüz dava yok.</div>'
+  else ddv.innerHTML=`<table class="tbl"><thead><tr><th>Dosya No</th><th>Müvekkil</th><th>Mahkeme</th><th>Durum</th></tr></thead><tbody>`+
+    dv.slice(-5).reverse().map(d=>`<tr><td style="font-weight:600">${d.dosyaNo}</td><td>${d.muvekkil}</td><td>${d.mahkeme||'—'}</td><td>${badge(DURUM_CLS[d.durum],DURUM[d.durum])}</td></tr>`).join('') +'</tbody></table>'
+}
+
+// ── YAPAY ZEKA ────────────────────────────────────────────────
+function renderAI(){
+  const suggs=['Bugün ne var?','Bekleyen görevleri listele','Açık davalar kaç?','Bu ay tahsilatım ne kadar?','Son müvekkilleri göster']
+  document.getElementById('ai-sugg').innerHTML=suggs.map(s=>`<div class="sg" onclick="askAI('${s}')">${s}</div>`).join('')
+  const msgs=document.getElementById('ai-msgs')
+  if(!msgs.innerHTML) addMsg('Merhaba! Dosyalarınız hakkında soru sorabilirsiniz.','bot')
+  renderRisk()
+}
+
+function renderRisk(){
+  const gvs=DB.gorevler.filter(g=>g.durum!=='tamamlandi'&&g.tarih&&new Date(g.tarih)<new Date())
+  const el=document.getElementById('ai-risk')
+  if(!gvs.length){ el.innerHTML='<div style="font-size:12px;color:var(--green)">Gecikmiş görev yok.</div>'; return }
+  el.innerHTML=gvs.map(g=>`<div style="padding:8px;background:#FEF2F2;border-radius:6px;font-size:12px;color:var(--red);margin-bottom:6px">${g.baslik} — ${g.tarih}</div>`).join('')
+}
+
+function sendAI(){
+  const inp=document.getElementById('ai-inp'); const v=inp.value.trim(); if(!v) return
+  askAI(v); inp.value=''
+}
+
+function askAI(soru){
+  addMsg(soru,'user')
+  setTimeout(()=>{
+    const vl=soru.toLowerCase(); let r='Sistemde bu konuda bilgi bulunamadı.'
+    const mv=DB.muvekkiller, dv=DB.davalar, gv=DB.gorevler, fn=DB.finanslar
+    if(vl.includes('müvekkil')||vl.includes('son müv')) r=mv.length?`${mv.length} kayıtlı müvekkiliniz var.\nSon eklenen: ${mv.slice(-1)[0]?.ad} ${mv.slice(-1)[0]?.soyad}`:'Henüz müvekkil eklenmemiş.'
+    else if(vl.includes('dava')||vl.includes('dosya')) r=dv.length?`Toplam ${dv.length} dava var. ${dv.filter(d=>d.durum!=='sonuclandi').length} tanesi aktif.`:'Henüz dava yok.'
+    else if(vl.includes('görev')||vl.includes('bekle')) { const b=gv.filter(g=>g.durum!=='tamamlandi'); r=b.length?`${b.length} bekleyen görev var:\n`+b.slice(0,3).map(g=>`• ${g.baslik}`).join('\n'):'Bekleyen görev yok.' }
+    else if(vl.includes('tahsilat')||vl.includes('para')||vl.includes('finans')) { const ay=new Date().toISOString().slice(0,7); const t=fn.filter(f=>f.tur==='tahsilat'&&f.tarih?.startsWith(ay)).reduce((s,f)=>s+f.tutar,0); r=`Bu ay tahsilatınız: ₺${t.toLocaleString('tr-TR')}` }
+    else if(vl.includes('bugün')||vl.includes('ne var')) { const et=DB.etkinlikler.filter(e=>e.tarih&&new Date(e.tarih).toDateString()===new Date().toDateString()); r=et.length?'Bugün '+et.length+' etkinlik var:\n'+et.map(e=>`• ${e.baslik}`).join('\n'):'Bugün için etkinlik yok.' }
+    addMsg(r,'bot')
+  },700)
+}
+
+function addMsg(text,rol){
+  const el=document.getElementById('ai-msgs')
+  const div=document.createElement('div'); div.className='msg '+rol
+  div.innerHTML=`<div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div>`
+  el.appendChild(div); el.scrollTop=el.scrollHeight
+}
+
+// ── AYARLAR ───────────────────────────────────────────────────
+
+// ── ABONELİK SİSTEMİ ──────────────────────────────────────
+let abPeriyotSec = 'aylik'
+let sbUser = null
+
+async function abonelikYukle() {
+  try {
+    const { data: { session } } = await window.sb?.auth?.getSession() || {}
+    if (!session) return
+    sbUser = session.user
+
+    const { data } = await window.sb.from('abonelikler')
+      .select('*').eq('buro_id', session.user.id)
+      .order('created_at', { ascending: false }).limit(1).single()
+
+    const ikon = document.getElementById('abone-ikon')
+    const baslik = document.getElementById('abone-baslik')
+    const alt = document.getElementById('abone-alt')
+    const badge = document.getElementById('abone-badge')
+
+    if (!data) {
+      ikon.innerHTML = '<i class="ti ti-package"></i>'
+      ikon.style.background = '#F9FAFB'
+      baslik.textContent = 'Aktif abonelik yok'
+      alt.textContent = 'Aşağıdan bir paket seçerek başlayın.'
+      return
+    }
+
+    abonelikUyarisi(data)
+
+    if (data.durum === 'aktif') {
+      ikon.innerHTML = '<i class="ti ti-check"></i>'
+      ikon.style.background = '#F0FDF4'
+      ikon.style.color = '#15803D'
+      baslik.textContent = `${data.paket_adi} Paketi — Aktif`
+      alt.textContent = `Bitiş: ${data.bitis_tarihi ? new Date(data.bitis_tarihi).toLocaleDateString('tr-TR') : 'Belirtilmemiş'} · Max ${data.max_kullanici} kullanıcı`
+      badge.innerHTML = '<span style="background:#F0FDF4;color:#15803D;padding:4px 12px;border-radius:5px;font-size:12px;font-weight:500">Aktif</span>'
+    } else if (data.durum === 'bekliyor') {
+      ikon.textContent = '⏳'
+      ikon.style.background = '#FFFBEB'
+      baslik.textContent = `${data.paket_adi} — Ödeme Bekleniyor`
+      alt.textContent = 'Ödemeniz onaylandıktan sonra aktif edilecektir.'
+      badge.innerHTML = '<span style="background:#FFFBEB;color:#B45309;padding:4px 12px;border-radius:5px;font-size:12px;font-weight:500">⏳ Bekliyor</span>'
+    }
+
+    // Kullanıcı yönetimi
+    await kuYukle(data)
+  } catch(e) {}
+}
+
+async function kuYukle(abone) {
+  const uyari = document.getElementById('ku-abone-uyari')
+  const aktifWrap = document.getElementById('ku-aktif-wrap')
+
+  if (!abone || abone.durum !== 'aktif') {
+    uyari.style.display = 'block'
+    aktifWrap.style.display = 'none'
+    return
+  }
+
+  uyari.style.display = 'none'
+  aktifWrap.style.display = 'block'
+
+  document.getElementById('ku-paket-adi').textContent = `${abone.paket_adi} Paketi`
+
+  const { data: davetler } = await window.sb.from('davetler').select('*').eq('buro_id', sbUser.id).eq('durum','bekliyor')
+  const { data: uyeler } = await window.sb.from('buro_uyeleri').select('*, kullanici_profil(email,avukat_adi)').eq('buro_id', sbUser.id)
+
+  const toplam = (davetler?.length || 0) + (uyeler?.length || 0)
+  document.getElementById('ku-kullanici-sayisi').textContent = `${toplam} / ${abone.max_kullanici} kullanıcı`
+
+  const davetBtn = document.getElementById('ku-davet-btn')
+  if (toplam >= abone.max_kullanici) {
+    davetBtn.disabled = true
+    davetBtn.title = 'Kullanıcı limitine ulaştınız'
+    davetBtn.style.opacity = '0.5'
+  }
+
+  const liste = document.getElementById('ku-liste')
+  if (!toplam) {
+    liste.innerHTML = '<div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">Henüz kullanıcı yok. Davet Et butonuyla başlayın.</div>'
+    return
+  }
+
+  let html = ''
+  uyeler?.forEach(u => {
+    const init = (u.kullanici_profil?.avukat_adi || u.kullanici_profil?.email || '?')[0].toUpperCase()
+    html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#F9FAFB;border-radius:5px">
+      <div style="width:32px;height:32px;border-radius:50%;background:#0B1629;color:#C9A84C;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0">${init}</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:500">${u.kullanici_profil?.avukat_adi || '—'}</div><div style="font-size:11px;color:var(--muted)">${u.kullanici_profil?.email || '—'}</div></div>
+      <span style="font-size:11px;padding:3px 9px;border-radius:5px;background:#F0FDF4;color:#15803D;font-weight:500">Aktif</span>
+    </div>`
+  })
+  davetler?.forEach(d => {
+    html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#F9FAFB;border-radius:5px">
+      <div style="width:32px;height:32px;border-radius:50%;background:#FFFBEB;color:#B45309;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">?</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:500">${d.email}</div><div style="font-size:11px;color:var(--muted)">Davet gönderildi</div></div>
+      <span style="font-size:11px;padding:3px 9px;border-radius:5px;background:#FFFBEB;color:#B45309;font-weight:500">⏳ Bekleniyor</span>
+    </div>`
+  })
+  liste.innerHTML = html
+}
+
+function abPeriyot(p) {
+  abPeriyotSec = p
+  const btnAylik = document.getElementById('ab-btn-aylik')
+  const btnYillik = document.getElementById('ab-btn-yillik')
+  if (p === 'aylik') {
+    btnAylik.style.background = '#0B1629'; btnAylik.style.color = '#C9A84C'
+    btnYillik.style.background = 'transparent'; btnYillik.style.color = 'var(--muted)'
+    document.getElementById('ab-f-baslangic').innerHTML = '₺1.500 <span style="font-size:13px;font-weight:400;color:var(--muted)">/ay</span>'
+    document.getElementById('ab-p-baslangic').textContent = 'Aylık ödeme'
+    document.getElementById('ab-f-buyume').innerHTML = '₺3.500 <span style="font-size:13px;font-weight:400;color:var(--muted)">/ay</span>'
+    document.getElementById('ab-p-buyume').textContent = 'Aylık ödeme'
+  } else {
+    btnYillik.style.background = '#0B1629'; btnYillik.style.color = '#C9A84C'
+    btnAylik.style.background = 'transparent'; btnAylik.style.color = 'var(--muted)'
+    document.getElementById('ab-f-baslangic').innerHTML = '₺13.500 <span style="font-size:13px;font-weight:400;color:var(--muted)">/yıl</span>'
+    document.getElementById('ab-p-baslangic').textContent = 'Yıllık ödeme (aylık ₺1.125)'
+    document.getElementById('ab-f-buyume').innerHTML = '₺28.000 <span style="font-size:13px;font-weight:400;color:var(--muted)">/yıl</span>'
+    document.getElementById('ab-p-buyume').textContent = 'Yıllık ödeme (aylık ₺2.333)'
+  }
+}
+
+async function abPaketSec(paket, max) {
+  if (!sbUser) { alert('Lütfen önce giriş yapın.'); return }
+  const FIYATLAR = { 'Başlangıç': { aylik:1500, yillik:13500 }, 'Büyüme': { aylik:3500, yillik:28000 } }
+  const fiyat = FIYATLAR[paket][abPeriyotSec]
+  const etiket = abPeriyotSec === 'aylik' ? '/ay' : '/yıl'
+
+  if (!confirm(`${paket} paketi seçildi.\n\nFiyat: ₺${fiyat.toLocaleString('tr-TR')}${etiket}\n\nÖdeme bildirimini WhatsApp üzerinden göndermek ister misiniz?`)) return
+
+  try {
+    await window.sb.from('abonelikler').insert({
+      buro_id: sbUser.id,
+      paket_adi: paket,
+      periyot: abPeriyotSec,
+      max_kullanici: max,
+      tutar: fiyat,
+      durum: 'bekliyor'
+    })
+
+    const mesaj = `YENİ ÖDEME BİLDİRİMİ\n\nE-posta: ${sbUser.email}\nPaket: ${paket} — ${abPeriyotSec === 'aylik' ? 'Aylık' : 'Yıllık'}\nTutar: ₺${fiyat.toLocaleString('tr-TR')}${etiket}\n\nLütfen IBAN'a havale yapıp bu mesajı yanıtlayın.`
+    window.open('https://wa.me/905304621769?text=' + encodeURIComponent(mesaj), '_blank')
+
+    alert('Talebiniz alındı! Ödemenizi yaptıktan sonra ekibimiz en kısa sürede onaylayacaktır.')
+    abonelikYukle()
+  } catch(e) {
+    alert('Hata: ' + e.message)
+  }
+}
+
+function kuDavetAc() {
+  document.getElementById('ku-link-wrap').style.display = 'none'
+  document.getElementById('ku-davet-email').value = ''
+  showModal('davet')
+}
+
+async function kuDavetGonder() {
+  const email = document.getElementById('ku-davet-email').value.trim()
+  if (!email) { alert('E-posta zorunludur!'); return }
+
+  const btn = document.getElementById('ku-davet-submit-btn')
+  btn.disabled = true; btn.textContent = 'Oluşturuluyor...'
+
+  try {
+    const token = Math.random().toString(36).substring(2) + Date.now().toString(36)
+    await window.sb.from('davetler').insert({ buro_id: sbUser.id, email, token })
+
+    const link = `${window.location.origin}/davet.html?token=${token}`
+    document.getElementById('ku-link-text').textContent = link
+    document.getElementById('ku-wa-link').href = 'https://wa.me/?text=' + encodeURIComponent(`Dosya360 sistemine davet edildiniz! Katılmak için: ${link}`)
+    document.getElementById('ku-link-wrap').style.display = 'block'
+    await kuYukle({ durum: 'aktif', max_kullanici: 99 })
+  } catch(e) {
+    alert('Hata: ' + e.message)
+  }
+  btn.disabled = false; btn.textContent = 'Davet Linki Oluştur'
+}
+
+
+
+function renderUpgrade(abone) {
+  const plansSection = document.getElementById('plans-section')
+  if(!plansSection) return
+
+  const upgrades = {
+    'Başlangıç': { sonraki: 'Büyüme', fiyatAylik: 3500, fiyatYillik: 28000, maxKullanici: 10 },
+    'Büyüme': { sonraki: 'Kurumsal', fiyatAylik: null, fiyatYillik: null, maxKullanici: 999 },
+  }
+
+  const upgrade = upgrades[abone.paket_adi]
+  const yillikMi = abone.periyot === 'yillik'
+
+  plansSection.innerHTML = `
+    <div style="margin-bottom:20px">
+      <div style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:14px">Mevcut Paketiniz</div>
+      <div style="background:var(--surface-1);border:1.5px solid #C9A84C;border-radius:6px;padding:20px;display:flex;align-items:center;gap:14px">
+        <div style="width:44px;height:44px;border-radius:6px;background:#F0FDF4;display:flex;align-items:center;justify-content:center;font-size:20px"><i class="ti ti-check"></i></div>
+        <div style="flex:1">
+          <div style="font-size:15px;font-weight:500;color:var(--text-primary)">${abone.paket_adi} Paketi — ${yillikMi?'Yıllık':'Aylık'}</div>
+          <div style="font-size:13px;color:var(--text-secondary);margin-top:2px">Max ${abone.max_kullanici} kullanıcı · ${abone.bitis_tarihi?'Bitiş: '+new Date(abone.bitis_tarihi).toLocaleDateString('tr-TR'):'Süresiz'}</div>
+        </div>
+        <span style="background:#F0FDF4;color:#15803D;padding:4px 12px;border-radius:5px;font-size:12px;font-weight:500">Aktif</span>
+      </div>
+    </div>
+
+    ${upgrade ? `
+    <div style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:14px">Yükseltme Seçenekleri</div>
+    <div style="display:grid;grid-template-columns:${upgrade.fiyatAylik?'1fr 1fr':'1fr'};gap:14px">
+      ${upgrade.fiyatAylik && !yillikMi ? `
+      <div style="background:var(--surface-1);border:0.5px solid var(--border);border-radius:6px;padding:20px">
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">${upgrade.sonraki} — Aylık</div>
+        <div style="font-size:26px;font-weight:500;color:var(--text-primary);margin-bottom:4px">₺${upgrade.fiyatAylik.toLocaleString('tr-TR')} <span style="font-size:13px;font-weight:400;color:var(--text-secondary)">/ay</span></div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:14px">Max ${upgrade.maxKullanici} kullanıcı</div>
+        <button onclick="abPaketSec('${upgrade.sonraki}',${upgrade.maxKullanici})" style="width:100%;padding:10px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">Yükselt</button>
+      </div>` : ''}
+      ${upgrade.fiyatYillik ? `
+      <div style="background:var(--surface-1);border:1.5px solid #C9A84C;border-radius:6px;padding:20px;position:relative">
+        <div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:#C9A84C;color:#0B1629;font-size:10px;font-weight:600;padding:3px 12px;border-radius:5px;white-space:nowrap">Önerilen</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">${upgrade.sonraki} — Yıllık</div>
+        <div style="font-size:26px;font-weight:500;color:var(--text-primary);margin-bottom:4px">₺${upgrade.fiyatYillik.toLocaleString('tr-TR')} <span style="font-size:13px;font-weight:400;color:var(--text-secondary)">/yıl</span></div>
+        <div style="font-size:12px;color:#15803D;margin-bottom:14px;font-weight:500">2 ay bedava · Max ${upgrade.maxKullanici} kullanıcı</div>
+        <button onclick="abPaketSec('${upgrade.sonraki}',${upgrade.maxKullanici})" style="width:100%;padding:10px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Yükselt</button>
+      </div>` : `
+      <div style="background:var(--surface-1);border:0.5px solid var(--border);border-radius:6px;padding:20px">
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">Kurumsal</div>
+        <div style="font-size:22px;font-weight:500;color:var(--text-primary);margin-bottom:4px">Özel teklif</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:14px">Sınırsız kullanıcı, özel destek</div>
+        <a href="https://wa.me/905304621769?text=Kurumsal%20paket%20için%20teklif%20almak%20istiyorum" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:500;text-decoration:none">WhatsApp ile İletişim</a>
+      </div>`}
+    </div>` : `
+    <div style="background:var(--bg-success);border:0.5px solid var(--border-success);border-radius:6px;padding:16px;text-align:center">
+      <div style="font-size:14px;font-weight:500;color:var(--text-success);margin-bottom:4px">En üst paketin kullanıcısısınız!</div>
+      <div style="font-size:13px;color:var(--text-secondary)">Kurumsal pakette sınırsız kullanıcı ve tüm özellikler dahil.</div>
+    </div>`}
+  `
+}
+
+function loadSettings(){
+  const s=DB.ayarlar
+  document.getElementById('set-buro').value=s.buroAdi||''
+  document.getElementById('set-avukat').value=s.avukatAdi||''
+  document.getElementById('set-tel').value=s.telefon||''
+  document.getElementById('set-email').value=s.email||''
+  document.getElementById('set-wa').value=s.whatsapp||''
+  if(s.buroAdi) document.getElementById('buro-adi-logo').textContent=s.buroAdi
+  updateWaTest(s.whatsapp)
+}
+// ── SILME: baglantili kayit denetimi + geri alma ──────────
+let sonSilinen = null
+
+function geriAlGoster(tur, adet, mesaj){
+  const eski = document.getElementById('geri-al'); if(eski) eski.remove()
+  const d = document.createElement('div')
+  d.id = 'geri-al'
+  d.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0B1629;color:#fff;'
+    + 'padding:11px 16px;border-radius:6px;display:flex;align-items:center;gap:14px;font-size:13px;z-index:9000;'
+    + 'box-shadow:0 8px 24px rgba(16,24,40,.18)'
+  d.innerHTML = '<span>' + mesaj + '</span>'
+    + '<button onclick="geriAl()" style="background:none;border:none;color:#C9A84C;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;padding:0">Geri al</button>'
+  document.body.appendChild(d)
+  setTimeout(function(){ const x = document.getElementById('geri-al'); if(x) x.remove(); sonSilinen = null }, 8000)
+}
+
+function geriAl(){
+  if(!sonSilinen) return
+  const { anahtar, kayit } = sonSilinen
+  const map = { mv:'saveMv', dv:'saveDv', gv:'saveGv', et:'saveEt', fn:'saveFn', bl:'saveBl', il:'saveIl' }
+  const getir = { mv:'muvekkiller', dv:'davalar', gv:'gorevler', et:'etkinlikler', fn:'finanslar', bl:'belgeler', il:'iletisimler' }
+  const liste = DB[getir[anahtar]]
+  liste.push(kayit)
+  DB[map[anahtar]](liste)
+  sonSilinen = null
+  const x = document.getElementById('geri-al'); if(x) x.remove()
+  renderAll()
+}
+
+function silOnayi(baslik, detay){
+  return confirm(baslik + (detay ? '\n\n' + detay : '') + '\n\nDevam edilsin mi?')
+}
+
+function delMv(id,e){
+  e.stopPropagation()
+  const mv = DB.muvekkiller.find(function(m){ return m.id === id }); if(!mv) return
+  const bagli = DB.davalar.filter(function(d){ return String(d.muvekkil) === String(id) || d.muvekkilId === id })
+  const fin = DB.finanslar.filter(function(f){ return String(f.muvekkil) === String(id) || f.muvekkilId === id })
+  let detay = ''
+  if(bagli.length) detay += bagli.length + ' dava bu müvekkile bağlı.\n'
+  if(fin.length)   detay += fin.length + ' finans kaydı bu müvekkile bağlı.\n'
+  if(detay) detay += 'Bu kayıtlar silinmeyecek ancak müvekkil bilgisi boş kalacak.'
+  if(!silOnayi(mv.ad + ' ' + mv.soyad + ' adlı müvekkil silinecek.', detay)) return
+  sonSilinen = { anahtar:'mv', kayit: mv }
+  DB.saveMv(DB.muvekkiller.filter(function(m){ return m.id !== id }))
+  geriAlGoster('mv', 1, 'Müvekkil silindi')
+  renderAll()
+}
+
+function delDv(id,e){
+  e.stopPropagation()
+  const dv = DB.davalar.find(function(d){ return d.id === id }); if(!dv) return
+  const gv = DB.gorevler.filter(function(g){ return String(g.dava) === String(dv.dosyaNo) })
+  const bl = DB.belgeler.filter(function(b){ return String(b.dava) === String(dv.dosyaNo) })
+  let detay = ''
+  if(gv.length) detay += gv.length + ' görev bu davaya bağlı.\n'
+  if(bl.length) detay += bl.length + ' belge bu davaya bağlı.\n'
+  if(detay) detay += 'Bu kayıtlar silinmeyecek.'
+  if(!silOnayi((dv.dosyaNo || 'Dava') + ' numaralı dosya silinecek.', detay)) return
+  sonSilinen = { anahtar:'dv', kayit: dv }
+  DB.saveDv(DB.davalar.filter(function(d){ return d.id !== id }))
+  geriAlGoster('dv', 1, 'Dava silindi')
+  renderAll()
+}
+
+function delGv(id,e){
+  e.stopPropagation()
+  const k = DB.gorevler.find(function(x){ return x.id === id }); if(!k) return
+  if(!silOnayi('"' + (k.baslik || 'Görev') + '" silinecek.')) return
+  sonSilinen = { anahtar:'gv', kayit: k }
+  DB.saveGv(DB.gorevler.filter(function(x){ return x.id !== id }))
+  geriAlGoster('gv', 1, 'Görev silindi'); renderAll()
+}
+
+function delBl(id,e){
+  e.stopPropagation()
+  const k = DB.belgeler.find(function(x){ return x.id === id }); if(!k) return
+  if(!silOnayi('"' + (k.ad || 'Belge') + '" silinecek.')) return
+  sonSilinen = { anahtar:'bl', kayit: k }
+  DB.saveBl(DB.belgeler.filter(function(x){ return x.id !== id }))
+  geriAlGoster('bl', 1, 'Belge silindi'); renderBl()
+}
+
+function delFn(id,e){
+  e.stopPropagation()
+  const k = DB.finanslar.find(function(x){ return x.id === id }); if(!k) return
+  if(!silOnayi('Finans kaydı silinecek.', (k.tutar ? 'Tutar: ' + k.tutar : ''))) return
+  sonSilinen = { anahtar:'fn', kayit: k }
+  DB.saveFn(DB.finanslar.filter(function(x){ return x.id !== id }))
+  geriAlGoster('fn', 1, 'Finans kaydı silindi'); renderFn()
+}
+
+function delIl(id,e){
+  e.stopPropagation()
+  const k = DB.iletisimler.find(function(x){ return x.id === id }); if(!k) return
+  if(!silOnayi('İletişim kaydı silinecek.')) return
+  sonSilinen = { anahtar:'il', kayit: k }
+  DB.saveIl(DB.iletisimler.filter(function(x){ return x.id !== id }))
+  geriAlGoster('il', 1, 'İletişim kaydı silindi'); renderIl()
+}
+
+// ── SIFRE DEGISTIRME ───────────────────────────────────────
+function sifreMesaj(metin, basarili){
+  const el = document.getElementById('sifre-mesaj')
+  el.textContent = metin
+  el.style.display = 'block'
+  el.style.background = basarili ? '#F0FDF4' : '#FEF2F2'
+  el.style.color      = basarili ? '#15803D' : '#B91C1C'
+  el.style.border     = '1px solid ' + (basarili ? '#BBF7D0' : '#FECACA')
+}
+
+async function sifreDegistir(){
+  const y1 = document.getElementById('sifre-yeni').value
+  const y2 = document.getElementById('sifre-yeni2').value
+  if(!y1 || !y2)      return sifreMesaj('Her iki alanı da doldurun.', false)
+  if(y1 !== y2)       return sifreMesaj('Şifreler eşleşmiyor.', false)
+  if(y1.length < 6)   return sifreMesaj('Şifre en az 6 karakter olmalı.', false)
+
+  const btn = document.getElementById('sifre-btn')
+  btn.disabled = true; btn.textContent = 'Güncelleniyor...'
+  try{
+    const { error } = await sb.auth.updateUser({ password: y1 })
+    if(error) throw error
+    document.getElementById('sifre-yeni').value = ''
+    document.getElementById('sifre-yeni2').value = ''
+    sifreMesaj('Şifreniz güncellendi.', true)
+    logla('sifre_degisti', '')
+  }catch(e){
+    let m = e.message || ''
+    if(m.indexOf('should be different') > -1) m = 'Yeni şifre mevcut şifreyle aynı olamaz.'
+    else if(m.indexOf('at least') > -1)       m = 'Şifre en az 6 karakter olmalı.'
+    else if(m.indexOf('session') > -1)        m = 'Oturumunuz sona ermiş. Çıkış yapıp tekrar girin.'
+    sifreMesaj(m || 'Şifre güncellenemedi.', false)
+  }
+  btn.disabled = false; btn.textContent = 'Şifreyi güncelle'
+}
+
+// ── ABONELIK BITIS UYARISI ────────────────────────────────
+function abonelikUyarisi(abone){
+  const eski = document.getElementById('abone-uyari'); if(eski) eski.remove()
+  if(!abone || abone.durum !== 'aktif' || !abone.bitis_tarihi) return
+
+  const kalan = Math.ceil((new Date(abone.bitis_tarihi) - new Date()) / 86400000)
+  if(kalan > 7) return
+
+  const demo = abone.paket_adi === 'Demo'
+  let renk, arka, kenar, metin
+
+  if(kalan < 0){
+    renk='#B91C1C'; arka='#FEF2F2'; kenar='#FECACA'
+    metin = (demo ? 'Deneme süreniz doldu.' : 'Aboneliğinizin süresi doldu.') + ' Erişiminiz kısıtlanabilir.'
+  } else if(kalan === 0){
+    renk='#B91C1C'; arka='#FEF2F2'; kenar='#FECACA'
+    metin = (demo ? 'Deneme süreniz bugün doluyor.' : 'Aboneliğiniz bugün doluyor.')
+  } else if(kalan <= 3){
+    renk='#B91C1C'; arka='#FEF2F2'; kenar='#FECACA'
+    metin = (demo ? 'Deneme sürenize ' : 'Aboneliğinize ') + kalan + ' gün kaldı.'
+  } else {
+    renk='#B45309'; arka='#FFFBEB'; kenar='#FDE68A'
+    metin = (demo ? 'Deneme sürenize ' : 'Aboneliğinize ') + kalan + ' gün kaldı.'
+  }
+
+  const mesaj = demo
+    ? 'Dosya360 aboneliği hakkında bilgi almak istiyorum. Deneme sürem doluyor.'
+    : 'Dosya360 aboneliğimi yenilemek istiyorum.'
+
+  const d = document.createElement('div')
+  d.id = 'abone-uyari'
+  d.style.cssText = 'display:flex;align-items:center;gap:12px;padding:11px 20px;background:' + arka
+    + ';border-bottom:1px solid ' + kenar + ';font-size:13px;color:' + renk
+  d.innerHTML = '<i class="ti ti-alert-circle" style="font-size:17px;flex-shrink:0"></i>'
+    + '<span style="flex:1">' + metin + ' Verileriniz korunur.</span>'
+    + '<a href="https://wa.me/905304621769?text=' + encodeURIComponent(mesaj) + '" target="_blank" '
+    + 'style="padding:6px 14px;background:' + renk + ';color:#fff;border-radius:4px;font-size:12.5px;font-weight:500;text-decoration:none;white-space:nowrap">'
+    + (demo ? 'Aboneliğe geç' : 'Yenile') + '</a>'
+    + '<button onclick="this.parentElement.remove()" style="background:none;border:none;color:' + renk
+    + ';cursor:pointer;font-size:16px;opacity:.5;padding:0 2px" aria-label="Kapat"><i class="ti ti-x"></i></button>'
+
+  const banner = document.getElementById('uyari-banner')
+  banner.parentNode.insertBefore(d, banner)
+}
+
+// ══ WEB ASISTANI ══════════════════════════════════════════
+let aiAyar = null, aiBilgiler = [], aiBasvurular = [], basvuruFiltre = ''
+
+const BS_DURUM = {
+  yeni:      { ad:'Yeni',              arka:'#EFF6FF', renk:'#1D4ED8' },
+  iletisim:  { ad:'İletişime geçildi', arka:'#FFFBEB', renk:'#B45309' },
+  randevu:   { ad:'Randevu planlandı', arka:'#F5F3FF', renk:'#6D28D9' },
+  muvekkil:  { ad:'Müvekkil oldu',     arka:'#F0FDF4', renk:'#15803D' },
+  olumsuz:   { ad:'Olumsuz',           arka:'#FEF2F2', renk:'#B91C1C' },
+  arsiv:     { ad:'Arşiv',             arka:'#F9FAFB', renk:'#6B7280' }
+}
+const BILGI_KAT = { sss:'Sık sorulan soru', buro:'Büro hakkında', hizmet:'Hizmet alanı', ozel:'Özel bilgi' }
+
+async function aiPaketUygun(){
+  if(!window.sb || !sbUser) return false
+  const buro = await buroIdAl()
+  const { data } = await window.sb.from('abonelikler').select('paket_adi')
+    .eq('buro_id', buro).eq('durum','aktif').order('created_at',{ascending:false}).limit(1).maybeSingle()
+  const p = data && data.paket_adi
+  return p === 'Buyume' || p === 'Büyüme' || p === 'Kurumsal' || p === 'Demo'
+}
+
+async function aiYukle(){
+  if(!window.sb || !sbUser) return
+  const uygun = await aiPaketUygun()
+  document.getElementById('ai-paket-uyari').style.display = uygun ? 'none' : 'block'
+  document.getElementById('ai-icerik').style.display = uygun ? 'block' : 'none'
+  if(!uygun) return
+
+  const buro = await buroIdAl()
+
+  let { data: ay } = await window.sb.from('ai_ayarlar').select('*').eq('buro_id', buro).maybeSingle()
+  if(!ay){
+    const yeni = { buro_id: buro, aktif: false }
+    await window.sb.from('ai_ayarlar').insert(yeni)
+    const r = await window.sb.from('ai_ayarlar').select('*').eq('buro_id', buro).maybeSingle()
+    ay = r.data
+  }
+  aiAyar = ay || {}
+
+  const g = function(id,v){ const e=document.getElementById(id); if(e) e.value = v || '' }
+  g('ai-bot-adi', aiAyar.bot_adi); g('ai-karsilama', aiAyar.karsilama)
+  g('ai-telefon', aiAyar.telefon); g('ai-whatsapp', aiAyar.whatsapp)
+  g('ai-eposta', aiAyar.eposta);   g('ai-adres', aiAyar.adres)
+  g('ai-saatler', aiAyar.calisma_saatleri); g('ai-uzmanlik', aiAyar.uzmanlik)
+  g('ai-alanlar', (aiAyar.izinli_alanlar || []).join(', '))
+  const tonEl = document.getElementById('ai-ton'); if(tonEl) tonEl.value = aiAyar.ton || 'resmi'
+  document.getElementById('ai-aktif').checked = !!aiAyar.aktif
+  aiDurumMetni()
+
+  document.getElementById('ai-embed-kod').textContent =
+    '<script src="https://dosya360.com/bot.js" data-buro="' + buro + '"><' + '/script>'
+
+  const { data: bl } = await window.sb.from('ai_bilgi').select('*').eq('buro_id', buro).order('kategori').order('sira')
+  aiBilgiler = bl || []
+  bilgiRender()
+
+  const { data: gr } = await window.sb.from('ai_gorusmeler').select('id,basvuru_var,created_at').eq('buro_id', buro)
+  const { data: bs } = await window.sb.from('ai_basvurular').select('id').eq('buro_id', buro)
+  const ay7 = new Date().toISOString().slice(0,7)
+  const buAy = (gr||[]).filter(function(x){ return String(x.created_at).slice(0,7) === ay7 })
+  document.getElementById('ai-m-gorusme').textContent = (gr||[]).length
+  document.getElementById('ai-m-ay').textContent = buAy.length
+  document.getElementById('ai-m-basvuru').textContent = (bs||[]).length
+  document.getElementById('ai-m-oran').textContent =
+    (gr||[]).length ? Math.round((bs||[]).length / gr.length * 100) + '%' : '—'
+}
+
+function aiDurumMetni(){
+  const acik = document.getElementById('ai-aktif').checked
+  const alan = (aiAyar && aiAyar.izinli_alanlar || []).length
+  document.getElementById('ai-durum-metin').textContent = !acik
+    ? 'Asistan kapalı. Sitenizde görünmüyor.'
+    : (alan ? 'Asistan etkin ve sitenizde çalışıyor.' : 'Etkin, ancak izinli alan adı girilmemiş. Ayarlardan ekleyin.')
+}
+
+async function aiDurumDegistir(){
+  const acik = document.getElementById('ai-aktif').checked
+  const buro = await buroIdAl()
+  await window.sb.from('ai_ayarlar').update({ aktif: acik }).eq('buro_id', buro)
+  if(aiAyar) aiAyar.aktif = acik
+  aiDurumMetni()
+}
+
+function aiSekme(ad, el){
+  ;['ayar','bilgi','kod'].forEach(function(x){
+    document.getElementById('ai-sekme-'+x).style.display = (x===ad ? 'block' : 'none')
+  })
+  document.querySelectorAll('.ai-tab').forEach(function(t){ t.classList.remove('active') })
+  if(el) el.classList.add('active')
+}
+
+function aiMesajGoster(metin, ok){
+  const el = document.getElementById('ai-mesaj')
+  el.textContent = metin; el.style.display = 'block'
+  el.style.background = ok ? '#F0FDF4' : '#FEF2F2'
+  el.style.color      = ok ? '#15803D' : '#B91C1C'
+  el.style.border     = '1px solid ' + (ok ? '#BBF7D0' : '#FECACA')
+}
+
+async function aiAyarKaydet(){
+  const btn = document.getElementById('ai-kaydet-btn')
+  btn.disabled = true; btn.textContent = 'Kaydediliyor...'
+  try{
+    const buro = await buroIdAl()
+    const alanlar = val('ai-alanlar').split(',').map(function(s){
+      return s.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/$/,'')
+    }).filter(Boolean)
+    const { error } = await window.sb.from('ai_ayarlar').update({
+      bot_adi: val('ai-bot-adi') || 'Dijital Asistan',
+      karsilama: val('ai-karsilama') || 'Merhaba, size nasıl yardımcı olabiliriz?',
+      ton: val('ai-ton'), telefon: val('ai-telefon'), whatsapp: val('ai-whatsapp'),
+      eposta: val('ai-eposta'), adres: val('ai-adres'),
+      calisma_saatleri: val('ai-saatler'), uzmanlik: val('ai-uzmanlik'),
+      izinli_alanlar: alanlar
+    }).eq('buro_id', buro)
+    if(error) throw error
+    if(aiAyar) aiAyar.izinli_alanlar = alanlar
+    aiDurumMetni()
+    aiMesajGoster('Ayarlar kaydedildi.', true)
+  }catch(e){ aiMesajGoster('Hata: ' + e.message, false) }
+  btn.disabled = false; btn.textContent = 'Ayarları kaydet'
+}
+
+// ── Bilgi bankasi
+function bilgiRender(){
+  const el = document.getElementById('ai-bilgi-liste')
+  if(!aiBilgiler.length){
+    el.innerHTML = '<div style="text-align:center;padding:36px;color:var(--muted);font-size:13px">'
+      + 'Henüz bilgi eklenmemiş. Asistan yalnızca buraya girdiğiniz bilgilerden yanıt verir.</div>'
+    return
+  }
+  el.innerHTML = aiBilgiler.map(function(b){
+    return '<div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:14px 16px">'
+      + '<div style="display:flex;align-items:flex-start;gap:12px">'
+      +   '<div style="flex:1;min-width:0">'
+      +     '<div style="font-size:11px;color:#C9A84C;font-weight:500;margin-bottom:3px">' + (BILGI_KAT[b.kategori]||b.kategori) + '</div>'
+      +     '<div style="font-size:13.5px;font-weight:600;color:var(--text)">' + b.baslik + '</div>'
+      +     '<div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">' + b.icerik + '</div>'
+      +   '</div>'
+      +   '<div style="display:flex;gap:6px;flex-shrink:0">'
+      +     '<button onclick="bilgiDuzenle(\'' + b.id + '\')" style="padding:5px 10px;background:var(--surface);border:1px solid var(--border);border-radius:4px;font-size:12px;cursor:pointer;font-family:inherit;color:var(--text)">Düzenle</button>'
+      +     '<button onclick="bilgiSil(\'' + b.id + '\')" style="padding:5px 10px;background:#FEF2F2;border:none;border-radius:4px;font-size:12px;cursor:pointer;font-family:inherit;color:#B91C1C">Sil</button>'
+      +   '</div></div></div>'
+  }).join('')
+}
+
+function bilgiModalAc(){
+  document.getElementById('bilgi-id').value = ''
+  document.getElementById('bilgi-baslik').value = ''
+  document.getElementById('bilgi-icerik').value = ''
+  document.getElementById('m-bilgi').classList.add('open')
+}
+
+function bilgiDuzenle(id){
+  const b = aiBilgiler.find(function(x){ return x.id === id }); if(!b) return
+  document.getElementById('bilgi-id').value = b.id
+  document.getElementById('bilgi-kategori').value = b.kategori
+  document.getElementById('bilgi-baslik').value = b.baslik
+  document.getElementById('bilgi-icerik').value = b.icerik
+  document.getElementById('m-bilgi').classList.add('open')
+}
+
+async function bilgiKaydet(){
+  const baslik = val('bilgi-baslik'), icerik = val('bilgi-icerik')
+  if(!baslik || !icerik) return alert('Başlık ve içerik zorunludur.')
+  const id = val('bilgi-id')
+  const buro = await buroIdAl()
+  const kayit = { buro_id: buro, kategori: val('bilgi-kategori'), baslik: baslik, icerik: icerik }
+  const { error } = id
+    ? await window.sb.from('ai_bilgi').update(kayit).eq('id', id)
+    : await window.sb.from('ai_bilgi').insert(kayit)
+  if(error) return alert('Hata: ' + error.message)
+  closeModal('bilgi'); aiYukle()
+}
+
+async function bilgiSil(id){
+  const b = aiBilgiler.find(function(x){ return x.id === id })
+  if(!confirm('"' + (b ? b.baslik : 'Bilgi') + '" silinecek.\n\nDevam edilsin mi?')) return
+  await window.sb.from('ai_bilgi').delete().eq('id', id)
+  aiYukle()
+}
+
+function embedKopyala(){
+  navigator.clipboard.writeText(document.getElementById('ai-embed-kod').textContent)
+  alert('Kod kopyalandı.')
+}
+
+// ── Basvurular
+async function basvuruYukle(){
+  if(!window.sb || !sbUser) return
+  const buro = await buroIdAl()
+  const { data } = await window.sb.from('ai_basvurular').select('*')
+    .eq('buro_id', buro).order('created_at', { ascending:false })
+  aiBasvurular = data || []
+  basvuruFiltreRender(); basvuruRender()
+  const yeni = aiBasvurular.filter(function(b){ return b.durum === 'yeni' }).length
+  const rz = document.getElementById('basvuru-rozet')
+  if(rz){ rz.textContent = yeni; rz.style.display = yeni ? 'inline-block' : 'none' }
+}
+
+function basvuruFiltreRender(){
+  const el = document.getElementById('basvuru-filtre')
+  const say = function(d){ return d ? aiBasvurular.filter(function(b){ return b.durum===d }).length : aiBasvurular.length }
+  let h = '<button onclick="basvuruFiltrele(\'\')" class="tbtn' + (basvuruFiltre===''?' primary':'') + '">Tümü (' + say('') + ')</button>'
+  Object.keys(BS_DURUM).forEach(function(k){
+    h += '<button onclick="basvuruFiltrele(\'' + k + '\')" class="tbtn' + (basvuruFiltre===k?' primary':'') + '">'
+       + BS_DURUM[k].ad + ' (' + say(k) + ')</button>'
+  })
+  el.innerHTML = h
+}
+
+function basvuruFiltrele(d){ basvuruFiltre = d; basvuruFiltreRender(); basvuruRender() }
+
+function basvuruRender(){
+  const el = document.getElementById('basvuru-liste')
+  const liste = basvuruFiltre ? aiBasvurular.filter(function(b){ return b.durum===basvuruFiltre }) : aiBasvurular
+  if(!liste.length){
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px">'
+      + 'Henüz başvuru yok. Web asistanı sitenizde etkinleştiğinde gelen talepler burada görünür.</div>'
+    return
+  }
+  el.innerHTML = liste.map(function(b){
+    const d = BS_DURUM[b.durum] || BS_DURUM.yeni
+    const tel = (b.telefon||'').replace(/\D/g,'')
+    return '<div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:16px 18px">'
+      + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px">'
+      +   '<div style="flex:1;min-width:0">'
+      +     '<div style="font-size:14px;font-weight:600;color:var(--text)">' + (b.ad_soyad||'İsim belirtilmemiş') + '</div>'
+      +     '<div style="font-size:12.5px;color:var(--muted);margin-top:2px">' + (b.telefon||'—') + (b.eposta ? ' · ' + b.eposta : '') + '</div>'
+      +     (b.konu ? '<div style="font-size:12.5px;color:var(--text);margin-top:6px">' + b.konu + '</div>' : '')
+      +     (b.aciklama ? '<div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">' + b.aciklama + '</div>' : '')
+      +     '<div style="font-size:11.5px;color:var(--hint);margin-top:6px">' + tarihFormat(b.created_at) + (b.kaynak_url ? ' · ' + b.kaynak_url : '') + '</div>'
+      +   '</div>'
+      +   '<span class="bs-durum" style="background:' + d.arka + ';color:' + d.renk + '">' + d.ad + '</span>'
+      + '</div>'
+      + '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">'
+      +   (tel ? '<a href="tel:' + tel + '" class="tbtn"><i class="ti ti-phone"></i>Ara</a>'
+      +          '<a href="https://wa.me/9' + tel + '" target="_blank" class="tbtn"><i class="ti ti-brand-whatsapp"></i>WhatsApp</a>' : '')
+      +   '<select onchange="basvuruDurum(\'' + b.id + '\',this.value)" style="padding:6px 10px;border:1px solid var(--border);border-radius:4px;font-size:12.5px;font-family:inherit;background:#fff;color:var(--text)">'
+      +     Object.keys(BS_DURUM).map(function(k){
+              return '<option value="'+k+'"'+(b.durum===k?' selected':'')+'>'+BS_DURUM[k].ad+'</option>' }).join('')
+      +   '</select>'
+      +   '<button onclick="basvuruMuvekkil(\'' + b.id + '\')" style="padding:6px 14px;background:#0B1629;color:#C9A84C;border:none;border-radius:4px;font-size:12.5px;font-weight:500;cursor:pointer;font-family:inherit">Müvekkile dönüştür</button>'
+      + '</div></div>'
+  }).join('')
+}
+
+async function basvuruDurum(id, durum){
+  await window.sb.from('ai_basvurular').update({ durum: durum }).eq('id', id)
+  basvuruYukle()
+}
+
+function basvuruMuvekkil(id){
+  const b = aiBasvurular.find(function(x){ return x.id === id }); if(!b) return
+  const parca = (b.ad_soyad || '').trim().split(' ')
+  const soyad = parca.length > 1 ? parca.pop() : ''
+  const mvs = DB.muvekkiller
+  mvs.push({ id: Date.now(), ad: parca.join(' ') || b.ad_soyad || '', soyad: soyad,
+             tel: b.telefon || '', email: b.eposta || '', tur: 'Gerçek kişi',
+             not: 'Web asistanı başvurusu' + (b.konu ? ' — ' + b.konu : ''),
+             tarih: new Date().toISOString() })
+  DB.saveMv(mvs)
+  window.sb.from('ai_basvurular').update({ durum: 'muvekkil' }).eq('id', id).then(function(){ basvuruYukle() })
+  logla('muvekkil_ekle', b.ad_soyad || '')
+  renderAll()
+  alert('Müvekkil olarak eklendi.')
+}
+
+// ── ISLEM GUNLUGU ──────────────────────────────────────────
+function logla(islem, detay){
+  try{
+    if(!window.sb || !sbUser) return
+    window.sb.from('islem_gunlugu').insert({
+      buro_id: sbUser.id, islem: islem, detay: (detay||'').slice(0,200)
+    }).then(function(){}, function(){})
+  }catch(e){}
+}
+
+// ── ONAY BEKLEME EKRANI ────────────────────────────────────
+function onayEkrani(durum, sebep, email){
+  const dondu = durum === 'donduruldu'
+  const red = durum === 'reddedildi' || dondu
+  document.getElementById('ana-uygulama').style.display = 'none'
+  const el = document.getElementById('giris-ekrani')
+  el.style.display = 'flex'
+  el.innerHTML = ''
+    + '<div style="width:100%;max-width:420px;text-align:center">'
+    +   '<div style="font-size:22px;font-weight:600;color:#C9A84C;margin-bottom:6px">Dosya360</div>'
+    +   '<div style="font-size:12px;color:rgba(255,255,255,.35);margin-bottom:26px">Avukatlık Bürosu Yönetim Sistemi</div>'
+    +   '<div style="background:#1A2B47;border:0.5px solid rgba(201,168,76,.15);border-radius:8px;padding:32px 28px">'
+    +     '<i class="ti ' + (dondu ? 'ti-lock' : red ? 'ti-circle-x' : 'ti-clock-hour-4') + '" style="font-size:38px;color:' + (red ? '#F87171' : '#C9A84C') + '"></i>'
+    +     '<div style="font-size:17px;font-weight:500;color:#fff;margin:14px 0 8px">'
+    +       (dondu ? 'Hesabınız geçici olarak durduruldu'
+              : red ? 'Başvurunuz onaylanmadı'
+              : 'Hesabınız inceleniyor') + '</div>'
+    +     '<div style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:20px">'
+    +       (dondu
+          ? 'Verileriniz güvende ve korunuyor. Erişiminizin yeniden açılması için bizimle iletişime geçin.'
+          : red
+          ? (sebep ? String(sebep) : 'Başvurunuz için uygun görülmedi. Ayrıntı için bizimle iletişime geçebilirsiniz.')
+          : 'Kaydınız alındı. Ekibimiz hesabınızı en kısa sürede etkinleştirecek. Onaylandığında bilgilendirileceksiniz.')
+    +     '</div>'
+    +     '<div style="background:rgba(255,255,255,.04);border-radius:6px;padding:10px;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:18px">' + (email || '') + '</div>'
+    +     '<a href="https://wa.me/905304621769?text=' + encodeURIComponent('Dosya360 hesabım için bilgi almak istiyorum: ' + (email||''))
+    +       '" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:11px;background:#C9A84C;color:#0B1629;border-radius:5px;font-size:13.5px;font-weight:500;text-decoration:none;margin-bottom:8px">'
+    +       '<i class="ti ti-brand-whatsapp"></i>Bizimle iletişime geçin</a>'
+    +     '<button onclick="sb.auth.signOut().then(function(){location.href=\'index.html\'})" style="width:100%;padding:10px;background:transparent;border:0.5px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);border-radius:5px;font-size:13px;cursor:pointer;font-family:inherit">Çıkış yap</button>'
+    +   '</div>'
+    + '</div>'
+}
+
+// ── KURULUM KARTI (onboarding yerine) ──────────────────────
+function kurulumKartiKontrol(profil){
+  const eksik = !profil?.buro_adi || !profil?.avukat_adi
+  const kart = document.getElementById('kurulum-karti')
+  if(!kart) return
+  kart.style.display = (eksik && profil?.kurulum_tamam !== true) ? 'flex' : 'none'
+}
+
+function kurulumaGit(){
+  let link = null
+  document.querySelectorAll('.navitem').forEach(function(n){
+    if((n.getAttribute('onclick')||'').indexOf('ayarlar') > -1) link = n
+  })
+  sp('ayarlar', link)
+}
+
+async function kurulumKaydet(){
+  const buro = val('set-buro'), avukat = val('set-avukat')
+  if(!buro || !avukat) return alert('Büro adı ve avukat adı zorunludur!')
+  const btn = document.getElementById('kurulum-kaydet-btn')
+  btn.disabled = true; btn.textContent = 'Kaydediliyor...'
+  try{
+    if(window.sb && sbUser){
+      const { error } = await window.sb.from('kullanici_profil').update({
+        buro_adi: buro, avukat_adi: avukat, telefon: val('set-tel'), kurulum_tamam: true
+      }).eq('id', sbUser.id)
+      if(error) throw error
+    }
+    document.getElementById('buro-adi-logo').textContent = buro
+    const k = document.getElementById('kurulum-karti'); if(k) k.style.display='none'
+    btn.textContent = 'Kaydedildi'
+    setTimeout(()=>{ btn.disabled=false; btn.textContent='Bilgileri Kaydet' }, 2000)
+  }catch(e){
+    alert('Hata: '+e.message)
+    btn.disabled=false; btn.textContent='Bilgileri Kaydet'
+  }
+}
+
+function saveSetting(key,val){
+  const s=DB.ayarlar; s[key]=val; DB.saveSet(s)
+  if(key==='buroAdi') document.getElementById('buro-adi-logo').textContent=val||'Avukatlık CRM'
+  if(key==='whatsapp') updateWaTest(val)
+}
+function updateWaTest(numara){
+  const wrap=document.getElementById('wa-test-wrap')
+  const link=document.getElementById('wa-test-link')
+  if(numara && numara.length>=10){
+    const temiz=numara.replace(/\D/g,'')
+    link.href=`https://wa.me/90${temiz}?text=Merhaba,%20Dosya360%20sistemi%20test%20mesajı.`
+    wrap.style.display='block'
+  } else {
+    wrap.style.display='none'
+  }
+}
+function waAc(tel, e){
+  e && e.stopPropagation()
+  const avukatWa = DB.ayarlar.whatsapp
+  const temizTel = tel.replace(/\D/g,'')
+  if(avukatWa){
+    // Müvekkil numarasına avukat whatsapp'ından mesaj aç
+    const temizWa = avukatWa.replace(/\D/g,'')
+    window.open(`https://wa.me/${temizTel.startsWith('90')?temizTel:'90'+temizTel}?text=Merhaba,%20Dosya360%20sistemi%20üzerinden%20iletişim.`, '_blank')
+  } else {
+    window.open(`https://wa.me/${temizTel.startsWith('90')?temizTel:'90'+temizTel}`, '_blank')
+  }
+}
+
+// ── YARDIMCı ──────────────────────────────────────────────────
+function setFilter(el){ el.closest('.filters').querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active')); el.classList.add('active') }
+function renderAll(){
+  const mv=DB.muvekkiller, dv=DB.davalar, gv=DB.gorevler
+  document.getElementById('nb-mv').textContent=mv.length
+  document.getElementById('nb-dv').textContent=dv.length
+  document.getElementById('nb-gv').textContent=gv.filter(g=>g.durum!=='tamamlandi').length
+  document.getElementById('s-mv').textContent=mv.length
+  document.getElementById('s-dv').textContent=dv.filter(d=>d.durum!=='sonuclandi').length
+  document.getElementById('s-gv').textContent=gv.filter(g=>g.durum!=='tamamlandi').length
+  renderMv(); renderDv(); renderGv(); renderDash(); uyariKontrol(); setTimeout(()=>{ document.querySelectorAll('.panel').forEach(p=>{ if(!p.querySelector('.ln-footer')){ const d=document.createElement('div'); d.className='ln-footer'; d.innerHTML='<strong style="color:#6B7280">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#C9A84C;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır'; d.style.cssText='text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:28px'; p.appendChild(d) } }) },200)
+}
+
+// ── UYARI SİSTEMİ ─────────────────────────────────────────────
+function uyariKontrol(){
+  const bugun = new Date(); bugun.setHours(0,0,0,0)
+  const yediGun = new Date(bugun); yediGun.setDate(yediGun.getDate()+7)
+  const dvs = DB.davalar
+  const yaklasan = dvs.filter(d=>{
+    if(!d.durusmaTarihi) return false
+    const t = new Date(d.durusmaTarihi); t.setHours(0,0,0,0)
+    return t >= bugun && t <= yediGun && d.durum !== 'sonuclandi'
+  }).sort((a,b)=>new Date(a.durusmaTarihi)-new Date(b.durusmaTarihi))
+
+  // Banner
+  const banner = document.getElementById('uyari-banner')
+  // Dashboard kartı
+  const kart = document.getElementById('yaklasan-kart')
+  const liste = document.getElementById('yaklasan-liste')
+
+  if(!yaklasan.length){
+    banner.style.display='none'
+    kart.style.display='none'
+    return
+  }
+
+  banner.style.display='flex'
+  kart.style.display='block'
+
+  const bannerHTML = yaklasan.map(d=>{
+    const t = new Date(d.durusmaTarihi)
+    const kalan = Math.ceil((t-bugun)/(1000*60*60*24))
+    const renk = kalan<=1?'#B91C1C':kalan<=3?'#B45309':'#1D4ED8'
+    const bg = kalan<=1?'#FEE2E2':kalan<=3?'#FEF3C7':'#DBEAFE'
+    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:${bg};border-radius:5px;font-size:13px">
+      <span style="width:6px;height:6px;border-radius:50%;flex-shrink:0;background:${kalan<=1?'#DC2626':kalan<=3?'#D97706':'#2563EB'}"></span>
+      <div style="flex:1"><strong style="color:${renk}">${d.dosyaNo} — ${d.muvekkil}</strong> · ${d.mahkeme||'Mahkeme belirtilmemiş'}</div>
+      <div style="font-size:12px;color:${renk};font-weight:600">${kalan===0?'BUGÜN':kalan===1?'YARIN':kalan+' gün kaldı'}</div>
+      <div style="font-size:12px;color:#374151">${t.toLocaleDateString('tr-TR')}${d.durusmaSaati?' '+d.durusmaSaati:''}</div>
+      ${d.muvekkılTel ? `<button onclick="waBildir('${d.muvekkılTel}','${d.muvekkil}','${t.toLocaleDateString('tr-TR')}','${d.durusmaSaati||''}','${d.mahkeme||''}')" title="WhatsApp hatırlatma gönder" style="background:#25D366;border:none;border-radius:6px;padding:5px 10px;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px"><i class="ti ti-brand-whatsapp"></i> Hatırlat</button>` : ''}
+    </div>`
+  }).join('')
+
+  banner.innerHTML = `<div style="font-size:13px;font-weight:600;color:#B91C1C;margin-bottom:4px">${yaklasan.length} yaklaşan duruşma var (7 gün içinde)</div>` + bannerHTML
+  liste.innerHTML = bannerHTML
+}
+
+function waBildir(tel, muvekkil, tarih, saat, mahkeme){
+  const temiz = tel.replace(/\D/g,'')
+  const numara = temiz.startsWith('90') ? temiz : '90'+temiz
+  const mesaj = `Sayın ${muvekkil},\n\n${tarih}${saat?' saat '+saat:''} tarihinde${mahkeme?' '+mahkeme+' Mahkemesi\'nde':''} duruşmanız bulunmaktadır.\n\nBilgilerinize saygıyla sunarız.`
+  window.open('https://wa.me/'+numara+'?text='+encodeURIComponent(mesaj), '_blank')
+}
+
+// ── BAŞLAT ────────────────────────────────────────────────────
+
+// ── SUPABASE AUTH ─────────────────────────────────────────
+async function girisYap() {
+  const email = document.getElementById('giris-email').value.trim()
+  const sifre = document.getElementById('giris-sifre').value
+  const hata = document.getElementById('giris-hata')
+  const btn = document.getElementById('giris-btn')
+  hata.style.display = 'none'
+  btn.disabled = true; btn.textContent = 'Giriş yapılıyor...'
+
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: sifre })
+    if (error) throw error
+    await uygulamaAc(data.user)
+  } catch(err) {
+    let msg = err.message
+    if (msg.includes('Invalid login')) msg = 'E-posta veya şifre hatalı'
+    hata.textContent = msg
+    hata.style.display = 'block'
+    btn.disabled = false; btn.textContent = 'Giriş Yap'
+  }
+}
+
+async function uygulamaAc(user) {
+  sbUser = user
+  
+  // Profil kontrolü
+  const { data: profil } = await sb.from('kullanici_profil')
+    .select('buro_adi,avukat_adi,telefon,rol,kurulum_tamam,onay_durum,red_sebebi,aktif').eq('id', user.id).maybeSingle()
+
+  if(profil?.rol === 'admin') { window.location.href = 'admin.html'; return }
+
+  // Ekip uyesiyse burosunun onayina bakilir
+  let onay = profil?.onay_durum
+  let redSebebi = profil?.red_sebebi
+  let hesapAktif = profil?.aktif
+  const { data: uyelik } = await sb.from('buro_uyeleri').select('buro_id').eq('kullanici_id', user.id).limit(1).maybeSingle()
+  if(uyelik){
+    const { data: bp } = await sb.from('kullanici_profil').select('onay_durum,red_sebebi,aktif').eq('id', uyelik.buro_id).maybeSingle()
+    if(bp){ onay = bp.onay_durum; redSebebi = bp.red_sebebi; hesapAktif = bp.aktif }
+  }
+
+  if(onay && onay !== 'onayli'){ onayEkrani(onay, redSebebi, user.email); return }
+  if(hesapAktif === false){ onayEkrani('donduruldu', null, user.email); return }
+
+  document.getElementById('giris-ekrani').style.display = 'none'
+  document.getElementById('ana-uygulama').style.display = 'flex'
+
+  // Once buluttan cek, sonra profil bilgilerini uygula
+  await verileriYukle()
+
+  const ayar = DB.ayarlar
+  if (profil?.buro_adi)   ayar.buroAdi   = profil.buro_adi
+  if (profil?.avukat_adi) ayar.avukatAdi = profil.avukat_adi
+  if (profil?.telefon)    ayar.telefon   = profil.telefon
+  ayar.email = user.email
+  DB.saveSet(ayar)
+
+  if (profil?.buro_adi) document.getElementById('buro-adi-logo').textContent = profil.buro_adi
+  kurulumKartiKontrol(profil)
+
+  loadSettings(); renderAll(); setTimeout(abonelikYukle, 500)
+  logla('giris', user.email)
+}
+
+async function authCikis() {
+  await sb.auth.signOut()
+  location.reload()
+}
+
+// Oturum kontrol - varsa direkt aç, yoksa ana sayfaya yönlendir
+sb.auth.getSession().then(async ({ data: { session } }) => {
+  if (session?.user) {
+    await uygulamaAc(session.user)
+  } else {
+    window.location.href = 'index.html'
+  }
+})
+
+
+</script>
+
+
+
+</body>
+</html>
