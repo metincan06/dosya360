@@ -1468,6 +1468,34 @@ function logla(islem, detay){
   }catch(e){}
 }
 
+// ── ONAY BEKLEME EKRANI ────────────────────────────────────
+function onayEkrani(durum, sebep, email){
+  const red = durum === 'reddedildi'
+  document.getElementById('ana-uygulama').style.display = 'none'
+  const el = document.getElementById('giris-ekrani')
+  el.style.display = 'flex'
+  el.innerHTML = ''
+    + '<div style="width:100%;max-width:420px;text-align:center">'
+    +   '<div style="font-size:22px;font-weight:600;color:#C9A84C;margin-bottom:6px">Dosya360</div>'
+    +   '<div style="font-size:12px;color:rgba(255,255,255,.35);margin-bottom:26px">Avukatlık Bürosu Yönetim Sistemi</div>'
+    +   '<div style="background:#1A2B47;border:0.5px solid rgba(201,168,76,.15);border-radius:8px;padding:32px 28px">'
+    +     '<i class="ti ' + (red ? 'ti-circle-x' : 'ti-clock-hour-4') + '" style="font-size:38px;color:' + (red ? '#F87171' : '#C9A84C') + '"></i>'
+    +     '<div style="font-size:17px;font-weight:500;color:#fff;margin:14px 0 8px">'
+    +       (red ? 'Başvurunuz onaylanmadı' : 'Hesabınız inceleniyor') + '</div>'
+    +     '<div style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:20px">'
+    +       (red
+          ? (sebep ? String(sebep) : 'Başvurunuz için uygun görülmedi. Ayrıntı için bizimle iletişime geçebilirsiniz.')
+          : 'Kaydınız alındı. Ekibimiz hesabınızı en kısa sürede etkinleştirecek. Onaylandığında bilgilendirileceksiniz.')
+    +     '</div>'
+    +     '<div style="background:rgba(255,255,255,.04);border-radius:6px;padding:10px;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:18px">' + (email || '') + '</div>'
+    +     '<a href="https://wa.me/905304621769?text=' + encodeURIComponent('Dosya360 hesabım için bilgi almak istiyorum: ' + (email||''))
+    +       '" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:11px;background:#C9A84C;color:#0B1629;border-radius:5px;font-size:13.5px;font-weight:500;text-decoration:none;margin-bottom:8px">'
+    +       '<i class="ti ti-brand-whatsapp"></i>Bizimle iletişime geçin</a>'
+    +     '<button onclick="sb.auth.signOut().then(function(){location.href=\'index.html\'})" style="width:100%;padding:10px;background:transparent;border:0.5px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);border-radius:5px;font-size:13px;cursor:pointer;font-family:inherit">Çıkış yap</button>'
+    +   '</div>'
+    + '</div>'
+}
+
 // ── KURULUM KARTI (onboarding yerine) ──────────────────────
 function kurulumKartiKontrol(profil){
   const eksik = !profil?.buro_adi || !profil?.avukat_adi
@@ -1628,9 +1656,20 @@ async function uygulamaAc(user) {
   
   // Profil kontrolü
   const { data: profil } = await sb.from('kullanici_profil')
-    .select('buro_adi,avukat_adi,telefon,rol,kurulum_tamam').eq('id', user.id).maybeSingle()
+    .select('buro_adi,avukat_adi,telefon,rol,kurulum_tamam,onay_durum,red_sebebi').eq('id', user.id).maybeSingle()
 
   if(profil?.rol === 'admin') { window.location.href = 'admin.html'; return }
+
+  // Ekip uyesiyse burosunun onayina bakilir
+  let onay = profil?.onay_durum
+  let redSebebi = profil?.red_sebebi
+  const { data: uyelik } = await sb.from('buro_uyeleri').select('buro_id').eq('kullanici_id', user.id).limit(1).maybeSingle()
+  if(uyelik){
+    const { data: bp } = await sb.from('kullanici_profil').select('onay_durum,red_sebebi').eq('id', uyelik.buro_id).maybeSingle()
+    if(bp){ onay = bp.onay_durum; redSebebi = bp.red_sebebi }
+  }
+
+  if(onay && onay !== 'onayli'){ onayEkrani(onay, redSebebi, user.email); return }
 
   document.getElementById('giris-ekrani').style.display = 'none'
   document.getElementById('ana-uygulama').style.display = 'flex'

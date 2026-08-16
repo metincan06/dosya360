@@ -103,15 +103,19 @@ async function davetKabul() {
 
   try {
     const { data, error } = await sb.auth.signUp({ email: davetBilgi.email, password: sifre })
-    if (error) throw error
+    if (error && !String(error.message).includes('already registered')) throw error
 
-    // Daveti kabul edildi olarak işaretle
-    await sb.from('davetler').update({ durum: 'kabul_edildi' }).eq('token', token)
-
-    // Büro üyesi olarak ekle
-    if (data.user) {
-      await sb.from('buro_uyeleri').insert({ buro_id: davetBilgi.buro_id, kullanici_id: data.user.id })
+    // Oturumu kesinlestir - signUp her zaman oturum acmayabiliyor
+    let { data: oturum } = await sb.auth.getSession()
+    if (!oturum?.session) {
+      const { error: gErr } = await sb.auth.signInWithPassword({ email: davetBilgi.email, password: sifre })
+      if (gErr) throw new Error('Hesap olusturuldu ancak giris yapilamadi. Sifrenizle giris yapmayi deneyin.')
     }
+
+    // Buroya katilim - sunucu tarafinda atomik
+    const { data: sonuc, error: rErr } = await sb.rpc('daveti_kabul_et', { p_token: token })
+    if (rErr) throw rErr
+    if (!sonuc || sonuc.ok !== true) throw new Error(sonuc?.hata || 'Buroya katilim tamamlanamadi')
 
     document.getElementById('main-content').innerHTML = `
       <div class="success">

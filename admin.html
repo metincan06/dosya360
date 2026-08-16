@@ -43,7 +43,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .content{padding:24px;flex:1}
 
 /* METRİKLER */
-.metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:24px}
+.metrics{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-bottom:24px}
 .mc{background:#fff;border:0.5px solid var(--border);border-radius:5px;padding:16px}
 .mc-icon{width:36px;height:36px;border-radius:5px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px}
 .mc-val{font-size:26px;font-weight:600;color:var(--text);margin-bottom:2px}
@@ -183,6 +183,20 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="mc-val" id="m-bitiyor">—</div>
         <div class="mc-label">30 Günde Bitiyor</div>
       </div>
+      <div class="mc">
+        <div class="mc-icon" style="background:#FFFBEB;color:#B45309"><i class="ti ti-user-question"></i></div>
+        <div class="mc-val" id="m-onay">—</div>
+        <div class="mc-label">Onay Bekliyor</div>
+      </div>
+    </div>
+
+    <!-- ONAY KUYRUGU -->
+    <div id="onay-bolum" style="display:none">
+      <div class="section-title">
+        <span>Onay Bekleyen Başvurular</span>
+        <span id="onay-sayi" style="font-size:13px;color:var(--muted);font-weight:400"></span>
+      </div>
+      <div id="onay-liste" style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px"></div>
     </div>
 
     <!-- KULLANICI TABLOSU -->
@@ -350,9 +364,78 @@ async function veriYukle() {
   })
 
   metrikleriGuncelle()
+  onayRender()
   tabloRender(tumKullanicilar)
   sonKayitlariRender()
   gunlukRender()
+}
+
+// ── ONAY KUYRUGU ──────────────────────────────────────────
+function onayRender(){
+  const bekleyen = tumKullanicilar.filter(function(k){ return k.onay_durum === 'bekliyor' })
+  const el = document.getElementById('m-onay'); if(el) el.textContent = bekleyen.length
+
+  const bolum = document.getElementById('onay-bolum')
+  const liste = document.getElementById('onay-liste')
+  if(!bolum || !liste) return
+
+  if(!bekleyen.length){ bolum.style.display = 'none'; return }
+  bolum.style.display = 'block'
+  document.getElementById('onay-sayi').textContent = bekleyen.length + ' başvuru'
+
+  liste.innerHTML = bekleyen.map(function(k){
+    return '<div style="background:#fff;border:1.5px solid #FDE68A;border-radius:6px;padding:16px 18px">'
+      + '<div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px">'
+      +   '<div style="width:40px;height:40px;border-radius:6px;background:#FFFBEB;color:#B45309;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-building"></i></div>'
+      +   '<div style="flex:1;min-width:0">'
+      +     '<div style="font-size:14px;font-weight:600;color:var(--text)">' + (k.buro_adi || 'Büro adı girilmemiş') + '</div>'
+      +     '<div style="font-size:12.5px;color:var(--muted);margin-top:2px">' + (k.email || '—') + (k.avukat_adi ? ' · ' + k.avukat_adi : '') + '</div>'
+      +     '<div style="font-size:11.5px;color:var(--hint);margin-top:3px">Kayıt: ' + (k.created_at ? tarihFormat(k.created_at) : '—') + (k.telefon ? ' · ' + k.telefon : '') + '</div>'
+      +   '</div>'
+      + '</div>'
+      + '<div style="display:flex;gap:8px;flex-wrap:wrap">'
+      +   '<button onclick="onayla(\'' + k.id + '\',\'demo\')" style="padding:8px 16px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:12.5px;font-weight:500;cursor:pointer;font-family:inherit"><i class="ti ti-clock-play"></i> Demo onayla — 14 gün</button>'
+      +   '<button onclick="abonelikOnayAc(\'' + k.id + '\',\'' + String(k.buro_adi||k.email||'').replace(/\x27/g,"") + '\')" style="padding:8px 16px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit"><i class="ti ti-check"></i> Abonelik onayla</button>'
+      +   '<button onclick="reddet(\'' + k.id + '\')" style="padding:8px 16px;background:#FEF2F2;color:#B91C1C;border:none;border-radius:5px;font-size:12.5px;font-weight:500;cursor:pointer;font-family:inherit">Reddet</button>'
+      + '</div></div>'
+  }).join('')
+}
+
+async function onayla(id, tur, paket, periyot){
+  const { data, error } = await sb.rpc('buro_onayla',
+    { p_buro_id: id, p_tur: tur, p_paket: paket || null, p_periyot: periyot || 'aylik' })
+  if(error){ alert('Hata: ' + error.message); return }
+  if(!data || data.ok !== true){ alert(data && data.hata ? data.hata : 'Onaylanamadı'); return }
+  modalKapat(); await veriYukle()
+}
+
+async function reddet(id){
+  const sebep = prompt('Red sebebi (kullanıcıya gösterilir, boş bırakılabilir):')
+  if(sebep === null) return
+  const { data, error } = await sb.rpc('buro_reddet', { p_buro_id: id, p_sebep: sebep || null })
+  if(error){ alert('Hata: ' + error.message); return }
+  if(!data || data.ok !== true){ alert(data && data.hata ? data.hata : 'İşlem başarısız'); return }
+  await veriYukle()
+}
+
+function abonelikOnayAc(id, ad){
+  document.getElementById('modal-baslik').textContent = 'Abonelik onayı — ' + ad
+  document.getElementById('modal-icerik').innerHTML = ''
+    + '<div style="font-size:13px;color:var(--muted);margin-bottom:16px">Paket ve dönem seçin. Abonelik hemen etkinleşir.</div>'
+    + '<div style="display:flex;flex-direction:column;gap:8px">'
+    + [['Baslangic','aylik','Başlangıç — Aylık','3 kullanıcı · ₺1.500/ay'],
+       ['Baslangic','yillik','Başlangıç — Yıllık','3 kullanıcı · ₺13.500/yıl'],
+       ['Buyume','aylik','Büyüme — Aylık','10 kullanıcı · ₺3.500/ay'],
+       ['Buyume','yillik','Büyüme — Yıllık','10 kullanıcı · ₺28.000/yıl'],
+       ['Kurumsal','yillik','Kurumsal — Yıllık','Sınırsız kullanıcı · özel fiyat']
+      ].map(function(p){
+        return '<button onclick="onayla(\'' + id + '\',\'abonelik\',\'' + p[0] + '\',\'' + p[1] + '\')" '
+          + 'style="text-align:left;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:5px;cursor:pointer;font-family:inherit">'
+          + '<div style="font-size:13.5px;font-weight:500;color:var(--text)">' + p[2] + '</div>'
+          + '<div style="font-size:12px;color:var(--muted);margin-top:2px">' + p[3] + '</div></button>'
+      }).join('')
+    + '</div>'
+  document.getElementById('detay-modal').classList.add('open')
 }
 
 // ── ABONELIK YARDIMCILARI ─────────────────────────────────
