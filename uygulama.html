@@ -1470,7 +1470,8 @@ function logla(islem, detay){
 
 // ── ONAY BEKLEME EKRANI ────────────────────────────────────
 function onayEkrani(durum, sebep, email){
-  const red = durum === 'reddedildi'
+  const dondu = durum === 'donduruldu'
+  const red = durum === 'reddedildi' || dondu
   document.getElementById('ana-uygulama').style.display = 'none'
   const el = document.getElementById('giris-ekrani')
   el.style.display = 'flex'
@@ -1479,11 +1480,15 @@ function onayEkrani(durum, sebep, email){
     +   '<div style="font-size:22px;font-weight:600;color:#C9A84C;margin-bottom:6px">Dosya360</div>'
     +   '<div style="font-size:12px;color:rgba(255,255,255,.35);margin-bottom:26px">Avukatlık Bürosu Yönetim Sistemi</div>'
     +   '<div style="background:#1A2B47;border:0.5px solid rgba(201,168,76,.15);border-radius:8px;padding:32px 28px">'
-    +     '<i class="ti ' + (red ? 'ti-circle-x' : 'ti-clock-hour-4') + '" style="font-size:38px;color:' + (red ? '#F87171' : '#C9A84C') + '"></i>'
+    +     '<i class="ti ' + (dondu ? 'ti-lock' : red ? 'ti-circle-x' : 'ti-clock-hour-4') + '" style="font-size:38px;color:' + (red ? '#F87171' : '#C9A84C') + '"></i>'
     +     '<div style="font-size:17px;font-weight:500;color:#fff;margin:14px 0 8px">'
-    +       (red ? 'Başvurunuz onaylanmadı' : 'Hesabınız inceleniyor') + '</div>'
+    +       (dondu ? 'Hesabınız geçici olarak durduruldu'
+              : red ? 'Başvurunuz onaylanmadı'
+              : 'Hesabınız inceleniyor') + '</div>'
     +     '<div style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:20px">'
-    +       (red
+    +       (dondu
+          ? 'Verileriniz güvende ve korunuyor. Erişiminizin yeniden açılması için bizimle iletişime geçin.'
+          : red
           ? (sebep ? String(sebep) : 'Başvurunuz için uygun görülmedi. Ayrıntı için bizimle iletişime geçebilirsiniz.')
           : 'Kaydınız alındı. Ekibimiz hesabınızı en kısa sürede etkinleştirecek. Onaylandığında bilgilendirileceksiniz.')
     +     '</div>'
@@ -1656,20 +1661,22 @@ async function uygulamaAc(user) {
   
   // Profil kontrolü
   const { data: profil } = await sb.from('kullanici_profil')
-    .select('buro_adi,avukat_adi,telefon,rol,kurulum_tamam,onay_durum,red_sebebi').eq('id', user.id).maybeSingle()
+    .select('buro_adi,avukat_adi,telefon,rol,kurulum_tamam,onay_durum,red_sebebi,aktif').eq('id', user.id).maybeSingle()
 
   if(profil?.rol === 'admin') { window.location.href = 'admin.html'; return }
 
   // Ekip uyesiyse burosunun onayina bakilir
   let onay = profil?.onay_durum
   let redSebebi = profil?.red_sebebi
+  let hesapAktif = profil?.aktif
   const { data: uyelik } = await sb.from('buro_uyeleri').select('buro_id').eq('kullanici_id', user.id).limit(1).maybeSingle()
   if(uyelik){
-    const { data: bp } = await sb.from('kullanici_profil').select('onay_durum,red_sebebi').eq('id', uyelik.buro_id).maybeSingle()
-    if(bp){ onay = bp.onay_durum; redSebebi = bp.red_sebebi }
+    const { data: bp } = await sb.from('kullanici_profil').select('onay_durum,red_sebebi,aktif').eq('id', uyelik.buro_id).maybeSingle()
+    if(bp){ onay = bp.onay_durum; redSebebi = bp.red_sebebi; hesapAktif = bp.aktif }
   }
 
   if(onay && onay !== 'onayli'){ onayEkrani(onay, redSebebi, user.email); return }
+  if(hesapAktif === false){ onayEkrani('donduruldu', null, user.email); return }
 
   document.getElementById('giris-ekrani').style.display = 'none'
   document.getElementById('ana-uygulama').style.display = 'flex'

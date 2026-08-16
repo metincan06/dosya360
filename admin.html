@@ -572,9 +572,14 @@ function aramaYap(q) {
 // ── DURUM DEĞİŞTİR ────────────────────────────────────────
 async function durumDegistir(id, mevcutDurum) {
   const yeniDurum = !mevcutDurum
-  const onay = confirm(`Bu kullanıcıyı ${yeniDurum ? 'aktif etmek' : 'dondurmak'} istediğinize emin misiniz?`)
-  if (!onay) return
-  await sb.from('kullanici_profil').update({ aktif: yeniDurum }).eq('id', id)
+  const mesaj = yeniDurum
+    ? 'Bu büronun erişimi yeniden açılacak. Onaylıyor musunuz?'
+    : 'Bu büro dondurulacak. Büro ve tüm ekip üyeleri sisteme erişemeyecek, verileri korunacak. Onaylıyor musunuz?'
+  if (!confirm(mesaj)) return
+
+  const { data, error } = await sb.rpc('buro_durum_degistir', { p_buro_id: id, p_aktif: yeniDurum })
+  if (error) { alert('Hata: ' + error.message); return }
+  if (!data || data.ok !== true) { alert(data && data.hata ? data.hata : 'İşlem tamamlanamadı'); return }
   await veriYukle()
 }
 
