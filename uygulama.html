@@ -519,6 +519,17 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
             <i class="ti ti-brand-whatsapp"></i> WhatsApp'ı Test Et
           </a>
         </div>
+        <div style="margin-top:26px;padding-top:20px;border-top:1px solid var(--border)">
+          <div style="font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:4px">Şifre değiştir</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px">En az 6 karakter. Değişiklikten sonra oturumunuz açık kalır.</div>
+          <div id="sifre-mesaj" style="display:none;font-size:12.5px;padding:9px 12px;border-radius:5px;margin-bottom:12px"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div class="field"><label>YENİ ŞİFRE</label><input type="password" id="sifre-yeni" placeholder="••••••••" autocomplete="new-password"></div>
+            <div class="field"><label>YENİ ŞİFRE TEKRAR</label><input type="password" id="sifre-yeni2" placeholder="••••••••" autocomplete="new-password"></div>
+          </div>
+          <button id="sifre-btn" onclick="sifreDegistir()" style="padding:10px 20px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:13.5px;font-weight:500;color:var(--text);cursor:pointer;font-family:inherit">Şifreyi güncelle</button>
+        </div>
+
         <button id="kurulum-kaydet-btn" onclick="kurulumKaydet()" style="width:100%;margin-top:16px;padding:11px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Bilgileri Kaydet</button>
         <p style="font-size:12px;color:var(--muted);margin-top:10px">Büro adı ve avukat adı hesabınıza kaydedilir. Diğer alanlar otomatik saklanır.</p>
       </div>
@@ -1032,7 +1043,6 @@ function renderMv(q=''){
     </div>`).join('')
 }
 
-function delMv(id,e){ e.stopPropagation(); if(!confirm('Silinsin mi?')) return; DB.saveMv(DB.muvekkiller.filter(m=>m.id!==id)); renderAll() }
 
 function renderDv(filtre=''){
   const dvs = filtre ? DB.davalar.filter(d=>d.durum===filtre) : DB.davalar
@@ -1048,7 +1058,6 @@ function renderDv(filtre=''){
     +`</tbody></table></div>`
 }
 
-function delDv(id,e){ e.stopPropagation(); if(!confirm('Silinsin mi?')) return; DB.saveDv(DB.davalar.filter(d=>d.id!==id)); renderAll() }
 
 function renderGv(){
   const gvs=DB.gorevler.filter(g=>gvFiltre==='hepsi'||g.durum===gvFiltre)
@@ -1064,7 +1073,6 @@ function renderGv(){
 }
 
 function toggleGv(id){ const gvs=DB.gorevler; const g=gvs.find(x=>x.id===id); if(g) g.durum=g.durum==='tamamlandi'?'bekliyor':'tamamlandi'; DB.saveGv(gvs); renderAll() }
-function delGv(id,e){ e.stopPropagation(); if(!confirm('Silinsin mi?')) return; DB.saveGv(DB.gorevler.filter(g=>g.id!==id)); renderAll() }
 
 function renderBl(){
   const bls=DB.belgeler; const el=document.getElementById('list-bl')
@@ -1073,7 +1081,6 @@ function renderBl(){
     bls.map(b=>`<tr><td><i class="ti ti-file" style="color:var(--hint);margin-right:6px"></i>${b.ad}</td><td>${badge('bb',b.kategori)}</td><td>${b.dava}</td><td>${b.tarih?new Date(b.tarih).toLocaleDateString('tr-TR'):'—'}</td><td><button class="del-btn" onclick="delBl(${b.id},event)"><i class="ti ti-trash"></i></button></td></tr>`).join('')
     +`</tbody></table></div>`
 }
-function delBl(id,e){ e.stopPropagation(); if(!confirm('Silinsin mi?')) return; DB.saveBl(DB.belgeler.filter(b=>b.id!==id)); renderBl() }
 
 function renderFn(){
   const fns=DB.finanslar
@@ -1090,7 +1097,6 @@ function renderFn(){
     [...fns].reverse().map(f=>`<tr><td>${f.tarih||'—'}</td><td>${f.muvekkil}</td><td>${f.aciklama||'—'}</td><td>${badge(f.tur==='tahsilat'?'bg':f.tur==='masraf'||f.tur==='harc'?'br':'ba',f.tur)}</td><td style="font-weight:600;color:${f.tur==='tahsilat'?'var(--green)':'var(--red)'}">${f.tur==='tahsilat'?'+':'-'}₺${f.tutar.toLocaleString('tr-TR')}</td><td><button class="del-btn" onclick="delFn(${f.id},event)"><i class="ti ti-trash"></i></button></td></tr>`).join('')
     +`</tbody></table></div>`
 }
-function delFn(id,e){ e.stopPropagation(); if(!confirm('Silinsin mi?')) return; DB.saveFn(DB.finanslar.filter(f=>f.id!==id)); renderFn() }
 
 function renderIl(){
   const ils=DB.iletisimler; const el=document.getElementById('list-il')
@@ -1104,7 +1110,6 @@ function renderIl(){
       <button class="del-btn" onclick="delIl(${i.id},event)"><i class="ti ti-trash"></i></button>
     </div>`).join('')
 }
-function delIl(id,e){ e.stopPropagation(); if(!confirm('Silinsin mi?')) return; DB.saveIl(DB.iletisimler.filter(i=>i.id!==id)); renderIl() }
 
 // ── TAKVİM ────────────────────────────────────────────────────
 const AYLAR=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık']
@@ -1238,6 +1243,8 @@ async function abonelikYukle() {
       alt.textContent = 'Aşağıdan bir paket seçerek başlayın.'
       return
     }
+
+    abonelikUyarisi(data)
 
     if (data.durum === 'aktif') {
       ikon.innerHTML = '<i class="ti ti-check"></i>'
@@ -1458,6 +1465,188 @@ function loadSettings(){
   if(s.buroAdi) document.getElementById('buro-adi-logo').textContent=s.buroAdi
   updateWaTest(s.whatsapp)
 }
+// ── SILME: baglantili kayit denetimi + geri alma ──────────
+let sonSilinen = null
+
+function geriAlGoster(tur, adet, mesaj){
+  const eski = document.getElementById('geri-al'); if(eski) eski.remove()
+  const d = document.createElement('div')
+  d.id = 'geri-al'
+  d.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0B1629;color:#fff;'
+    + 'padding:11px 16px;border-radius:6px;display:flex;align-items:center;gap:14px;font-size:13px;z-index:9000;'
+    + 'box-shadow:0 8px 24px rgba(16,24,40,.18)'
+  d.innerHTML = '<span>' + mesaj + '</span>'
+    + '<button onclick="geriAl()" style="background:none;border:none;color:#C9A84C;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;padding:0">Geri al</button>'
+  document.body.appendChild(d)
+  setTimeout(function(){ const x = document.getElementById('geri-al'); if(x) x.remove(); sonSilinen = null }, 8000)
+}
+
+function geriAl(){
+  if(!sonSilinen) return
+  const { anahtar, kayit } = sonSilinen
+  const map = { mv:'saveMv', dv:'saveDv', gv:'saveGv', et:'saveEt', fn:'saveFn', bl:'saveBl', il:'saveIl' }
+  const getir = { mv:'muvekkiller', dv:'davalar', gv:'gorevler', et:'etkinlikler', fn:'finanslar', bl:'belgeler', il:'iletisimler' }
+  const liste = DB[getir[anahtar]]
+  liste.push(kayit)
+  DB[map[anahtar]](liste)
+  sonSilinen = null
+  const x = document.getElementById('geri-al'); if(x) x.remove()
+  renderAll()
+}
+
+function silOnayi(baslik, detay){
+  return confirm(baslik + (detay ? '\n\n' + detay : '') + '\n\nDevam edilsin mi?')
+}
+
+function delMv(id,e){
+  e.stopPropagation()
+  const mv = DB.muvekkiller.find(function(m){ return m.id === id }); if(!mv) return
+  const bagli = DB.davalar.filter(function(d){ return String(d.muvekkil) === String(id) || d.muvekkilId === id })
+  const fin = DB.finanslar.filter(function(f){ return String(f.muvekkil) === String(id) || f.muvekkilId === id })
+  let detay = ''
+  if(bagli.length) detay += bagli.length + ' dava bu müvekkile bağlı.\n'
+  if(fin.length)   detay += fin.length + ' finans kaydı bu müvekkile bağlı.\n'
+  if(detay) detay += 'Bu kayıtlar silinmeyecek ancak müvekkil bilgisi boş kalacak.'
+  if(!silOnayi(mv.ad + ' ' + mv.soyad + ' adlı müvekkil silinecek.', detay)) return
+  sonSilinen = { anahtar:'mv', kayit: mv }
+  DB.saveMv(DB.muvekkiller.filter(function(m){ return m.id !== id }))
+  geriAlGoster('mv', 1, 'Müvekkil silindi')
+  renderAll()
+}
+
+function delDv(id,e){
+  e.stopPropagation()
+  const dv = DB.davalar.find(function(d){ return d.id === id }); if(!dv) return
+  const gv = DB.gorevler.filter(function(g){ return String(g.dava) === String(dv.dosyaNo) })
+  const bl = DB.belgeler.filter(function(b){ return String(b.dava) === String(dv.dosyaNo) })
+  let detay = ''
+  if(gv.length) detay += gv.length + ' görev bu davaya bağlı.\n'
+  if(bl.length) detay += bl.length + ' belge bu davaya bağlı.\n'
+  if(detay) detay += 'Bu kayıtlar silinmeyecek.'
+  if(!silOnayi((dv.dosyaNo || 'Dava') + ' numaralı dosya silinecek.', detay)) return
+  sonSilinen = { anahtar:'dv', kayit: dv }
+  DB.saveDv(DB.davalar.filter(function(d){ return d.id !== id }))
+  geriAlGoster('dv', 1, 'Dava silindi')
+  renderAll()
+}
+
+function delGv(id,e){
+  e.stopPropagation()
+  const k = DB.gorevler.find(function(x){ return x.id === id }); if(!k) return
+  if(!silOnayi('"' + (k.baslik || 'Görev') + '" silinecek.')) return
+  sonSilinen = { anahtar:'gv', kayit: k }
+  DB.saveGv(DB.gorevler.filter(function(x){ return x.id !== id }))
+  geriAlGoster('gv', 1, 'Görev silindi'); renderAll()
+}
+
+function delBl(id,e){
+  e.stopPropagation()
+  const k = DB.belgeler.find(function(x){ return x.id === id }); if(!k) return
+  if(!silOnayi('"' + (k.ad || 'Belge') + '" silinecek.')) return
+  sonSilinen = { anahtar:'bl', kayit: k }
+  DB.saveBl(DB.belgeler.filter(function(x){ return x.id !== id }))
+  geriAlGoster('bl', 1, 'Belge silindi'); renderBl()
+}
+
+function delFn(id,e){
+  e.stopPropagation()
+  const k = DB.finanslar.find(function(x){ return x.id === id }); if(!k) return
+  if(!silOnayi('Finans kaydı silinecek.', (k.tutar ? 'Tutar: ' + k.tutar : ''))) return
+  sonSilinen = { anahtar:'fn', kayit: k }
+  DB.saveFn(DB.finanslar.filter(function(x){ return x.id !== id }))
+  geriAlGoster('fn', 1, 'Finans kaydı silindi'); renderFn()
+}
+
+function delIl(id,e){
+  e.stopPropagation()
+  const k = DB.iletisimler.find(function(x){ return x.id === id }); if(!k) return
+  if(!silOnayi('İletişim kaydı silinecek.')) return
+  sonSilinen = { anahtar:'il', kayit: k }
+  DB.saveIl(DB.iletisimler.filter(function(x){ return x.id !== id }))
+  geriAlGoster('il', 1, 'İletişim kaydı silindi'); renderIl()
+}
+
+// ── SIFRE DEGISTIRME ───────────────────────────────────────
+function sifreMesaj(metin, basarili){
+  const el = document.getElementById('sifre-mesaj')
+  el.textContent = metin
+  el.style.display = 'block'
+  el.style.background = basarili ? '#F0FDF4' : '#FEF2F2'
+  el.style.color      = basarili ? '#15803D' : '#B91C1C'
+  el.style.border     = '1px solid ' + (basarili ? '#BBF7D0' : '#FECACA')
+}
+
+async function sifreDegistir(){
+  const y1 = document.getElementById('sifre-yeni').value
+  const y2 = document.getElementById('sifre-yeni2').value
+  if(!y1 || !y2)      return sifreMesaj('Her iki alanı da doldurun.', false)
+  if(y1 !== y2)       return sifreMesaj('Şifreler eşleşmiyor.', false)
+  if(y1.length < 6)   return sifreMesaj('Şifre en az 6 karakter olmalı.', false)
+
+  const btn = document.getElementById('sifre-btn')
+  btn.disabled = true; btn.textContent = 'Güncelleniyor...'
+  try{
+    const { error } = await sb.auth.updateUser({ password: y1 })
+    if(error) throw error
+    document.getElementById('sifre-yeni').value = ''
+    document.getElementById('sifre-yeni2').value = ''
+    sifreMesaj('Şifreniz güncellendi.', true)
+    logla('sifre_degisti', '')
+  }catch(e){
+    let m = e.message || ''
+    if(m.indexOf('should be different') > -1) m = 'Yeni şifre mevcut şifreyle aynı olamaz.'
+    else if(m.indexOf('at least') > -1)       m = 'Şifre en az 6 karakter olmalı.'
+    else if(m.indexOf('session') > -1)        m = 'Oturumunuz sona ermiş. Çıkış yapıp tekrar girin.'
+    sifreMesaj(m || 'Şifre güncellenemedi.', false)
+  }
+  btn.disabled = false; btn.textContent = 'Şifreyi güncelle'
+}
+
+// ── ABONELIK BITIS UYARISI ────────────────────────────────
+function abonelikUyarisi(abone){
+  const eski = document.getElementById('abone-uyari'); if(eski) eski.remove()
+  if(!abone || abone.durum !== 'aktif' || !abone.bitis_tarihi) return
+
+  const kalan = Math.ceil((new Date(abone.bitis_tarihi) - new Date()) / 86400000)
+  if(kalan > 7) return
+
+  const demo = abone.paket_adi === 'Demo'
+  let renk, arka, kenar, metin
+
+  if(kalan < 0){
+    renk='#B91C1C'; arka='#FEF2F2'; kenar='#FECACA'
+    metin = (demo ? 'Deneme süreniz doldu.' : 'Aboneliğinizin süresi doldu.') + ' Erişiminiz kısıtlanabilir.'
+  } else if(kalan === 0){
+    renk='#B91C1C'; arka='#FEF2F2'; kenar='#FECACA'
+    metin = (demo ? 'Deneme süreniz bugün doluyor.' : 'Aboneliğiniz bugün doluyor.')
+  } else if(kalan <= 3){
+    renk='#B91C1C'; arka='#FEF2F2'; kenar='#FECACA'
+    metin = (demo ? 'Deneme sürenize ' : 'Aboneliğinize ') + kalan + ' gün kaldı.'
+  } else {
+    renk='#B45309'; arka='#FFFBEB'; kenar='#FDE68A'
+    metin = (demo ? 'Deneme sürenize ' : 'Aboneliğinize ') + kalan + ' gün kaldı.'
+  }
+
+  const mesaj = demo
+    ? 'Dosya360 aboneliği hakkında bilgi almak istiyorum. Deneme sürem doluyor.'
+    : 'Dosya360 aboneliğimi yenilemek istiyorum.'
+
+  const d = document.createElement('div')
+  d.id = 'abone-uyari'
+  d.style.cssText = 'display:flex;align-items:center;gap:12px;padding:11px 20px;background:' + arka
+    + ';border-bottom:1px solid ' + kenar + ';font-size:13px;color:' + renk
+  d.innerHTML = '<i class="ti ti-alert-circle" style="font-size:17px;flex-shrink:0"></i>'
+    + '<span style="flex:1">' + metin + ' Verileriniz korunur.</span>'
+    + '<a href="https://wa.me/905304621769?text=' + encodeURIComponent(mesaj) + '" target="_blank" '
+    + 'style="padding:6px 14px;background:' + renk + ';color:#fff;border-radius:4px;font-size:12.5px;font-weight:500;text-decoration:none;white-space:nowrap">'
+    + (demo ? 'Aboneliğe geç' : 'Yenile') + '</a>'
+    + '<button onclick="this.parentElement.remove()" style="background:none;border:none;color:' + renk
+    + ';cursor:pointer;font-size:16px;opacity:.5;padding:0 2px" aria-label="Kapat"><i class="ti ti-x"></i></button>'
+
+  const banner = document.getElementById('uyari-banner')
+  banner.parentNode.insertBefore(d, banner)
+}
+
 // ── ISLEM GUNLUGU ──────────────────────────────────────────
 function logla(islem, detay){
   try{
