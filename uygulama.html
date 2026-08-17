@@ -260,6 +260,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
   color:rgba(255,255,255,.32);padding:16px 20px 5px;white-space:nowrap;overflow:hidden
 }
 .navsec:first-of-type{padding-top:8px}
+
+.ai-tab{padding:9px 14px;background:none;border:none;border-bottom:2px solid transparent;font-size:13.5px;color:var(--muted);cursor:pointer;font-family:inherit;margin-bottom:-1px}
+.ai-tab.active{color:var(--text);border-bottom-color:#C9A84C;font-weight:500}
+.bs-durum{padding:3px 9px;border-radius:4px;font-size:11.5px;font-weight:500}
 </style>
 </head>
 <body>
@@ -319,6 +323,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <a class="navitem" onclick="sp('ayarlar',this)"><i class="ti ti-settings"></i><span class="nav-label">Ayarlar</span></a>
     <a class="navitem" onclick="sp('abonelik',this)"><i class="ti ti-credit-card"></i><span class="nav-label">Abonelik</span></a>
     <a class="navitem" onclick="sp('kullanici-yonetimi',this)"><i class="ti ti-user-plus"></i><span class="nav-label">Kullanıcılar</span></a>
+    <a class="navitem" onclick="sp('ai-asistan',this)"><i class="ti ti-robot"></i><span class="nav-label">Web Asistanı</span></a>
+    <a class="navitem" onclick="sp('ai-basvuru',this)"><i class="ti ti-inbox"></i><span class="nav-label">Başvurular</span><span class="nbadge" id="basvuru-rozet" style="display:none">0</span></a>
     <div class="navsec" id="ns5">UYAP</div>
     <a class="navitem" href="https://avukat.uyap.gov.tr" target="_blank"><i class="ti ti-scale"></i><span class="nav-label">Avukat UYAP</span></a>
     <a class="navitem" href="https://vatandas.uyap.gov.tr" target="_blank"><i class="ti ti-user-check"></i><span class="nav-label">Vatandaş UYAP</span></a>
@@ -634,6 +640,117 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       </div>
     </div>
 
+
+    <!-- WEB ASISTANI -->
+    <div class="panel" id="panel-ai-asistan">
+      <div id="ai-paket-uyari" style="display:none;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:16px 18px;margin-bottom:20px">
+        <div style="font-size:14px;font-weight:600;color:#92400E;margin-bottom:4px">Bu özellik mevcut paketinizde bulunmuyor</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Web Asistanı, Büyüme ve Kurumsal paketlerde sunulmaktadır.</div>
+        <button onclick="sp('abonelik',null)" style="padding:8px 16px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">Paketleri görüntüle</button>
+      </div>
+
+      <div id="ai-icerik" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin-bottom:20px">
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--text)">Asistan durumu</div>
+            <div style="font-size:12.5px;color:var(--muted);margin-top:2px" id="ai-durum-metin">Yükleniyor...</div>
+          </div>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" id="ai-aktif" onchange="aiDurumDegistir()" style="width:auto">
+            <span style="font-size:13px;color:var(--text)">Etkin</span>
+          </label>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">
+          <div class="mc"><div class="mc-val" id="ai-m-gorusme">—</div><div class="mc-label">Toplam görüşme</div></div>
+          <div class="mc"><div class="mc-val" id="ai-m-ay">—</div><div class="mc-label">Bu ay</div></div>
+          <div class="mc"><div class="mc-val" id="ai-m-basvuru">—</div><div class="mc-label">Başvuru</div></div>
+          <div class="mc"><div class="mc-val" id="ai-m-oran">—</div><div class="mc-label">Başvuru oranı</div></div>
+        </div>
+
+        <div style="display:flex;gap:8px;border-bottom:1px solid var(--border);margin-bottom:20px">
+          <button class="ai-tab active" onclick="aiSekme('ayar',this)">Ayarlar</button>
+          <button class="ai-tab" onclick="aiSekme('bilgi',this)">Bilgi bankası</button>
+          <button class="ai-tab" onclick="aiSekme('kod',this)">Sitenize ekleyin</button>
+        </div>
+
+        <div id="ai-sekme-ayar">
+          <div class="card" style="padding:20px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div class="field"><label>ASİSTAN ADI</label><input id="ai-bot-adi" placeholder="Dijital Asistan"></div>
+              <div class="field"><label>KONUŞMA TONU</label><select id="ai-ton"><option value="resmi">Resmî</option><option value="samimi">Samimi</option><option value="kisa">Kısa ve net</option></select></div>
+            </div>
+            <div class="field"><label>KARŞILAMA MESAJI</label><textarea id="ai-karsilama" rows="2" placeholder="Merhaba, size nasıl yardımcı olabiliriz?"></textarea></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div class="field"><label>TELEFON</label><input id="ai-telefon" placeholder="0312 000 00 00"></div>
+              <div class="field"><label>WHATSAPP</label><input id="ai-whatsapp" placeholder="5301234567"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div class="field"><label>E-POSTA</label><input id="ai-eposta" placeholder="info@buro.com"></div>
+              <div class="field"><label>ÇALIŞMA SAATLERİ</label><input id="ai-saatler" placeholder="Hafta içi 09:00 - 18:00"></div>
+            </div>
+            <div class="field"><label>ADRES</label><input id="ai-adres" placeholder="Kızılay, Çankaya / Ankara"></div>
+            <div class="field"><label>UZMANLIK ALANLARI</label><input id="ai-uzmanlik" placeholder="İş hukuku, icra, aile hukuku"></div>
+            <div class="field"><label>İZİNLİ ALAN ADLARI</label><input id="ai-alanlar" placeholder="ornekhukuk.com, www.ornekhukuk.com">
+              <p style="font-size:11px;color:var(--hint);margin-top:5px">Asistan yalnızca bu adreslerde çalışır. Virgülle ayırın.</p></div>
+            <div id="ai-mesaj" style="display:none;font-size:12.5px;padding:9px 12px;border-radius:5px;margin-bottom:12px"></div>
+            <button id="ai-kaydet-btn" onclick="aiAyarKaydet()" style="padding:10px 20px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit">Ayarları kaydet</button>
+          </div>
+        </div>
+
+        <div id="ai-sekme-bilgi" style="display:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div style="font-size:12.5px;color:var(--muted)">Asistan yalnızca buradaki bilgilerden yanıt verir. Girmediğiniz konuda görüş bildirmez.</div>
+            <button onclick="bilgiModalAc()" style="padding:8px 16px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap"><i class="ti ti-plus"></i> Bilgi ekle</button>
+          </div>
+          <div id="ai-bilgi-liste" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+
+        <div id="ai-sekme-kod" style="display:none">
+          <div class="card" style="padding:20px">
+            <div style="font-size:14px;font-weight:600;margin-bottom:6px">Kodu web sitenize ekleyin</div>
+            <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px">Aşağıdaki satırı sitenizin her sayfasında, kapanış &lt;/body&gt; etiketinden hemen önce ekleyin.</div>
+            <div style="background:#0B1629;border-radius:5px;padding:14px;font-family:ui-monospace,monospace;font-size:12px;color:#E8C96A;word-break:break-all;margin-bottom:10px" id="ai-embed-kod">—</div>
+            <button onclick="embedKopyala()" style="padding:9px 18px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:13px;font-weight:500;color:var(--text);cursor:pointer;font-family:inherit"><i class="ti ti-copy"></i> Kodu kopyala</button>
+            <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+              <div style="font-size:13px;font-weight:600;margin-bottom:8px">WordPress</div>
+              <div style="font-size:12.5px;color:var(--muted);line-height:1.7;margin-bottom:14px">Eklentiler bölümünden <strong>WPCode</strong> eklentisini kurun. Code Snippets → Header &amp; Footer bölümüne yapıştırın. Tema dosyasına eklemeyin, tema güncellemesinde silinir.</div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:8px">Wix</div>
+              <div style="font-size:12.5px;color:var(--muted);line-height:1.7">Ayarlar → Custom Code → Add Custom Code. Tüm sayfalar ve Body - end seçin. <strong>Ücretsiz Wix planlarında özel kod eklenemez</strong>, en az Core planı gerekir.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BASVURULAR -->
+    <div class="panel" id="panel-ai-basvuru">
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap" id="basvuru-filtre"></div>
+      <div id="basvuru-liste" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+
+    <!-- BILGI MODAL -->
+    <div class="overlay" id="m-bilgi">
+      <div class="modal">
+        <div class="modal-head"><h3>Bilgi ekle</h3><button class="modal-close" onclick="closeModal('bilgi')"><i class="ti ti-x"></i></button></div>
+        <div class="modal-body">
+          <input type="hidden" id="bilgi-id">
+          <div class="field"><label>KATEGORİ</label><select id="bilgi-kategori">
+            <option value="sss">Sık sorulan soru</option>
+            <option value="buro">Büro hakkında</option>
+            <option value="hizmet">Hizmet alanı</option>
+            <option value="ozel">Özel bilgi</option>
+          </select></div>
+          <div class="field"><label>BAŞLIK / SORU</label><input id="bilgi-baslik" placeholder="Çalışma saatleriniz nedir?"></div>
+          <div class="field"><label>İÇERİK / CEVAP</label><textarea id="bilgi-icerik" rows="4" placeholder="Hafta içi 09:00 - 18:00 arası açığız."></textarea></div>
+          <div class="modal-footer">
+            <button class="tbtn" onclick="closeModal('bilgi')">Vazgeç</button>
+            <button class="tbtn primary" onclick="bilgiKaydet()">Kaydet</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- KULLANICI YÖNETİMİ PANELİ -->
     <div class="panel" id="panel-kullanici-yonetimi">
       <h1 style="font-size:20px;font-weight:600;margin-bottom:6px">Kullanıcı Yönetimi</h1>
@@ -897,7 +1014,7 @@ let gvFiltre = 'hepsi'
 let calDate = new Date(); let calSel = new Date()
 
 // ── PANEL GEÇİŞ ──────────────────────────────────────────────
-const TITLES = { anasayfa:' Anasayfa', muvekkiller:'Müvekkiller', davalar:'Davalar', takvim:'Takvim', gorevler:'Görevler', belgeler:'Belgeler', finans:'Finans', iletisim:'İletişim', 'yapay-zeka':'YZ Asistanı', ayarlar:'Ayarlar' }
+const TITLES = { anasayfa:'Anasayfa', muvekkiller:'Müvekkiller', davalar:'Davalar', takvim:'Takvim', gorevler:'Görevler', belgeler:'Belgeler', finans:'Finans', iletisim:'İletişim', 'yapay-zeka':'YZ Asistanı', ayarlar:'Ayarlar', abonelik:'Abonelik', 'kullanici-yonetimi':'Kullanıcı Yönetimi', 'ai-asistan':'Web Asistanı', 'ai-basvuru':'Başvurular' }
 const FOOTER_HTML = '<div style="text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:28px"><strong style=\"color:#6B7280\">Dosya360</strong> — Bir <a href=\"https://otukenmedya.com\" target=\"_blank\" style=\"color:#C9A84C;text-decoration:none;font-weight:500\">Ötüken Medya</a> yazılımıdır</div>';
 
 function addFooter(panelId){
@@ -922,6 +1039,8 @@ function sp(id, el) {
   setTimeout(()=>addFooter(id), 100)
   if(id==='anasayfa') renderDash()
   if(id==='abonelik') abonelikYukle()
+  if(id==='ai-asistan') aiYukle()
+  if(id==='ai-basvuru') basvuruYukle()
   if(id==='kullanici-yonetimi') abonelikYukle()
   if(id==='davalar') renderDv()
   if(id==='gorevler') renderGv()
@@ -1645,6 +1764,275 @@ function abonelikUyarisi(abone){
 
   const banner = document.getElementById('uyari-banner')
   banner.parentNode.insertBefore(d, banner)
+}
+
+// ══ WEB ASISTANI ══════════════════════════════════════════
+let aiAyar = null, aiBilgiler = [], aiBasvurular = [], basvuruFiltre = ''
+
+const BS_DURUM = {
+  yeni:      { ad:'Yeni',              arka:'#EFF6FF', renk:'#1D4ED8' },
+  iletisim:  { ad:'İletişime geçildi', arka:'#FFFBEB', renk:'#B45309' },
+  randevu:   { ad:'Randevu planlandı', arka:'#F5F3FF', renk:'#6D28D9' },
+  muvekkil:  { ad:'Müvekkil oldu',     arka:'#F0FDF4', renk:'#15803D' },
+  olumsuz:   { ad:'Olumsuz',           arka:'#FEF2F2', renk:'#B91C1C' },
+  arsiv:     { ad:'Arşiv',             arka:'#F9FAFB', renk:'#6B7280' }
+}
+const BILGI_KAT = { sss:'Sık sorulan soru', buro:'Büro hakkında', hizmet:'Hizmet alanı', ozel:'Özel bilgi' }
+
+async function aiPaketUygun(){
+  if(!window.sb || !sbUser) return false
+  const buro = await buroIdAl()
+  const { data } = await window.sb.from('abonelikler').select('paket_adi')
+    .eq('buro_id', buro).eq('durum','aktif').order('created_at',{ascending:false}).limit(1).maybeSingle()
+  const p = data && data.paket_adi
+  return p === 'Buyume' || p === 'Büyüme' || p === 'Kurumsal' || p === 'Demo'
+}
+
+async function aiYukle(){
+  if(!window.sb || !sbUser) return
+  const uygun = await aiPaketUygun()
+  document.getElementById('ai-paket-uyari').style.display = uygun ? 'none' : 'block'
+  document.getElementById('ai-icerik').style.display = uygun ? 'block' : 'none'
+  if(!uygun) return
+
+  const buro = await buroIdAl()
+
+  let { data: ay } = await window.sb.from('ai_ayarlar').select('*').eq('buro_id', buro).maybeSingle()
+  if(!ay){
+    const yeni = { buro_id: buro, aktif: false }
+    await window.sb.from('ai_ayarlar').insert(yeni)
+    const r = await window.sb.from('ai_ayarlar').select('*').eq('buro_id', buro).maybeSingle()
+    ay = r.data
+  }
+  aiAyar = ay || {}
+
+  const g = function(id,v){ const e=document.getElementById(id); if(e) e.value = v || '' }
+  g('ai-bot-adi', aiAyar.bot_adi); g('ai-karsilama', aiAyar.karsilama)
+  g('ai-telefon', aiAyar.telefon); g('ai-whatsapp', aiAyar.whatsapp)
+  g('ai-eposta', aiAyar.eposta);   g('ai-adres', aiAyar.adres)
+  g('ai-saatler', aiAyar.calisma_saatleri); g('ai-uzmanlik', aiAyar.uzmanlik)
+  g('ai-alanlar', (aiAyar.izinli_alanlar || []).join(', '))
+  const tonEl = document.getElementById('ai-ton'); if(tonEl) tonEl.value = aiAyar.ton || 'resmi'
+  document.getElementById('ai-aktif').checked = !!aiAyar.aktif
+  aiDurumMetni()
+
+  document.getElementById('ai-embed-kod').textContent =
+    '<script src="https://dosya360.com/bot.js" data-buro="' + buro + '"><' + '/script>'
+
+  const { data: bl } = await window.sb.from('ai_bilgi').select('*').eq('buro_id', buro).order('kategori').order('sira')
+  aiBilgiler = bl || []
+  bilgiRender()
+
+  const { data: gr } = await window.sb.from('ai_gorusmeler').select('id,basvuru_var,created_at').eq('buro_id', buro)
+  const { data: bs } = await window.sb.from('ai_basvurular').select('id').eq('buro_id', buro)
+  const ay7 = new Date().toISOString().slice(0,7)
+  const buAy = (gr||[]).filter(function(x){ return String(x.created_at).slice(0,7) === ay7 })
+  document.getElementById('ai-m-gorusme').textContent = (gr||[]).length
+  document.getElementById('ai-m-ay').textContent = buAy.length
+  document.getElementById('ai-m-basvuru').textContent = (bs||[]).length
+  document.getElementById('ai-m-oran').textContent =
+    (gr||[]).length ? Math.round((bs||[]).length / gr.length * 100) + '%' : '—'
+}
+
+function aiDurumMetni(){
+  const acik = document.getElementById('ai-aktif').checked
+  const alan = (aiAyar && aiAyar.izinli_alanlar || []).length
+  document.getElementById('ai-durum-metin').textContent = !acik
+    ? 'Asistan kapalı. Sitenizde görünmüyor.'
+    : (alan ? 'Asistan etkin ve sitenizde çalışıyor.' : 'Etkin, ancak izinli alan adı girilmemiş. Ayarlardan ekleyin.')
+}
+
+async function aiDurumDegistir(){
+  const acik = document.getElementById('ai-aktif').checked
+  const buro = await buroIdAl()
+  await window.sb.from('ai_ayarlar').update({ aktif: acik }).eq('buro_id', buro)
+  if(aiAyar) aiAyar.aktif = acik
+  aiDurumMetni()
+}
+
+function aiSekme(ad, el){
+  ;['ayar','bilgi','kod'].forEach(function(x){
+    document.getElementById('ai-sekme-'+x).style.display = (x===ad ? 'block' : 'none')
+  })
+  document.querySelectorAll('.ai-tab').forEach(function(t){ t.classList.remove('active') })
+  if(el) el.classList.add('active')
+}
+
+function aiMesajGoster(metin, ok){
+  const el = document.getElementById('ai-mesaj')
+  el.textContent = metin; el.style.display = 'block'
+  el.style.background = ok ? '#F0FDF4' : '#FEF2F2'
+  el.style.color      = ok ? '#15803D' : '#B91C1C'
+  el.style.border     = '1px solid ' + (ok ? '#BBF7D0' : '#FECACA')
+}
+
+async function aiAyarKaydet(){
+  const btn = document.getElementById('ai-kaydet-btn')
+  btn.disabled = true; btn.textContent = 'Kaydediliyor...'
+  try{
+    const buro = await buroIdAl()
+    const alanlar = val('ai-alanlar').split(',').map(function(s){
+      return s.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/$/,'')
+    }).filter(Boolean)
+    const { error } = await window.sb.from('ai_ayarlar').update({
+      bot_adi: val('ai-bot-adi') || 'Dijital Asistan',
+      karsilama: val('ai-karsilama') || 'Merhaba, size nasıl yardımcı olabiliriz?',
+      ton: val('ai-ton'), telefon: val('ai-telefon'), whatsapp: val('ai-whatsapp'),
+      eposta: val('ai-eposta'), adres: val('ai-adres'),
+      calisma_saatleri: val('ai-saatler'), uzmanlik: val('ai-uzmanlik'),
+      izinli_alanlar: alanlar
+    }).eq('buro_id', buro)
+    if(error) throw error
+    if(aiAyar) aiAyar.izinli_alanlar = alanlar
+    aiDurumMetni()
+    aiMesajGoster('Ayarlar kaydedildi.', true)
+  }catch(e){ aiMesajGoster('Hata: ' + e.message, false) }
+  btn.disabled = false; btn.textContent = 'Ayarları kaydet'
+}
+
+// ── Bilgi bankasi
+function bilgiRender(){
+  const el = document.getElementById('ai-bilgi-liste')
+  if(!aiBilgiler.length){
+    el.innerHTML = '<div style="text-align:center;padding:36px;color:var(--muted);font-size:13px">'
+      + 'Henüz bilgi eklenmemiş. Asistan yalnızca buraya girdiğiniz bilgilerden yanıt verir.</div>'
+    return
+  }
+  el.innerHTML = aiBilgiler.map(function(b){
+    return '<div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:14px 16px">'
+      + '<div style="display:flex;align-items:flex-start;gap:12px">'
+      +   '<div style="flex:1;min-width:0">'
+      +     '<div style="font-size:11px;color:#C9A84C;font-weight:500;margin-bottom:3px">' + (BILGI_KAT[b.kategori]||b.kategori) + '</div>'
+      +     '<div style="font-size:13.5px;font-weight:600;color:var(--text)">' + b.baslik + '</div>'
+      +     '<div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">' + b.icerik + '</div>'
+      +   '</div>'
+      +   '<div style="display:flex;gap:6px;flex-shrink:0">'
+      +     '<button onclick="bilgiDuzenle(\'' + b.id + '\')" style="padding:5px 10px;background:var(--surface);border:1px solid var(--border);border-radius:4px;font-size:12px;cursor:pointer;font-family:inherit;color:var(--text)">Düzenle</button>'
+      +     '<button onclick="bilgiSil(\'' + b.id + '\')" style="padding:5px 10px;background:#FEF2F2;border:none;border-radius:4px;font-size:12px;cursor:pointer;font-family:inherit;color:#B91C1C">Sil</button>'
+      +   '</div></div></div>'
+  }).join('')
+}
+
+function bilgiModalAc(){
+  document.getElementById('bilgi-id').value = ''
+  document.getElementById('bilgi-baslik').value = ''
+  document.getElementById('bilgi-icerik').value = ''
+  document.getElementById('m-bilgi').classList.add('open')
+}
+
+function bilgiDuzenle(id){
+  const b = aiBilgiler.find(function(x){ return x.id === id }); if(!b) return
+  document.getElementById('bilgi-id').value = b.id
+  document.getElementById('bilgi-kategori').value = b.kategori
+  document.getElementById('bilgi-baslik').value = b.baslik
+  document.getElementById('bilgi-icerik').value = b.icerik
+  document.getElementById('m-bilgi').classList.add('open')
+}
+
+async function bilgiKaydet(){
+  const baslik = val('bilgi-baslik'), icerik = val('bilgi-icerik')
+  if(!baslik || !icerik) return alert('Başlık ve içerik zorunludur.')
+  const id = val('bilgi-id')
+  const buro = await buroIdAl()
+  const kayit = { buro_id: buro, kategori: val('bilgi-kategori'), baslik: baslik, icerik: icerik }
+  const { error } = id
+    ? await window.sb.from('ai_bilgi').update(kayit).eq('id', id)
+    : await window.sb.from('ai_bilgi').insert(kayit)
+  if(error) return alert('Hata: ' + error.message)
+  closeModal('bilgi'); aiYukle()
+}
+
+async function bilgiSil(id){
+  const b = aiBilgiler.find(function(x){ return x.id === id })
+  if(!confirm('"' + (b ? b.baslik : 'Bilgi') + '" silinecek.\n\nDevam edilsin mi?')) return
+  await window.sb.from('ai_bilgi').delete().eq('id', id)
+  aiYukle()
+}
+
+function embedKopyala(){
+  navigator.clipboard.writeText(document.getElementById('ai-embed-kod').textContent)
+  alert('Kod kopyalandı.')
+}
+
+// ── Basvurular
+async function basvuruYukle(){
+  if(!window.sb || !sbUser) return
+  const buro = await buroIdAl()
+  const { data } = await window.sb.from('ai_basvurular').select('*')
+    .eq('buro_id', buro).order('created_at', { ascending:false })
+  aiBasvurular = data || []
+  basvuruFiltreRender(); basvuruRender()
+  const yeni = aiBasvurular.filter(function(b){ return b.durum === 'yeni' }).length
+  const rz = document.getElementById('basvuru-rozet')
+  if(rz){ rz.textContent = yeni; rz.style.display = yeni ? 'inline-block' : 'none' }
+}
+
+function basvuruFiltreRender(){
+  const el = document.getElementById('basvuru-filtre')
+  const say = function(d){ return d ? aiBasvurular.filter(function(b){ return b.durum===d }).length : aiBasvurular.length }
+  let h = '<button onclick="basvuruFiltrele(\'\')" class="tbtn' + (basvuruFiltre===''?' primary':'') + '">Tümü (' + say('') + ')</button>'
+  Object.keys(BS_DURUM).forEach(function(k){
+    h += '<button onclick="basvuruFiltrele(\'' + k + '\')" class="tbtn' + (basvuruFiltre===k?' primary':'') + '">'
+       + BS_DURUM[k].ad + ' (' + say(k) + ')</button>'
+  })
+  el.innerHTML = h
+}
+
+function basvuruFiltrele(d){ basvuruFiltre = d; basvuruFiltreRender(); basvuruRender() }
+
+function basvuruRender(){
+  const el = document.getElementById('basvuru-liste')
+  const liste = basvuruFiltre ? aiBasvurular.filter(function(b){ return b.durum===basvuruFiltre }) : aiBasvurular
+  if(!liste.length){
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px">'
+      + 'Henüz başvuru yok. Web asistanı sitenizde etkinleştiğinde gelen talepler burada görünür.</div>'
+    return
+  }
+  el.innerHTML = liste.map(function(b){
+    const d = BS_DURUM[b.durum] || BS_DURUM.yeni
+    const tel = (b.telefon||'').replace(/\D/g,'')
+    return '<div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:16px 18px">'
+      + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px">'
+      +   '<div style="flex:1;min-width:0">'
+      +     '<div style="font-size:14px;font-weight:600;color:var(--text)">' + (b.ad_soyad||'İsim belirtilmemiş') + '</div>'
+      +     '<div style="font-size:12.5px;color:var(--muted);margin-top:2px">' + (b.telefon||'—') + (b.eposta ? ' · ' + b.eposta : '') + '</div>'
+      +     (b.konu ? '<div style="font-size:12.5px;color:var(--text);margin-top:6px">' + b.konu + '</div>' : '')
+      +     (b.aciklama ? '<div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">' + b.aciklama + '</div>' : '')
+      +     '<div style="font-size:11.5px;color:var(--hint);margin-top:6px">' + tarihFormat(b.created_at) + (b.kaynak_url ? ' · ' + b.kaynak_url : '') + '</div>'
+      +   '</div>'
+      +   '<span class="bs-durum" style="background:' + d.arka + ';color:' + d.renk + '">' + d.ad + '</span>'
+      + '</div>'
+      + '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">'
+      +   (tel ? '<a href="tel:' + tel + '" class="tbtn"><i class="ti ti-phone"></i>Ara</a>'
+      +          '<a href="https://wa.me/9' + tel + '" target="_blank" class="tbtn"><i class="ti ti-brand-whatsapp"></i>WhatsApp</a>' : '')
+      +   '<select onchange="basvuruDurum(\'' + b.id + '\',this.value)" style="padding:6px 10px;border:1px solid var(--border);border-radius:4px;font-size:12.5px;font-family:inherit;background:#fff;color:var(--text)">'
+      +     Object.keys(BS_DURUM).map(function(k){
+              return '<option value="'+k+'"'+(b.durum===k?' selected':'')+'>'+BS_DURUM[k].ad+'</option>' }).join('')
+      +   '</select>'
+      +   '<button onclick="basvuruMuvekkil(\'' + b.id + '\')" style="padding:6px 14px;background:#0B1629;color:#C9A84C;border:none;border-radius:4px;font-size:12.5px;font-weight:500;cursor:pointer;font-family:inherit">Müvekkile dönüştür</button>'
+      + '</div></div>'
+  }).join('')
+}
+
+async function basvuruDurum(id, durum){
+  await window.sb.from('ai_basvurular').update({ durum: durum }).eq('id', id)
+  basvuruYukle()
+}
+
+function basvuruMuvekkil(id){
+  const b = aiBasvurular.find(function(x){ return x.id === id }); if(!b) return
+  const parca = (b.ad_soyad || '').trim().split(' ')
+  const soyad = parca.length > 1 ? parca.pop() : ''
+  const mvs = DB.muvekkiller
+  mvs.push({ id: Date.now(), ad: parca.join(' ') || b.ad_soyad || '', soyad: soyad,
+             tel: b.telefon || '', email: b.eposta || '', tur: 'Gerçek kişi',
+             not: 'Web asistanı başvurusu' + (b.konu ? ' — ' + b.konu : ''),
+             tarih: new Date().toISOString() })
+  DB.saveMv(mvs)
+  window.sb.from('ai_basvurular').update({ durum: 'muvekkil' }).eq('id', id).then(function(){ basvuruYukle() })
+  logla('muvekkil_ekle', b.ad_soyad || '')
+  renderAll()
+  alert('Müvekkil olarak eklendi.')
 }
 
 // ── ISLEM GUNLUGU ──────────────────────────────────────────
