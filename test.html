@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Örnek Hukuk Bürosu — Widget Test Sayfası</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+     background:#F8F9FC;color:#111827;-webkit-font-smoothing:antialiased;letter-spacing:-.006em}
+.sar{max-width:860px;margin:0 auto;padding:0 24px}
+
+nav{background:#0B1629;height:60px;display:flex;align-items:center}
+.nav-ic{display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:16px;font-weight:600;color:#C9A84C}
+.nav-bag{display:flex;gap:24px;font-size:13px;color:rgba(255,255,255,.6)}
+
+.kap{background:#0B1629;padding:56px 0 48px;color:#fff}
+.kap h1{font-size:34px;font-weight:600;line-height:1.15;margin-bottom:12px}
+.kap h1 span{color:#C9A84C}
+.kap p{font-size:15px;color:rgba(255,255,255,.55);max-width:480px;line-height:1.7}
+
+.uyari{background:#FFFBEB;border-bottom:1px solid #FDE68A;padding:14px 0}
+.uyari-ic{display:flex;gap:12px;align-items:flex-start}
+.uyari-b{font-size:13px;font-weight:600;color:#92400E;margin-bottom:3px}
+.uyari-m{font-size:12.5px;color:#78350F;line-height:1.6}
+
+section{padding:44px 0}
+h2{font-size:22px;font-weight:600;margin-bottom:10px}
+.alt{font-size:14px;color:#6B7280;line-height:1.7;margin-bottom:24px;max-width:560px}
+
+.izgara{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.kart{background:#fff;border:1px solid #E4E7EC;border-radius:8px;padding:22px}
+.kart-b{font-size:14.5px;font-weight:600;margin-bottom:6px}
+.kart-m{font-size:13px;color:#6B7280;line-height:1.65}
+
+.kontrol{background:#fff;border:1px solid #E4E7EC;border-radius:8px;padding:22px;margin-top:24px}
+.kontrol h3{font-size:15px;font-weight:600;margin-bottom:14px}
+.satir{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #F0F1F3;font-size:13px}
+.satir:last-child{border-bottom:none}
+.no{width:20px;height:20px;border-radius:4px;background:#0B1629;color:#C9A84C;font-size:11px;
+    font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.satir-m{color:#374151;line-height:1.6}
+.satir-m code{background:#F3F4F6;padding:1px 5px;border-radius:3px;font-size:12px}
+
+footer{background:#0B1629;padding:28px 0;margin-top:20px}
+.ft{font-size:12px;color:rgba(255,255,255,.3);text-align:center}
+
+@media(max-width:700px){.izgara{grid-template-columns:1fr}.kap h1{font-size:26px}.nav-bag{display:none}}
+</style>
+</head>
+<body>
+
+<nav><div class="sar nav-ic">
+  <div class="logo">Örnek Hukuk Bürosu</div>
+  <div class="nav-bag"><span>Hakkımızda</span><span>Çalışma Alanları</span><span>İletişim</span></div>
+</div></nav>
+
+<div class="kap"><div class="sar">
+  <h1>Hukuki süreçlerinizde<br><span>yanınızdayız</span></h1>
+  <p>Bu sayfa yalnızca Dosya360 web asistanının denenmesi için hazırlanmıştır. Gerçek bir hukuk bürosuna ait değildir.</p>
+</div></div>
+
+<div class="uyari"><div class="sar uyari-ic">
+  <div>
+    <div class="uyari-b">Test sayfası</div>
+    <div class="uyari-m">Bu sayfa arama motorlarına kapalıdır. Asistanı denedikten sonra <code>test.html</code> dosyasını depodan silebilirsiniz.</div>
+  </div>
+</div></div>
+
+<section><div class="sar">
+  <h2>Çalışma alanları</h2>
+  <p class="alt">Aşağıdaki içerik yalnızca sayfayı gerçekçi göstermek içindir.</p>
+  <div class="izgara">
+    <div class="kart"><div class="kart-b">İş hukuku</div><div class="kart-m">İşe iade, kıdem ve ihbar tazminatı, fazla mesai alacakları.</div></div>
+    <div class="kart"><div class="kart-b">İcra ve iflas</div><div class="kart-m">Alacak takibi, haciz işlemleri, itirazın iptali davaları.</div></div>
+    <div class="kart"><div class="kart-b">Aile hukuku</div><div class="kart-m">Boşanma, velayet, nafaka ve mal paylaşımı süreçleri.</div></div>
+  </div>
+</div></section>
+
+<section style="padding-top:0"><div class="sar">
+  <div class="kontrol">
+    <h3>Widget kontrol listesi</h3>
+    <div class="satir"><div class="no">1</div><div class="satir-m">Sağ altta <strong>Size yardımcı olalım</strong> düğmesi görünüyor mu?</div></div>
+    <div class="satir"><div class="no">2</div><div class="satir-m">Tıklayınca panel açılıyor, karşılama mesajı yazılıyor mu?</div></div>
+    <div class="satir"><div class="no">3</div><div class="satir-m">Bilgi bankasına girdiğiniz sorular buton olarak listeleniyor mu?</div></div>
+    <div class="satir"><div class="no">4</div><div class="satir-m">Bir soruya tıklayınca cevabı geliyor mu?</div></div>
+    <div class="satir"><div class="no">5</div><div class="satir-m">Üstte adres, saat, uzmanlık şeridi ve açık/kapalı noktası doğru mu?</div></div>
+    <div class="satir"><div class="no">6</div><div class="satir-m">Altta ara, WhatsApp, e-posta, yol tarifi kısayolları çalışıyor mu?</div></div>
+    <div class="satir"><div class="no">7</div><div class="satir-m"><strong>Bir avukatla görüşmek istiyorum</strong> → form açılıyor mu? Konu listesi uzmanlık alanlarınızdan mı geliyor?</div></div>
+    <div class="satir"><div class="no">8</div><div class="satir-m">KVKK kutusunu işaretlemeden göndermeyi deneyin — engellemeli.</div></div>
+    <div class="satir"><div class="no">9</div><div class="satir-m">Formu gönderin, Dosya360 → <strong>Başvurular</strong> bölümünde görünmeli.</div></div>
+    <div class="satir"><div class="no">10</div><div class="satir-m"><strong>Müvekkile dönüştür</strong> → müvekkil listesine geçmeli.</div></div>
+    <div class="satir"><div class="no">11</div><div class="satir-m">Panelden asistanı kapatın, sayfayı yenileyin — widget kaybolmalı.</div></div>
+    <div class="satir"><div class="no">12</div><div class="satir-m">İzinli alan adını <code>baskasite.com</code> yapın, yenileyin — widget çıkmamalı. Sonra <code>dosya360.com</code> olarak geri alın.</div></div>
+  </div>
+</div></section>
+
+<footer><div class="sar ft">Örnek Hukuk Bürosu — Dosya360 test sayfası</div></footer>
+
+<!-- ══ WIDGET ══ data-buro değerini panelden kopyaladığınız kodla değiştirin ══ -->
+<script src="https://dosya360.com/bot.js" data-buro="c5dd3cb7-99e7-4199-864d-918f353de93f"></script>
+
+</body>
+</html>
