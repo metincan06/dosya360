@@ -187,21 +187,33 @@ function botDer(metin, sonra){
 }
 
 /* ── Açılış ─────────────────────────────────────────── */
+function tani(){ try{ console.log.apply(console, ['[Dosya360]'].concat([].slice.call(arguments))); }catch(e){} }
+
 async function yukle(){
-  if(!BURO) return;
+  tani('baslatiliyor', { buro: BURO, host: HOST });
+  if(!BURO){ tani('DURDU: buro kimligi yok'); return; }
   try{
     var a = await sb.from('ai_ayarlar').select('*').eq('buro_id', BURO).eq('aktif', true).maybeSingle();
-    if(!a.data) return;
+    if(a.error){ tani('DURDU: ayar okunamadi', a.error.message); return; }
+    if(!a.data){ tani('DURDU: asistan etkin degil veya bu buro icin ayar yok'); return; }
     ayar = a.data;
+    tani('ayar geldi', { izinli_alanlar: ayar.izinli_alanlar });
 
     var izin = ayar.izinli_alanlar || [];
     if(izin.length){
+      var h = HOST.replace(/^www\./,'');
       var uygun = izin.some(function(d){
-        d = String(d).toLowerCase().replace(/^www\./,'');
-        var h = HOST.replace(/^www\./,'');
+        d = String(d).toLowerCase().replace(/^https?:\/\//,'').replace(/\/.*$/,'').replace(/^www\./,'');
         return h === d || h.endsWith('.' + d);
       });
-      if(!uygun){ ust('gizle'); return; }
+      if(!uygun){
+        tani('GIZLENDI: alan adi izinli degil', { site: h, izinliler: izin,
+              cozum: 'Panel > Web Asistani > Ayarlar > Izinli alan adlari kutusuna "' + h + '" ekleyin' });
+        ust('gizle'); return;
+      }
+      tani('alan adi dogrulandi', h);
+    } else {
+      tani('izinli alan adi girilmemis - kontrol atlandi');
     }
 
     var b = await sb.from('ai_bilgi').select('*').eq('buro_id', BURO).eq('aktif', true)
@@ -215,7 +227,9 @@ async function yukle(){
     kisayollar();
     goster('p-uyari', true);
     hazir = true;
-  }catch(e){ /* sessiz */ }
+    tani('hazir', { soru_sayisi: bilgiler.length });
+    if(!bilgiler.length) tani('UYARI: bilgi bankasi bos - panel acilir ama soru listelenmez');
+  }catch(e){ tani('HATA', e && e.message ? e.message : e); }
 }
 
 function durumYaz(){

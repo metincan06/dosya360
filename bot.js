@@ -18,7 +18,10 @@
     if (!script) return;
 
     var buro = script.getAttribute('data-buro');
-    if (!buro) return;
+    if (!buro) {
+      try { console.log('[Dosya360] data-buro bulunamadi'); } catch (e) {}
+      return;
+    }
 
     var kaynak = script.src.replace(/\/bot\.js.*$/, '');
     var konum  = (script.getAttribute('data-konum') || 'sag').toLowerCase();
@@ -69,7 +72,10 @@
 
     window.addEventListener('message', function (olay) {
       if (!olay.data || olay.data.kaynak !== 'd360') return;
-      if (olay.origin !== kaynak && kaynak.indexOf(olay.origin) !== 0) return;
+      if (olay.origin !== kaynak && kaynak.indexOf(olay.origin) !== 0) {
+        try { console.log('[Dosya360] mesaj reddedildi', { gelen: olay.origin, beklenen: kaynak }); } catch (e) {}
+        return;
+      }
 
       if (olay.data.tip === 'ac') {
         var mobil = window.innerWidth < 480;
