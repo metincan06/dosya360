@@ -812,8 +812,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
             <option value="sekreter">Sekreter</option>
             <option value="muhasebe">Muhasebe</option>
           </select></div>
-          <div id="ku-link-wrap" style="display:none;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:5px;padding:12px;margin-bottom:14px">
-            <div style="font-size:12px;color:#15803D;font-weight:500;margin-bottom:6px">Davet linki oluşturuldu</div>
+          <div id="ku-eposta-durum" style="display:none;align-items:center;gap:9px;border-radius:5px;padding:10px 12px;margin-bottom:12px;font-size:12.5px;line-height:1.5"></div>
+          <div id="ku-link-wrap" style="display:none;background:#F9FAFB;border:1px solid var(--border);border-radius:5px;padding:12px;margin-bottom:14px">
+            <div style="font-size:12px;color:var(--muted);font-weight:500;margin-bottom:6px">Yedek bağlantı</div>
             <div id="ku-link-text" style="font-size:11px;color:#374151;word-break:break-all;background:#fff;padding:8px;border-radius:6px;margin-bottom:6px"></div>
             <div style="display:flex;gap:8px">
               <button onclick="navigator.clipboard.writeText(document.getElementById('ku-link-text').textContent);alert('Kopyalandı!')" style="padding:5px 12px;background:#15803D;color:#fff;border:none;border-radius:5px;font-size:12px;cursor:pointer">Linki Kopyala</button>
@@ -823,7 +824,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
           </div>
           <div class="modal-footer">
             <button class="tbtn" onclick="closeModal('davet')">Kapat</button>
-            <button class="tbtn primary" id="ku-davet-submit-btn" onclick="kuDavetGonder()"><i class="ti ti-link"></i> Davet Linki Oluştur</button>
+            <button class="tbtn primary" id="ku-davet-submit-btn" onclick="kuDavetGonder()"><i class="ti ti-mail"></i> Davet Gönder</button>
           </div>
         </div>
       </div>
@@ -1934,24 +1935,57 @@ function kuDavetAc() {
 
 async function kuDavetGonder() {
   const email = document.getElementById('ku-davet-email').value.trim()
+  const rol = document.getElementById('ku-davet-rol')?.value || 'avukat'
   if (!email) { alert('E-posta zorunludur!'); return }
 
   const btn = document.getElementById('ku-davet-submit-btn')
-  btn.disabled = true; btn.textContent = 'Oluşturuluyor...'
+  btn.disabled = true; btn.textContent = 'Gönderiliyor...'
 
   try {
-    const token = Math.random().toString(36).substring(2) + Date.now().toString(36)
-    await window.sb.from('davetler').insert({ buro_id: sbUser.id, email, token })
+    const { data: { session } } = await window.sb.auth.getSession()
+    if (!session) throw new Error('Oturum bulunamadı, sayfayı yenileyin')
 
-    const link = `${window.location.origin}/davet.html?token=${token}`
+    const cevap = await fetch(SUPABASE_URL + '/functions/v1/davet-gonder', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + session.access_token,
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY
+      },
+      body: JSON.stringify({ email: email, rol: rol })
+    })
+    const sonuc = await cevap.json().catch(function(){ return {} })
+    if (!cevap.ok || !sonuc.ok) throw new Error(sonuc.hata || 'Davet gönderilemedi')
+
+    const link = sonuc.link
     document.getElementById('ku-link-text').textContent = link
-    document.getElementById('ku-wa-link').href = 'https://wa.me/?text=' + encodeURIComponent(`Dosya360 sistemine davet edildiniz! Katılmak için: ${link}`)
+    document.getElementById('ku-wa-link').href = 'https://wa.me/?text=' +
+      encodeURIComponent('Dosya360 sistemine davet edildiniz. Katılmak için: ' + link)
     document.getElementById('ku-link-wrap').style.display = 'block'
+
+    const durum = document.getElementById('ku-eposta-durum')
+    if (durum) {
+      durum.style.display = 'flex'
+      if (sonuc.eposta) {
+        durum.style.background = '#F0FDF4'
+        durum.style.color = '#15803D'
+        durum.innerHTML = '<i class="ti ti-mail-check" style="font-size:16px"></i>' +
+          '<span>Davet e-postası <strong>' + email + '</strong> adresine gönderildi.</span>'
+      } else {
+        durum.style.background = '#FFFBEB'
+        durum.style.color = '#B45309'
+        durum.innerHTML = '<i class="ti ti-mail-off" style="font-size:16px"></i>' +
+          '<span>E-posta gönderilemedi. Aşağıdaki bağlantıyı elle iletebilirsiniz.</span>'
+        console.warn('Davet e-postası hatası:', sonuc.epostaHata)
+      }
+    }
+
+    logla('davet_gonderildi', email)
     await kuYukle({ durum: 'aktif', max_kullanici: 99 })
   } catch(e) {
     alert('Hata: ' + e.message)
   }
-  btn.disabled = false; btn.textContent = 'Davet Linki Oluştur'
+  btn.disabled = false; btn.textContent = 'Davet Gönder'
 }
 
 
