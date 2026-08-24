@@ -836,20 +836,22 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
 <!-- MODALS -->
 <div class="overlay" id="m-muvekkil"><div class="modal">
-  <div class="modal-head"><h3>Yeni Müvekkil</h3><button class="modal-close" onclick="closeModal('muvekkil')"><i class="ti ti-x"></i></button></div>
+  <div class="modal-head"><h3 id="baslik-muvekkil">Yeni Müvekkil</h3><button class="modal-close" onclick="closeModal('muvekkil')"><i class="ti ti-x"></i></button></div>
   <div class="modal-body">
+    <input type="hidden" id="duzenle-muvekkil" value="">
     <div class="field2"><div class="field"><label>Ad *</label><input type="text" id="mv-ad" placeholder="Ad"></div><div class="field"><label>Soyad *</label><input type="text" id="mv-soyad" placeholder="Soyad"></div></div>
     <div class="field2"><div class="field"><label>TC No</label><input type="text" id="mv-tc" placeholder="12345678901" maxlength="11"></div><div class="field"><label>Telefon</label><input type="text" id="mv-tel" placeholder="0500 000 0000"></div></div>
     <div class="field2"><div class="field"><label>E-posta</label><input type="email" id="mv-email" placeholder="ad@ornek.com"></div><div class="field"><label>İl</label><input type="text" id="mv-il" placeholder="Ankara"></div></div>
     <div class="field"><label>Tür</label><select id="mv-tur"><option value="bireysel">Bireysel</option><option value="kurumsal">Kurumsal</option></select></div>
     <div class="field"><label>Notlar</label><textarea id="mv-not" rows="3" placeholder="Müvekkil hakkında notlar..."></textarea></div>
-    <div class="modal-footer"><button class="tbtn" onclick="closeModal('muvekkil')">İptal</button><button class="tbtn primary" onclick="saveMuvekkil()">Müvekkil Ekle</button></div>
+    <div class="modal-footer"><button class="tbtn" onclick="closeModal('muvekkil')">İptal</button><button class="tbtn primary" id="btn-muvekkil" onclick="saveMuvekkil()">Müvekkil Ekle</button></div>
   </div>
 </div></div>
 
 <div class="overlay" id="m-dava"><div class="modal">
-  <div class="modal-head"><h3>Yeni Dava</h3><button class="modal-close" onclick="closeModal('dava')"><i class="ti ti-x"></i></button></div>
+  <div class="modal-head"><h3 id="baslik-dava">Yeni Dava</h3><button class="modal-close" onclick="closeModal('dava')"><i class="ti ti-x"></i></button></div>
   <div class="modal-body">
+    <input type="hidden" id="duzenle-dava" value="">
     <div class="field2"><div class="field"><label>Dosya No *</label><input type="text" id="dv-no" placeholder="2026/0001"></div><div class="field"><label>Müvekkil</label><select id="dv-mv"></select></div></div>
     <div id="dv-mv-bilgi" style="display:none;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:10px 12px;margin-bottom:12px"></div>
     <div class="field2"><div class="field"><label>Mahkeme</label><input type="text" id="dv-mhk" placeholder="Ankara 3. Asliye Hukuk"></div><div class="field"><label>Karşı Taraf</label><input type="text" id="dv-kt2" placeholder="Ad Soyad"></div></div>
@@ -865,36 +867,39 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     </select></div>
     <div class="field2"><div class="field"><label>Sonraki Duruşma Tarihi</label><input type="date" id="dv-durusma-tarihi"></div><div class="field"><label>Duruşma Saati</label><input type="time" id="dv-durusma-saati" placeholder="09:00"></div></div>
     <div class="field"><label>Notlar</label><textarea id="dv-not" rows="3" placeholder="Dava notları..."></textarea></div>
-    <div class="modal-footer"><button class="tbtn" onclick="closeModal('dava')">İptal</button><button class="tbtn primary" onclick="saveDava()">Dava Ekle</button></div>
+    <div class="modal-footer"><button class="tbtn" onclick="closeModal('dava')">İptal</button><button class="tbtn primary" id="btn-dava" onclick="saveDava()">Dava Ekle</button></div>
   </div>
 </div></div>
 
 <div class="overlay" id="m-gorev"><div class="modal">
-  <div class="modal-head"><h3>Yeni Görev</h3><button class="modal-close" onclick="closeModal('gorev')"><i class="ti ti-x"></i></button></div>
+  <div class="modal-head"><h3 id="baslik-gorev">Yeni Görev</h3><button class="modal-close" onclick="closeModal('gorev')"><i class="ti ti-x"></i></button></div>
   <div class="modal-body">
+    <input type="hidden" id="duzenle-gorev" value="">
     <div class="field"><label>Görev *</label><input type="text" id="gv-baslik" placeholder="Dilekçe hazırla..."></div>
     <div class="field2"><div class="field"><label>Son Tarih</label><input type="date" id="gv-tarih"></div><div class="field"><label>Öncelik</label><select id="gv-oncelik"><option value="normal">Normal</option><option value="yuksek">Yüksek</option><option value="kritik">Kritik</option></select></div></div>
     <div class="field"><label>İlgili Dava</label><select id="gv-dava"></select></div>
-    <div class="modal-footer"><button class="tbtn" onclick="closeModal('gorev')">İptal</button><button class="tbtn primary" onclick="saveGorev()">Görev Ekle</button></div>
+    <div class="modal-footer"><button class="tbtn" onclick="closeModal('gorev')">İptal</button><button class="tbtn primary" id="btn-gorev" onclick="saveGorev()">Görev Ekle</button></div>
   </div>
 </div></div>
 
 <div class="overlay" id="m-etkinlik"><div class="modal">
-  <div class="modal-head"><h3>Etkinlik / Duruşma Ekle</h3><button class="modal-close" onclick="closeModal('etkinlik')"><i class="ti ti-x"></i></button></div>
+  <div class="modal-head"><h3 id="baslik-etkinlik">Etkinlik / Duruşma Ekle</h3><button class="modal-close" onclick="closeModal('etkinlik')"><i class="ti ti-x"></i></button></div>
   <div class="modal-body">
+    <input type="hidden" id="duzenle-etkinlik" value="">
     <div class="field"><label>Başlık *</label><input type="text" id="et-baslik" placeholder="Duruşma başlığı..."></div>
     <div class="field2"><div class="field"><label>Tarih & Saat *</label><input type="datetime-local" id="et-tarih"></div><div class="field"><label>Tür</label><select id="et-tur"><option value="durusma">Duruşma</option><option value="toplanti">Toplantı</option><option value="son_tarih">Son Tarih</option><option value="diger">Diğer</option></select></div></div>
     <div class="field"><label>İlgili Dava</label><select id="et-dava"></select></div>
     <div class="field2"><div class="field"><label>Esas No</label><input type="text" id="et-esas" placeholder="2026/0001"></div><div class="field"><label>Mahkeme</label><input type="text" id="et-mahkeme" placeholder="Ankara 3. Asliye Hukuk"></div></div>
     <div class="field"><label>Müvekkil</label><input type="text" id="et-muvekkil" placeholder="Ad Soyad"></div>
     <div class="field"><label>Notlar</label><textarea id="et-not" rows="2" placeholder="Notlar..."></textarea></div>
-    <div class="modal-footer"><button class="tbtn" onclick="closeModal('etkinlik')">İptal</button><button class="tbtn primary" onclick="saveEtkinlik()">Ekle</button></div>
+    <div class="modal-footer"><button class="tbtn" onclick="closeModal('etkinlik')">İptal</button><button class="tbtn primary" id="btn-etkinlik" onclick="saveEtkinlik()">Ekle</button></div>
   </div>
 </div></div>
 
 <div class="overlay" id="m-finans"><div class="modal">
-  <div class="modal-head"><h3>Mali İşlem</h3><button class="modal-close" onclick="closeModal('finans')"><i class="ti ti-x"></i></button></div>
+  <div class="modal-head"><h3 id="baslik-finans">Mali İşlem</h3><button class="modal-close" onclick="closeModal('finans')"><i class="ti ti-x"></i></button></div>
   <div class="modal-body">
+    <input type="hidden" id="duzenle-finans" value="">
     <div class="field2"><div class="field"><label>Tür</label><select id="fn-tur" onchange="finansTurDegisti()">
       <optgroup label="Gelir"><option value="tahsilat">Tahsilat</option></optgroup>
       <optgroup label="Dava gideri"><option value="masraf">Dava masrafı</option><option value="harc">Harç</option><option value="bilirkisi">Bilirkişi</option><option value="tebligat">Tebligat</option></optgroup>
@@ -905,25 +910,27 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     </select></div><div class="field"><label id="fn-tutar-etiket">Tutar (₺) *</label><input type="number" id="fn-tutar" placeholder="0"></div></div>
     <div class="field2"><div class="field" id="fn-mv-sar"><label>Müvekkil</label><select id="fn-mv"></select></div><div class="field"><label>Tarih</label><input type="date" id="fn-tarih"></div></div>
     <div class="field"><label>Açıklama</label><input type="text" id="fn-aciklama" placeholder="İşlem açıklaması..."></div>
-    <div class="modal-footer"><button class="tbtn" onclick="closeModal('finans')">İptal</button><button class="tbtn primary" onclick="saveFinans()">İşlem Ekle</button></div>
+    <div class="modal-footer"><button class="tbtn" onclick="closeModal('finans')">İptal</button><button class="tbtn primary" id="btn-finans" onclick="saveFinans()">İşlem Ekle</button></div>
   </div>
 </div></div>
 
 <div class="overlay" id="m-belge"><div class="modal">
-  <div class="modal-head"><h3>Belge Ekle</h3><button class="modal-close" onclick="closeModal('belge')"><i class="ti ti-x"></i></button></div>
+  <div class="modal-head"><h3 id="baslik-belge">Belge Ekle</h3><button class="modal-close" onclick="closeModal('belge')"><i class="ti ti-x"></i></button></div>
   <div class="modal-body">
+    <input type="hidden" id="duzenle-belge" value="">
     <div class="field"><label>Belge Adı *</label><input type="text" id="bl-ad" placeholder="Dilekçe_v1.pdf"></div>
     <div class="field2"><div class="field"><label>Kategori</label><select id="bl-kat"><option value="dilekce">Dilekçe</option><option value="karar">Mahkeme Kararı</option><option value="bilirkisi">Bilirkişi Raporu</option><option value="vekalet">Vekalet</option><option value="sozlesme">Sözleşme</option><option value="fatura">Fatura</option><option value="diger">Diğer</option></select></div><div class="field"><label>İlgili Dava</label><select id="bl-dava"></select></div></div>
-    <div class="modal-footer"><button class="tbtn" onclick="closeModal('belge')">İptal</button><button class="tbtn primary" onclick="saveBelge()">Ekle</button></div>
+    <div class="modal-footer"><button class="tbtn" onclick="closeModal('belge')">İptal</button><button class="tbtn primary" id="btn-belge" onclick="saveBelge()">Ekle</button></div>
   </div>
 </div></div>
 
 <div class="overlay" id="m-iletisim"><div class="modal">
-  <div class="modal-head"><h3>İletişim Kaydı</h3><button class="modal-close" onclick="closeModal('iletisim')"><i class="ti ti-x"></i></button></div>
+  <div class="modal-head"><h3 id="baslik-iletisim">İletişim Kaydı</h3><button class="modal-close" onclick="closeModal('iletisim')"><i class="ti ti-x"></i></button></div>
   <div class="modal-body">
+    <input type="hidden" id="duzenle-iletisim" value="">
     <div class="field2"><div class="field"><label>Müvekkil</label><select id="il-mv"></select></div><div class="field"><label>Kanal</label><select id="il-kanal"><option value="whatsapp">WhatsApp</option><option value="email">E-posta</option><option value="sms">SMS</option><option value="telefon">Telefon</option></select></div></div>
     <div class="field"><label>Mesaj *</label><textarea id="il-mesaj" rows="4" placeholder="Görüşme içeriği..."></textarea></div>
-    <div class="modal-footer"><button class="tbtn" onclick="closeModal('iletisim')">İptal</button><button class="tbtn primary" onclick="saveIletisim()">Kaydet</button></div>
+    <div class="modal-footer"><button class="tbtn" onclick="closeModal('iletisim')">İptal</button><button class="tbtn primary" id="btn-iletisim" onclick="saveIletisim()">Kaydet</button></div>
   </div>
 </div></div>
 
@@ -1115,18 +1122,17 @@ async function showModal(type) {
   }
   document.getElementById('m-'+type).classList.add('open')
 }
-function closeModal(type) { document.getElementById('m-'+type).classList.remove('open') }
+function closeModal(type) { document.getElementById('m-'+type).classList.remove('open'); if(typeof duzTemizle==='function') duzTemizle(type) }
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open') }))
 
 // ── KAYDET ────────────────────────────────────────────────────
 function saveMuvekkil() {
   const ad=val('mv-ad'), soyad=val('mv-soyad')
   if(!ad||!soyad) return alert('Ad ve soyad zorunludur!')
-  const mvs=DB.muvekkiller
-  mvs.push({ id:Date.now(), ad, soyad, tc:val('mv-tc'), tel:val('mv-tel'), email:val('mv-email'),
-             il:val('mv-il'), tur:val('mv-tur'), not:val('mv-not'), tarih:new Date().toISOString() })
-  DB.saveMv(mvs); ['mv-ad','mv-soyad','mv-tc','mv-tel','mv-email','mv-il','mv-not'].forEach(clear)
-  logla('muvekkil_ekle', ad+' '+soyad); closeModal('muvekkil'); renderAll()
+  const duzenlendi = duzUygula('muvekkil', { id:Date.now(), ad, soyad, tc:val('mv-tc'), tel:val('mv-tel'),
+    email:val('mv-email'), il:val('mv-il'), tur:val('mv-tur'), not:val('mv-not'), tarih:new Date().toISOString() })
+  ;['mv-ad','mv-soyad','mv-tc','mv-tel','mv-email','mv-il','mv-not'].forEach(clear)
+  logla(duzenlendi?'muvekkil_duzenle':'muvekkil_ekle', ad+' '+soyad); closeModal('muvekkil'); renderAll()
 }
 
 
@@ -1134,21 +1140,21 @@ function saveMuvekkil() {
 function saveDava() {
   const no=val('dv-no'); if(!no) return alert('Dosya no zorunludur!')
   const mvId=val('dv-mv'); const mv=DB.muvekkiller.find(m=>m.id==mvId)
-  const dvId=Date.now()
+  const kim = duzKimlik('dava')
+  const dvId = kim ? kim : Date.now()
   const durusmaT=val('dv-durusma-tarihi'), durusmaS=val('dv-durusma-saati')
-  const dvs=DB.davalar
-  dvs.push({ id:dvId, dosyaNo:no, muvekkil:mv?mv.ad+' '+mv.soyad:'—', muvekkılId:mvId,
-             muvekkılTel:mv?.tel||'', mahkeme:val('dv-mhk'), tur:val('dv-tur'),
-             karsiTaraf:val('dv-kt2'), tarih:val('dv-tarih'), durum:val('dv-durum'),
-             not:val('dv-not'), durusmaTarihi:durusmaT, durusmaSaati:durusmaS })
-  DB.saveDv(dvs)
+  const duzenlendi = duzUygula('dava', { id:dvId, dosyaNo:no, muvekkil:mv?mv.ad+' '+mv.soyad:'—',
+    muvekkılId:mvId, muvekkılTel:mv?.tel||'', mahkeme:val('dv-mhk'), tur:val('dv-tur'),
+    karsiTaraf:val('dv-kt2'), tarih:val('dv-tarih'), durum:val('dv-durum'),
+    not:val('dv-not'), durusmaTarihi:durusmaT, durusmaSaati:durusmaS })
 
-  // Durusma tarihi girildiyse takvime otomatik dus
+  // Durusma tarihi varsa takvime yaz, yoksa eski kaydi temizle
   if(durusmaT) davaTakvimeYaz(dvId, no, mv, val('dv-mhk'), durusmaT, durusmaS)
+  else DB.saveEt(DB.etkinlikler.filter(function(x){ return String(x.davaId) !== String(dvId) }))
 
   ;['dv-no','dv-mhk','dv-kt2','dv-not','dv-durusma-tarihi','dv-durusma-saati'].forEach(clear)
   turSecimSifirla()
-  logla('dava_ekle', no); closeModal('dava'); renderAll()
+  logla(duzenlendi?'dava_duzenle':'dava_ekle', no); closeModal('dava'); renderAll()
 }
 
 // Davanin durusmasini takvime yazar; ayni dava icin varsa gunceller
@@ -1173,46 +1179,50 @@ function davaTakvimeYaz(davaId, dosyaNo, mv, mahkeme, tarih, saat){
 function saveGorev() {
   const baslik=val('gv-baslik'); if(!baslik) return alert('Görev başlığı zorunludur!')
   const dvId=val('gv-dava'); const dv=DB.davalar.find(d=>d.id==dvId)
-  const gvs=DB.gorevler; gvs.push({ id:Date.now(), baslik, tarih:val('gv-tarih'), oncelik:val('gv-oncelik'), dava:dv?dv.dosyaNo:'—', durum:'bekliyor' })
-  DB.saveGv(gvs); clear('gv-baslik'); clear('gv-tarih')
-  logla('gorev_ekle', val('gv-baslik')); closeModal('gorev'); renderAll()
+  const duzenlendi = duzUygula('gorev', { id:Date.now(), baslik, tarih:val('gv-tarih'),
+    oncelik:val('gv-oncelik'), dava:dv?dv.dosyaNo:'—', durum:'bekliyor' })
+  ;['gv-baslik','gv-tarih'].forEach(clear)
+  logla(duzenlendi?'gorev_duzenle':'gorev_ekle', baslik); closeModal('gorev'); renderAll()
 }
 
 function saveEtkinlik() {
   const baslik=val('et-baslik'), tarih=val('et-tarih'); if(!baslik||!tarih) return alert('Başlık ve tarih zorunludur!')
   const dvId=val('et-dava'); const dv=DB.davalar.find(d=>d.id==dvId)
-  const ets=DB.etkinlikler
-  ets.push({ id:Date.now(), baslik, tarih, tur:val('et-tur'),
-             dava: val('et-esas') || (dv?dv.dosyaNo:''),
-             mahkeme: val('et-mahkeme') || (dv?dv.mahkeme:'') || '',
-             muvekkil: val('et-muvekkil') || (dv?dv.muvekkil:'') || '',
-             not:val('et-not') })
-  DB.saveEt(ets); ['et-baslik','et-tarih','et-not','et-esas','et-mahkeme','et-muvekkil'].forEach(clear)
-  logla('etkinlik_ekle', baslik); closeModal('etkinlik'); renderCal()
+  const duzenlendi = duzUygula('etkinlik', { id:Date.now(), baslik, tarih, tur:val('et-tur'),
+    dava: val('et-esas') || (dv?dv.dosyaNo:''),
+    mahkeme: val('et-mahkeme') || (dv?dv.mahkeme:'') || '',
+    muvekkil: val('et-muvekkil') || (dv?dv.muvekkil:'') || '',
+    not:val('et-not') })
+  ;['et-baslik','et-tarih','et-not','et-esas','et-mahkeme','et-muvekkil'].forEach(clear)
+  logla(duzenlendi?'etkinlik_duzenle':'etkinlik_ekle', baslik); closeModal('etkinlik'); renderCal()
 }
 
 function saveFinans() {
   const tutar=parseFloat(val('fn-tutar')); if(!tutar) return alert('Tutar giriniz!')
   const mvId=val('fn-mv'); const mv=DB.muvekkiller.find(m=>m.id==mvId)
-  const fns=DB.finanslar; fns.push({ id:Date.now(), tur:val('fn-tur'), tutar, muvekkil:mv?mv.ad+' '+mv.soyad:'—', tarih:val('fn-tarih')||new Date().toISOString().split('T')[0], aciklama:val('fn-aciklama') })
-  DB.saveFn(fns); clear('fn-tutar'); clear('fn-aciklama')
-  logla('finans_ekle', val('fn-tutar')); closeModal('finans'); renderAll()
+  const duzenlendi = duzUygula('finans', { id:Date.now(), tur:val('fn-tur'), tutar,
+    muvekkil:mv?mv.ad+' '+mv.soyad:'—', muvekkilId:val('fn-mv'),
+    tarih:val('fn-tarih')||new Date().toISOString().split('T')[0], aciklama:val('fn-aciklama') })
+  ;['fn-tutar','fn-aciklama'].forEach(clear)
+  logla(duzenlendi?'finans_duzenle':'finans_ekle', String(tutar)); closeModal('finans'); renderAll()
 }
 
 function saveBelge() {
   const ad=val('bl-ad'); if(!ad) return alert('Belge adı giriniz!')
   const dvId=val('bl-dava'); const dv=DB.davalar.find(d=>d.id==dvId)
-  const bls=DB.belgeler; bls.push({ id:Date.now(), ad, kategori:val('bl-kat'), dava:dv?dv.dosyaNo:'—', tarih:new Date().toISOString() })
-  DB.saveBl(bls); clear('bl-ad')
-  logla('belge_ekle', ad); closeModal('belge'); renderBl()
+  const duzenlendi = duzUygula('belge', { id:Date.now(), ad, kategori:val('bl-kat'),
+    dava:dv?dv.dosyaNo:'—', tarih:new Date().toISOString() })
+  clear('bl-ad')
+  logla(duzenlendi?'belge_duzenle':'belge_ekle', ad); closeModal('belge'); renderBl()
 }
 
 function saveIletisim() {
   const mesaj=val('il-mesaj'); if(!mesaj) return alert('Mesaj giriniz!')
   const mvId=val('il-mv'); const mv=DB.muvekkiller.find(m=>m.id==mvId)
-  const ils=DB.iletisimler; ils.push({ id:Date.now(), muvekkil:mv?mv.ad+' '+mv.soyad:'—', kanal:val('il-kanal'), mesaj, tarih:new Date().toISOString() })
-  DB.saveIl(ils); clear('il-mesaj')
-  logla('iletisim_ekle', val('il-kanal')); closeModal('iletisim'); renderIl()
+  const duzenlendi = duzUygula('iletisim', { id:Date.now(), muvekkil:mv?mv.ad+' '+mv.soyad:'—',
+    muvekkilId:val('il-mv'), kanal:val('il-kanal'), mesaj, tarih:new Date().toISOString() })
+  clear('il-mesaj')
+  logla(duzenlendi?'iletisim_duzenle':'iletisim_ekle', val('il-kanal')); closeModal('iletisim'); renderIl()
 }
 
 // ── RENDER ────────────────────────────────────────────────────
@@ -1233,7 +1243,7 @@ function renderMv(q=''){
       ${badge(m.tur==='kurumsal'?'bb':'bp',m.tur==='kurumsal'?'Kurumsal':'Bireysel')}
       <button onclick="davaEkleMv(${m.id},event)" title="Bu müvekkile dava ekle" style="background:#0B1629;border:none;border-radius:4px;height:32px;padding:0 11px;display:flex;align-items:center;gap:5px;cursor:pointer;flex-shrink:0;color:#C9A84C;font-size:12px;font-weight:500;font-family:inherit"><i class="ti ti-plus" style="font-size:15px"></i>Dava</button>
       ${m.tel ? `<button onclick="waAc('${m.tel}',event)" title="WhatsApp'ta aç" style="background:#25D366;border:none;border-radius:4px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0"><i class="ti ti-brand-whatsapp" style="color:#fff;font-size:17px"></i></button>` : ''}
-      <button class="del-btn" onclick="delMv(${m.id},event)"><i class="ti ti-trash"></i></button>
+      <button class="del-btn" onclick="duzenleMv(${m.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delMv(${m.id},event)"><i class="ti ti-trash"></i></button>
     </div>`).join('')
 }
 
@@ -1322,7 +1332,7 @@ function renderDv(filtre){
         else if(fark<=3){ renk='#B91C1C' }
         else if(fark<=7){ renk='#B45309' }
       }
-      return `<tr><td style="font-weight:600">${d.dosyaNo}</td><td>${d.muvekkil}</td><td>${d.mahkeme||'—'}</td><td>${d.tur||'—'}</td><td style="color:${renk};white-space:nowrap">${dur}</td><td>${badge(DURUM_CLS[d.durum],DURUM[d.durum]||d.durum)}</td><td><button class="del-btn" onclick="delDv(${d.id},event)"><i class="ti ti-trash"></i></button></td></tr>`
+      return `<tr><td style="font-weight:600">${d.dosyaNo}</td><td>${d.muvekkil}</td><td>${d.mahkeme||'—'}</td><td>${d.tur||'—'}</td><td style="color:${renk};white-space:nowrap">${dur}</td><td>${badge(DURUM_CLS[d.durum],DURUM[d.durum]||d.durum)}</td><td><button class="del-btn" onclick="duzenleDv(${d.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delDv(${d.id},event)"><i class="ti ti-trash"></i></button></td></tr>`
     }).join('')
     +`</tbody></table></div>`
 }
@@ -1337,7 +1347,7 @@ function renderGv(){
       <div class="check ${g.durum==='tamamlandi'?'done':''}" onclick="toggleGv(${g.id})">${g.durum==='tamamlandi'?'<i class="ti ti-check" style="font-size:12px"></i>':''}</div>
       <div style="flex:1"><div class="li-name" style="${g.durum==='tamamlandi'?'text-decoration:line-through;color:var(--hint)':''}">${g.baslik}</div><div class="li-meta">${g.dava!=='—'?g.dava+' · ':''} ${g.tarih||'Tarih yok'}</div></div>
       ${badge(ONCELIK_CLS[g.oncelik]||'bgr',g.oncelik)}
-      <button class="del-btn" onclick="delGv(${g.id},event)"><i class="ti ti-trash"></i></button>
+      <button class="del-btn" onclick="duzenleGv(${g.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delGv(${g.id},event)"><i class="ti ti-trash"></i></button>
     </div>`).join('')
 }
 
@@ -1347,7 +1357,7 @@ function renderBl(){
   const bls=DB.belgeler; const el=document.getElementById('list-bl')
   if(!bls.length){ el.innerHTML=empty('folders','Belge bulunamadı','Belge ekleyerek başlayın.'); return }
   el.innerHTML=`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Belge Adı</th><th>Kategori</th><th>İlgili Dava</th><th>Tarih</th><th></th></tr></thead><tbody>`+
-    bls.map(b=>`<tr><td><i class="ti ti-file" style="color:var(--hint);margin-right:6px"></i>${b.ad}</td><td>${badge('bb',b.kategori)}</td><td>${b.dava}</td><td>${b.tarih?new Date(b.tarih).toLocaleDateString('tr-TR'):'—'}</td><td><button class="del-btn" onclick="delBl(${b.id},event)"><i class="ti ti-trash"></i></button></td></tr>`).join('')
+    bls.map(b=>`<tr><td><i class="ti ti-file" style="color:var(--hint);margin-right:6px"></i>${b.ad}</td><td>${badge('bb',b.kategori)}</td><td>${b.dava}</td><td>${b.tarih?new Date(b.tarih).toLocaleDateString('tr-TR'):'—'}</td><td><button class="del-btn" onclick="duzenleBl(${b.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delBl(${b.id},event)"><i class="ti ti-trash"></i></button></td></tr>`).join('')
     +`</tbody></table></div>`
 }
 
@@ -1363,7 +1373,7 @@ function renderFn(){
   const el=document.getElementById('list-fn')
   if(!fns.length){ el.innerHTML=empty('coin','Mali işlem yok','Yeni işlem ekleyin.'); return }
   el.innerHTML=`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Tarih</th><th>Müvekkil</th><th>Açıklama</th><th>Tür</th><th>Tutar</th><th></th></tr></thead><tbody>`+
-    [...fns].reverse().map(f=>`<tr><td>${f.tarih||'—'}</td><td>${f.muvekkil}</td><td>${f.aciklama||'—'}</td><td>${badge(f.tur==='tahsilat'?'bg':f.tur==='masraf'||f.tur==='harc'?'br':'ba',f.tur)}</td><td style="font-weight:600;color:${f.tur==='tahsilat'?'var(--green)':'var(--red)'}">${f.tur==='tahsilat'?'+':'-'}₺${f.tutar.toLocaleString('tr-TR')}</td><td><button class="del-btn" onclick="delFn(${f.id},event)"><i class="ti ti-trash"></i></button></td></tr>`).join('')
+    [...fns].reverse().map(f=>`<tr><td>${f.tarih||'—'}</td><td>${f.muvekkil}</td><td>${f.aciklama||'—'}</td><td>${badge(f.tur==='tahsilat'?'bg':f.tur==='masraf'||f.tur==='harc'?'br':'ba',f.tur)}</td><td style="font-weight:600;color:${f.tur==='tahsilat'?'var(--green)':'var(--red)'}">${f.tur==='tahsilat'?'+':'-'}₺${f.tutar.toLocaleString('tr-TR')}</td><td><button class="del-btn" onclick="duzenleFn(${f.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delFn(${f.id},event)"><i class="ti ti-trash"></i></button></td></tr>`).join('')
     +`</tbody></table></div>`
 }
 
@@ -1376,7 +1386,7 @@ function renderIl(){
       <i class="ti ti-${ICON[i.kanal]||'message'}" style="font-size:22px;color:var(--gold)"></i>
       <div style="flex:1"><div class="li-name">${i.muvekkil} <span style="font-size:11px;color:var(--muted)">· ${i.kanal}</span></div><div class="li-meta">${i.mesaj}</div></div>
       <div style="font-size:11px;color:var(--hint)">${i.tarih?new Date(i.tarih).toLocaleDateString('tr-TR'):''}</div>
-      <button class="del-btn" onclick="delIl(${i.id},event)"><i class="ti ti-trash"></i></button>
+      <button class="del-btn" onclick="duzenleIl(${i.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delIl(${i.id},event)"><i class="ti ti-trash"></i></button>
     </div>`).join('')
 }
 
@@ -1456,10 +1466,10 @@ function renderDash(){
 
 // ── YAPAY ZEKA ────────────────────────────────────────────────
 function renderAI(){
-  const suggs=['Bugün ne var?','Yaklaşan duruşmalar','Bekleyen görevler','Bu ay özeti','Giderler','Son müvekkiller']
+  const suggs=['Bugün ne var?','Bu hafta','Yaklaşan duruşmalar','Bekleyen görevler','Bu ay özeti','Tahsilat','Giderler','Müvekkiller']
   document.getElementById('ai-sugg').innerHTML=suggs.map(s=>`<div class="sg" onclick="askAI('${s}')">${s}</div>`).join('')
   const msgs=document.getElementById('ai-msgs')
-  if(!msgs.innerHTML) addMsg('Merhaba, ben 360 Asistan. Müvekkil adı, dosya numarası veya serbest soru yazabilirsiniz.','bot')
+  if(!msgs.innerHTML) addMsg('Merhaba, ben 360 Asistan.\n\nMüvekkil adı, dosya numarası, mahkeme adı ya da serbest bir soru yazabilirsiniz. Kayıtlarınızı tarayıp yanıtlarım.','bot')
   renderRisk()
 }
 
@@ -1501,165 +1511,259 @@ function asistanCevap(soru){
   const bugun = new Date(); bugun.setHours(0,0,0,0)
   const ay = new Date().toISOString().slice(0,7)
 
-  // ── 1) Serbest metinde gecen bir muvekkil adi var mi
-  const bulunanMv = mv.filter(function(m){
-    const ad = trKucuk(m.ad + ' ' + m.soyad)
-    if(ad.length < 3) return false
-    if(s.indexOf(ad) > -1) return true
-    const parcalar = ad.split(' ').filter(function(p){ return p.length > 2 })
-    return parcalar.length && parcalar.every(function(p){ return s.indexOf(p) > -1 })
-  })
-  if(bulunanMv.length){
-    return bulunanMv.slice(0,3).map(function(m){
-      const ad = m.ad + ' ' + m.soyad
-      const dosyalar = dv.filter(function(d){ return trKucuk(d.muvekkil) === trKucuk(ad) })
-      const paralar  = fn.filter(function(f){ return String(f.muvekkil) === String(m.id) || trKucuk(f.muvekkil||'') === trKucuk(ad) })
-      const tahsil   = paralar.filter(function(f){ return f.tur === 'tahsilat' }).reduce(function(t,f){ return t + (+f.tutar||0) },0)
-      const gider    = paralar.filter(function(f){ return f.tur !== 'tahsilat' && f.tur !== 'fatura' }).reduce(function(t,f){ return t + (+f.tutar||0) },0)
-      let r = ad + '\n'
-      r += (m.tel ? 'Telefon: ' + m.tel + '\n' : '')
-      r += 'Dosya sayısı: ' + dosyalar.length + '\n'
-      dosyalar.slice(0,5).forEach(function(d){
-        r += '• ' + d.dosyaNo + (d.mahkeme ? ' — ' + d.mahkeme : '') + (d.tur ? ' (' + d.tur + ')' : '')
-        if(d.durusmaTarihi) r += ' · duruşma ' + new Date(d.durusmaTarihi).toLocaleDateString('tr-TR')
-        r += '\n'
-      })
-      if(paralar.length) r += 'Tahsilat: ' + paraYaz(tahsil) + ' · Masraf: ' + paraYaz(gider)
-      return r.trim()
-    }).join('\n\n')
+  // Sorudan anlamli kelimeleri cikar (baglaclar ve soru kaliplari atilir)
+  const DOLGU = ['bir','bu','su','o','ve','ile','icin','gibi','kadar','daha','cok','az',
+    'ne','neler','nedir','kim','kimin','hangi','kac','kacta','nerede','nasil','var','yok',
+    'mi','mu','mı','mü','musun','misin','olan','olarak','benim','bana','bizim','onun',
+    'gostere','goster','listele','soyle','bak','bakar','getir','ver','yaz','ara','bul',
+    'lutfen','acaba','peki','ama','ise','de','da','ki','en','tum','tumu','hepsi','butun']
+  const kelime = s.replace(/[^\wçğıöşü\s]/g,' ').split(/\s+/)
+    .filter(function(k){ return k.length > 2 && DOLGU.indexOf(k) === -1 })
+
+  function skor(metin, kelimeler){
+    const m = trKucuk(metin)
+    let p = 0
+    kelimeler.forEach(function(k){ if(m.indexOf(k) > -1) p++ })
+    return p
   }
 
-  // ── 2) Serbest metinde dosya numarasi
+  // ═══ 1) MUVEKKIL ADI ARAMA (esnek eslesme) ═══
+  const mvSonuc = mv.map(function(x){
+    const ad = (x.ad||'') + ' ' + (x.soyad||'')
+    return { k:x, p:skor(ad, kelime) }
+  }).filter(function(x){ return x.p > 0 }).sort(function(a,b){ return b.p - a.p })
+
+  if(mvSonuc.length && mvSonuc[0].p >= 1){
+    const enIyi = mvSonuc.filter(function(x){ return x.p === mvSonuc[0].p }).slice(0,3)
+    return enIyi.map(function(r){
+      const m = r.k, ad = m.ad + ' ' + m.soyad
+      const dosyalar = dv.filter(function(d){
+        return String(d.muvekkılId) === String(m.id) || trKucuk(d.muvekkil||'') === trKucuk(ad) })
+      const paralar = fn.filter(function(f){
+        return String(f.muvekkilId) === String(m.id) || trKucuk(f.muvekkil||'') === trKucuk(ad) })
+      const tahsil = paralar.filter(function(f){ return f.tur==='tahsilat' })
+        .reduce(function(t,f){ return t+(+f.tutar||0) },0)
+      const gider = paralar.filter(function(f){ return f.tur!=='tahsilat' && f.tur!=='fatura' })
+        .reduce(function(t,f){ return t+(+f.tutar||0) },0)
+      const gorevler = gv.filter(function(g){
+        return dosyalar.some(function(d){ return d.dosyaNo === g.dava }) && g.durum!=='tamamlandi' })
+
+      let r2 = ad
+      if(m.tel) r2 += '\nTelefon: ' + m.tel
+      if(m.tc)  r2 += '\nTC: ' + m.tc
+      r2 += '\n\nDosya: ' + dosyalar.length
+      dosyalar.slice(0,6).forEach(function(d){
+        r2 += '\n• ' + d.dosyaNo + (d.mahkeme ? ' — ' + d.mahkeme : '') + (d.tur ? ' (' + d.tur + ')' : '')
+        if(d.durusmaTarihi){
+          const t = new Date(d.durusmaTarihi); t.setHours(0,0,0,0)
+          const f = Math.round((t-bugun)/86400000)
+          r2 += ' · duruşma ' + new Date(d.durusmaTarihi).toLocaleDateString('tr-TR')
+             + (f===0?' (bugün)':f>0?' ('+f+' gün)':' (geçti)')
+        }
+      })
+      if(paralar.length) r2 += '\n\nTahsilat: ' + paraYaz(tahsil) + ' · Masraf: ' + paraYaz(gider)
+      if(gorevler.length) r2 += '\nBekleyen görev: ' + gorevler.length
+      if(m.not) r2 += '\n\nNot: ' + m.not
+      return r2
+    }).join('\n\n───\n\n')
+  }
+
+  // ═══ 2) DOSYA NUMARASI ═══
   const noEsl = soru.match(/\d{4}\s*\/\s*\d+/)
   if(noEsl){
     const ara = noEsl[0].replace(/\s/g,'')
     const d = dv.find(function(x){ return String(x.dosyaNo||'').replace(/\s/g,'') === ara })
     if(d){
-      let r = 'Dosya ' + d.dosyaNo + '\n'
-      r += 'Müvekkil: ' + (d.muvekkil||'—') + '\n'
-      if(d.mahkeme) r += 'Mahkeme: ' + d.mahkeme + '\n'
-      if(d.tur) r += 'Tür: ' + d.tur + '\n'
-      if(d.karsiTaraf) r += 'Karşı taraf: ' + d.karsiTaraf + '\n'
-      r += 'Durum: ' + (DURUM[d.durum] || d.durum || '—') + '\n'
+      let r = 'Dosya ' + d.dosyaNo
+      r += '\nMüvekkil: ' + (d.muvekkil||'—')
+      if(d.mahkeme) r += '\nMahkeme: ' + d.mahkeme
+      if(d.tur) r += '\nTür: ' + d.tur
+      if(d.karsiTaraf) r += '\nKarşı taraf: ' + d.karsiTaraf
+      r += '\nDurum: ' + (DURUM[d.durum] || d.durum || '—')
       if(d.durusmaTarihi){
         const t = new Date(d.durusmaTarihi); t.setHours(0,0,0,0)
-        const fark = Math.round((t - bugun)/86400000)
-        r += 'Duruşma: ' + new Date(d.durusmaTarihi).toLocaleDateString('tr-TR')
+        const f = Math.round((t-bugun)/86400000)
+        r += '\nDuruşma: ' + new Date(d.durusmaTarihi).toLocaleDateString('tr-TR')
            + (d.durusmaSaati ? ' ' + d.durusmaSaati : '')
-           + (fark === 0 ? ' (bugün)' : fark > 0 ? ' (' + fark + ' gün kaldı)' : ' (geçti)')
+           + (f===0?' (bugün)':f>0?' ('+f+' gün kaldı)':' (geçti)')
       }
       const bel = bl.filter(function(b){ return b.dava === d.dosyaNo })
-      if(bel.length) r += '\nBelge: ' + bel.length + ' kayıt'
-      return r.trim()
+      const gor = gv.filter(function(g){ return g.dava === d.dosyaNo && g.durum!=='tamamlandi' })
+      if(bel.length) r += '\nBelge: ' + bel.length
+      if(gor.length) r += '\nBekleyen görev: ' + gor.map(function(g){ return g.baslik }).join(', ')
+      if(d.not) r += '\n\nNot: ' + d.not
+      return r
     }
     return ara + ' numaralı dosya bulunamadı.'
   }
 
-  // ── 3) Duruşma ve takvim
-  if(icerir(s,['duruşma','durusma','mahkeme'])){
+  // ═══ 3) MAHKEME / DAVA TURU / KARSI TARAF ARAMA ═══
+  if(kelime.length){
+    const dvSonuc = dv.map(function(d){
+      return { d:d, p:skor((d.mahkeme||'')+' '+(d.tur||'')+' '+(d.karsiTaraf||'')+' '+(d.not||''), kelime) }
+    }).filter(function(x){ return x.p > 0 }).sort(function(a,b){ return b.p-a.p })
+
+    if(dvSonuc.length){
+      const liste = dvSonuc.filter(function(x){ return x.p === dvSonuc[0].p }).slice(0,8)
+      return liste.length + ' eşleşen dosya:\n' + liste.map(function(x){
+        const d = x.d
+        return '• ' + d.dosyaNo + ' — ' + (d.muvekkil||'—')
+          + (d.mahkeme?' · '+d.mahkeme:'') + (d.tur?' · '+d.tur:'')
+          + (d.durusmaTarihi?' · duruşma '+new Date(d.durusmaTarihi).toLocaleDateString('tr-TR'):'')
+      }).join('\n')
+    }
+  }
+
+  // ═══ 4) ZAMAN SORULARI ═══
+  if(icerir(s,['duruşma','durusma','mahkeme','celse'])){
     const yak = dv.filter(function(d){ return d.durusmaTarihi })
-      .map(function(d){
-        const t = new Date(d.durusmaTarihi); t.setHours(0,0,0,0)
-        return { d:d, fark: Math.round((t - bugun)/86400000) }
-      })
-      .filter(function(x){ return x.fark >= 0 }).sort(function(a,b){ return a.fark - b.fark })
+      .map(function(d){ const t=new Date(d.durusmaTarihi); t.setHours(0,0,0,0)
+                        return { d:d, f:Math.round((t-bugun)/86400000) } })
+      .filter(function(x){ return x.f >= 0 }).sort(function(a,b){ return a.f-b.f })
     if(!yak.length) return 'Kayıtlı yaklaşan duruşma yok.'
-    return 'Yaklaşan duruşmalar:\n' + yak.slice(0,6).map(function(x){
+    return 'Yaklaşan duruşmalar:\n' + yak.slice(0,8).map(function(x){
       return '• ' + new Date(x.d.durusmaTarihi).toLocaleDateString('tr-TR')
-        + (x.d.durusmaSaati ? ' ' + x.d.durusmaSaati : '')
+        + (x.d.durusmaSaati?' '+x.d.durusmaSaati:'')
         + ' — ' + x.d.dosyaNo + ' · ' + (x.d.muvekkil||'—')
-        + (x.d.mahkeme ? ' · ' + x.d.mahkeme : '')
-        + (x.fark === 0 ? '  (bugün)' : x.fark === 1 ? '  (yarın)' : '  (' + x.fark + ' gün)')
+        + (x.d.mahkeme?' · '+x.d.mahkeme:'')
+        + (x.f===0?'  (bugün)':x.f===1?'  (yarın)':'  ('+x.f+' gün)')
     }).join('\n')
   }
 
-  if(icerir(s,['bugün','bugun','ne var','ajanda','program'])){
-    const eBugun = et.filter(function(e){ return e.tarih && new Date(e.tarih).toDateString() === new Date().toDateString() })
-    const gBugun = gv.filter(function(g){ return g.durum !== 'tamamlandi' && g.tarih === new Date().toISOString().slice(0,10) })
-    if(!eBugun.length && !gBugun.length) return 'Bugün için kayıtlı etkinlik veya görev yok.'
-    let r = ''
-    if(eBugun.length) r += 'Bugünkü etkinlikler:\n' + eBugun.map(function(e){
-      return '• ' + e.baslik + (e.mahkeme ? ' · ' + e.mahkeme : '') + (e.muvekkil ? ' · ' + e.muvekkil : '') }).join('\n')
-    if(gBugun.length) r += (r?'\n\n':'') + 'Bugünkü görevler:\n' + gBugun.map(function(g){ return '• ' + g.baslik }).join('\n')
+  if(icerir(s,['bugün','bugun','ajanda','program','gündem','gundem'])){
+    const eB = et.filter(function(e){ return e.tarih && new Date(e.tarih).toDateString()===new Date().toDateString() })
+    const gB = gv.filter(function(g){ return g.durum!=='tamamlandi' && g.tarih===new Date().toISOString().slice(0,10) })
+    const dB = dv.filter(function(d){ return d.durusmaTarihi && new Date(d.durusmaTarihi).toDateString()===new Date().toDateString() })
+    if(!eB.length && !gB.length && !dB.length) return 'Bugün için kayıtlı duruşma, etkinlik veya görev yok.'
+    let r=''
+    if(dB.length) r += 'Bugünkü duruşmalar:\n' + dB.map(function(d){
+      return '• ' + (d.durusmaSaati?d.durusmaSaati+' ':'') + d.dosyaNo + ' · ' + (d.muvekkil||'—') + (d.mahkeme?' · '+d.mahkeme:'') }).join('\n')
+    if(eB.length) r += (r?'\n\n':'') + 'Etkinlikler:\n' + eB.map(function(e){
+      return '• ' + e.baslik + (e.mahkeme?' · '+e.mahkeme:'') + (e.muvekkil?' · '+e.muvekkil:'') }).join('\n')
+    if(gB.length) r += (r?'\n\n':'') + 'Görevler:\n' + gB.map(function(g){ return '• ' + g.baslik }).join('\n')
     return r
   }
 
   if(icerir(s,['yarın','yarin'])){
     const y = new Date(); y.setDate(y.getDate()+1)
-    const liste = dv.filter(function(d){ return d.durusmaTarihi && new Date(d.durusmaTarihi).toDateString() === y.toDateString() })
-    return liste.length
-      ? 'Yarınki duruşmalar:\n' + liste.map(function(d){ return '• ' + d.dosyaNo + ' · ' + (d.muvekkil||'—') + (d.mahkeme?' · '+d.mahkeme:'') }).join('\n')
+    const l = dv.filter(function(d){ return d.durusmaTarihi && new Date(d.durusmaTarihi).toDateString()===y.toDateString() })
+    return l.length
+      ? 'Yarınki duruşmalar:\n' + l.map(function(d){
+          return '• ' + (d.durusmaSaati?d.durusmaSaati+' ':'') + d.dosyaNo + ' · ' + (d.muvekkil||'—') + (d.mahkeme?' · '+d.mahkeme:'') }).join('\n')
       : 'Yarın için kayıtlı duruşma yok.'
   }
 
-  // ── 4) Finans
-  if(icerir(s,['tahsilat','gelir','kazanç','kazanc','para','ciro'])){
-    const t = fn.filter(function(f){ return f.tur==='tahsilat' && String(f.tarih||'').indexOf(ay)===0 })
-                .reduce(function(x,f){ return x + (+f.tutar||0) },0)
-    const tum = fn.filter(function(f){ return f.tur==='tahsilat' }).reduce(function(x,f){ return x + (+f.tutar||0) },0)
-    return 'Bu ay tahsilat: ' + paraYaz(t) + '\nToplam tahsilat: ' + paraYaz(tum)
-  }
-  if(icerir(s,['gider','masraf','harcama','harç','harc'])){
-    const gid = fn.filter(function(f){ return f.tur!=='tahsilat' && f.tur!=='fatura' })
-    const buAy = gid.filter(function(f){ return String(f.tarih||'').indexOf(ay)===0 })
-    const top  = buAy.reduce(function(x,f){ return x + (+f.tutar||0) },0)
-    if(!gid.length) return 'Kayıtlı gider yok.'
-    const grup = {}
-    buAy.forEach(function(f){ grup[f.tur] = (grup[f.tur]||0) + (+f.tutar||0) })
-    let r = 'Bu ay gider: ' + paraYaz(top)
-    const anahtarlar = Object.keys(grup)
-    if(anahtarlar.length) r += '\n' + anahtarlar.map(function(k){ return '• ' + k + ': ' + paraYaz(grup[k]) }).join('\n')
-    return r
-  }
-  if(icerir(s,['kâr','kar durumu','bilanço','bilanco','özet','ozet','durum raporu'])){
-    const gel = fn.filter(function(f){ return f.tur==='tahsilat' && String(f.tarih||'').indexOf(ay)===0 }).reduce(function(x,f){ return x+(+f.tutar||0) },0)
-    const gid = fn.filter(function(f){ return f.tur!=='tahsilat' && f.tur!=='fatura' && String(f.tarih||'').indexOf(ay)===0 }).reduce(function(x,f){ return x+(+f.tutar||0) },0)
-    return 'Bu ay özeti\nGelir: ' + paraYaz(gel) + '\nGider: ' + paraYaz(gid) + '\nFark: ' + paraYaz(gel-gid)
-      + '\n\nMüvekkil: ' + mv.length + ' · Dava: ' + dv.length
-      + ' · Açık dava: ' + dv.filter(function(d){ return d.durum!=='sonuclandi' }).length
+  if(icerir(s,['hafta','önümüzdeki','onumuzdeki','gelecek'])){
+    const l = dv.filter(function(d){ return d.durusmaTarihi })
+      .map(function(d){ const t=new Date(d.durusmaTarihi); t.setHours(0,0,0,0)
+                        return { d:d, f:Math.round((t-bugun)/86400000) } })
+      .filter(function(x){ return x.f>=0 && x.f<=7 }).sort(function(a,b){ return a.f-b.f })
+    return l.length
+      ? 'Önümüzdeki 7 gün:\n' + l.map(function(x){
+          return '• ' + new Date(x.d.durusmaTarihi).toLocaleDateString('tr-TR') + ' — ' + x.d.dosyaNo + ' · ' + (x.d.muvekkil||'—') }).join('\n')
+      : 'Önümüzdeki hafta duruşma yok.'
   }
 
-  // ── 5) Gorev
-  if(icerir(s,['görev','gorev','yapılacak','yapilacak','bekleyen','iş listesi'])){
+  // ═══ 5) FINANS ═══
+  if(icerir(s,['tahsilat','gelir','kazanç','kazanc','ciro','para geldi','ödeme','odeme'])){
+    const t = fn.filter(function(f){ return f.tur==='tahsilat' && String(f.tarih||'').indexOf(ay)===0 })
+      .reduce(function(x,f){ return x+(+f.tutar||0) },0)
+    const tum = fn.filter(function(f){ return f.tur==='tahsilat' }).reduce(function(x,f){ return x+(+f.tutar||0) },0)
+    const son = fn.filter(function(f){ return f.tur==='tahsilat' }).slice(-4).reverse()
+    let r = 'Bu ay tahsilat: ' + paraYaz(t) + '\nToplam: ' + paraYaz(tum)
+    if(son.length) r += '\n\nSon tahsilatlar:\n' + son.map(function(f){
+      return '• ' + paraYaz(f.tutar) + ' — ' + (f.muvekkil||'—') + (f.tarih?' · '+f.tarih:'') }).join('\n')
+    return r
+  }
+
+  if(icerir(s,['gider','masraf','harcama','harç','harc','ödedim','odedim'])){
+    const gid = fn.filter(function(f){ return f.tur!=='tahsilat' && f.tur!=='fatura' })
+    if(!gid.length) return 'Kayıtlı gider yok.'
+    const buAy = gid.filter(function(f){ return String(f.tarih||'').indexOf(ay)===0 })
+    const top = buAy.reduce(function(x,f){ return x+(+f.tutar||0) },0)
+    const grup = {}
+    buAy.forEach(function(f){ grup[f.tur] = (grup[f.tur]||0)+(+f.tutar||0) })
+    let r = 'Bu ay gider: ' + paraYaz(top)
+    const ak = Object.keys(grup).sort(function(a,b){ return grup[b]-grup[a] })
+    if(ak.length) r += '\n' + ak.map(function(k){ return '• ' + k + ': ' + paraYaz(grup[k]) }).join('\n')
+    return r
+  }
+
+  if(icerir(s,['kâr','kar durumu','bilanço','bilanco','özet','ozet','rapor','durum','genel'])){
+    const gel = fn.filter(function(f){ return f.tur==='tahsilat' && String(f.tarih||'').indexOf(ay)===0 })
+      .reduce(function(x,f){ return x+(+f.tutar||0) },0)
+    const gid = fn.filter(function(f){ return f.tur!=='tahsilat' && f.tur!=='fatura' && String(f.tarih||'').indexOf(ay)===0 })
+      .reduce(function(x,f){ return x+(+f.tutar||0) },0)
+    const acik = dv.filter(function(d){ return d.durum!=='sonuclandi' })
+    const yakin = dv.filter(function(d){ if(!d.durusmaTarihi) return false
+      const t=new Date(d.durusmaTarihi); t.setHours(0,0,0,0)
+      const f=Math.round((t-bugun)/86400000); return f>=0 && f<=7 })
+    return 'Bu ay özeti\nGelir: ' + paraYaz(gel) + '\nGider: ' + paraYaz(gid) + '\nFark: ' + paraYaz(gel-gid)
+      + '\n\nMüvekkil: ' + mv.length + '\nDava: ' + dv.length + ' (' + acik.length + ' açık)'
+      + '\nBekleyen görev: ' + gv.filter(function(g){ return g.durum!=='tamamlandi' }).length
+      + '\n7 gün içinde duruşma: ' + yakin.length
+  }
+
+  // ═══ 6) GOREV ═══
+  if(icerir(s,['görev','gorev','yapılacak','yapilacak','bekleyen','iş listesi','todo'])){
     const b = gv.filter(function(g){ return g.durum!=='tamamlandi' })
     if(!b.length) return 'Bekleyen görev yok.'
-    const gecikmis = b.filter(function(g){ return g.tarih && new Date(g.tarih) < bugun })
-    let r = b.length + ' bekleyen görev var'
-    if(gecikmis.length) r += ' (' + gecikmis.length + ' tanesi gecikmiş)'
-    r += ':\n' + b.slice(0,6).map(function(g){
-      return '• ' + g.baslik + (g.tarih ? ' — ' + g.tarih : '') + (g.dava && g.dava!=='—' ? ' · ' + g.dava : '') }).join('\n')
+    const gec = b.filter(function(g){ return g.tarih && new Date(g.tarih) < bugun })
+    let r = b.length + ' bekleyen görev'
+    if(gec.length) r += ' (' + gec.length + ' gecikmiş)'
+    r += ':\n' + b.slice(0,8).map(function(g){
+      const es = g.tarih && new Date(g.tarih) < bugun
+      return '• ' + g.baslik + (g.tarih?' — '+g.tarih+(es?' (gecikmiş)':''):'')
+        + (g.dava && g.dava!=='—' ? ' · '+g.dava : '') }).join('\n')
     return r
   }
 
-  // ── 6) Dava ve muvekkil sayilari
+  // ═══ 7) LISTELER ═══
   if(icerir(s,['dava','dosya'])){
     if(!dv.length) return 'Henüz dava kaydı yok.'
     const acik = dv.filter(function(d){ return d.durum!=='sonuclandi' })
     const turler = {}
-    dv.forEach(function(d){ if(d.tur) turler[d.tur] = (turler[d.tur]||0)+1 })
-    let r = 'Toplam ' + dv.length + ' dava, ' + acik.length + ' tanesi açık.'
-    const tk = Object.keys(turler)
-    if(tk.length) r += '\n\nTürlere göre:\n' + tk.sort(function(a,b){ return turler[b]-turler[a] })
-      .slice(0,6).map(function(k){ return '• ' + k + ': ' + turler[k] }).join('\n')
+    dv.forEach(function(d){ if(d.tur) turler[d.tur]=(turler[d.tur]||0)+1 })
+    let r = 'Toplam ' + dv.length + ' dava, ' + acik.length + ' açık.'
+    const tk = Object.keys(turler).sort(function(a,b){ return turler[b]-turler[a] })
+    if(tk.length) r += '\n\nTürlere göre:\n' + tk.slice(0,8).map(function(k){ return '• ' + k + ': ' + turler[k] }).join('\n')
     return r
   }
-  if(icerir(s,['müvekkil','muvekkil','danışan','danisan','kişi'])){
+
+  if(icerir(s,['müvekkil','muvekkil','danışan','danisan','kişi','kisi'])){
     if(!mv.length) return 'Henüz müvekkil kaydı yok.'
-    return mv.length + ' kayıtlı müvekkiliniz var.\nSon eklenenler:\n'
-      + mv.slice(-5).reverse().map(function(m){ return '• ' + m.ad + ' ' + m.soyad + (m.tel ? ' · ' + m.tel : '') }).join('\n')
-  }
-  if(icerir(s,['belge','evrak','dilekçe','dilekce'])){
-    if(!bl.length) return 'Kayıtlı belge yok.'
-    return bl.length + ' belge kayıtlı.\nSon eklenenler:\n'
-      + bl.slice(-5).reverse().map(function(b){ return '• ' + b.ad + (b.dava ? ' — ' + b.dava : '') }).join('\n')
+    return mv.length + ' kayıtlı müvekkil.\n\nSon eklenenler:\n'
+      + mv.slice(-6).reverse().map(function(m){
+          const dc = dv.filter(function(d){ return String(d.muvekkılId)===String(m.id) }).length
+          return '• ' + m.ad + ' ' + m.soyad + (m.tel?' · '+m.tel:'') + (dc?' · '+dc+' dosya':'') }).join('\n')
   }
 
-  // ── 7) Anlasilamadi: ne yapabilecegini soyle
-  return 'Bu soruyu anlayamadım. Şunları deneyebilirsiniz:\n'
-    + '• Bir müvekkil adı yazın — dosyalarını ve hesabını getireyim\n'
-    + '• Bir dosya numarası yazın (örn. 2026/142)\n'
-    + '• "Yaklaşan duruşmalar", "bugün ne var", "bekleyen görevler"\n'
-    + '• "Bu ay tahsilat", "giderler", "bu ay özeti"'
+  if(icerir(s,['belge','evrak','dilekçe','dilekce','doküman','dokuman'])){
+    if(!bl.length) return 'Kayıtlı belge yok.'
+    return bl.length + ' belge kayıtlı.\n\nSon eklenenler:\n'
+      + bl.slice(-6).reverse().map(function(b){ return '• ' + b.ad + (b.dava && b.dava!=='—' ? ' — '+b.dava : '') }).join('\n')
+  }
+
+  if(icerir(s,['takvim','etkinlik','randevu','toplantı','toplanti'])){
+    const gel = et.filter(function(e){ return e.tarih && new Date(e.tarih) >= bugun })
+      .sort(function(a,b){ return new Date(a.tarih)-new Date(b.tarih) })
+    if(!gel.length) return 'Yaklaşan etkinlik yok.'
+    return 'Yaklaşan etkinlikler:\n' + gel.slice(0,8).map(function(e){
+      return '• ' + new Date(e.tarih).toLocaleDateString('tr-TR') + ' — ' + e.baslik
+        + (e.mahkeme?' · '+e.mahkeme:'') + (e.muvekkil?' · '+e.muvekkil:'') }).join('\n')
+  }
+
+  // ═══ 8) ANLASILMADI ═══
+  let r = 'Bu soruyla eşleşen kayıt bulamadım.'
+  if(kelime.length) r += '\nAradığım kelimeler: ' + kelime.join(', ')
+  r += '\n\nŞunları deneyebilirsiniz:'
+    + '\n• Müvekkil adı — dosyalarını ve hesabını getireyim'
+    + '\n• Dosya numarası (2026/142)'
+    + '\n• Mahkeme veya dava türü adı'
+    + '\n• "Bugün ne var", "yaklaşan duruşmalar", "bu hafta"'
+    + '\n• "Bu ay tahsilat", "giderler", "bu ay özeti"'
+    + '\n• "Bekleyen görevler", "belgeler", "takvim"'
+  return r
 }
 
 function addMsg(text,rol){
@@ -2431,6 +2535,132 @@ function finansTurDegisti(){
   if(et) et.textContent = gelir ? 'Tutar (₺) *' : 'Gider tutarı (₺) *'
   const mv = document.getElementById('fn-mv-sar')
   if(mv) mv.style.display = t.indexOf('ofis-')===0 || t.indexOf('kurum-')===0 || t.indexOf('kisisel-')===0 ? 'none' : 'block'
+}
+
+// ══ DUZENLEME ALTYAPISI ═══════════════════════════════════
+const DUZ_META = {
+  muvekkil:{ liste:'muvekkiller', kaydet:'saveMv', ekle:'Yeni Müvekkil', duz:'Müvekkili Düzenle', btnE:'Müvekkil Ekle', btnD:'Değişiklikleri Kaydet' },
+  dava:    { liste:'davalar',     kaydet:'saveDv', ekle:'Yeni Dava',     duz:'Davayı Düzenle',    btnE:'Dava Ekle',     btnD:'Değişiklikleri Kaydet' },
+  gorev:   { liste:'gorevler',    kaydet:'saveGv', ekle:'Yeni Görev',    duz:'Görevi Düzenle',    btnE:'Görev Ekle',    btnD:'Değişiklikleri Kaydet' },
+  etkinlik:{ liste:'etkinlikler', kaydet:'saveEt', ekle:'Etkinlik / Duruşma Ekle', duz:'Etkinliği Düzenle', btnE:'Ekle', btnD:'Değişiklikleri Kaydet' },
+  finans:  { liste:'finanslar',   kaydet:'saveFn', ekle:'Mali İşlem',    duz:'Kaydı Düzenle',     btnE:'Kaydet',        btnD:'Değişiklikleri Kaydet' },
+  belge:   { liste:'belgeler',    kaydet:'saveBl', ekle:'Belge Ekle',    duz:'Belgeyi Düzenle',   btnE:'Belge Ekle',    btnD:'Değişiklikleri Kaydet' },
+  iletisim:{ liste:'iletisimler', kaydet:'saveIl', ekle:'İletişim Kaydı',duz:'Kaydı Düzenle',     btnE:'Kaydet',        btnD:'Değişiklikleri Kaydet' }
+}
+
+function duzModu(tur, acik){
+  const m = DUZ_META[tur]; if(!m) return
+  const b = document.getElementById('baslik-'+tur)
+  const k = document.getElementById('btn-'+tur)
+  if(b) b.textContent = acik ? m.duz : m.ekle
+  if(k) k.textContent = acik ? m.btnD : m.btnE
+}
+
+function duzKimlik(tur){ const e=document.getElementById('duzenle-'+tur); return e ? e.value : '' }
+function duzTemizle(tur){
+  const e=document.getElementById('duzenle-'+tur); if(e) e.value=''
+  duzModu(tur,false)
+}
+
+// Kaydetme sirasinda: duzenleme ise eskisini cikar, yenisini ayni kimlikle yaz
+function duzUygula(tur, yeniKayit){
+  const m = DUZ_META[tur]
+  const kim = duzKimlik(tur)
+  let liste = DB[m.liste]
+  if(kim){
+    const eski = liste.find(function(x){ return String(x.id) === String(kim) })
+    if(eski) yeniKayit = Object.assign({}, eski, yeniKayit, { id: eski.id })
+    liste = liste.filter(function(x){ return String(x.id) !== String(kim) })
+  }
+  liste.push(yeniKayit)
+  DB[m.kaydet](liste)
+  duzTemizle(tur)
+  return !!kim
+}
+
+function alanDoldur(esl, kayit){
+  Object.keys(esl).forEach(function(id){
+    const e = document.getElementById(id); if(!e) return
+    const d = kayit[esl[id]]
+    e.value = (d === undefined || d === null) ? '' : d
+  })
+}
+
+// ── Modul bazli duzenleme acicilari
+async function duzenleMv(id, e){
+  if(e) e.stopPropagation()
+  const k = DB.muvekkiller.find(function(x){ return String(x.id)===String(id) }); if(!k) return
+  await showModal('muvekkil')
+  document.getElementById('duzenle-muvekkil').value = k.id
+  alanDoldur({ 'mv-ad':'ad','mv-soyad':'soyad','mv-tc':'tc','mv-tel':'tel',
+               'mv-email':'email','mv-il':'il','mv-tur':'tur','mv-not':'not' }, k)
+  duzModu('muvekkil', true)
+}
+
+async function duzenleDv(id, e){
+  if(e) e.stopPropagation()
+  const k = DB.davalar.find(function(x){ return String(x.id)===String(id) }); if(!k) return
+  await showModal('dava')
+  document.getElementById('duzenle-dava').value = k.id
+  alanDoldur({ 'dv-no':'dosyaNo','dv-mhk':'mahkeme','dv-kt2':'karsiTaraf','dv-tarih':'tarih',
+               'dv-durum':'durum','dv-not':'not','dv-durusma-tarihi':'durusmaTarihi',
+               'dv-durusma-saati':'durusmaSaati' }, k)
+  const sel = document.getElementById('dv-mv')
+  if(sel && k.muvekkılId) sel.value = String(k.muvekkılId)
+  const g = document.getElementById('dv-tur'); if(g) g.value = k.tur || ''
+  turSecimCiz()
+  duzModu('dava', true)
+}
+
+async function duzenleGv(id, e){
+  if(e) e.stopPropagation()
+  const k = DB.gorevler.find(function(x){ return String(x.id)===String(id) }); if(!k) return
+  await showModal('gorev')
+  document.getElementById('duzenle-gorev').value = k.id
+  alanDoldur({ 'gv-baslik':'baslik','gv-oncelik':'oncelik','gv-tarih':'tarih','gv-not':'not' }, k)
+  duzModu('gorev', true)
+}
+
+async function duzenleEt(id, e){
+  if(e) e.stopPropagation()
+  const k = DB.etkinlikler.find(function(x){ return String(x.id)===String(id) }); if(!k) return
+  await showModal('etkinlik')
+  document.getElementById('duzenle-etkinlik').value = k.id
+  alanDoldur({ 'et-baslik':'baslik','et-tur':'tur','et-not':'not',
+               'et-esas':'dava','et-mahkeme':'mahkeme','et-muvekkil':'muvekkil' }, k)
+  const t = document.getElementById('et-tarih')
+  if(t && k.tarih) t.value = String(k.tarih).slice(0,10)
+  duzModu('etkinlik', true)
+}
+
+async function duzenleFn(id, e){
+  if(e) e.stopPropagation()
+  const k = DB.finanslar.find(function(x){ return String(x.id)===String(id) }); if(!k) return
+  await showModal('finans')
+  document.getElementById('duzenle-finans').value = k.id
+  alanDoldur({ 'fn-tur':'tur','fn-tutar':'tutar','fn-tarih':'tarih','fn-not':'not' }, k)
+  const sel = document.getElementById('fn-mv'); if(sel && k.muvekkilId) sel.value = String(k.muvekkilId)
+  finansTurDegisti()
+  duzModu('finans', true)
+}
+
+async function duzenleBl(id, e){
+  if(e) e.stopPropagation()
+  const k = DB.belgeler.find(function(x){ return String(x.id)===String(id) }); if(!k) return
+  await showModal('belge')
+  document.getElementById('duzenle-belge').value = k.id
+  alanDoldur({ 'bl-ad':'ad','bl-kategori':'kategori' }, k)
+  duzModu('belge', true)
+}
+
+async function duzenleIl(id, e){
+  if(e) e.stopPropagation()
+  const k = DB.iletisimler.find(function(x){ return String(x.id)===String(id) }); if(!k) return
+  await showModal('iletisim')
+  document.getElementById('duzenle-iletisim').value = k.id
+  alanDoldur({ 'il-kanal':'kanal','il-mesaj':'mesaj' }, k)
+  const sel = document.getElementById('il-mv'); if(sel && k.muvekkilId) sel.value = String(k.muvekkilId)
+  duzModu('iletisim', true)
 }
 
 // ── ISLEM GUNLUGU ──────────────────────────────────────────
