@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Yeni şifre belirleyin — Dosya360</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C9A84C' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0B1629;--navy3:#1A2B47;--gold:#C9A84C;--gold2:#E8C96A;
+      --kenar:#E4E7EC;--metin:#0C111D;--soluk:#475467;--silik:#98A2B3;
+      --yesil:#12805C;--kirmizi:#B42318}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+     background:var(--navy);min-height:100vh;display:flex;align-items:center;
+     justify-content:center;padding:20px;-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
+.kutu{width:100%;max-width:412px}
+.tepe{text-align:center;margin-bottom:26px}
+.lg{display:inline-flex;align-items:center;gap:8px;font-size:19px;font-weight:600;color:var(--gold)}
+.lg svg{width:21px;height:21px}
+.lg-alt{font-size:12px;color:rgba(255,255,255,.38);margin-top:4px}
+.kart{background:#fff;border-radius:12px;padding:30px 28px;box-shadow:0 20px 56px rgba(0,0,0,.28)}
+.baslik{font-size:18px;font-weight:600;color:var(--metin);margin-bottom:5px}
+.aciklama{font-size:13px;color:var(--soluk);line-height:1.65;margin-bottom:22px}
+.alan{margin-bottom:15px}
+.alan label{display:block;font-size:11px;font-weight:600;color:var(--soluk);margin-bottom:6px;letter-spacing:.03em}
+.alan input{width:100%;padding:10px 13px;border:1.5px solid var(--kenar);border-radius:7px;
+            font-size:13.5px;outline:none;font-family:inherit;transition:border-color .16s;color:var(--metin)}
+.alan input:focus{border-color:var(--gold)}
+.olcu{height:3px;background:var(--kenar);border-radius:2px;margin-top:7px;overflow:hidden}
+.olcu i{display:block;height:100%;width:0;border-radius:2px;transition:width .22s,background .22s}
+.olcu-yazi{font-size:11px;margin-top:5px;color:var(--silik)}
+.btn{width:100%;padding:12px;background:var(--navy);color:var(--gold);border:none;border-radius:7px;
+     font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .16s}
+.btn:hover{background:var(--navy3)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.uyari{border-radius:7px;padding:10px 13px;font-size:12.5px;margin-bottom:15px;display:none;line-height:1.6}
+.uyari.hata{background:#FEF3F2;border:1px solid #FECDCA;color:var(--kirmizi)}
+.uyari.iyi{background:#ECFDF3;border:1px solid #ABEFC6;color:var(--yesil)}
+.alt{text-align:center;font-size:12.5px;color:var(--silik);margin-top:16px}
+.alt a{color:var(--navy);font-weight:500;text-decoration:none}
+.bitti{text-align:center;padding:12px 0}
+.bitti i{font-size:38px;color:var(--yesil)}
+.bitti-b{font-size:17px;font-weight:600;color:var(--metin);margin:12px 0 6px}
+.bitti-a{font-size:13px;color:var(--soluk);line-height:1.65;margin-bottom:22px}
+.gizle{display:none}
+</style>
+</head>
+<body>
+<div class="kutu">
+  <div class="tepe">
+    <div class="lg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg>Dosya360</div>
+    <div class="lg-alt">Hukuk Bürosu Yönetim Sistemi</div>
+  </div>
+
+  <div class="kart">
+    <div id="yukleniyor">
+      <div class="baslik">Bağlantı doğrulanıyor</div>
+      <div class="aciklama">Lütfen bekleyin...</div>
+    </div>
+
+    <div id="form" class="gizle">
+      <div class="baslik">Yeni şifrenizi belirleyin</div>
+      <div class="aciklama" id="hesap-bilgi">Hesabınız için yeni bir şifre oluşturun.</div>
+      <div class="uyari" id="mesaj"></div>
+      <div class="alan">
+        <label>YENİ ŞİFRE</label>
+        <input type="password" id="s1" placeholder="En az 6 karakter" autocomplete="new-password" oninput="olc()">
+        <div class="olcu"><i id="olcu-c"></i></div>
+        <div class="olcu-yazi" id="olcu-y">Şifre gücü</div>
+      </div>
+      <div class="alan">
+        <label>YENİ ŞİFRE TEKRAR</label>
+        <input type="password" id="s2" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key==='Enter')kaydet()">
+      </div>
+      <button class="btn" id="btn" onclick="kaydet()">Şifreyi güncelle</button>
+    </div>
+
+    <div id="gecersiz" class="gizle">
+      <div class="baslik">Bağlantı geçersiz</div>
+      <div class="aciklama">Bu sıfırlama bağlantısı kullanılmış ya da süresi dolmuş olabilir. Bağlantılar bir saat geçerlidir.</div>
+      <a href="index.html" class="btn" style="display:block;text-align:center;text-decoration:none">Yeni bağlantı isteyin</a>
+    </div>
+
+    <div id="bitti" class="gizle">
+      <div class="bitti">
+        <i class="ti ti-circle-check"></i>
+        <div class="bitti-b">Şifreniz güncellendi</div>
+        <div class="bitti-a">Yeni şifrenizle giriş yapabilirsiniz.</div>
+        <a href="uygulama.html" class="btn" style="display:block;text-align:center;text-decoration:none">Panele git</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="alt">Sorun yaşarsanız <a href="mailto:hello@dosya360.com">hello@dosya360.com</a></div>
+</div>
+
+<script>
+const SB_URL = 'https://gzyqwbvvorgepazjpkjt.supabase.co'
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6eXF3YnZ2b3JnZXBhempwa2p0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzNjgwNjgsImV4cCI6MjA5OTk0NDA2OH0.H1aVkbCLciXCGbkvsG0jPmYkm5IBXhwstwVkM490-gI'
+const sb = supabase.createClient(SB_URL, SB_KEY)
+
+function el(id){ return document.getElementById(id) }
+function goster(id){ ['yukleniyor','form','gecersiz','bitti'].forEach(function(x){
+  el(x).classList.toggle('gizle', x !== id) }) }
+function mesaj(m, iyi){
+  const e = el('mesaj')
+  e.textContent = m
+  e.className = 'uyari ' + (iyi ? 'iyi' : 'hata')
+  e.style.display = 'block'
+}
+
+function olc(){
+  const s = el('s1').value
+  let p = 0
+  if(s.length >= 6)  p++
+  if(s.length >= 10) p++
+  if(/[a-z]/.test(s) && /[A-Z]/.test(s)) p++
+  if(/\d/.test(s)) p++
+  if(/[^\w\s]/.test(s)) p++
+  const yuzde = [0, 22, 42, 62, 82, 100][p]
+  const renk  = p <= 1 ? '#F04438' : p <= 2 ? '#F79009' : p <= 3 ? '#EAAA08' : '#12805C'
+  const yazi  = !s ? 'Şifre gücü' : p <= 1 ? 'Zayıf' : p <= 2 ? 'Orta' : p <= 3 ? 'İyi' : 'Güçlü'
+  el('olcu-c').style.width = yuzde + '%'
+  el('olcu-c').style.background = renk
+  el('olcu-y').textContent = yazi
+  el('olcu-y').style.color = s ? renk : '#98A2B3'
+}
+
+async function kaydet(){
+  const a = el('s1').value, b = el('s2').value
+  if(!a || !b)      return mesaj('Her iki alanı da doldurun.')
+  if(a !== b)       return mesaj('Şifreler eşleşmiyor.')
+  if(a.length < 6)  return mesaj('Şifre en az 6 karakter olmalı.')
+
+  const btn = el('btn')
+  btn.disabled = true; btn.textContent = 'Güncelleniyor...'
+  try{
+    const { error } = await sb.auth.updateUser({ password: a })
+    if(error) throw error
+    goster('bitti')
+  }catch(e){
+    let m = e.message || ''
+    if(m.indexOf('should be different') > -1) m = 'Yeni şifre eskisiyle aynı olamaz.'
+    else if(m.indexOf('at least') > -1)       m = 'Şifre en az 6 karakter olmalı.'
+    else if(m.indexOf('session') > -1 || m.indexOf('expired') > -1) return goster('gecersiz')
+    mesaj(m || 'Şifre güncellenemedi. Bağlantıyı yeniden isteyin.')
+    btn.disabled = false; btn.textContent = 'Şifreyi güncelle'
+  }
+}
+
+// Supabase bagi acildiginda oturum kurar; kisa bir bekleme gerekir
+let denendi = 0
+function kontrol(){
+  sb.auth.getSession().then(function(r){
+    const o = r.data.session
+    if(o){
+      goster('form')
+      const e = o.user && o.user.email
+      if(e) el('hesap-bilgi').textContent = e + ' hesabı için yeni bir şifre oluşturun.'
+      return
+    }
+    if(++denendi < 8) return setTimeout(kontrol, 320)
+    goster('gecersiz')
+  })
+}
+
+sb.auth.onAuthStateChange(function(olay, oturum){
+  if(oturum) { goster('form'); const e = oturum.user && oturum.user.email
+    if(e) el('hesap-bilgi').textContent = e + ' hesabı için yeni bir şifre oluşturun.' }
+})
+
+kontrol()
+</script>
+</body>
+</html>

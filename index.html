@@ -285,9 +285,11 @@ footer{background:var(--navy);padding:52px 0 26px;border-top:1px solid rgba(255,
 .k-lg{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:600;color:var(--gold);margin-bottom:3px}
 .k-al{font-size:12px;color:rgba(255,255,255,.4)}
 .k-sek{display:flex;border-bottom:1px solid var(--kenar)}
-.ksek{flex:1;padding:13px;text-align:center;font-size:13.5px;font-weight:500;cursor:pointer;
-      color:var(--soluk);border:none;border-bottom:2px solid transparent;background:none;
-      font-family:inherit;transition:all .16s}
+.ksek{flex:1;padding:13px 8px;text-align:center;font-size:13.5px;font-weight:500;cursor:pointer;
+      color:var(--soluk);background:none;font-family:inherit;transition:all .16s;
+      border:0;border-bottom:2px solid transparent;border-radius:0;
+      appearance:none;-webkit-appearance:none;outline:none;margin:0;line-height:1.4}
+.ksek:hover{color:var(--metin);background:var(--bg)}
 .ksek.aktif{color:var(--navy);border-bottom-color:var(--gold)}
 .k-gov{padding:24px 26px}
 .alan{margin-bottom:14px}
@@ -689,7 +691,7 @@ footer{background:var(--navy);padding:52px 0 26px;border-top:1px solid rgba(255,
       <div class="k-lg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:19px;height:19px"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg>Dosya360</div>
       <div class="k-al">Hukuk Bürosu Yönetim Sistemi</div>
     </div>
-    <div class="k-sek">
+    <div class="k-sek" id="k-sekler">
       <button class="ksek aktif" id="tab-giris" onclick="tabSec('giris')">Giriş yap</button>
       <button class="ksek" id="tab-kayit" onclick="tabSec('kayit')">Kayıt ol</button>
     </div>
@@ -698,10 +700,29 @@ footer{background:var(--navy);padding:52px 0 26px;border-top:1px solid rgba(255,
       <div class="k-ok" id="m-success"></div>
       <div id="form-giris">
         <div class="alan"><label>E-POSTA</label><input type="email" id="g-email" placeholder="avukat@buro.com" autocomplete="email"></div>
-        <div class="alan"><label>ŞİFRE</label><input type="password" id="g-sifre" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')girisYap()"></div>
+        <div class="alan">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <label style="margin:0">ŞİFRE</label>
+            <span onclick="tabSec('sifre')" style="font-size:11.5px;color:var(--gold3);cursor:pointer;font-weight:500">Şifremi unuttum</span>
+          </div>
+          <input type="password" id="g-sifre" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')girisYap()">
+        </div>
         <button class="k-btn" id="g-btn" onclick="girisYap()">Giriş yap</button>
         <div class="k-alt">Hesabınız yok mu? <span onclick="tabSec('kayit')">Kayıt olun</span></div>
       </div>
+      <div id="form-sifre" style="display:none">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px">
+          <span onclick="tabSec('giris')" style="cursor:pointer;color:var(--silik);font-size:18px;line-height:1"><i class="ti ti-arrow-left"></i></span>
+          <div>
+            <div style="font-size:15px;font-weight:600;color:var(--metin)">Şifrenizi mi unuttunuz?</div>
+            <div style="font-size:12.5px;color:var(--soluk);margin-top:2px">Hesabınızın e-posta adresini girin, sıfırlama bağlantısı gönderelim.</div>
+          </div>
+        </div>
+        <div class="alan"><label>E-POSTA</label><input type="email" id="s-email" placeholder="avukat@buro.com" autocomplete="email" onkeydown="if(event.key==='Enter')sifreSifirla()"></div>
+        <button class="k-btn" id="s-btn" onclick="sifreSifirla()">Sıfırlama bağlantısı gönder</button>
+        <div class="k-alt">Şifrenizi hatırladınız mı? <span onclick="tabSec('giris')">Giriş yapın</span></div>
+      </div>
+
       <div id="form-kayit" style="display:none">
         <div class="alan"><label>AD SOYAD</label><input type="text" id="k-ad" placeholder="Av. Ad Soyad"></div>
         <div class="alan"><label>BÜRO ADI</label><input type="text" id="k-buro" placeholder="Örnek Hukuk Bürosu"></div>
@@ -814,10 +835,31 @@ function modalKapat() { document.getElementById('modal').classList.remove('open'
 function tabSec(t) {
   document.getElementById('form-giris').style.display = t==='giris'?'block':'none'
   document.getElementById('form-kayit').style.display = t==='kayit'?'block':'none'
-  document.getElementById('tab-giris').className = 'mtab'+(t==='giris'?' active':'')
-  document.getElementById('tab-kayit').className = 'mtab'+(t==='kayit'?' active':'')
+  document.getElementById('form-sifre').style.display = t==='sifre'?'block':'none'
+  document.getElementById('k-sekler').style.display  = t==='sifre'?'none':'flex'
+  document.getElementById('tab-giris').className = 'ksek'+(t==='giris'?' aktif':'')
+  document.getElementById('tab-kayit').className = 'ksek'+(t==='kayit'?' aktif':'')
   document.getElementById('m-error').style.display = 'none'
   document.getElementById('m-success').style.display = 'none'
+}
+
+// ── SIFRE SIFIRLAMA ────────────────────────────────────────
+async function sifreSifirla(){
+  const email = document.getElementById('s-email').value.trim()
+  if(!email){ hata('E-posta adresinizi girin'); return }
+  const btn = document.getElementById('s-btn')
+  btn.disabled = true; btn.textContent = 'Gönderiliyor...'
+  try{
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/yeni-sifre.html'
+    })
+    if(error) throw error
+    basari('Sıfırlama bağlantısı ' + email + ' adresine gönderildi. Gelen kutunuzu ve spam klasörünü kontrol edin.')
+    document.getElementById('s-email').value = ''
+  }catch(err){
+    hata(hataCoz(err))
+  }
+  btn.disabled = false; btn.textContent = 'Sıfırlama bağlantısı gönder'
 }
 function hata(m) { const e=document.getElementById('m-error'); e.textContent=m; e.style.display='block'; document.getElementById('m-success').style.display='none' }
 
