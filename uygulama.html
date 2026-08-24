@@ -711,6 +711,22 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
             </div>
             <div class="field"><label>ADRES</label><input id="ai-adres" placeholder="Kızılay, Çankaya / Ankara"></div>
             <div class="field"><label>UZMANLIK ALANLARI</label><input id="ai-uzmanlik" placeholder="İş hukuku, icra, aile hukuku"></div>
+            <div style="border-top:1px solid var(--border);margin:20px 0 16px;padding-top:18px">
+              <div style="font-size:13.5px;font-weight:600;margin-bottom:4px">Randevu butonu</div>
+              <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px">Ziyaretçiye gösterilen çağrı butonu. Metnini siz belirlersiniz.</div>
+              <label style="display:flex;align-items:center;gap:9px;margin-bottom:12px;cursor:pointer">
+                <input type="checkbox" id="ai-cta-aktif" style="width:auto" checked>
+                <span style="font-size:13px">Randevu butonunu göster</span>
+              </label>
+              <div class="field"><label>BUTON METNİ</label><input id="ai-cta-metin" placeholder="Randevu talep et" maxlength="40">
+                <p style="font-size:11px;color:var(--hint);margin-top:5px">Örnek: Randevu talep et · Bizi arayın · Ön görüşme talebi</p></div>
+              <label style="display:flex;align-items:center;gap:9px;margin-bottom:4px;cursor:pointer">
+                <input type="checkbox" id="ai-yazma" style="width:auto" checked>
+                <span style="font-size:13px">Ziyaretçi serbest soru yazabilsin</span>
+              </label>
+              <p style="font-size:11px;color:var(--hint);margin:4px 0 0 26px">Kapatırsanız yalnızca hazır butonlarla ilerlenir.</p>
+            </div>
+
             <div class="field"><label>İZİNLİ ALAN ADLARI</label><input id="ai-alanlar" placeholder="ornekhukuk.com, www.ornekhukuk.com">
               <p style="font-size:11px;color:var(--hint);margin-top:5px">Asistan yalnızca bu adreslerde çalışır. Virgülle ayırın.</p></div>
             <div id="ai-mesaj" style="display:none;font-size:12.5px;padding:9px 12px;border-radius:5px;margin-bottom:12px"></div>
@@ -720,7 +736,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
         <div id="ai-sekme-bilgi" style="display:none">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-            <div style="font-size:12.5px;color:var(--muted)">Asistan yalnızca buradaki bilgilerden yanıt verir. Girmediğiniz konuda görüş bildirmez.</div>
+            <div style="font-size:12.5px;color:var(--muted);max-width:520px">Asistan yalnızca buradaki bilgilerden yanıt verir. Ziyaretçi serbest yazdığında da bu kayıtlar taranır.<br><span id="hizli-sayi" style="color:var(--text)"></span> Yıldız işaretiyle en fazla <strong>3</strong> kaydı hızlı buton yapabilirsiniz.</div>
             <button onclick="bilgiModalAc()" style="padding:8px 16px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap"><i class="ti ti-plus"></i> Bilgi ekle</button>
           </div>
           <div id="ai-bilgi-liste" style="display:flex;flex-direction:column;gap:8px"></div>
@@ -2286,6 +2302,9 @@ async function aiYukle(){
   g('ai-saatler', aiAyar.calisma_saatleri); g('ai-uzmanlik', aiAyar.uzmanlik)
   g('ai-alanlar', (aiAyar.izinli_alanlar || []).join(', '))
   const tonEl = document.getElementById('ai-ton'); if(tonEl) tonEl.value = aiAyar.ton || 'resmi'
+  const ctaA = document.getElementById('ai-cta-aktif'); if(ctaA) ctaA.checked = aiAyar.cta_aktif !== false
+  const ctaM = document.getElementById('ai-cta-metin'); if(ctaM) ctaM.value = aiAyar.cta_metin || 'Randevu talep et'
+  const yzm  = document.getElementById('ai-yazma');     if(yzm)  yzm.checked  = aiAyar.yazma_aktif !== false
   document.getElementById('ai-aktif').checked = !!aiAyar.aktif
   aiDurumMetni()
 
@@ -2353,7 +2372,10 @@ async function aiAyarKaydet(){
       ton: val('ai-ton'), telefon: val('ai-telefon'), whatsapp: val('ai-whatsapp'),
       eposta: val('ai-eposta'), adres: val('ai-adres'),
       calisma_saatleri: val('ai-saatler'), uzmanlik: val('ai-uzmanlik'),
-      izinli_alanlar: alanlar
+      izinli_alanlar: alanlar,
+      cta_aktif: document.getElementById('ai-cta-aktif').checked,
+      cta_metin: val('ai-cta-metin') || 'Randevu talep et',
+      yazma_aktif: document.getElementById('ai-yazma').checked
     }).eq('buro_id', buro)
     if(error) throw error
     if(aiAyar) aiAyar.izinli_alanlar = alanlar
@@ -2365,6 +2387,12 @@ async function aiAyarKaydet(){
 
 // ── Bilgi bankasi
 function bilgiRender(){
+  const sy = document.getElementById('hizli-sayi')
+  if(sy){
+    const n = aiBilgiler.filter(function(b){ return b.hizli }).length
+    sy.textContent = n + ' / 3 hızlı buton seçili.'
+    sy.style.color = n ? 'var(--text)' : 'var(--muted)'
+  }
   const el = document.getElementById('ai-bilgi-liste')
   if(!aiBilgiler.length){
     el.innerHTML = '<div style="text-align:center;padding:36px;color:var(--muted);font-size:13px">'
@@ -2375,11 +2403,15 @@ function bilgiRender(){
     return '<div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:14px 16px">'
       + '<div style="display:flex;align-items:flex-start;gap:12px">'
       +   '<div style="flex:1;min-width:0">'
-      +     '<div style="font-size:11px;color:#C9A84C;font-weight:500;margin-bottom:3px">' + (BILGI_KAT[b.kategori]||b.kategori) + '</div>'
+      +     '<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">'
+      +       '<span style="font-size:11px;color:#C9A84C;font-weight:500">' + (BILGI_KAT[b.kategori]||b.kategori) + '</span>'
+      +       (b.hizli ? '<span style="font-size:10px;background:rgba(201,168,76,.14);color:#8A6D1F;padding:2px 7px;border-radius:20px;font-weight:500">Hızlı buton</span>' : '')
+      +     '</div>'
       +     '<div style="font-size:13.5px;font-weight:600;color:var(--text)">' + b.baslik + '</div>'
       +     '<div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">' + b.icerik + '</div>'
       +   '</div>'
       +   '<div style="display:flex;gap:6px;flex-shrink:0">'
+      +     '<button onclick="hizliDegistir(\'' + b.id + '\',' + (b.hizli?'false':'true') + ')" title="Widget\'te hızlı buton olarak göster" style="padding:5px 10px;background:' + (b.hizli?'#0B1629':'var(--surface)') + ';border:1px solid ' + (b.hizli?'#0B1629':'var(--border)') + ';border-radius:4px;font-size:12px;cursor:pointer;font-family:inherit;color:' + (b.hizli?'#C9A84C':'var(--muted)') + '"><i class="ti ti-' + (b.hizli?'star-filled':'star') + '"></i></button>'
       +     '<button onclick="bilgiDuzenle(\'' + b.id + '\')" style="padding:5px 10px;background:var(--surface);border:1px solid var(--border);border-radius:4px;font-size:12px;cursor:pointer;font-family:inherit;color:var(--text)">Düzenle</button>'
       +     '<button onclick="bilgiSil(\'' + b.id + '\')" style="padding:5px 10px;background:#FEF2F2;border:none;border-radius:4px;font-size:12px;cursor:pointer;font-family:inherit;color:#B91C1C">Sil</button>'
       +   '</div></div></div>'
@@ -2413,6 +2445,19 @@ async function bilgiKaydet(){
     : await window.sb.from('ai_bilgi').insert(kayit)
   if(error) return alert('Hata: ' + error.message)
   closeModal('bilgi'); aiYukle()
+}
+
+async function hizliDegistir(id, yeniDurum){
+  if(yeniDurum){
+    const mevcut = aiBilgiler.filter(function(b){ return b.hizli }).length
+    if(mevcut >= 3){
+      alert('En fazla 3 hızlı buton seçebilirsiniz.\n\nBaşka bir kaydın yıldızını kaldırıp tekrar deneyin.')
+      return
+    }
+  }
+  const { error } = await window.sb.from('ai_bilgi').update({ hizli: yeniDurum }).eq('id', id)
+  if(error) return alert('Hata: ' + error.message)
+  aiYukle()
 }
 
 async function bilgiSil(id){

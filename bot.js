@@ -27,8 +27,8 @@
     var konum  = (script.getAttribute('data-konum') || 'sag').toLowerCase();
     var sag    = konum !== 'sol';
 
-    var KAPALI_G = 168, KAPALI_Y = 56;
-    var ACIK_G   = 380, ACIK_Y   = 580;
+    var KAPALI_G = 240, KAPALI_Y = 62;
+    var ACIK_G   = 384, ACIK_Y   = 600;
 
     var kutu = document.createElement('div');
     kutu.id = 'd360-bot';

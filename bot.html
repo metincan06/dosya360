@@ -22,8 +22,8 @@ body.sol{align-items:flex-start}
 body.sag{align-items:flex-end}
 
 /* ── Kapalı düğme ── */
-#dugme{display:flex;align-items:center;gap:9px;background:var(--navy);color:var(--gold2);
-       padding:0 18px;height:48px;border-radius:24px;cursor:pointer;font-size:13.5px;
+#dugme{display:inline-flex;align-items:center;gap:9px;background:var(--navy);color:var(--gold2);
+       padding:0 18px;height:48px;max-width:100%;border-radius:24px;cursor:pointer;font-size:13.5px;
        font-weight:500;border:none;font-family:inherit;white-space:nowrap;
        box-shadow:0 4px 16px rgba(11,22,41,.22)}
 #dugme:hover{background:var(--navy2)}
@@ -95,6 +95,15 @@ body.sag{align-items:flex-end}
 .ks:hover{background:var(--bg)}
 .ks i{font-size:15px;display:block;margin-bottom:2px;color:var(--silik)}
 
+.yaz{display:flex;gap:7px;padding:10px 15px;border-top:1px solid var(--kenar);flex-shrink:0;align-items:flex-end}
+.yaz textarea{flex:1;padding:9px 12px;border:1px solid var(--kenar);border-radius:18px;font-size:13px;
+  font-family:inherit;color:var(--metin);background:var(--yzy);outline:none;resize:none;
+  max-height:88px;line-height:1.45;overflow-y:auto}
+.yaz textarea:focus{border-color:var(--gold)}
+.yaz button{width:36px;height:36px;border-radius:50%;background:var(--navy);color:var(--gold2);
+  border:none;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px}
+.yaz button:hover{background:var(--navy2)}
+.yaz button:disabled{opacity:.4;cursor:not-allowed}
 .uyari{padding:8px 15px;background:#FFFBEB;border-top:1px solid #FDE68A;font-size:10.5px;
        color:#92400E;line-height:1.5;flex-shrink:0}
 .imza{padding:7px 15px;border-top:1px solid var(--kenar);text-align:center;font-size:10px;
@@ -140,6 +149,12 @@ body.sag{align-items:flex-end}
     <div class="hata" id="f-hata"></div>
     <button class="gonder" id="f-btn" onclick="basvuruGonder()">Talebi gönder</button>
     <button class="geri" onclick="menuyeDon()">Geri</button>
+  </div>
+
+  <div class="yaz gizle" id="yaz">
+    <textarea id="girdi" rows="1" placeholder="Sorunuzu yazın..." oninput="boyutla(this)"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();gonder()}"></textarea>
+    <button onclick="gonder()" aria-label="Gönder"><i class="ti ti-send"></i></button>
   </div>
 
   <div class="kisayol gizle" id="kisayol"></div>
@@ -271,16 +286,97 @@ function kisayollar(){
 /* ── Menü ───────────────────────────────────────────── */
 function menu(){
   goster('form', false);
-  var sss = bilgiler.filter(function(b){ return b.kategori === 'sss'; }).slice(0, 5);
-  var digerleri = bilgiler.filter(function(b){ return b.kategori !== 'sss'; }).slice(0, 3);
-  var liste = sss.concat(digerleri);
-
-  var h = liste.map(function(b, i){
+  var hizli = bilgiler.filter(function(b){ return b.hizli; }).slice(0, 3);
+  var h = hizli.map(function(b){
     return '<button class="sec" onclick="cevapla(' + bilgiler.indexOf(b) + ')">' + kacisli(b.baslik) + '</button>';
   }).join('');
-  h += '<button class="sec vurgu" onclick="formAc()">Bir avukatla görüşmek istiyorum</button>';
+  if(ayar.cta_aktif !== false){
+    h += '<button class="sec vurgu" onclick="formAc()">' + kacisli(ayar.cta_metin || 'Randevu talep et') + '</button>';
+  }
   el('secenekler').innerHTML = h;
-  goster('secenekler', true);
+  goster('secenekler', h ? true : false);
+  goster('yaz', ayar.yazma_aktif !== false);
+}
+
+/* ── Serbest metin ───────────────────────────────────── */
+function boyutla(t){ t.style.height='auto'; t.style.height=Math.min(t.scrollHeight,88)+'px' }
+
+var DOLGU = ['bir','bu','şu','su','ve','ile','için','icin','gibi','kadar','daha','çok','cok','az',
+ 'ne','neler','nedir','kim','kimin','hangi','kaç','kac','nerede','nasıl','nasil','var','yok',
+ 'mi','mı','mu','mü','misiniz','mısınız','musunuz','müsünüz','olan','acaba','lütfen','lutfen',
+ 'merhaba','selam','iyi','günler','gunler','istiyorum','istiyoruz','öğrenmek','ogrenmek','bilgi'];
+
+function sadeles(s){
+  return String(s||'').replace(/İ/g,'i').replace(/I/g,'ı').replace(/Ş/g,'ş')
+    .replace(/Ğ/g,'ğ').replace(/Ü/g,'ü').replace(/Ö/g,'ö').replace(/Ç/g,'ç').toLowerCase();
+}
+
+function anahtarlar(s){
+  return sadeles(s).replace(/[^\wçğıöşü\s]/g,' ').split(/\s+/)
+    .filter(function(k){ return k.length > 2 && DOLGU.indexOf(k) === -1 });
+}
+
+function esle(soru){
+  var kel = anahtarlar(soru);
+  if(!kel.length) return null;
+  var puanli = bilgiler.map(function(b){
+    var metin = sadeles((b.baslik||'') + ' ' + (b.icerik||''));
+    var p = 0;
+    kel.forEach(function(k){
+      if(metin.indexOf(k) > -1) p += 2;
+      else if(k.length > 4 && metin.indexOf(k.slice(0, k.length-2)) > -1) p += 1;
+    });
+    return { b:b, p:p };
+  }).filter(function(x){ return x.p > 0 }).sort(function(a,b){ return b.p - a.p });
+  return puanli.length ? puanli[0].b : null;
+}
+
+var RANDEVU_IZ = ['randevu','görüşmek','gorusmek','avukat','danışmak','danismak','arayın','arayin',
+                  'ulaşmak','ulasmak','iletişim','iletisim','telefon','numara'];
+
+function gonder(){
+  var t = el('girdi');
+  var metin = t.value.trim();
+  if(!metin) return;
+  t.value = ''; t.style.height = 'auto';
+  balon(metin, true);
+  mesajSayisi += 1;
+  goster('secenekler', false);
+
+  var s = sadeles(metin);
+  var randevuIster = RANDEVU_IZ.some(function(k){ return s.indexOf(k) > -1 });
+
+  if(randevuIster && ayar.cta_aktif !== false){
+    botDer('Sizi arayabilmemiz için birkaç bilgi alalım.', formAlanlari);
+    return;
+  }
+
+  var b = esle(metin);
+  if(b){
+    mesajSayisi += 1;
+    botDer(b.icerik, secenekGoster);
+    return;
+  }
+
+  mesajSayisi += 1;
+  var alt = ayar.cta_aktif !== false
+    ? 'Bu konuda size daha iyi yardımcı olabilmemiz için görüşmemiz gerekiyor.'
+    : 'Bu konuda bilgi bulamadım. Aşağıdaki iletişim seçeneklerinden bize ulaşabilirsiniz.';
+  botDer(alt, secenekGoster);
+}
+
+function secenekGoster(){
+  var h = '';
+  var hizli = bilgiler.filter(function(b){ return b.hizli; }).slice(0, 3);
+  if(ayar.cta_aktif !== false){
+    h += '<button class="sec vurgu" onclick="formAc()">' + kacisli(ayar.cta_metin || 'Randevu talep et') + '</button>';
+  }
+  hizli.forEach(function(b){
+    h += '<button class="sec" onclick="cevapla(' + bilgiler.indexOf(b) + ')">' + kacisli(b.baslik) + '</button>';
+  });
+  el('secenekler').innerHTML = h;
+  goster('secenekler', h ? true : false);
+  kacir();
 }
 
 function cevapla(i){
@@ -288,29 +384,27 @@ function cevapla(i){
   balon(b.baslik, true);
   goster('secenekler', false);
   mesajSayisi += 2;
-  botDer(b.icerik, function(){
-    el('secenekler').innerHTML =
-        '<button class="sec vurgu" onclick="formAc()">Bir avukatla görüşmek istiyorum</button>'
-      + '<button class="sec" onclick="menu()">Başka bir soru</button>';
-    goster('secenekler', true);
-  });
+  botDer(b.icerik, secenekGoster);
 }
 
 function menuyeDon(){ goster('form', false); menu(); }
 
 function formAc(){
   goster('secenekler', false);
-  balon('Bir avukatla görüşmek istiyorum', true);
+  balon(ayar.cta_metin || 'Randevu talep et', true);
   mesajSayisi += 2;
-  botDer('Sizi arayabilmemiz için birkaç bilgi alalım.', function(){
-    var alanlar = (ayar.uzmanlik || '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
-    var sec = el('f-konu');
-    sec.innerHTML = '<option value="">Konu seçiniz</option>'
-      + alanlar.map(function(a){ return '<option>' + kacisli(a) + '</option>'; }).join('')
-      + '<option>Diğer</option>';
-    goster('form', true);
-    kacir();
-  });
+  botDer('Sizi arayabilmemiz için birkaç bilgi alalım.', formAlanlari);
+}
+
+function formAlanlari(){
+  var alanlar = (ayar.uzmanlik || '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+  var sec = el('f-konu');
+  sec.innerHTML = '<option value="">Konu seçiniz</option>'
+    + alanlar.map(function(a){ return '<option>' + kacisli(a) + '</option>'; }).join('')
+    + '<option>Diğer</option>';
+  goster('form', true);
+  goster('yaz', false);
+  kacir();
 }
 
 async function basvuruGonder(){
@@ -338,7 +432,7 @@ async function basvuruGonder(){
     });
     if(r.error) throw r.error;
 
-    goster('form', false); goster('secenekler', false); goster('kisayol', false);
+    goster('form', false); goster('secenekler', false); goster('kisayol', false); goster('yaz', false);
     el('akis').innerHTML = '<div class="basarili">'
       + '<i class="ti ti-circle-check"></i>'
       + '<div class="basarili-b">Talebiniz alındı</div>'
