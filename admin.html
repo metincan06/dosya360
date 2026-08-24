@@ -390,7 +390,10 @@ function onayRender(){
       +   '<div style="flex:1;min-width:0">'
       +     '<div style="font-size:14px;font-weight:600;color:var(--text)">' + (k.buro_adi || 'Büro adı girilmemiş') + '</div>'
       +     '<div style="font-size:12.5px;color:var(--muted);margin-top:2px">' + (k.email || '—') + (k.avukat_adi ? ' · ' + k.avukat_adi : '') + '</div>'
-      +     '<div style="font-size:11.5px;color:var(--hint);margin-top:3px">Kayıt: ' + (k.created_at ? tarihFormat(k.created_at) : '—') + (k.telefon ? ' · ' + k.telefon : '') + '</div>'
+      +     '<div style="font-size:11.5px;color:var(--hint);margin-top:3px">Kayıt: ' + (k.created_at ? tarihFormat(k.created_at) : '—') + '</div>'
+      +     (k.telefon ? '<div style="display:flex;gap:7px;margin-top:7px">'
+            + '<a href="tel:' + String(k.telefon).replace(/\D/g,'') + '" style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:#1D4ED8;text-decoration:none"><i class="ti ti-phone"></i>' + k.telefon + '</a>'
+            + '<a href="https://wa.me/9' + String(k.telefon).replace(/\D/g,'') + '" target="_blank" style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:#15803D;text-decoration:none"><i class="ti ti-brand-whatsapp"></i>WhatsApp</a></div>' : '')
       +   '</div>'
       + '</div>'
       + '<div style="display:flex;gap:8px;flex-wrap:wrap">'
@@ -524,7 +527,7 @@ function tabloRender(liste) {
     return `
     <tr>
       <td style="color:var(--hint);font-size:12px">${i + 1}</td>
-      <td><strong>${k.email || '—'}</strong><div style="font-size:11px;color:var(--hint)">${k.avukat_adi || ''}</div></td>
+      <td><strong>${k.email || '—'}</strong><div style="font-size:11px;color:var(--hint)">${k.avukat_adi || ''}</div>${k.telefon ? `<a href="tel:${String(k.telefon).replace(/\D/g,'')}" style="font-size:11.5px;color:#1D4ED8;text-decoration:none">${k.telefon}</a>` : ''}</td>
       <td>${k.buro_adi || '—'}</td>
       <td>${aboneRozet(aboneMap[k.id])}</td>
       <td style="font-size:12px;color:var(--muted);white-space:nowrap">${s.muvekkil} müvekkil · ${s.dava} dava<div style="font-size:11px;color:var(--hint)">${s.toplam} işlem</div></td>
@@ -593,7 +596,7 @@ function detayGoster(id) {
       <div class="detail-item"><div class="detail-label">E-posta</div><div class="detail-value">${k.email || '—'}</div></div>
       <div class="detail-item"><div class="detail-label">Büro Adı</div><div class="detail-value">${k.buro_adi || '—'}</div></div>
       <div class="detail-item"><div class="detail-label">Avukat Adı</div><div class="detail-value">${k.avukat_adi || '—'}</div></div>
-      <div class="detail-item"><div class="detail-label">Telefon</div><div class="detail-value">${k.telefon || '—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Telefon</div><div class="detail-value">${k.telefon ? `<a href="tel:${String(k.telefon).replace(/\D/g,'')}" style="color:#1D4ED8;text-decoration:none">${k.telefon}</a>` : '—'}</div></div>
       <div class="detail-item"><div class="detail-label">Kayıt Tarihi</div><div class="detail-value">${k.created_at ? tarihFormat(k.created_at) : '—'}</div></div>
       <div class="detail-item"><div class="detail-label">Hesap Durumu</div><div class="detail-value"><span class="badge ${k.aktif ? 'badge-green' : 'badge-red'}">${k.aktif ? 'Aktif' : 'Pasif'}</span></div></div>
     </div>
