@@ -43,7 +43,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .content{padding:24px;flex:1}
 
 /* METRİKLER */
-.metrics{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-bottom:24px}
+.metrics{display:grid;grid-template-columns:repeat(8,1fr);gap:12px;margin-bottom:24px}
 .mc{background:#fff;border:0.5px solid var(--border);border-radius:5px;padding:16px}
 .mc-icon{width:36px;height:36px;border-radius:5px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px}
 .mc-val{font-size:26px;font-weight:600;color:var(--text);margin-bottom:2px}
@@ -132,7 +132,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="login-card">
       <div class="login-title">Admin Girişi</div>
       <div class="login-error" id="login-error"></div>
-      <div class="lfield"><label>E-posta</label><input type="email" id="login-email" placeholder="info@otukenmedya.com" value="info@otukenmedya.com"></div>
+      <div class="lfield"><label>E-posta</label><input type="email" id="login-email" placeholder="hello@dosya360.com" value="hello@dosya360.com"></div>
       <div class="lfield"><label>Şifre</label><input type="password" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')adminGiris()"></div>
       <button class="login-btn" id="login-btn" onclick="adminGiris()">Giriş Yap</button>
     </div>
@@ -188,6 +188,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="mc-val" id="m-onay">—</div>
         <div class="mc-label">Onay Bekliyor</div>
       </div>
+      <div class="mc">
+        <div class="mc-icon" style="background:#EFF6FF;color:#1D4ED8"><i class="ti ti-lifebuoy"></i></div>
+        <div class="mc-val" id="m-destek">—</div>
+        <div class="mc-label">Açık Destek</div>
+      </div>
     </div>
 
     <!-- ONAY KUYRUGU -->
@@ -197,6 +202,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <span id="onay-sayi" style="font-size:13px;color:var(--muted);font-weight:400"></span>
       </div>
       <div id="onay-liste" style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px"></div>
+    </div>
+
+    <!-- DESTEK TALEPLERI -->
+    <div id="destek-bolum" style="display:none">
+      <div class="section-title">
+        <span>Destek Talepleri</span>
+        <div style="display:flex;gap:6px" id="destek-filtre"></div>
+      </div>
+      <div id="destek-liste" style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px"></div>
     </div>
 
     <!-- KULLANICI TABLOSU -->
@@ -288,7 +302,11 @@ const SUPABASE_URL = 'https://gzyqwbvvorgepazjpkjt.supabase.co'
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6eXF3YnZ2b3JnZXBhempwa2p0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzNjgwNjgsImV4cCI6MjA5OTk0NDA2OH0.H1aVkbCLciXCGbkvsG0jPmYkm5IBXhwstwVkM490-gI'
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
 
-const ADMIN_EMAIL = 'info@otukenmedya.com'
+// Geçiş dönemi: her iki adres de admin sayılır.
+// Supabase'de e-posta değiştikten sonra eski adres listeden çıkarılabilir.
+const ADMIN_EMAILLER = ['hello@dosya360.com', 'info@otukenmedya.com']
+const ADMIN_EMAIL = ADMIN_EMAILLER[0]
+function adminMi(e){ return ADMIN_EMAILLER.indexOf(String(e||'').toLowerCase()) > -1 }
 let tumKullanicilar = []
 let aboneMap = {}
 let sayacMap = {}
@@ -306,7 +324,7 @@ async function adminGiris() {
   try {
     const { data, error } = await sb.auth.signInWithPassword({ email, password: sifre })
     if (error) throw error
-    if (email !== ADMIN_EMAIL) throw new Error('Bu panel sadece admin kullanıcısına özeldir.')
+    if (!adminMi(email)) throw new Error('Bu panel sadece admin kullanıcısına özeldir.')
     panelAc(email)
   } catch(err) {
     let msg = err.message
@@ -365,9 +383,120 @@ async function veriYukle() {
 
   metrikleriGuncelle()
   onayRender()
+  destekYukleAdmin()
   tabloRender(tumKullanicilar)
   sonKayitlariRender()
   gunlukRender()
+}
+
+
+// ── DESTEK TALEPLERI ──────────────────────────────────────
+let destekler = [], destekFiltre = 'acik'
+const DS_DURUM = {
+  yeni:       { ad:'Yeni',        arka:'#EFF6FF', renk:'#1D4ED8' },
+  inceleniyor:{ ad:'İnceleniyor', arka:'#FFFBEB', renk:'#B45309' },
+  cevaplandi: { ad:'Cevaplandı',  arka:'#F0FDF4', renk:'#15803D' },
+  kapandi:    { ad:'Kapandı',     arka:'#F9FAFB', renk:'#6B7280' },
+}
+const DS_KAT = { hata:'Hata bildirimi', kullanim:'Kullanım sorusu', ozellik:'Özellik önerisi', abonelik:'Abonelik', genel:'Genel' }
+const DS_ONC = { acil:{ad:'ACİL',renk:'#B42318',arka:'#FEF3F2'}, normal:{ad:'Normal',renk:'#475467',arka:'#F9FAFB'}, dusuk:{ad:'Düşük',renk:'#98A2B3',arka:'#F9FAFB'} }
+
+async function destekYukleAdmin(){
+  const { data } = await sb.from('destek_talepleri')
+    .select('*').order('created_at', { ascending:false }).limit(200)
+  destekler = data || []
+  const acik = destekler.filter(function(t){ return t.durum==='yeni' || t.durum==='inceleniyor' }).length
+  const el = document.getElementById('m-destek'); if(el) el.textContent = acik
+  destekFiltreCiz(); destekCiz()
+}
+
+function destekFiltreCiz(){
+  const el = document.getElementById('destek-filtre'); if(!el) return
+  const say = function(d){
+    if(d==='acik') return destekler.filter(function(t){ return t.durum==='yeni'||t.durum==='inceleniyor' }).length
+    if(d==='') return destekler.length
+    return destekler.filter(function(t){ return t.durum===d }).length
+  }
+  const ler = [['acik','Açık'],['','Tümü'],['cevaplandi','Cevaplandı'],['kapandi','Kapandı']]
+  el.innerHTML = ler.map(function(x){
+    const a = destekFiltre === x[0]
+    return '<button onclick="destekFiltrele(\'' + x[0] + '\')" style="padding:5px 12px;border-radius:4px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:400;'
+      + 'border:1px solid ' + (a?'#0B1629':'var(--border)') + ';background:' + (a?'#0B1629':'#fff') + ';color:' + (a?'#C9A84C':'var(--muted)') + '">'
+      + x[1] + ' (' + say(x[0]) + ')</button>'
+  }).join('')
+}
+
+function destekFiltrele(d){ destekFiltre = d; destekFiltreCiz(); destekCiz() }
+
+function destekCiz(){
+  const bolum = document.getElementById('destek-bolum')
+  const el = document.getElementById('destek-liste')
+  if(!bolum || !el) return
+
+  const liste = destekFiltre === 'acik'
+    ? destekler.filter(function(t){ return t.durum==='yeni'||t.durum==='inceleniyor' })
+    : (destekFiltre ? destekler.filter(function(t){ return t.durum===destekFiltre }) : destekler)
+
+  if(!destekler.length){ bolum.style.display = 'none'; return }
+  bolum.style.display = 'block'
+
+  if(!liste.length){
+    el.innerHTML = '<div style="text-align:center;padding:28px;color:var(--muted);font-size:13px">Bu durumda talep yok.</div>'
+    return
+  }
+
+  el.innerHTML = liste.map(function(t){
+    const d = DS_DURUM[t.durum] || DS_DURUM.yeni
+    const o = DS_ONC[t.oncelik] || DS_ONC.normal
+    const k = tumKullanicilar.find(function(u){ return u.id === t.buro_id })
+    const no = 'D-' + String(t.id).slice(0,8).toUpperCase()
+    const acilMi = t.oncelik === 'acil' && (t.durum==='yeni'||t.durum==='inceleniyor')
+    return '<div style="background:#fff;border:' + (acilMi?'1.5px solid #FECDCA':'1px solid var(--border)') + ';border-radius:6px;padding:16px 18px">'
+      + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px">'
+      +   '<div style="flex:1;min-width:0">'
+      +     '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
+      +       '<span style="font-size:14.5px;font-weight:600;color:var(--text)">' + t.konu + '</span>'
+      +       (t.oncelik==='acil' ? '<span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;background:' + o.arka + ';color:' + o.renk + '">' + o.ad + '</span>' : '')
+      +     '</div>'
+      +     '<div style="font-size:12px;color:var(--hint)">' + no + ' · ' + (DS_KAT[t.kategori]||t.kategori)
+      +       ' · <strong style="color:var(--muted)">' + (k?.buro_adi || k?.email || '—') + '</strong> · ' + tarihFormat(t.created_at) + '</div>'
+      +   '</div>'
+      +   '<span class="badge" style="background:' + d.arka + ';color:' + d.renk + ';white-space:nowrap">' + d.ad + '</span>'
+      + '</div>'
+      + '<div style="font-size:13px;color:var(--muted);line-height:1.65;white-space:pre-wrap;background:var(--bg);border-radius:5px;padding:11px 13px;margin-bottom:10px">' + t.mesaj + '</div>'
+      + (t.cevap ? '<div style="font-size:12.5px;color:var(--text);line-height:1.6;white-space:pre-wrap;border-left:3px solid #15803D;padding-left:11px;margin-bottom:10px">' + t.cevap + '</div>' : '')
+      + '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">'
+      +   (k?.email ? '<a href="mailto:' + k.email + '?subject=' + encodeURIComponent('Re: ' + no + ' · ' + t.konu) + '" class="action-btn" style="background:#EFF6FF;color:#1D4ED8;text-decoration:none"><i class="ti ti-mail"></i> Yanıtla</a>' : '')
+      +   (k?.telefon ? '<a href="https://wa.me/9' + String(k.telefon).replace(/\D/g,'') + '" target="_blank" class="action-btn" style="background:#F0FDF4;color:#15803D;text-decoration:none"><i class="ti ti-brand-whatsapp"></i> WhatsApp</a>' : '')
+      +   '<button onclick="destekCevapla(\'' + t.id + '\')" class="action-btn" style="background:var(--surface);border:1px solid var(--border);color:var(--text)">Not ekle</button>'
+      +   '<select onchange="destekDurum(\'' + t.id + '\',this.value)" style="padding:5px 9px;border:1px solid var(--border);border-radius:4px;font-size:12px;font-family:inherit;background:#fff;color:var(--text)">'
+      +     Object.keys(DS_DURUM).map(function(x){
+              return '<option value="'+x+'"'+(t.durum===x?' selected':'')+'>'+DS_DURUM[x].ad+'</option>' }).join('')
+      +   '</select>'
+      + '</div></div>'
+  }).join('')
+}
+
+async function destekDurum(id, durum){
+  const { error } = await sb.from('destek_talepleri')
+    .update({ durum: durum, updated_at: new Date().toISOString() }).eq('id', id)
+  if(error) return alert('Hata: ' + error.message)
+  destekYukleAdmin()
+}
+
+async function destekCevapla(id){
+  const t = destekler.find(function(x){ return x.id === id })
+  const mevcut = t && t.cevap ? t.cevap : ''
+  const c = prompt('Kullanıcının göreceği not:', mevcut)
+  if(c === null) return
+  const { error } = await sb.from('destek_talepleri').update({
+    cevap: c || null,
+    cevap_tarihi: c ? new Date().toISOString() : null,
+    durum: c ? 'cevaplandi' : (t ? t.durum : 'yeni'),
+    updated_at: new Date().toISOString()
+  }).eq('id', id)
+  if(error) return alert('Hata: ' + error.message)
+  destekYukleAdmin()
 }
 
 // ── ONAY KUYRUGU ──────────────────────────────────────────
@@ -404,9 +533,10 @@ function onayRender(){
   }).join('')
 }
 
-async function onayla(id, tur, paket, periyot){
+async function onayla(id, tur, paket, periyot, kurucu){
   const { data, error } = await sb.rpc('buro_onayla',
-    { p_buro_id: id, p_tur: tur, p_paket: paket || null, p_periyot: periyot || 'aylik' })
+    { p_buro_id: id, p_tur: tur, p_paket: paket || null,
+      p_periyot: periyot || 'aylik', p_kurucu: !!kurucu })
   if(error){ alert('Hata: ' + error.message); return }
   if(!data || data.ok !== true){ alert(data && data.hata ? data.hata : 'Onaylanamadı'); return }
   modalKapat(); await veriYukle()
@@ -426,14 +556,16 @@ function abonelikOnayAc(id, ad){
   document.getElementById('modal-icerik').innerHTML = ''
     + '<div style="font-size:13px;color:var(--muted);margin-bottom:16px">Paket ve dönem seçin. Abonelik hemen etkinleşir.</div>'
     + '<div style="display:flex;flex-direction:column;gap:8px">'
-    + [['Baslangic','aylik','Başlangıç — Aylık','3 kullanıcı · ₺1.500/ay'],
-       ['Baslangic','yillik','Başlangıç — Yıllık','3 kullanıcı · ₺13.500/yıl'],
-       ['Buyume','aylik','Büyüme — Aylık','10 kullanıcı · ₺3.500/ay'],
-       ['Buyume','yillik','Büyüme — Yıllık','10 kullanıcı · ₺28.000/yıl'],
-       ['Kurumsal','yillik','Kurumsal — Yıllık','Sınırsız kullanıcı · özel fiyat']
+    + [['Baslangic','aylik','Başlangıç — Aylık','3 kullanıcı · ₺1.500/ay',0],
+       ['Baslangic','yillik','Başlangıç — Yıllık','3 kullanıcı · ₺13.500/yıl',0],
+       ['Baslangic','yillik','Başlangıç — Yıllık · KURUCU','3 kullanıcı · ₺11.900/yıl · fiyat kilidi',1],
+       ['Buyume','aylik','Büyüme — Aylık','10 kullanıcı · ₺3.500/ay',0],
+       ['Buyume','yillik','Büyüme — Yıllık','10 kullanıcı · ₺28.000/yıl',0],
+       ['Buyume','yillik','Büyüme — Yıllık · KURUCU','10 kullanıcı · ₺23.900/yıl · fiyat kilidi',1],
+       ['Kurumsal','yillik','Kurumsal — Yıllık','Sınırsız kullanıcı · özel fiyat',0]
       ].map(function(p){
-        return '<button onclick="onayla(\'' + id + '\',\'abonelik\',\'' + p[0] + '\',\'' + p[1] + '\')" '
-          + 'style="text-align:left;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:5px;cursor:pointer;font-family:inherit">'
+        return '<button onclick="onayla(\'' + id + '\',\'abonelik\',\'' + p[0] + '\',\'' + p[1] + '\',' + p[4] + ')" '
+          + 'style="text-align:left;padding:12px 14px;background:' + (p[4]?'rgba(201,168,76,.08)':'var(--surface)') + ';border:1px solid ' + (p[4]?'#C9A84C':'var(--border)') + ';border-radius:5px;cursor:pointer;font-family:inherit">'
           + '<div style="font-size:13.5px;font-weight:500;color:var(--text)">' + p[2] + '</div>'
           + '<div style="font-size:12px;color:var(--muted);margin-top:2px">' + p[3] + '</div></button>'
       }).join('')
@@ -449,6 +581,12 @@ function kalanGun(bitis){
 
 function aboneRozet(a){
   if(!a) return '<span class="badge badge-gray">Abonelik yok</span>'
+  const kr = a.kurucu ? '<span class="badge" style="background:rgba(201,168,76,.16);color:#8A6D1F;margin-left:4px">Kurucu</span>' : ''
+  if(kr) return aboneRozetTemel(a) + kr
+  return aboneRozetTemel(a)
+}
+
+function aboneRozetTemel(a){
   if(a.durum === 'bekliyor') return '<span class="badge" style="background:#FFFBEB;color:#B45309">Ödeme bekliyor</span>'
   if(a.durum !== 'aktif') return '<span class="badge badge-red">'+a.durum+'</span>'
   const k = kalanGun(a.bitis_tarihi)
@@ -634,7 +772,7 @@ function tarihFormat(iso) {
 
 // ── BAŞLAT ────────────────────────────────────────────────
 sb.auth.getSession().then(({ data: { session } }) => {
-  if (session?.user?.email === ADMIN_EMAIL) {
+  if (adminMi(session?.user?.email)) {
     panelAc(session.user.email)
   }
 })

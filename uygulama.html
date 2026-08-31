@@ -157,6 +157,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 .cd.other-m{color:var(--hint)}
 
 /* MOBILE */
+@media(max-width:900px){#destek-duzen{grid-template-columns:1fr!important}}
 @media(max-width:768px){
   .sidebar{position:fixed;z-index:100;height:100vh;transform:translateX(-100%);transition:transform .3s}
   .sidebar.open{transform:translateX(0)}
@@ -264,6 +265,46 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .ai-tab{padding:9px 14px;background:none;border:none;border-bottom:2px solid transparent;font-size:13.5px;color:var(--muted);cursor:pointer;font-family:inherit;margin-bottom:-1px}
 .ai-tab.active{color:var(--text);border-bottom-color:#C9A84C;font-weight:500}
 .bs-durum{padding:3px 9px;border-radius:4px;font-size:11.5px;font-weight:500}
+
+/* ── ÇIKTI / YAZDIRMA ─────────────────────────────────────── */
+#ciktikap{display:none}
+@media print{
+  @page{size:A4;margin:16mm 14mm}
+  body{background:#fff!important}
+  .sidebar,.topbar,.content,#uyari-banner,#abone-uyari,#geri-al,.overlay,#giris-ekrani,#d360-bot{display:none!important}
+  #ciktikap{display:block!important;position:static!important}
+  html,body{height:auto!important;overflow:visible!important}
+}
+.ck{font-family:'Inter',-apple-system,sans-serif;color:#111827;font-size:11pt;line-height:1.55}
+.ck-bas{display:flex;align-items:flex-start;justify-content:space-between;
+  border-bottom:2px solid #0B1629;padding-bottom:10px;margin-bottom:18px}
+.ck-buro{font-size:16pt;font-weight:600;color:#0B1629;letter-spacing:-.01em}
+.ck-alt{font-size:9pt;color:#6B7280;margin-top:2px}
+.ck-tur{font-size:9pt;color:#8A6D1F;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-align:right}
+.ck-tarih{font-size:8.5pt;color:#9CA3AF;text-align:right;margin-top:3px}
+.ck-h1{font-size:19pt;font-weight:600;color:#0B1629;margin:0 0 4px;letter-spacing:-.02em}
+.ck-h2{font-size:11pt;font-weight:600;color:#0B1629;margin:20px 0 8px;
+  padding-bottom:5px;border-bottom:1px solid #E4E7EC;letter-spacing:.02em}
+.ck-ust{font-size:10pt;color:#6B7280;margin-bottom:16px}
+.ck-tb{width:100%;border-collapse:collapse;font-size:10pt}
+.ck-tb th{text-align:left;padding:6px 8px;background:#F5F6F8;color:#374151;
+  font-size:8.5pt;font-weight:600;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #E4E7EC}
+.ck-tb td{padding:6px 8px;border-bottom:1px solid #F0F1F3;vertical-align:top}
+.ck-tb tr:last-child td{border-bottom:none}
+.ck-ikili{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+.ck-sat{display:flex;padding:5px 0;border-bottom:1px solid #F0F1F3;font-size:10pt}
+.ck-et{width:42%;color:#6B7280;flex-shrink:0}
+.ck-dg{flex:1;color:#111827;font-weight:500}
+.ck-kutu{border:1px solid #E4E7EC;border-radius:4px;padding:12px 14px;margin:12px 0;background:#FAFBFC}
+.ck-vur{border-left:3px solid #C9A84C;padding-left:12px;margin:12px 0}
+.ck-ozet{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+.ck-oz{border:1px solid #E4E7EC;border-radius:4px;padding:10px 12px}
+.ck-oz-d{font-size:15pt;font-weight:600;color:#0B1629;font-variant-numeric:tabular-nums}
+.ck-oz-e{font-size:8.5pt;color:#6B7280;margin-top:2px}
+.ck-not{font-size:9pt;color:#6B7280;line-height:1.6;white-space:pre-wrap}
+.ck-alt-bilgi{margin-top:26px;padding-top:10px;border-top:1px solid #E4E7EC;
+  display:flex;justify-content:space-between;font-size:8pt;color:#9CA3AF}
+.ck-bos{color:#9CA3AF}
 </style>
 </head>
 <body>
@@ -325,6 +366,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <a class="navitem" onclick="sp('kullanici-yonetimi',this)"><i class="ti ti-user-plus"></i><span class="nav-label">Kullanıcılar</span></a>
     <a class="navitem" onclick="sp('ai-asistan',this)"><i class="ti ti-robot"></i><span class="nav-label">Web Asistanı</span></a>
     <a class="navitem" onclick="sp('ai-basvuru',this)"><i class="ti ti-inbox"></i><span class="nav-label">Başvurular</span><span class="nbadge" id="basvuru-rozet" style="display:none">0</span></a>
+    <a class="navitem" onclick="sp('destek',this)"><i class="ti ti-lifebuoy"></i><span class="nav-label">Destek</span></a>
     <div class="navsec" id="ns5">UYAP</div>
     <a class="navitem" href="https://avukat.uyap.gov.tr" target="_blank"><i class="ti ti-scale"></i><span class="nav-label">Avukat UYAP</span></a>
     <a class="navitem" href="https://vatandas.uyap.gov.tr" target="_blank"><i class="ti ti-user-check"></i><span class="nav-label">Vatandaş UYAP</span></a>
@@ -419,6 +461,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
           <option value="yok">Duruşma girilmemiş</option>
         </select>
         <button onclick="davaFiltreSifirla()" style="padding:7px 12px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:13px;color:var(--muted);cursor:pointer;font-family:inherit">Temizle</button>
+        <button onclick="ciktiDavaListesi()" title="Listeyi yazdır" style="padding:7px 12px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:13px;color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px"><i class="ti ti-printer"></i>Yazdır</button>
       </div>
       <div class="filters" id="dava-filters"></div>
       <div id="dv-sonuc" style="font-size:12px;color:var(--muted);margin-bottom:10px"></div>
@@ -464,6 +507,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="fbtn" onclick="gvFiltre='bekliyor';renderGv();setFilter(this)">Bekliyor</div>
         <div class="fbtn" onclick="gvFiltre='tamamlandi';renderGv();setFilter(this)">Tamamlandı</div>
       </div>
+      <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:5px;padding:7px 11px;margin-bottom:12px;max-width:420px"><i class="ti ti-search" style="color:var(--hint);font-size:15px"></i><input id="gv-ara" oninput="renderGv()" placeholder="Görev, dosya no..." style="border:none;outline:none;font-size:13px;flex:1;background:transparent;color:var(--text);font-family:inherit"><span id="gv-sonuc" style="font-size:11.5px;color:var(--hint);white-space:nowrap"></span></div>
       <div id="list-gv"></div>
     </div>
 
@@ -473,6 +517,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <h1 style="font-size:20px;font-weight:600">Belgeler</h1>
         <button class="tbtn primary" onclick="showModal('belge')"><i class="ti ti-upload"></i>Belge Ekle</button>
       </div>
+      <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:5px;padding:7px 11px;margin-bottom:12px;max-width:420px"><i class="ti ti-search" style="color:var(--hint);font-size:15px"></i><input id="bl-ara" oninput="renderBl()" placeholder="Belge adı, kategori, dosya..." style="border:none;outline:none;font-size:13px;flex:1;background:transparent;color:var(--text);font-family:inherit"><span id="bl-sonuc" style="font-size:11.5px;color:var(--hint);white-space:nowrap"></span></div>
       <div id="list-bl"></div>
     </div>
 
@@ -480,13 +525,17 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="panel" id="panel-finans">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <h1 style="font-size:20px;font-weight:600">Finans</h1>
-        <button class="tbtn primary" onclick="showModal('finans')"><i class="ti ti-plus"></i>Yeni İşlem</button>
+        <div style="display:flex;gap:8px">
+          <button class="tbtn" onclick="ciktiFinans()"><i class="ti ti-printer"></i>Rapor al</button>
+          <button class="tbtn primary" onclick="showModal('finans')"><i class="ti ti-plus"></i>Yeni İşlem</button>
+        </div>
       </div>
       <div class="fin-grid">
         <div class="fin-card"><div class="fin-icon" style="background:#F0FDF4;color:#15803D"><i class="ti ti-trending-up"></i></div><div class="fin-amount" id="f-tahsilat">₺0</div><div class="fin-label">Bu ay tahsilat</div></div>
         <div class="fin-card"><div class="fin-icon" style="background:#FFFBEB;color:#B45309"><i class="ti ti-clock"></i></div><div class="fin-amount" id="f-bekleyen">₺0</div><div class="fin-label">Bekleyen alacak</div></div>
         <div class="fin-card"><div class="fin-icon" style="background:#FEF2F2;color:#B91C1C"><i class="ti ti-receipt"></i></div><div class="fin-amount" id="f-masraf">₺0</div><div class="fin-label">Bu ay masraf</div></div>
       </div>
+      <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:5px;padding:7px 11px;margin-bottom:12px;max-width:420px"><i class="ti ti-search" style="color:var(--hint);font-size:15px"></i><input id="fn-ara" oninput="renderFn()" placeholder="Müvekkil, açıklama, tür..." style="border:none;outline:none;font-size:13px;flex:1;background:transparent;color:var(--text);font-family:inherit"><span id="fn-sonuc" style="font-size:11.5px;color:var(--hint);white-space:nowrap"></span></div>
       <div id="list-fn"></div>
     </div>
 
@@ -496,6 +545,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <h1 style="font-size:20px;font-weight:600">İletişim Merkezi</h1>
         <button class="tbtn primary" onclick="showModal('iletisim')"><i class="ti ti-plus"></i>Kayıt Ekle</button>
       </div>
+      <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:5px;padding:7px 11px;margin-bottom:12px;max-width:420px"><i class="ti ti-search" style="color:var(--hint);font-size:15px"></i><input id="il-ara" oninput="renderIl()" placeholder="Müvekkil, mesaj, kanal..." style="border:none;outline:none;font-size:13px;flex:1;background:transparent;color:var(--text);font-family:inherit"><span id="il-sonuc" style="font-size:11.5px;color:var(--hint);white-space:nowrap"></span></div>
       <div id="list-il"></div>
     </div>
 
@@ -756,6 +806,61 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+
+    <!-- DESTEK -->
+    <div class="panel" id="panel-destek">
+      <div style="display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:start" id="destek-duzen">
+
+        <div>
+          <div class="card" style="padding:22px">
+            <div style="font-size:15px;font-weight:600;margin-bottom:4px">Yeni destek talebi</div>
+            <div style="font-size:12.5px;color:var(--muted);margin-bottom:18px">Yaşadığınız sorunu yazın, ekibimiz en kısa sürede dönüş yapsın.</div>
+
+            <div class="field2">
+              <div class="field"><label>KATEGORİ</label><select id="dk-kategori">
+                <option value="hata">Bir şey çalışmıyor</option>
+                <option value="kullanim">Nasıl yapılır</option>
+                <option value="ozellik">Özellik önerisi</option>
+                <option value="abonelik">Abonelik ve ödeme</option>
+                <option value="genel">Diğer</option>
+              </select></div>
+              <div class="field"><label>ÖNCELİK</label><select id="dk-oncelik">
+                <option value="normal">Normal</option>
+                <option value="dusuk">Düşük</option>
+                <option value="acil">Acil — işimi durduruyor</option>
+              </select></div>
+            </div>
+
+            <div class="field"><label>KONU</label><input id="dk-konu" maxlength="160" placeholder="Kısaca özetleyin"></div>
+            <div class="field"><label>AÇIKLAMA</label>
+              <textarea id="dk-mesaj" rows="7" maxlength="4000" placeholder="Ne yapmaya çalıştınız, ne oldu? Hata mesajı varsa yazın."></textarea>
+              <p style="font-size:11px;color:var(--hint);margin-top:5px">Hangi ekranda olduğunuzu ve adımları yazarsanız daha hızlı çözeriz.</p>
+            </div>
+
+            <div id="dk-mesaj-kutu" style="display:none;font-size:12.5px;padding:10px 13px;border-radius:5px;margin-bottom:12px;line-height:1.55"></div>
+
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <button id="dk-btn" onclick="destekGonder()" style="padding:11px 22px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit"><i class="ti ti-send"></i> Talebi gönder</button>
+              <a href="https://wa.me/905304621769?text=Dosya360%20destek" target="_blank" style="padding:11px 18px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:13.5px;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:7px"><i class="ti ti-brand-whatsapp" style="color:#25D366"></i>Acil ise WhatsApp</a>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="padding:20px;margin-bottom:16px">
+            <div style="font-size:13.5px;font-weight:600;margin-bottom:12px">Bize ulaşın</div>
+            <a href="mailto:hello@dosya360.com" style="display:flex;align-items:center;gap:10px;padding:9px 0;font-size:13px;color:var(--text);text-decoration:none;border-bottom:1px solid var(--border)"><i class="ti ti-mail" style="color:var(--muted);font-size:17px"></i>hello@dosya360.com</a>
+            <a href="https://wa.me/905304621769" target="_blank" style="display:flex;align-items:center;gap:10px;padding:9px 0;font-size:13px;color:var(--text);text-decoration:none;border-bottom:1px solid var(--border)"><i class="ti ti-brand-whatsapp" style="color:#25D366;font-size:17px"></i>+90 530 462 17 69</a>
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 0;font-size:13px;color:var(--muted)"><i class="ti ti-clock" style="font-size:17px"></i>Hafta içi 09:00 – 18:00</div>
+          </div>
+
+          <div style="font-size:13.5px;font-weight:600;margin-bottom:10px">Taleplerim</div>
+          <div id="destek-liste" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+
       </div>
     </div>
 
@@ -1072,7 +1177,7 @@ let gvFiltre = 'hepsi'
 let calDate = new Date(); let calSel = new Date()
 
 // ── PANEL GEÇİŞ ──────────────────────────────────────────────
-const TITLES = { anasayfa:'Anasayfa', muvekkiller:'Müvekkiller', davalar:'Davalar', takvim:'Takvim', gorevler:'Görevler', belgeler:'Belgeler', finans:'Finans', iletisim:'İletişim', 'yapay-zeka':'360 Asistan', ayarlar:'Ayarlar', abonelik:'Abonelik', 'kullanici-yonetimi':'Kullanıcı Yönetimi', 'ai-asistan':'Web Asistanı', 'ai-basvuru':'Başvurular' }
+const TITLES = { anasayfa:'Anasayfa', muvekkiller:'Müvekkiller', davalar:'Davalar', takvim:'Takvim', gorevler:'Görevler', belgeler:'Belgeler', finans:'Finans', iletisim:'İletişim', 'yapay-zeka':'360 Asistan', ayarlar:'Ayarlar', abonelik:'Abonelik', 'kullanici-yonetimi':'Kullanıcı Yönetimi', 'ai-asistan':'Web Asistanı', 'ai-basvuru':'Başvurular', destek:'Destek' }
 const FOOTER_HTML = '<div style="text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:28px"><strong style=\"color:#6B7280\">Dosya360</strong> — Bir <a href=\"https://otukenmedya.com\" target=\"_blank\" style=\"color:#C9A84C;text-decoration:none;font-weight:500\">Ötüken Medya</a> yazılımıdır</div>';
 
 function addFooter(panelId){
@@ -1082,7 +1187,7 @@ function addFooter(panelId){
   if(existing) return
   const div = document.createElement('div')
   div.className = 'ln-footer'
-  div.innerHTML = '<strong style="color:#6B7280">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#C9A84C;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır'
+  div.innerHTML = '<strong style="color:#6B7280">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#C9A84C;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır · <a href="mailto:hello@dosya360.com" style="color:#9CA3AF">hello@dosya360.com</a>'
   div.style.cssText = 'text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:28px'
   p.appendChild(div)
 }
@@ -1099,6 +1204,7 @@ function sp(id, el) {
   if(id==='abonelik') abonelikYukle()
   if(id==='ai-asistan') aiYukle()
   if(id==='ai-basvuru') basvuruYukle()
+  if(id==='destek') destekYukle()
   if(id==='kullanici-yonetimi') abonelikYukle()
   if(id==='davalar') renderDv()
   if(id==='gorevler') renderGv()
@@ -1260,7 +1366,7 @@ function renderMv(q=''){
       ${badge(m.tur==='kurumsal'?'bb':'bp',m.tur==='kurumsal'?'Kurumsal':'Bireysel')}
       <button onclick="davaEkleMv(${m.id},event)" title="Bu müvekkile dava ekle" style="background:#0B1629;border:none;border-radius:4px;height:32px;padding:0 11px;display:flex;align-items:center;gap:5px;cursor:pointer;flex-shrink:0;color:#C9A84C;font-size:12px;font-weight:500;font-family:inherit"><i class="ti ti-plus" style="font-size:15px"></i>Dava</button>
       ${m.tel ? `<button onclick="waAc('${m.tel}',event)" title="WhatsApp'ta aç" style="background:#25D366;border:none;border-radius:4px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0"><i class="ti ti-brand-whatsapp" style="color:#fff;font-size:17px"></i></button>` : ''}
-      <button class="del-btn" onclick="duzenleMv(${m.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delMv(${m.id},event)"><i class="ti ti-trash"></i></button>
+      <button class="del-btn" onclick="ciktiMuvekkil(${m.id},event)" title="Yazdır / PDF" style="color:var(--muted)"><i class="ti ti-printer"></i></button><button class="del-btn" onclick="duzenleMv(${m.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delMv(${m.id},event)"><i class="ti ti-trash"></i></button>
     </div>`).join('')
 }
 
@@ -1349,16 +1455,19 @@ function renderDv(filtre){
         else if(fark<=3){ renk='#B91C1C' }
         else if(fark<=7){ renk='#B45309' }
       }
-      return `<tr><td style="font-weight:600">${d.dosyaNo}</td><td>${d.muvekkil}</td><td>${d.mahkeme||'—'}</td><td>${d.tur||'—'}</td><td style="color:${renk};white-space:nowrap">${dur}</td><td>${badge(DURUM_CLS[d.durum],DURUM[d.durum]||d.durum)}</td><td><button class="del-btn" onclick="duzenleDv(${d.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delDv(${d.id},event)"><i class="ti ti-trash"></i></button></td></tr>`
+      return `<tr><td style="font-weight:600">${d.dosyaNo}</td><td>${d.muvekkil}</td><td>${d.mahkeme||'—'}</td><td>${d.tur||'—'}</td><td style="color:${renk};white-space:nowrap">${dur}</td><td>${badge(DURUM_CLS[d.durum],DURUM[d.durum]||d.durum)}</td><td><button class="del-btn" onclick="ciktiDava(${d.id},event)" title="Yazdır / PDF" style="color:var(--muted)"><i class="ti ti-printer"></i></button><button class="del-btn" onclick="duzenleDv(${d.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delDv(${d.id},event)"><i class="ti ti-trash"></i></button></td></tr>`
     }).join('')
     +`</tbody></table></div>`
 }
 
 
 function renderGv(){
-  const gvs=DB.gorevler.filter(g=>gvFiltre==='hepsi'||g.durum===gvFiltre)
+  const q = araMetni('gv')
+  const temel = DB.gorevler.filter(g=>gvFiltre==='hepsi'||g.durum===gvFiltre)
+  const gvs = temel.filter(function(g){ return araUyar(g, ['baslik','dava','not','oncelik'], q) })
+  araSonuc('gv', gvs.length, temel.length)
   const el=document.getElementById('list-gv')
-  if(!gvs.length){ el.innerHTML=empty('checkbox','Görev bulunamadı','Yeni görev ekleyin.'); return }
+  if(!gvs.length){ el.innerHTML=empty(q?'search':'checkbox', q?'Sonuç bulunamadı':'Görev bulunamadı', q?'Aramanızı değiştirin.':'Yeni görev ekleyin.'); return }
   el.innerHTML=gvs.map(g=>`
     <div class="list-item">
       <div class="check ${g.durum==='tamamlandi'?'done':''}" onclick="toggleGv(${g.id})">${g.durum==='tamamlandi'?'<i class="ti ti-check" style="font-size:12px"></i>':''}</div>
@@ -1371,8 +1480,12 @@ function renderGv(){
 function toggleGv(id){ const gvs=DB.gorevler; const g=gvs.find(x=>x.id===id); if(g) g.durum=g.durum==='tamamlandi'?'bekliyor':'tamamlandi'; DB.saveGv(gvs); renderAll() }
 
 function renderBl(){
-  const bls=DB.belgeler; const el=document.getElementById('list-bl')
-  if(!bls.length){ el.innerHTML=empty('folders','Belge bulunamadı','Belge ekleyerek başlayın.'); return }
+  const q = araMetni('bl')
+  const temel = DB.belgeler
+  const bls = temel.filter(function(b){ return araUyar(b, ['ad','kategori','dava'], q) })
+  araSonuc('bl', bls.length, temel.length)
+  const el=document.getElementById('list-bl')
+  if(!bls.length){ el.innerHTML=empty(q?'search':'folders', q?'Sonuç bulunamadı':'Belge bulunamadı', q?'Aramanızı değiştirin.':'Belge ekleyerek başlayın.'); return }
   el.innerHTML=`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Belge Adı</th><th>Kategori</th><th>İlgili Dava</th><th>Tarih</th><th></th></tr></thead><tbody>`+
     bls.map(b=>`<tr><td><i class="ti ti-file" style="color:var(--hint);margin-right:6px"></i>${b.ad}</td><td>${badge('bb',b.kategori)}</td><td>${b.dava}</td><td>${b.tarih?new Date(b.tarih).toLocaleDateString('tr-TR'):'—'}</td><td><button class="del-btn" onclick="duzenleBl(${b.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delBl(${b.id},event)"><i class="ti ti-trash"></i></button></td></tr>`).join('')
     +`</tbody></table></div>`
@@ -1387,16 +1500,23 @@ function renderFn(){
   document.getElementById('f-tahsilat').textContent='₺'+tahsilat.toLocaleString('tr-TR')
   document.getElementById('f-masraf').textContent='₺'+masraf.toLocaleString('tr-TR')
   document.getElementById('f-bekleyen').textContent='₺'+bekleyen.toLocaleString('tr-TR')
+  const q = araMetni('fn')
+  const suzulmus = fns.filter(function(f){ return araUyar(f, ['muvekkil','aciklama','tur','tarih'], q) })
+  araSonuc('fn', suzulmus.length, fns.length)
   const el=document.getElementById('list-fn')
-  if(!fns.length){ el.innerHTML=empty('coin','Mali işlem yok','Yeni işlem ekleyin.'); return }
+  if(!suzulmus.length){ el.innerHTML=empty(q?'search':'coin', q?'Sonuç bulunamadı':'Mali işlem yok', q?'Aramanızı değiştirin.':'Yeni işlem ekleyin.'); return }
   el.innerHTML=`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Tarih</th><th>Müvekkil</th><th>Açıklama</th><th>Tür</th><th>Tutar</th><th></th></tr></thead><tbody>`+
-    [...fns].reverse().map(f=>`<tr><td>${f.tarih||'—'}</td><td>${f.muvekkil}</td><td>${f.aciklama||'—'}</td><td>${badge(f.tur==='tahsilat'?'bg':f.tur==='masraf'||f.tur==='harc'?'br':'ba',f.tur)}</td><td style="font-weight:600;color:${f.tur==='tahsilat'?'var(--green)':'var(--red)'}">${f.tur==='tahsilat'?'+':'-'}₺${f.tutar.toLocaleString('tr-TR')}</td><td><button class="del-btn" onclick="duzenleFn(${f.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delFn(${f.id},event)"><i class="ti ti-trash"></i></button></td></tr>`).join('')
+    [...suzulmus].reverse().map(f=>`<tr><td>${f.tarih||'—'}</td><td>${f.muvekkil}</td><td>${f.aciklama||'—'}</td><td>${badge(f.tur==='tahsilat'?'bg':f.tur==='masraf'||f.tur==='harc'?'br':'ba',f.tur)}</td><td style="font-weight:600;color:${f.tur==='tahsilat'?'var(--green)':'var(--red)'}">${f.tur==='tahsilat'?'+':'-'}₺${f.tutar.toLocaleString('tr-TR')}</td><td><button class="del-btn" onclick="duzenleFn(${f.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delFn(${f.id},event)"><i class="ti ti-trash"></i></button></td></tr>`).join('')
     +`</tbody></table></div>`
 }
 
 function renderIl(){
-  const ils=DB.iletisimler; const el=document.getElementById('list-il')
-  if(!ils.length){ el.innerHTML=empty('message-2','İletişim kaydı yok','Müvekkil görüşmelerinizi kaydedin.'); return }
+  const q = araMetni('il')
+  const temel = DB.iletisimler
+  const ils = temel.filter(function(i){ return araUyar(i, ['muvekkil','mesaj','kanal'], q) })
+  araSonuc('il', ils.length, temel.length)
+  const el=document.getElementById('list-il')
+  if(!ils.length){ el.innerHTML=empty(q?'search':'message-2', q?'Sonuç bulunamadı':'İletişim kaydı yok', q?'Aramanızı değiştirin.':'Müvekkil görüşmelerinizi kaydedin.'); return }
   const ICON={whatsapp:'brand-whatsapp',email:'mail',sms:'device-mobile',telefon:'phone'}
   el.innerHTML=[...ils].reverse().map(i=>`
     <div class="list-item">
@@ -2742,6 +2862,347 @@ async function duzenleIl(id, e){
   duzModu('iletisim', true)
 }
 
+// ══ ÇIKTI / RAPOR ═════════════════════════════════════════
+function ckKac(s){ const d=document.createElement('div'); d.textContent = (s==null?'':String(s)); return d.innerHTML }
+function ckTarih(t){ return t ? new Date(t).toLocaleDateString('tr-TR') : '' }
+function ckPara(n){ return '₺' + Number(n||0).toLocaleString('tr-TR') }
+function ckBos(v){ return (v===undefined||v===null||v==='') ? '<span class="ck-bos">—</span>' : ckKac(v) }
+
+function ckBaslik(tur){
+  const a = DB.ayarlar
+  return '<div class="ck-bas">'
+    + '<div><div class="ck-buro">' + ckKac(a.buroAdi || 'Hukuk Bürosu') + '</div>'
+    + '<div class="ck-alt">' + [a.avukatAdi, a.telefon, a.email].filter(Boolean).map(ckKac).join(' · ') + '</div></div>'
+    + '<div><div class="ck-tur">' + ckKac(tur) + '</div>'
+    + '<div class="ck-tarih">' + new Date().toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'}) + '</div></div>'
+    + '</div>'
+}
+
+function ckAlt(){
+  return '<div class="ck-alt-bilgi"><span>Bu belge Dosya360 ile üretilmiştir</span>'
+    + '<span>' + new Date().toLocaleString('tr-TR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}) + '</span></div>'
+}
+
+function ckSatir(etiket, deger){
+  return '<div class="ck-sat"><div class="ck-et">' + etiket + '</div><div class="ck-dg">' + deger + '</div></div>'
+}
+
+function ckYazdir(icerik){
+  const k = document.getElementById('ciktikap')
+  k.innerHTML = '<div class="ck">' + icerik + ckAlt() + '</div>'
+  setTimeout(function(){ window.print() }, 120)
+}
+
+// ── Dava özeti ────────────────────────────────────────────
+function ciktiDava(id, e){
+  if(e) e.stopPropagation()
+  const d = DB.davalar.find(function(x){ return String(x.id)===String(id) }); if(!d) return
+  const mv = DB.muvekkiller.find(function(m){ return String(m.id)===String(d.muvekkılId) })
+  const gv = DB.gorevler.filter(function(g){ return g.dava===d.dosyaNo })
+  const bl = DB.belgeler.filter(function(b){ return b.dava===d.dosyaNo })
+  const fn = DB.finanslar.filter(function(f){
+    return mv && (String(f.muvekkilId)===String(mv.id) || f.muvekkil===(mv.ad+' '+mv.soyad)) })
+  const et = DB.etkinlikler.filter(function(x){ return x.dava===d.dosyaNo })
+
+  let h = ckBaslik('Dava Özeti')
+  h += '<div class="ck-h1">' + ckKac(d.dosyaNo || 'Dosya') + '</div>'
+  h += '<div class="ck-ust">' + ckKac(d.mahkeme || '') + (d.tur ? ' · ' + ckKac(d.tur) : '') + '</div>'
+
+  h += '<div class="ck-h2">Dosya Bilgileri</div><div class="ck-ikili"><div>'
+  h += ckSatir('Esas No', ckBos(d.dosyaNo))
+  h += ckSatir('Mahkeme', ckBos(d.mahkeme))
+  h += ckSatir('Dava Türü', ckBos(d.tur))
+  h += ckSatir('Durum', ckBos(DURUM[d.durum] || d.durum))
+  h += '</div><div>'
+  h += ckSatir('Müvekkil', ckBos(d.muvekkil))
+  h += ckSatir('Karşı Taraf', ckBos(d.karsiTaraf))
+  h += ckSatir('Açılış Tarihi', ckBos(ckTarih(d.tarih)))
+  h += ckSatir('Sonraki Duruşma', d.durusmaTarihi
+        ? ckTarih(d.durusmaTarihi) + (d.durusmaSaati ? ' · ' + ckKac(d.durusmaSaati) : '')
+        : '<span class="ck-bos">Belirtilmemiş</span>')
+  h += '</div></div>'
+
+  if(mv){
+    h += '<div class="ck-h2">Müvekkil İletişim</div><div class="ck-ikili"><div>'
+    h += ckSatir('Ad Soyad', ckKac(mv.ad + ' ' + mv.soyad))
+    h += ckSatir('TC Kimlik', ckBos(mv.tc))
+    h += '</div><div>'
+    h += ckSatir('Telefon', ckBos(mv.tel))
+    h += ckSatir('E-posta', ckBos(mv.email))
+    h += '</div></div>'
+  }
+
+  if(et.length){
+    h += '<div class="ck-h2">Takvim Kayıtları</div><table class="ck-tb"><thead><tr><th>Tarih</th><th>Konu</th><th>Mahkeme</th></tr></thead><tbody>'
+    et.forEach(function(x){
+      h += '<tr><td>' + ckTarih(x.tarih) + '</td><td>' + ckKac(x.baslik) + '</td><td>' + ckKac(x.mahkeme||'') + '</td></tr>' })
+    h += '</tbody></table>'
+  }
+
+  if(gv.length){
+    h += '<div class="ck-h2">Görevler</div><table class="ck-tb"><thead><tr><th>Görev</th><th>Son Tarih</th><th>Durum</th></tr></thead><tbody>'
+    gv.forEach(function(g){
+      h += '<tr><td>' + ckKac(g.baslik) + '</td><td>' + ckBos(g.tarih) + '</td><td>'
+         + (g.durum==='tamamlandi' ? 'Tamamlandı' : 'Bekliyor') + '</td></tr>' })
+    h += '</tbody></table>'
+  }
+
+  if(bl.length){
+    h += '<div class="ck-h2">Belgeler</div><table class="ck-tb"><thead><tr><th>Belge</th><th>Kategori</th></tr></thead><tbody>'
+    bl.forEach(function(b){ h += '<tr><td>' + ckKac(b.ad) + '</td><td>' + ckBos(b.kategori) + '</td></tr>' })
+    h += '</tbody></table>'
+  }
+
+  if(fn.length){
+    const th = fn.filter(function(f){ return f.tur==='tahsilat' }).reduce(function(t,f){ return t+(+f.tutar||0) },0)
+    const gi = fn.filter(function(f){ return f.tur!=='tahsilat' && f.tur!=='fatura' }).reduce(function(t,f){ return t+(+f.tutar||0) },0)
+    h += '<div class="ck-h2">Mali Durum</div><div class="ck-ozet">'
+      + '<div class="ck-oz"><div class="ck-oz-d">' + ckPara(th) + '</div><div class="ck-oz-e">Tahsilat</div></div>'
+      + '<div class="ck-oz"><div class="ck-oz-d">' + ckPara(gi) + '</div><div class="ck-oz-e">Masraf</div></div>'
+      + '<div class="ck-oz"><div class="ck-oz-d">' + ckPara(th-gi) + '</div><div class="ck-oz-e">Fark</div></div></div>'
+  }
+
+  if(d.not) h += '<div class="ck-h2">Notlar</div><div class="ck-kutu"><div class="ck-not">' + ckKac(d.not) + '</div></div>'
+
+  ckYazdir(h)
+  logla('cikti_dava', d.dosyaNo || '')
+}
+
+// ── Müvekkil kartı ────────────────────────────────────────
+function ciktiMuvekkil(id, e){
+  if(e) e.stopPropagation()
+  const m = DB.muvekkiller.find(function(x){ return String(x.id)===String(id) }); if(!m) return
+  const ad = m.ad + ' ' + m.soyad
+  const dv = DB.davalar.filter(function(d){ return String(d.muvekkılId)===String(m.id) || d.muvekkil===ad })
+  const fn = DB.finanslar.filter(function(f){ return String(f.muvekkilId)===String(m.id) || f.muvekkil===ad })
+  const il = DB.iletisimler.filter(function(x){ return String(x.muvekkilId)===String(m.id) || x.muvekkil===ad })
+
+  let h = ckBaslik('Müvekkil Kartı')
+  h += '<div class="ck-h1">' + ckKac(ad) + '</div>'
+  h += '<div class="ck-ust">' + dv.length + ' dosya · kayıt tarihi ' + ckTarih(m.tarih) + '</div>'
+
+  h += '<div class="ck-h2">Kişi Bilgileri</div><div class="ck-ikili"><div>'
+  h += ckSatir('Ad Soyad', ckKac(ad))
+  h += ckSatir('TC Kimlik', ckBos(m.tc))
+  h += ckSatir('Tür', ckBos(m.tur))
+  h += '</div><div>'
+  h += ckSatir('Telefon', ckBos(m.tel))
+  h += ckSatir('E-posta', ckBos(m.email))
+  h += ckSatir('Şehir', ckBos(m.il))
+  h += '</div></div>'
+
+  if(dv.length){
+    h += '<div class="ck-h2">Dosyalar</div><table class="ck-tb"><thead><tr><th>Esas No</th><th>Mahkeme</th><th>Tür</th><th>Duruşma</th><th>Durum</th></tr></thead><tbody>'
+    dv.forEach(function(d){
+      h += '<tr><td>' + ckKac(d.dosyaNo) + '</td><td>' + ckKac(d.mahkeme||'') + '</td><td>' + ckKac(d.tur||'')
+         + '</td><td>' + (d.durusmaTarihi ? ckTarih(d.durusmaTarihi) : '—') + '</td><td>'
+         + ckKac(DURUM[d.durum] || d.durum || '') + '</td></tr>' })
+    h += '</tbody></table>'
+  }
+
+  if(fn.length){
+    const th = fn.filter(function(f){ return f.tur==='tahsilat' }).reduce(function(t,f){ return t+(+f.tutar||0) },0)
+    const gi = fn.filter(function(f){ return f.tur!=='tahsilat' && f.tur!=='fatura' }).reduce(function(t,f){ return t+(+f.tutar||0) },0)
+    h += '<div class="ck-h2">Mali Hareketler</div><div class="ck-ozet">'
+      + '<div class="ck-oz"><div class="ck-oz-d">' + ckPara(th) + '</div><div class="ck-oz-e">Toplam tahsilat</div></div>'
+      + '<div class="ck-oz"><div class="ck-oz-d">' + ckPara(gi) + '</div><div class="ck-oz-e">Toplam masraf</div></div>'
+      + '<div class="ck-oz"><div class="ck-oz-d">' + ckPara(th-gi) + '</div><div class="ck-oz-e">Net</div></div></div>'
+    h += '<table class="ck-tb"><thead><tr><th>Tarih</th><th>Tür</th><th>Açıklama</th><th style="text-align:right">Tutar</th></tr></thead><tbody>'
+    fn.slice().reverse().forEach(function(f){
+      h += '<tr><td>' + ckBos(f.tarih) + '</td><td>' + ckKac(f.tur||'') + '</td><td>' + ckKac(f.aciklama||'')
+         + '</td><td style="text-align:right">' + ckPara(f.tutar) + '</td></tr>' })
+    h += '</tbody></table>'
+  }
+
+  if(il.length){
+    h += '<div class="ck-h2">İletişim Kayıtları</div><table class="ck-tb"><thead><tr><th>Tarih</th><th>Kanal</th><th>Konu</th></tr></thead><tbody>'
+    il.slice().reverse().slice(0,15).forEach(function(x){
+      h += '<tr><td>' + ckTarih(x.tarih) + '</td><td>' + ckKac(x.kanal||'') + '</td><td>' + ckKac(x.mesaj||'') + '</td></tr>' })
+    h += '</tbody></table>'
+  }
+
+  if(m.not) h += '<div class="ck-h2">Notlar</div><div class="ck-kutu"><div class="ck-not">' + ckKac(m.not) + '</div></div>'
+
+  ckYazdir(h)
+  logla('cikti_muvekkil', ad)
+}
+
+// ── Finans raporu ─────────────────────────────────────────
+function ciktiFinans(){
+  const secim = prompt('Hangi dönem?\n\n1 — Bu ay\n2 — Bu yıl\n3 — Tümü', '1')
+  if(secim === null) return
+  const bugun = new Date()
+  let onek = '', baslik = ''
+  if(secim === '1'){ onek = bugun.toISOString().slice(0,7); baslik = bugun.toLocaleDateString('tr-TR',{month:'long',year:'numeric'}) }
+  else if(secim === '2'){ onek = String(bugun.getFullYear()); baslik = bugun.getFullYear() + ' yılı' }
+  else { onek = ''; baslik = 'Tüm kayıtlar' }
+
+  const fn = DB.finanslar.filter(function(f){ return !onek || String(f.tarih||'').indexOf(onek)===0 })
+  if(!fn.length) return alert('Bu dönemde kayıt bulunamadı.')
+
+  const gelir = fn.filter(function(f){ return f.tur==='tahsilat' })
+  const gider = fn.filter(function(f){ return f.tur!=='tahsilat' && f.tur!=='fatura' })
+  const tg = gelir.reduce(function(t,f){ return t+(+f.tutar||0) },0)
+  const tgi = gider.reduce(function(t,f){ return t+(+f.tutar||0) },0)
+
+  let h = ckBaslik('Finans Raporu')
+  h += '<div class="ck-h1">' + ckKac(baslik) + '</div>'
+  h += '<div class="ck-ust">' + fn.length + ' kayıt</div>'
+
+  h += '<div class="ck-ozet">'
+    + '<div class="ck-oz"><div class="ck-oz-d">' + ckPara(tg) + '</div><div class="ck-oz-e">Toplam gelir</div></div>'
+    + '<div class="ck-oz"><div class="ck-oz-d">' + ckPara(tgi) + '</div><div class="ck-oz-e">Toplam gider</div></div>'
+    + '<div class="ck-oz"><div class="ck-oz-d">' + ckPara(tg-tgi) + '</div><div class="ck-oz-e">Net</div></div></div>'
+
+  const grup = {}
+  gider.forEach(function(f){ grup[f.tur||'diger'] = (grup[f.tur||'diger']||0) + (+f.tutar||0) })
+  const ak = Object.keys(grup).sort(function(a,b){ return grup[b]-grup[a] })
+  if(ak.length){
+    h += '<div class="ck-h2">Gider Dağılımı</div><table class="ck-tb"><thead><tr><th>Kategori</th><th style="text-align:right">Tutar</th><th style="text-align:right">Oran</th></tr></thead><tbody>'
+    ak.forEach(function(k){
+      const o = tgi ? Math.round(grup[k]/tgi*100) : 0
+      h += '<tr><td>' + ckKac(k) + '</td><td style="text-align:right">' + ckPara(grup[k])
+         + '</td><td style="text-align:right">%' + o + '</td></tr>' })
+    h += '</tbody></table>'
+  }
+
+  if(gelir.length){
+    h += '<div class="ck-h2">Tahsilatlar</div><table class="ck-tb"><thead><tr><th>Tarih</th><th>Müvekkil</th><th>Açıklama</th><th style="text-align:right">Tutar</th></tr></thead><tbody>'
+    gelir.slice().reverse().forEach(function(f){
+      h += '<tr><td>' + ckBos(f.tarih) + '</td><td>' + ckKac(f.muvekkil||'') + '</td><td>' + ckKac(f.aciklama||'')
+         + '</td><td style="text-align:right">' + ckPara(f.tutar) + '</td></tr>' })
+    h += '</tbody></table>'
+  }
+
+  if(gider.length){
+    h += '<div class="ck-h2">Giderler</div><table class="ck-tb"><thead><tr><th>Tarih</th><th>Kategori</th><th>Açıklama</th><th style="text-align:right">Tutar</th></tr></thead><tbody>'
+    gider.slice().reverse().forEach(function(f){
+      h += '<tr><td>' + ckBos(f.tarih) + '</td><td>' + ckKac(f.tur||'') + '</td><td>' + ckKac(f.aciklama||'')
+         + '</td><td style="text-align:right">' + ckPara(f.tutar) + '</td></tr>' })
+    h += '</tbody></table>'
+  }
+
+  ckYazdir(h)
+  logla('cikti_finans', baslik)
+}
+
+// ── Dava listesi ──────────────────────────────────────────
+function ciktiDavaListesi(){
+  const dvs = DB.davalar
+  if(!dvs.length) return alert('Kayıtlı dava yok.')
+  let h = ckBaslik('Dava Listesi')
+  h += '<div class="ck-h1">Tüm Dosyalar</div>'
+  h += '<div class="ck-ust">' + dvs.length + ' dosya · '
+     + dvs.filter(function(d){ return d.durum!=='sonuclandi' }).length + ' açık</div>'
+  h += '<table class="ck-tb"><thead><tr><th>Esas No</th><th>Müvekkil</th><th>Mahkeme</th><th>Tür</th><th>Duruşma</th><th>Durum</th></tr></thead><tbody>'
+  dvs.forEach(function(d){
+    h += '<tr><td>' + ckKac(d.dosyaNo) + '</td><td>' + ckKac(d.muvekkil||'') + '</td><td>' + ckKac(d.mahkeme||'')
+       + '</td><td>' + ckKac(d.tur||'') + '</td><td>' + (d.durusmaTarihi ? ckTarih(d.durusmaTarihi) : '—')
+       + '</td><td>' + ckKac(DURUM[d.durum] || d.durum || '') + '</td></tr>' })
+  h += '</tbody></table>'
+  ckYazdir(h)
+  logla('cikti_dava_listesi', String(dvs.length))
+}
+
+// ══ LISTE ARAMA ═══════════════════════════════════════════
+function araMetni(anahtar){
+  const e = document.getElementById(anahtar + '-ara')
+  return e ? trKucuk(e.value.trim()) : ''
+}
+function araSonuc(anahtar, gosterilen, toplam){
+  const e = document.getElementById(anahtar + '-sonuc')
+  if(!e) return
+  e.textContent = (gosterilen === toplam) ? '' : gosterilen + ' / ' + toplam
+}
+function araUyar(kayit, alanlar, q){
+  if(!q) return true
+  const metin = trKucuk(alanlar.map(function(a){ return kayit[a] || '' }).join(' '))
+  return metin.indexOf(q) > -1
+}
+
+// ══ DESTEK ════════════════════════════════════════════════
+const DK_DURUM = {
+  yeni:      { ad:'Yeni',           arka:'#EFF6FF', renk:'#1D4ED8' },
+  inceleniyor:{ad:'İnceleniyor',    arka:'#FFFBEB', renk:'#B45309' },
+  cevaplandi:{ ad:'Cevaplandı',     arka:'#F0FDF4', renk:'#15803D' },
+  kapandi:   { ad:'Kapandı',        arka:'#F9FAFB', renk:'#6B7280' },
+}
+const DK_KAT = { hata:'Hata', kullanim:'Kullanım', ozellik:'Öneri', abonelik:'Abonelik', genel:'Genel' }
+
+function destekMesaj(metin, ok){
+  const e = document.getElementById('dk-mesaj-kutu')
+  e.textContent = metin; e.style.display = 'block'
+  e.style.background = ok ? '#F0FDF4' : '#FEF2F2'
+  e.style.color      = ok ? '#15803D' : '#B91C1C'
+  e.style.border     = '1px solid ' + (ok ? '#BBF7D0' : '#FECACA')
+}
+
+async function destekGonder(){
+  const konu = val('dk-konu'), mesaj = val('dk-mesaj')
+  if(!konu || konu.length < 3)   return destekMesaj('Konu girin.', false)
+  if(!mesaj || mesaj.length < 10) return destekMesaj('Açıklama en az 10 karakter olmalı.', false)
+
+  const btn = document.getElementById('dk-btn')
+  btn.disabled = true; btn.textContent = 'Gönderiliyor...'
+  try{
+    const { data: { session } } = await window.sb.auth.getSession()
+    if(!session) throw new Error('Oturum bulunamadı, sayfayı yenileyin')
+
+    const cevap = await fetch(SUPABASE_URL + '/functions/v1/destek-talebi', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + session.access_token,
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY
+      },
+      body: JSON.stringify({
+        konu: konu, mesaj: mesaj,
+        kategori: val('dk-kategori'), oncelik: val('dk-oncelik'),
+        tarayici: navigator.userAgent + ' · ' + screen.width + 'x' + screen.height
+      })
+    })
+    const s = await cevap.json().catch(function(){ return {} })
+    if(!cevap.ok || !s.ok) throw new Error(s.hata || 'Talep gönderilemedi')
+
+    destekMesaj('Talebiniz alındı — ' + s.no + '. E-posta adresinize onay gönderdik.', true)
+    clear('dk-konu'); clear('dk-mesaj')
+    logla('destek_talebi', konu)
+    destekYukle()
+  }catch(e){
+    destekMesaj('Gönderilemedi: ' + e.message + ' · hello@dosya360.com adresine yazabilirsiniz.', false)
+  }
+  btn.disabled = false; btn.innerHTML = '<i class="ti ti-send"></i> Talebi gönder'
+}
+
+async function destekYukle(){
+  if(!window.sb || !sbUser) return
+  const el = document.getElementById('destek-liste')
+  if(!el) return
+  try{
+    const buro = await buroIdAl()
+    const { data } = await window.sb.from('destek_talepleri')
+      .select('*').eq('buro_id', buro).order('created_at', { ascending:false }).limit(20)
+
+    if(!data || !data.length){
+      el.innerHTML = '<div style="font-size:12.5px;color:var(--muted);padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:5px">Henüz talep açmadınız.</div>'
+      return
+    }
+
+    el.innerHTML = data.map(function(t){
+      const d = DK_DURUM[t.durum] || DK_DURUM.yeni
+      const no = 'D-' + String(t.id).slice(0,8).toUpperCase()
+      return '<div style="background:#fff;border:1px solid var(--border);border-radius:5px;padding:13px 15px">'
+        + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:5px">'
+        +   '<div style="font-size:13.5px;font-weight:600;color:var(--text);flex:1;min-width:0">' + t.konu + '</div>'
+        +   '<span style="font-size:11px;padding:2px 8px;border-radius:4px;background:' + d.arka + ';color:' + d.renk + ';white-space:nowrap">' + d.ad + '</span>'
+        + '</div>'
+        + '<div style="font-size:11.5px;color:var(--hint)">' + no + ' · ' + (DK_KAT[t.kategori]||t.kategori) + ' · ' + tarihFormat(t.created_at) + '</div>'
+        + (t.cevap ? '<div style="margin-top:10px;padding:10px 12px;background:#F0FDF4;border-left:3px solid #15803D;border-radius:0 4px 4px 0;font-size:12.5px;color:var(--text);line-height:1.6;white-space:pre-wrap">' + t.cevap + '</div>' : '')
+        + '</div>'
+    }).join('')
+  }catch(e){ console.warn('Destek listesi:', e) }
+}
+
 // ── ISLEM GUNLUGU ──────────────────────────────────────────
 function logla(islem, detay){
   try{
@@ -3001,5 +3462,6 @@ sb.auth.getSession().then(async ({ data: { session } }) => {
 
 
 
+<div id="ciktikap"></div>
 </body>
 </html>
