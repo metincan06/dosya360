@@ -157,7 +157,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 .cd.other-m{color:var(--hint)}
 
 /* MOBILE */
-@media(max-width:900px){#destek-duzen{grid-template-columns:1fr!important}}
+@media(max-width:900px){#destek-duzen,#dl-duzen,#sr-duzen{grid-template-columns:1fr!important}}
 @media(max-width:768px){
   .sidebar{position:fixed;z-index:100;height:100vh;transform:translateX(-100%);transition:transform .3s}
   .sidebar.open{transform:translateX(0)}
@@ -367,6 +367,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <a class="navitem" onclick="sp('ai-asistan',this)"><i class="ti ti-robot"></i><span class="nav-label">Web Asistanı</span></a>
     <a class="navitem" onclick="sp('ai-basvuru',this)"><i class="ti ti-inbox"></i><span class="nav-label">Başvurular</span><span class="nbadge" id="basvuru-rozet" style="display:none">0</span></a>
     <a class="navitem" onclick="sp('destek',this)"><i class="ti ti-lifebuoy"></i><span class="nav-label">Destek</span></a>
+
+    <div class="navsec">HUKUKİ ARAÇLAR</div>
+    <a class="navitem" onclick="sp('dilekce',this)"><i class="ti ti-file-text"></i><span class="nav-label">Dilekçe Yaz</span></a>
+    <a class="navitem" onclick="sp('sure',this)"><i class="ti ti-hourglass"></i><span class="nav-label">Süre Takibi</span><span class="nbadge" id="sure-rozet" style="display:none">0</span></a>
     <div class="navsec" id="ns5">UYAP</div>
     <a class="navitem" href="https://avukat.uyap.gov.tr" target="_blank"><i class="ti ti-scale"></i><span class="nav-label">Avukat UYAP</span></a>
     <a class="navitem" href="https://vatandas.uyap.gov.tr" target="_blank"><i class="ti ti-user-check"></i><span class="nav-label">Vatandaş UYAP</span></a>
@@ -810,6 +814,173 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
 
 
+
+
+    <!-- SURE TAKIBI -->
+    <div class="panel" id="panel-sure">
+      <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:12px 15px;margin-bottom:18px;font-size:12.5px;color:#92400E;line-height:1.6">
+        Bu bölüm bir süre takip ve hatırlatma aracıdır, hukuki görüş değildir. Özel kanunlardaki farklı süreler, sürelerin başlangıcı, adli tatil ve dosyaya özgü istisnalar ayrıca kontrol edilmelidir.
+      </div>
+
+      <div id="sr-duzen" style="display:grid;grid-template-columns:.9fr 1.1fr;gap:22px;align-items:start">
+
+        <div class="card" style="padding:22px">
+          <div style="font-size:15px;font-weight:600;margin-bottom:16px">Süre ekle</div>
+
+          <div class="field"><label>DOSYA</label><select id="sr-dava"></select></div>
+
+          <div class="field2">
+            <div class="field"><label>YARGI KOLU</label><select id="sr-kol" onchange="sureIslemDoldur()">
+              <option value="hukuk">Hukuk</option>
+              <option value="ceza">Ceza</option>
+              <option value="idari">İdari / Vergi</option>
+              <option value="icra">İcra</option>
+            </select></div>
+            <div class="field"><label>İŞLEM</label><select id="sr-islem" onchange="sureHesapla()"></select></div>
+          </div>
+
+          <div class="field"><label>TEBLİGAT TÜRÜ <span style="color:var(--hint);font-weight:400">— isteğe bağlı</span></label>
+            <input id="sr-tur" placeholder="Gerekçeli karar, ödeme emri..."></div>
+
+          <div class="field"><label>TEBLİGATIN ULAŞTIĞI TARİH</label>
+            <input type="date" id="sr-tarih" onchange="sureHesapla()"></div>
+
+          <label style="display:flex;align-items:flex-start;gap:9px;margin-bottom:14px;cursor:pointer">
+            <input type="checkbox" id="sr-uets" checked onchange="sureHesapla()" style="width:auto;margin-top:3px">
+            <span style="font-size:12.5px;color:var(--text);line-height:1.5">E-tebligat (UETS) — beş gün sonra tebliğ edilmiş sayılır</span>
+          </label>
+
+          <div id="sr-onizleme" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:14px 16px;margin-bottom:14px"></div>
+
+          <div class="field"><label>NOT <span style="color:var(--hint);font-weight:400">— isteğe bağlı</span></label>
+            <input id="sr-not" placeholder="Kısa açıklama"></div>
+
+          <button id="sr-btn" onclick="sureKaydet()" style="width:100%;padding:12px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit"><i class="ti ti-plus"></i> Süreyi kaydet</button>
+
+          <button onclick="sureKuralAc()" style="width:100%;margin-top:9px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:13px;color:var(--muted);cursor:pointer;font-family:inherit">Süre kurallarını düzenle</button>
+        </div>
+
+        <div>
+          <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap" id="sr-filtre"></div>
+          <div id="sr-liste" style="display:flex;flex-direction:column;gap:9px"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SURE KURAL MODAL -->
+    <div class="overlay" id="m-surekural">
+      <div class="modal" style="max-width:640px">
+        <div class="modal-head"><h3>Süre kuralları</h3><button class="modal-close" onclick="closeModal('surekural')"><i class="ti ti-x"></i></button></div>
+        <div class="modal-body">
+          <div style="font-size:12.5px;color:var(--muted);line-height:1.6;margin-bottom:16px">
+            Süreler mevzuat değişikliklerinde güncellenebilir. Dayanak sütununu kontrol ederek kendi pratiğinize göre düzenleyin.
+          </div>
+          <div id="sk-liste" style="display:flex;flex-direction:column;gap:7px;margin-bottom:16px"></div>
+          <div style="border-top:1px solid var(--border);padding-top:14px">
+            <div style="font-size:13px;font-weight:600;margin-bottom:10px">Yeni kural</div>
+            <div class="field2">
+              <div class="field"><label>YARGI KOLU</label><select id="sk-kol">
+                <option value="hukuk">Hukuk</option><option value="ceza">Ceza</option>
+                <option value="idari">İdari / Vergi</option><option value="icra">İcra</option>
+              </select></div>
+              <div class="field"><label>SÜRE (GÜN)</label><input type="number" id="sk-gun" min="1" max="365" placeholder="14"></div>
+            </div>
+            <div class="field"><label>İŞLEM</label><input id="sk-islem" placeholder="İstinaf"></div>
+            <div class="field"><label>DAYANAK</label><input id="sk-dayanak" placeholder="HMK m.345"></div>
+            <button class="tbtn primary" onclick="sureKuralEkle()" style="width:100%">Kural ekle</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DILEKCE -->
+    <div class="panel" id="panel-dilekce">
+      <div id="dl-duzen" style="display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start">
+
+        <div class="card" style="padding:22px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <div>
+              <div style="font-size:15px;font-weight:600">Yeni dilekçe</div>
+              <div style="font-size:12.5px;color:var(--muted);margin-top:2px">Dosya bilgileri otomatik gelir</div>
+            </div>
+            <span id="dl-kalan" style="font-size:11.5px;color:var(--muted)"></span>
+          </div>
+
+          <div class="field"><label>DOSYA</label><select id="dl-dava" onchange="dilekceDavaSec()"></select></div>
+          <div id="dl-dava-bilgi" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:10px 12px;margin-bottom:14px;font-size:12.5px;color:var(--muted);line-height:1.6"></div>
+
+          <div class="field"><label>DİLEKÇE TÜRÜ</label><select id="dl-tur">
+            <optgroup label="Genel">
+              <option value="dava_dilekcesi">Dava dilekçesi</option>
+              <option value="cevap_dilekcesi">Cevap dilekçesi</option>
+              <option value="istinaf">İstinaf dilekçesi</option>
+              <option value="temyiz">Temyiz dilekçesi</option>
+              <option value="bilirkisi_itiraz">Bilirkişi raporuna itiraz</option>
+            </optgroup>
+            <optgroup label="Aile hukuku">
+              <option value="bosanma">Boşanma dava dilekçesi</option>
+              <option value="velayet">Velayet dilekçesi</option>
+              <option value="nafaka">Nafaka dilekçesi</option>
+            </optgroup>
+            <optgroup label="İcra ve alacak">
+              <option value="icra_takip">İcra takip talebi</option>
+              <option value="itirazin_iptali">İtirazın iptali</option>
+              <option value="odeme_emrine_itiraz">Ödeme emrine itiraz</option>
+            </optgroup>
+            <optgroup label="İş hukuku">
+              <option value="ise_iade">İşe iade</option>
+              <option value="kidem_ihbar">Kıdem ve ihbar tazminatı</option>
+              <option value="fazla_mesai">Fazla mesai alacağı</option>
+            </optgroup>
+          </select></div>
+
+          <div class="field"><label>OLAY ÖZETİ</label>
+            <textarea id="dl-olay" rows="8" maxlength="6000" placeholder="Ne oldu? Tarihler, tutarlar ve taraflar arasındaki ilişkiyi yazın. Ne kadar ayrıntı verirseniz taslak o kadar isabetli olur."></textarea>
+          </div>
+
+          <div class="field"><label>TALEPLER <span style="color:var(--hint);font-weight:400">— isteğe bağlı</span></label>
+            <textarea id="dl-talep" rows="3" maxlength="2000" placeholder="Neyi talep ediyorsunuz? Boş bırakırsanız olay özetinden çıkarılır."></textarea>
+          </div>
+
+          <div id="dl-mesaj" style="display:none;font-size:12.5px;padding:10px 13px;border-radius:5px;margin-bottom:12px;line-height:1.55"></div>
+
+          <button id="dl-btn" onclick="dilekceUret()" style="width:100%;padding:12px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit"><i class="ti ti-sparkles"></i> Taslağı oluştur</button>
+
+          <div style="margin-top:14px;padding:11px 13px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:5px;font-size:11.5px;color:#92400E;line-height:1.6">
+            Üretilen metin bir taslaktır. Kanun maddelerini, tutarları ve tarihleri kontrol etmeden kullanmayın. Köşeli parantezli alanlar sizin doldurmanız içindir.
+          </div>
+        </div>
+
+        <div>
+          <div id="dl-cikti-kap" style="display:none">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:10px;flex-wrap:wrap">
+              <div style="font-size:14px;font-weight:600" id="dl-cikti-baslik">Taslak</div>
+              <div style="display:flex;gap:6px">
+                <button onclick="dilekceKopyala()" class="tbtn"><i class="ti ti-copy"></i>Kopyala</button>
+                <button onclick="dilekceYazdir()" class="tbtn"><i class="ti ti-printer"></i>Yazdır</button>
+                <button onclick="dilekceKaydet()" class="tbtn primary"><i class="ti ti-device-floppy"></i>Kaydet</button>
+              </div>
+            </div>
+            <textarea id="dl-cikti" rows="26" style="width:100%;padding:16px 18px;border:1px solid var(--border);border-radius:6px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.5px;line-height:1.75;color:var(--text);background:#fff;outline:none;resize:vertical"></textarea>
+            <div style="font-size:11.5px;color:var(--hint);margin-top:6px" id="dl-cikti-alt"></div>
+          </div>
+
+          <div id="dl-bos" style="text-align:center;padding:60px 24px;background:var(--surface);border:1px dashed var(--border);border-radius:6px">
+            <i class="ti ti-file-text" style="font-size:34px;color:var(--hint)"></i>
+            <div style="font-size:14px;color:var(--muted);margin-top:12px">Taslak burada görünecek</div>
+            <div style="font-size:12.5px;color:var(--hint);margin-top:4px">Soldaki formu doldurup oluştur düğmesine basın</div>
+          </div>
+
+          <div style="margin-top:20px">
+            <div style="font-size:13.5px;font-weight:600;margin-bottom:10px">Kayıtlı taslaklar</div>
+            <div id="dl-liste" style="display:flex;flex-direction:column;gap:8px"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
     <!-- DESTEK -->
     <div class="panel" id="panel-destek">
       <div style="display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:start" id="destek-duzen">
@@ -1177,7 +1348,7 @@ let gvFiltre = 'hepsi'
 let calDate = new Date(); let calSel = new Date()
 
 // ── PANEL GEÇİŞ ──────────────────────────────────────────────
-const TITLES = { anasayfa:'Anasayfa', muvekkiller:'Müvekkiller', davalar:'Davalar', takvim:'Takvim', gorevler:'Görevler', belgeler:'Belgeler', finans:'Finans', iletisim:'İletişim', 'yapay-zeka':'360 Asistan', ayarlar:'Ayarlar', abonelik:'Abonelik', 'kullanici-yonetimi':'Kullanıcı Yönetimi', 'ai-asistan':'Web Asistanı', 'ai-basvuru':'Başvurular', destek:'Destek' }
+const TITLES = { anasayfa:'Anasayfa', muvekkiller:'Müvekkiller', davalar:'Davalar', takvim:'Takvim', gorevler:'Görevler', belgeler:'Belgeler', finans:'Finans', iletisim:'İletişim', 'yapay-zeka':'360 Asistan', ayarlar:'Ayarlar', abonelik:'Abonelik', 'kullanici-yonetimi':'Kullanıcı Yönetimi', 'ai-asistan':'Web Asistanı', 'ai-basvuru':'Başvurular', destek:'Destek', dilekce:'Dilekçe Yaz', sure:'Süre Takibi' }
 const FOOTER_HTML = '<div style="text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:28px"><strong style=\"color:#6B7280\">Dosya360</strong> — Bir <a href=\"https://otukenmedya.com\" target=\"_blank\" style=\"color:#C9A84C;text-decoration:none;font-weight:500\">Ötüken Medya</a> yazılımıdır</div>';
 
 function addFooter(panelId){
@@ -1205,6 +1376,8 @@ function sp(id, el) {
   if(id==='ai-asistan') aiYukle()
   if(id==='ai-basvuru') basvuruYukle()
   if(id==='destek') destekYukle()
+  if(id==='dilekce') dilekceYukle()
+  if(id==='sure') sureYukle()
   if(id==='kullanici-yonetimi') abonelikYukle()
   if(id==='davalar') renderDv()
   if(id==='gorevler') renderGv()
@@ -3201,6 +3374,458 @@ async function destekYukle(){
         + '</div>'
     }).join('')
   }catch(e){ console.warn('Destek listesi:', e) }
+}
+
+// ══ DILEKCE ═══════════════════════════════════════════════
+let dlSonuc = null, dlTaslaklar = []
+const DL_AD = {
+  dava_dilekcesi:'Dava dilekçesi', cevap_dilekcesi:'Cevap dilekçesi',
+  istinaf:'İstinaf', temyiz:'Temyiz', bilirkisi_itiraz:'Bilirkişi itirazı',
+  bosanma:'Boşanma', velayet:'Velayet', nafaka:'Nafaka',
+  icra_takip:'İcra takip', itirazin_iptali:'İtirazın iptali', odeme_emrine_itiraz:'Ödeme emrine itiraz',
+  ise_iade:'İşe iade', kidem_ihbar:'Kıdem-ihbar', fazla_mesai:'Fazla mesai'
+}
+
+function dilekceMesaj(metin, ok){
+  const e = document.getElementById('dl-mesaj')
+  e.textContent = metin; e.style.display = 'block'
+  e.style.background = ok ? '#F0FDF4' : '#FEF2F2'
+  e.style.color      = ok ? '#15803D' : '#B91C1C'
+  e.style.border     = '1px solid ' + (ok ? '#BBF7D0' : '#FECACA')
+}
+
+async function dilekceYukle(){
+  if(!window.sb || !sbUser) return
+
+  const sel = document.getElementById('dl-dava')
+  if(sel){
+    sel.innerHTML = '<option value="">Dosya seçmeden devam et</option>'
+      + DB.davalar.map(function(d){
+          return '<option value="' + d.id + '">' + (d.dosyaNo||'Dosya') + ' — ' + (d.muvekkil||'') + '</option>' }).join('')
+  }
+
+  try{
+    const buro = await buroIdAl()
+    const { data } = await window.sb.from('dilekce_taslaklari')
+      .select('id,baslik,tur,dosya_no,kelime,created_at')
+      .eq('buro_id', buro).order('created_at', { ascending:false }).limit(15)
+    dlTaslaklar = data || []
+    dilekceListe()
+
+    const { data: sayi } = await window.sb.rpc('dilekce_ay_sayisi')
+    const el = document.getElementById('dl-kalan')
+    if(el && typeof sayi === 'number') el.textContent = 'Bu ay ' + sayi + ' taslak'
+  }catch(e){ console.warn('Dilekçe listesi:', e) }
+}
+
+function dilekceDavaSec(){
+  const id = val('dl-dava')
+  const kutu = document.getElementById('dl-dava-bilgi')
+  if(!id){ kutu.style.display = 'none'; return }
+  const d = DB.davalar.find(function(x){ return String(x.id) === String(id) })
+  if(!d){ kutu.style.display = 'none'; return }
+  const par = []
+  if(d.mahkeme) par.push(d.mahkeme)
+  if(d.tur) par.push(d.tur)
+  if(d.karsiTaraf) par.push('Karşı taraf: ' + d.karsiTaraf)
+  kutu.style.display = 'block'
+  kutu.innerHTML = '<strong style="color:var(--text)">' + (d.muvekkil||'') + '</strong>'
+    + (par.length ? '<br>' + par.join(' · ') : '')
+}
+
+async function dilekceUret(){
+  const olay = val('dl-olay')
+  if(olay.length < 30) return dilekceMesaj('Olay özeti en az 30 karakter olmalı. Ne kadar ayrıntı verirseniz taslak o kadar isabetli olur.', false)
+
+  const btn = document.getElementById('dl-btn')
+  btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader"></i> Hazırlanıyor, bu biraz sürebilir...'
+  document.getElementById('dl-mesaj').style.display = 'none'
+
+  try{
+    const { data: { session } } = await window.sb.auth.getSession()
+    if(!session) throw new Error('Oturum bulunamadı, sayfayı yenileyin')
+
+    const cevap = await fetch(SUPABASE_URL + '/functions/v1/dilekce-yaz', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + session.access_token,
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY
+      },
+      body: JSON.stringify({
+        tur: val('dl-tur'),
+        dava_id: val('dl-dava') || null,
+        olay: olay,
+        talepler: val('dl-talep')
+      })
+    })
+    const s = await cevap.json().catch(function(){ return {} })
+    if(!cevap.ok || !s.ok) throw new Error(s.hata || 'Taslak üretilemedi')
+
+    dlSonuc = s
+    document.getElementById('dl-bos').style.display = 'none'
+    document.getElementById('dl-cikti-kap').style.display = 'block'
+    document.getElementById('dl-cikti-baslik').textContent = s.baslik
+    document.getElementById('dl-cikti').value = s.icerik
+    document.getElementById('dl-cikti-alt').textContent =
+      s.kelime + ' kelime · taslak kaydedildi' + (typeof s.kalan === 'number' ? ' · bu ay ' + s.kalan + ' hakkınız kaldı' : '')
+    dilekceMesaj('Taslak hazır. Sağdaki alanda düzenleyebilirsiniz.', true)
+    logla('dilekce_uretildi', val('dl-tur'))
+    dilekceYukle()
+  }catch(e){
+    dilekceMesaj(e.message, false)
+  }
+  btn.disabled = false; btn.innerHTML = '<i class="ti ti-sparkles"></i> Taslağı oluştur'
+}
+
+function dilekceListe(){
+  const el = document.getElementById('dl-liste')
+  if(!el) return
+  if(!dlTaslaklar.length){
+    el.innerHTML = '<div style="font-size:12.5px;color:var(--muted);padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:5px">Henüz taslak yok.</div>'
+    return
+  }
+  el.innerHTML = dlTaslaklar.map(function(t){
+    return '<div style="background:#fff;border:1px solid var(--border);border-radius:5px;padding:11px 13px;display:flex;align-items:center;gap:10px">'
+      + '<div style="flex:1;min-width:0">'
+      +   '<div style="font-size:13px;font-weight:500;color:var(--text)">' + t.baslik + '</div>'
+      +   '<div style="font-size:11.5px;color:var(--hint);margin-top:2px">' + (DL_AD[t.tur]||t.tur) + ' · ' + t.kelime + ' kelime · ' + tarihFormat(t.created_at) + '</div>'
+      + '</div>'
+      + '<button onclick="dilekceAc(\'' + t.id + '\')" class="tbtn">Aç</button>'
+      + '<button onclick="dilekceSil(\'' + t.id + '\')" class="del-btn"><i class="ti ti-trash"></i></button>'
+      + '</div>'
+  }).join('')
+}
+
+async function dilekceAc(id){
+  const { data } = await window.sb.from('dilekce_taslaklari').select('*').eq('id', id).maybeSingle()
+  if(!data) return
+  dlSonuc = { id: data.id, baslik: data.baslik, icerik: data.icerik, kelime: data.kelime }
+  document.getElementById('dl-bos').style.display = 'none'
+  document.getElementById('dl-cikti-kap').style.display = 'block'
+  document.getElementById('dl-cikti-baslik').textContent = data.baslik
+  document.getElementById('dl-cikti').value = data.icerik
+  document.getElementById('dl-cikti-alt').textContent = data.kelime + ' kelime · ' + tarihFormat(data.created_at)
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+async function dilekceSil(id){
+  const t = dlTaslaklar.find(function(x){ return x.id === id })
+  if(!confirm('"' + (t ? t.baslik : 'Taslak') + '" silinecek.\n\nDevam edilsin mi?')) return
+  await window.sb.from('dilekce_taslaklari').delete().eq('id', id)
+  dilekceYukle()
+}
+
+async function dilekceKaydet(){
+  if(!dlSonuc || !dlSonuc.id) return alert('Kaydedilecek taslak yok.')
+  const metin = document.getElementById('dl-cikti').value
+  const { error } = await window.sb.from('dilekce_taslaklari').update({
+    icerik: metin, kelime: metin.split(/\s+/).length, updated_at: new Date().toISOString()
+  }).eq('id', dlSonuc.id)
+  if(error) return alert('Hata: ' + error.message)
+  document.getElementById('dl-cikti-alt').textContent = 'Değişiklikler kaydedildi'
+  dilekceYukle()
+}
+
+function dilekceKopyala(){
+  const t = document.getElementById('dl-cikti')
+  t.select(); navigator.clipboard.writeText(t.value)
+  document.getElementById('dl-cikti-alt').textContent = 'Panoya kopyalandı'
+}
+
+function dilekceYazdir(){
+  const metin = document.getElementById('dl-cikti').value
+  if(!metin) return
+  const baslik = document.getElementById('dl-cikti-baslik').textContent
+  let h = ckBaslik('Dilekçe Taslağı')
+  h += '<div class="ck-h1">' + ckKac(baslik) + '</div>'
+  h += '<div style="font-size:11pt;line-height:1.85;white-space:pre-wrap;margin-top:16px">' + ckKac(metin) + '</div>'
+  ckYazdir(h)
+}
+
+// ══ SURE TAKIBI ═══════════════════════════════════════════
+let srKurallar = [], srTakipler = [], srFiltre = 'acik'
+const SR_KOL = { hukuk:'Hukuk', ceza:'Ceza', idari:'İdari / Vergi', icra:'İcra' }
+
+// Resmi tatiller — sabit tarihli olanlar (dini bayramlar degisken, kapsam disi)
+const SR_TATIL = ['01-01','04-23','05-01','05-19','07-15','08-30','10-29']
+
+function srGun(t){ const d = new Date(t); d.setHours(12,0,0,0); return d }
+function srYaz(d){ return d.toISOString().slice(0,10) }
+function srTr(d){ return new Date(d).toLocaleDateString('tr-TR') }
+
+function srTatilMi(d){
+  const g = d.getDay()
+  if(g === 0 || g === 6) return true
+  const md = String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0')
+  return SR_TATIL.indexOf(md) > -1
+}
+
+// Adli tatil: 20 Temmuz - 31 Agustos
+function srAdliTatilde(d){
+  const ay = d.getMonth() + 1, gun = d.getDate()
+  return (ay === 7 && gun >= 20) || (ay === 8)
+}
+
+async function sureYukle(){
+  if(!window.sb || !sbUser) return
+  try{
+    const buro = await buroIdAl()
+
+    let { data: kur } = await window.sb.from('sure_kurallari')
+      .select('*').eq('buro_id', buro).eq('aktif', true).order('yargi_kolu').order('islem')
+    if(!kur || !kur.length){
+      await window.sb.rpc('sure_kurallari_kur')
+      const r = await window.sb.from('sure_kurallari')
+        .select('*').eq('buro_id', buro).eq('aktif', true).order('yargi_kolu').order('islem')
+      kur = r.data
+    }
+    srKurallar = kur || []
+
+    const sel = document.getElementById('sr-dava')
+    if(sel) sel.innerHTML = '<option value="">Dosya seçmeden devam et</option>'
+      + DB.davalar.map(function(d){
+          return '<option value="' + d.id + '">' + (d.dosyaNo||'Dosya') + ' — ' + (d.muvekkil||'') + '</option>' }).join('')
+
+    const t = document.getElementById('sr-tarih')
+    if(t && !t.value) t.value = new Date().toISOString().slice(0,10)
+
+    sureIslemDoldur()
+
+    const { data: tk } = await window.sb.from('sure_takibi')
+      .select('*').eq('buro_id', buro).order('son_tarih')
+    srTakipler = tk || []
+    sureFiltreCiz(); sureListe(); sureRozet()
+  }catch(e){ console.warn('Süre yükleme:', e) }
+}
+
+function sureRozet(){
+  const bugun = srGun(new Date())
+  const yakin = srTakipler.filter(function(t){
+    if(t.durum !== 'acik') return false
+    const f = Math.round((srGun(t.son_tarih) - bugun) / 86400000)
+    return f <= 7
+  }).length
+  const r = document.getElementById('sure-rozet')
+  if(r){ r.textContent = yakin; r.style.display = yakin ? 'inline-block' : 'none' }
+}
+
+function sureIslemDoldur(){
+  const kol = val('sr-kol')
+  const sel = document.getElementById('sr-islem'); if(!sel) return
+  const liste = srKurallar.filter(function(k){ return k.yargi_kolu === kol })
+  sel.innerHTML = liste.length
+    ? liste.map(function(k){ return '<option value="' + k.id + '">' + k.islem + ' — ' + k.sure_gun + ' gün</option>' }).join('')
+    : '<option value="">Bu kolda kural yok</option>'
+  sureHesapla()
+}
+
+function sureHesapla(){
+  const kutu = document.getElementById('sr-onizleme'); if(!kutu) return
+  const kural = srKurallar.find(function(k){ return k.id === val('sr-islem') })
+  const tarih = val('sr-tarih')
+  if(!kural || !tarih){ kutu.style.display = 'none'; return }
+
+  const uets = document.getElementById('sr-uets').checked
+  const ulasma = srGun(tarih)
+  const teblig = srGun(tarih)
+  if(uets) teblig.setDate(teblig.getDate() + 5)
+
+  const son = srGun(teblig)
+  son.setDate(son.getDate() + kural.sure_gun)
+
+  // Son gun tatile denk gelirse ilk is gunune uzar
+  let kaydi = false
+  while(srTatilMi(son)){ son.setDate(son.getDate() + 1); kaydi = true }
+
+  const uyarilar = []
+  if(srAdliTatilde(son)) uyarilar.push('Son tarih adli tatile denk geliyor (20 Temmuz – 31 Ağustos). Süre uzayabilir, kontrol edin.')
+  if(kaydi) uyarilar.push('Son gün tatile denk geldiği için ilk iş gününe alındı.')
+  if(kural.yargi_kolu === 'idari') uyarilar.push('İdari yargıda parasal sınır ve kararın niteliği süreyi etkiler.')
+
+  const bugun = srGun(new Date())
+  const kalan = Math.round((son - bugun) / 86400000)
+
+  kutu.style.display = 'block'
+  kutu.innerHTML =
+      (uets ? '<div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);padding:4px 0"><span>Ulaşma tarihi</span><span>' + srTr(ulasma) + '</span></div>'
+            + '<div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);padding:4px 0"><span>Tebliğ sayılan tarih (+5 gün)</span><span>' + srTr(teblig) + '</span></div>'
+            : '<div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);padding:4px 0"><span>Tebliğ tarihi</span><span>' + srTr(teblig) + '</span></div>')
+    + '<div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);padding:4px 0"><span>Yasal süre</span><span>' + kural.sure_gun + ' gün · ' + (kural.dayanak||'') + '</span></div>'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0 4px;margin-top:6px;border-top:1px solid var(--border)">'
+    +   '<span style="font-size:13.5px;font-weight:600;color:var(--text)">Son tarih</span>'
+    +   '<span style="font-size:15px;font-weight:700;color:' + (kalan<0?'#B91C1C':kalan<=7?'#B45309':'#0B1629') + '">' + srTr(son) + '</span>'
+    + '</div>'
+    + '<div style="font-size:11.5px;color:var(--hint);text-align:right">' + (kalan<0 ? Math.abs(kalan)+' gün geçti' : kalan+' gün kaldı') + '</div>'
+    + uyarilar.map(function(u){
+        return '<div style="margin-top:9px;padding:8px 10px;background:#FFFBEB;border-radius:4px;font-size:11.5px;color:#92400E;line-height:1.5">' + u + '</div>' }).join('')
+
+  return { kural:kural, ulasma:srYaz(ulasma), teblig:srYaz(teblig), son:srYaz(son), uyari:uyarilar.join(' ') }
+}
+
+async function sureKaydet(){
+  const h = sureHesapla()
+  if(!h) return alert('Yargı kolu, işlem ve tarih seçin.')
+
+  const btn = document.getElementById('sr-btn')
+  btn.disabled = true; btn.textContent = 'Kaydediliyor...'
+  try{
+    const buro = await buroIdAl()
+    const davaId = val('sr-dava')
+    const dava = DB.davalar.find(function(d){ return String(d.id) === String(davaId) })
+
+    const { error } = await window.sb.from('sure_takibi').insert({
+      buro_id: buro, dava_id: davaId || null, dosya_no: dava ? dava.dosyaNo : null,
+      yargi_kolu: val('sr-kol'), islem: h.kural.islem, tebligat_turu: val('sr-tur') || null,
+      uets: document.getElementById('sr-uets').checked,
+      ulasma_tarihi: h.ulasma, teblig_tarihi: h.teblig,
+      sure_gun: h.kural.sure_gun, son_tarih: h.son,
+      dayanak: h.kural.dayanak, uyari: h.uyari || null, not_metni: val('sr-not') || null
+    })
+    if(error) throw error
+
+    // Takvime 7-3-1 gun kala hatirlatma
+    const ets = DB.etkinlikler
+    ;[7,3,1].forEach(function(g){
+      const d = srGun(h.son); d.setDate(d.getDate() - g)
+      if(d < srGun(new Date())) return
+      ets.push({
+        id: Date.now() + g, otomatik: true, tur:'sure',
+        baslik: h.kural.islem + ' süresi — ' + g + ' gün kaldı',
+        tarih: srYaz(d),
+        dava: dava ? dava.dosyaNo : (val('sr-tur') || ''),
+        mahkeme: dava ? (dava.mahkeme||'') : '',
+        muvekkil: dava ? (dava.muvekkil||'') : '',
+        not: 'Son tarih: ' + srTr(h.son) + (h.kural.dayanak ? ' · ' + h.kural.dayanak : '')
+      })
+    })
+    DB.saveEt(ets)
+
+    clear('sr-tur'); clear('sr-not')
+    logla('sure_eklendi', h.kural.islem)
+    sureYukle(); renderAll()
+  }catch(e){ alert('Hata: ' + e.message) }
+  btn.disabled = false; btn.innerHTML = '<i class="ti ti-plus"></i> Süreyi kaydet'
+}
+
+function sureFiltreCiz(){
+  const el = document.getElementById('sr-filtre'); if(!el) return
+  const bugun = srGun(new Date())
+  const say = {
+    acik: srTakipler.filter(function(t){ return t.durum==='acik' }).length,
+    yakin: srTakipler.filter(function(t){ return t.durum==='acik' && Math.round((srGun(t.son_tarih)-bugun)/86400000) <= 7 }).length,
+    gecti: srTakipler.filter(function(t){ return t.durum==='acik' && srGun(t.son_tarih) < bugun }).length,
+    tamam: srTakipler.filter(function(t){ return t.durum==='tamam' }).length
+  }
+  const ler = [['acik','Açık',say.acik],['yakin','7 gün içinde',say.yakin],
+               ['gecti','Süresi geçen',say.gecti],['tamam','Tamamlanan',say.tamam],['','Tümü',srTakipler.length]]
+  el.innerHTML = ler.map(function(x){
+    const a = srFiltre === x[0]
+    return '<button onclick="sureFiltrele(\'' + x[0] + '\')" class="tbtn' + (a?' primary':'') + '">' + x[1] + ' (' + x[2] + ')</button>'
+  }).join('')
+}
+
+function sureFiltrele(f){ srFiltre = f; sureFiltreCiz(); sureListe() }
+
+function sureListe(){
+  const el = document.getElementById('sr-liste'); if(!el) return
+  const bugun = srGun(new Date())
+  let liste = srTakipler
+  if(srFiltre === 'acik')  liste = liste.filter(function(t){ return t.durum==='acik' })
+  if(srFiltre === 'yakin') liste = liste.filter(function(t){ return t.durum==='acik' && Math.round((srGun(t.son_tarih)-bugun)/86400000) <= 7 })
+  if(srFiltre === 'gecti') liste = liste.filter(function(t){ return t.durum==='acik' && srGun(t.son_tarih) < bugun })
+  if(srFiltre === 'tamam') liste = liste.filter(function(t){ return t.durum==='tamam' })
+
+  if(!liste.length){
+    el.innerHTML = '<div style="text-align:center;padding:36px;color:var(--muted);font-size:13px;background:var(--surface);border:1px solid var(--border);border-radius:6px">Bu durumda kayıt yok.</div>'
+    return
+  }
+
+  el.innerHTML = liste.map(function(t){
+    const kalan = Math.round((srGun(t.son_tarih) - bugun) / 86400000)
+    const bitti = t.durum === 'tamam'
+    let renk = '#1D4ED8', arka = '#EFF6FF', metin = kalan + ' gün'
+    if(bitti){ renk='#6B7280'; arka='#F9FAFB'; metin='Tamamlandı' }
+    else if(kalan < 0){ renk='#B91C1C'; arka='#FEF2F2'; metin=Math.abs(kalan)+' gün geçti' }
+    else if(kalan <= 3){ renk='#B91C1C'; arka='#FEF2F2' }
+    else if(kalan <= 7){ renk='#B45309'; arka='#FFFBEB' }
+
+    return '<div style="background:#fff;border:' + ((!bitti && kalan<=3)?'1.5px solid #FECACA':'1px solid var(--border)') + ';border-radius:6px;padding:14px 16px">'
+      + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px">'
+      +   '<div style="flex:1;min-width:0">'
+      +     '<div style="font-size:14px;font-weight:600;color:var(--text)' + (bitti?';text-decoration:line-through;opacity:.6':'') + '">' + t.islem + (t.tebligat_turu ? ' — ' + t.tebligat_turu : '') + '</div>'
+      +     '<div style="font-size:11.5px;color:var(--hint);margin-top:3px">' + (SR_KOL[t.yargi_kolu]||t.yargi_kolu)
+      +       (t.dosya_no ? ' · ' + t.dosya_no : '') + (t.dayanak ? ' · ' + t.dayanak : '') + '</div>'
+      +   '</div>'
+      +   '<span style="font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:4px;background:' + arka + ';color:' + renk + ';white-space:nowrap">' + metin + '</span>'
+      + '</div>'
+      + '<div style="display:flex;gap:16px;font-size:12px;color:var(--muted);margin:8px 0">'
+      +   '<span>Tebliğ: ' + srTr(t.teblig_tarihi) + '</span>'
+      +   '<span style="font-weight:600;color:var(--text)">Son tarih: ' + srTr(t.son_tarih) + '</span>'
+      + '</div>'
+      + (t.uyari ? '<div style="font-size:11.5px;color:#92400E;background:#FFFBEB;border-radius:4px;padding:7px 9px;margin-bottom:8px;line-height:1.5">' + t.uyari + '</div>' : '')
+      + (t.not_metni ? '<div style="font-size:12px;color:var(--muted);margin-bottom:8px">' + t.not_metni + '</div>' : '')
+      + '<div style="display:flex;gap:6px">'
+      +   '<button onclick="sureDurum(\'' + t.id + '\',\'' + (bitti?'acik':'tamam') + '\')" class="tbtn">' + (bitti?'Geri aç':'Tamamlandı') + '</button>'
+      +   '<button onclick="sureSil(\'' + t.id + '\')" class="del-btn"><i class="ti ti-trash"></i></button>'
+      + '</div></div>'
+  }).join('')
+}
+
+async function sureDurum(id, durum){
+  await window.sb.from('sure_takibi').update({ durum: durum }).eq('id', id)
+  sureYukle()
+}
+
+async function sureSil(id){
+  if(!confirm('Bu süre kaydı silinecek.\n\nDevam edilsin mi?')) return
+  await window.sb.from('sure_takibi').delete().eq('id', id)
+  sureYukle()
+}
+
+// ── Kural yonetimi
+function sureKuralAc(){ sureKuralListe(); document.getElementById('m-surekural').classList.add('open') }
+
+function sureKuralListe(){
+  const el = document.getElementById('sk-liste'); if(!el) return
+  el.innerHTML = srKurallar.map(function(k){
+    return '<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface);border:1px solid var(--border);border-radius:5px">'
+      + '<div style="flex:1;min-width:0">'
+      +   '<div style="font-size:13px;font-weight:500;color:var(--text)">' + (SR_KOL[k.yargi_kolu]||k.yargi_kolu) + ' · ' + k.islem + '</div>'
+      +   '<div style="font-size:11.5px;color:var(--hint)">' + (k.dayanak||'') + '</div>'
+      + '</div>'
+      + '<input type="number" value="' + k.sure_gun + '" min="1" max="365" onchange="sureKuralGuncelle(\'' + k.id + '\',this.value)" style="width:72px;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:inherit;text-align:center">'
+      + '<span style="font-size:12px;color:var(--muted)">gün</span>'
+      + '<button onclick="sureKuralSil(\'' + k.id + '\')" class="del-btn"><i class="ti ti-trash"></i></button>'
+      + '</div>'
+  }).join('')
+}
+
+async function sureKuralGuncelle(id, gun){
+  const n = parseInt(gun, 10)
+  if(!n || n < 1) return
+  await window.sb.from('sure_kurallari').update({ sure_gun: n }).eq('id', id)
+  const k = srKurallar.find(function(x){ return x.id === id }); if(k) k.sure_gun = n
+  sureIslemDoldur()
+}
+
+async function sureKuralEkle(){
+  const islem = val('sk-islem'), gun = parseInt(val('sk-gun'), 10)
+  if(!islem || !gun) return alert('İşlem adı ve süre gerekli.')
+  const buro = await buroIdAl()
+  const { error } = await window.sb.from('sure_kurallari').insert({
+    buro_id: buro, yargi_kolu: val('sk-kol'), islem: islem,
+    sure_gun: gun, dayanak: val('sk-dayanak') || null
+  })
+  if(error) return alert('Hata: ' + error.message)
+  clear('sk-islem'); clear('sk-gun'); clear('sk-dayanak')
+  await sureYukle(); sureKuralListe()
+}
+
+async function sureKuralSil(id){
+  if(!confirm('Bu kural silinecek.\n\nDevam edilsin mi?')) return
+  await window.sb.from('sure_kurallari').update({ aktif:false }).eq('id', id)
+  await sureYukle(); sureKuralListe()
 }
 
 // ── ISLEM GUNLUGU ──────────────────────────────────────────
