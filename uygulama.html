@@ -908,7 +908,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
           </div>
 
           <div class="field"><label>DOSYA</label><select id="dl-dava" onchange="dilekceDavaSec()"></select></div>
-          <div id="dl-dava-bilgi" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:10px 12px;margin-bottom:14px;font-size:12.5px;color:var(--muted);line-height:1.6"></div>
+          <div class="field"><label>MÜVEKKİL</label><select id="dl-muvekkil" onchange="dilekceMvSec()"></select>
+            <p style="font-size:11px;color:var(--hint);margin-top:5px">Kimlik ve iletişim bilgileri dilekçeye otomatik yerleşir.</p></div>
+          <div id="dl-dava-bilgi" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:11px 13px;margin-bottom:14px;font-size:12.5px;color:var(--muted);line-height:1.65"></div>
 
           <div class="field"><label>DİLEKÇE TÜRÜ</label><select id="dl-tur">
             <optgroup label="Genel">
@@ -3403,6 +3405,12 @@ async function dilekceYukle(){
       + DB.davalar.map(function(d){
           return '<option value="' + d.id + '">' + (d.dosyaNo||'Dosya') + ' — ' + (d.muvekkil||'') + '</option>' }).join('')
   }
+  const msel = document.getElementById('dl-muvekkil')
+  if(msel){
+    msel.innerHTML = '<option value="">Müvekkil seçilmedi</option>'
+      + DB.muvekkiller.map(function(m){
+          return '<option value="' + m.id + '">' + m.ad + ' ' + m.soyad + (m.tc ? ' · ' + m.tc : '') + '</option>' }).join('')
+  }
 
   try{
     const buro = await buroIdAl()
@@ -3420,17 +3428,44 @@ async function dilekceYukle(){
 
 function dilekceDavaSec(){
   const id = val('dl-dava')
+  if(id){
+    const d = DB.davalar.find(function(x){ return String(x.id) === String(id) })
+    // Davanin muvekkilini otomatik sec
+    if(d && d.muvekkılId){
+      const msel = document.getElementById('dl-muvekkil')
+      if(msel) msel.value = String(d.muvekkılId)
+    }
+  }
+  dilekceBilgiCiz()
+}
+
+function dilekceMvSec(){ dilekceBilgiCiz() }
+
+function dilekceBilgiCiz(){
   const kutu = document.getElementById('dl-dava-bilgi')
-  if(!id){ kutu.style.display = 'none'; return }
-  const d = DB.davalar.find(function(x){ return String(x.id) === String(id) })
-  if(!d){ kutu.style.display = 'none'; return }
-  const par = []
-  if(d.mahkeme) par.push(d.mahkeme)
-  if(d.tur) par.push(d.tur)
-  if(d.karsiTaraf) par.push('Karşı taraf: ' + d.karsiTaraf)
+  const d = DB.davalar.find(function(x){ return String(x.id) === String(val('dl-dava')) })
+  const m = DB.muvekkiller.find(function(x){ return String(x.id) === String(val('dl-muvekkil')) })
+  if(!d && !m){ kutu.style.display = 'none'; return }
+
+  let h = ''
+  if(m){
+    h += '<div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px">' + m.ad + ' ' + m.soyad + '</div>'
+    const mp = []
+    if(m.tc) mp.push('TC: ' + m.tc)
+    if(m.tel) mp.push(m.tel)
+    if(m.il) mp.push(m.il)
+    if(mp.length) h += '<div>' + mp.join(' · ') + '</div>'
+  }
+  if(d){
+    const dp = []
+    if(d.dosyaNo) dp.push(d.dosyaNo)
+    if(d.mahkeme) dp.push(d.mahkeme)
+    if(d.karsiTaraf) dp.push('Karşı taraf: ' + d.karsiTaraf)
+    if(dp.length) h += '<div style="margin-top:' + (m?'7px':'0') + ';padding-top:' + (m?'7px':'0') + ';'
+      + (m?'border-top:1px solid var(--border);':'') + '">' + dp.join(' · ') + '</div>'
+  }
   kutu.style.display = 'block'
-  kutu.innerHTML = '<strong style="color:var(--text)">' + (d.muvekkil||'') + '</strong>'
-    + (par.length ? '<br>' + par.join(' · ') : '')
+  kutu.innerHTML = h
 }
 
 async function dilekceUret(){
@@ -3455,6 +3490,7 @@ async function dilekceUret(){
       body: JSON.stringify({
         tur: val('dl-tur'),
         dava_id: val('dl-dava') || null,
+        muvekkil_id: val('dl-muvekkil') || null,
         olay: olay,
         talepler: val('dl-talep')
       })
