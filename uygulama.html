@@ -157,7 +157,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 .cd.other-m{color:var(--hint)}
 
 /* MOBILE */
-@media(max-width:900px){#destek-duzen,#dl-duzen,#sr-duzen{grid-template-columns:1fr!important}}
+@media(max-width:900px){#destek-duzen,#dl-duzen,#sr-duzen,#ay-duzen{grid-template-columns:1fr!important}}
 @media(max-width:768px){
   .sidebar{position:fixed;z-index:100;height:100vh;transform:translateX(-100%);transition:transform .3s}
   .sidebar.open{transform:translateX(0)}
@@ -579,44 +579,102 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
     <!-- AYARLAR -->
     <div class="panel" id="panel-ayarlar">
-      <h1 style="font-size:20px;font-weight:600;margin-bottom:16px">Ayarlar</h1>
-      <div class="card" style="max-width:500px">
-        <div class="card-title" style="margin-bottom:14px">Büro Bilgileri</div>
-        <div class="field"><label>Büro Adı</label><input type="text" id="set-buro" placeholder="Hukuk Bürosu" oninput="saveSetting('buroAdi',this.value)"></div>
-        <div class="field"><label>Avukat Adı</label><input type="text" id="set-avukat" placeholder="Av. Ad Soyad" oninput="saveSetting('avukatAdi',this.value)"></div>
-        <div class="field"><label>Telefon</label><input type="text" id="set-tel" placeholder="0312 000 0000" oninput="saveSetting('telefon',this.value)"></div>
-        <div class="field"><label>E-posta</label><input type="email" id="set-email" placeholder="buro@ornek.com" oninput="saveSetting('email',this.value)"></div>
-        <div class="field" style="margin-top:8px;padding-top:14px;border-top:0.5px solid var(--border)">
-          <label>WhatsApp Numarası <span style="color:var(--muted);font-weight:400">(müvekkil kartlarında görünür)</span></label>
-          <div style="display:flex;gap:8px;align-items:center">
-            <span style="padding:9px 12px;background:var(--bg);border:0.5px solid var(--border);border-radius:5px;font-size:13px;color:var(--muted);white-space:nowrap">+90</span>
-            <input type="tel" id="set-wa" placeholder="532 000 0000" maxlength="13" oninput="saveSetting('whatsapp',this.value)">
+      <h1 style="font-size:20px;font-weight:600;margin-bottom:18px">Ayarlar</h1>
+
+      <div id="ay-duzen" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;max-width:920px">
+
+        <!-- Büro bilgileri -->
+        <div class="card" style="padding:22px">
+          <div style="font-size:14.5px;font-weight:600;margin-bottom:3px">Büro bilgileri</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:18px">Belge çıktılarının antetinde görünür.</div>
+
+          <div class="field"><label>BÜRO ADI</label>
+            <input type="text" id="set-buro" placeholder="Örnek Hukuk Bürosu" oninput="saveSetting('buroAdi',this.value)"></div>
+          <div class="field"><label>AVUKAT ADI</label>
+            <input type="text" id="set-avukat" placeholder="Av. Ad Soyad" oninput="saveSetting('avukatAdi',this.value)"></div>
+          <div class="field2">
+            <div class="field"><label>TELEFON</label>
+              <input type="tel" id="set-tel" placeholder="0312 000 00 00" oninput="saveSetting('telefon',this.value)"></div>
+            <div class="field"><label>E-POSTA</label>
+              <input type="email" id="set-email" placeholder="buro@ornek.com" oninput="saveSetting('email',this.value)"></div>
           </div>
-          <p style="font-size:11px;color:var(--muted);margin-top:5px">Örnek: 5321234567 (başında 0 olmadan)</p>
+
+          <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--border)">
+            <div style="font-size:13.5px;font-weight:600;margin-bottom:3px">WhatsApp</div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Müvekkil kartlarındaki hatırlatma butonu bu numarayı kullanır.</div>
+            <div class="field">
+              <label>NUMARA</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <span style="padding:9px 12px;background:var(--bg);border:1px solid var(--border);border-radius:5px;font-size:13px;color:var(--muted);white-space:nowrap">+90</span>
+                <input type="tel" id="set-wa" placeholder="532 000 00 00" maxlength="13" oninput="saveSetting('whatsapp',this.value)">
+              </div>
+              <p style="font-size:11px;color:var(--hint);margin-top:5px">Başında sıfır olmadan yazın</p>
+            </div>
+            <div id="wa-test-wrap" style="display:none">
+              <a id="wa-test-link" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#25D366;color:#fff;border-radius:5px;font-size:12.5px;font-weight:500;text-decoration:none">
+                <i class="ti ti-brand-whatsapp"></i> Numarayı test et
+              </a>
+            </div>
+          </div>
         </div>
-        <div id="wa-test-wrap" style="display:none;margin-top:8px">
-          <a id="wa-test-link" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#25D366;color:#fff;border-radius:5px;font-size:13px;font-weight:500;text-decoration:none">
-            <i class="ti ti-brand-whatsapp"></i> WhatsApp'ı Test Et
-          </a>
+
+        <!-- Fatura bilgileri -->
+        <div class="card" style="padding:22px">
+          <div style="font-size:14.5px;font-weight:600;margin-bottom:3px">Fatura bilgileri</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:18px">Abonelik faturanız bu bilgilerle düzenlenir.</div>
+
+          <div class="field"><label>FİRMA ÜNVANI</label>
+            <input type="text" id="set-firma" placeholder="Örnek Hukuk Bürosu Av. Ad Soyad" oninput="saveSetting('firmaUnvan',this.value)"></div>
+
+          <div class="field2">
+            <div class="field"><label>VERGİ NO / TCKN</label>
+              <input type="text" id="set-vergino" placeholder="1234567890" maxlength="11" inputmode="numeric" oninput="saveSetting('vergiNo',this.value)"></div>
+            <div class="field"><label>VERGİ DAİRESİ</label>
+              <input type="text" id="set-vergidairesi" placeholder="Çankaya" oninput="saveSetting('vergiDairesi',this.value)"></div>
+          </div>
+
+          <div class="field"><label>ADRES</label>
+            <textarea id="set-adres" rows="3" placeholder="Cadde, no, ilçe / il" oninput="saveSetting('adres',this.value)"></textarea></div>
+
+          <div class="field"><label>FATURA E-POSTASI</label>
+            <input type="email" id="set-faturaEmail" placeholder="muhasebe@ornek.com" oninput="saveSetting('faturaEmail',this.value)">
+            <p style="font-size:11px;color:var(--hint);margin-top:5px">Boş bırakırsanız büro e-postası kullanılır</p></div>
+
+          <div style="margin-top:6px;padding:11px 13px;background:var(--bg);border-radius:5px;font-size:11.5px;color:var(--muted);line-height:1.6">
+            Şahıs işletmesiyseniz vergi numarası yerine TC kimlik numaranızı yazabilirsiniz.
+          </div>
         </div>
-        <div style="margin-top:26px;padding-top:20px;border-top:1px solid var(--border)">
-          <div style="font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:4px">Şifre değiştir</div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:14px">En az 6 karakter. Değişiklikten sonra oturumunuz açık kalır.</div>
-          <div id="sifre-mesaj" style="display:none;font-size:12.5px;padding:9px 12px;border-radius:5px;margin-bottom:12px"></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div class="field"><label>YENİ ŞİFRE</label><input type="password" id="sifre-yeni" placeholder="••••••••" autocomplete="new-password"></div>
-            <div class="field"><label>YENİ ŞİFRE TEKRAR</label><input type="password" id="sifre-yeni2" placeholder="••••••••" autocomplete="new-password"></div>
+
+        <!-- Güvenlik -->
+        <div class="card" style="padding:22px">
+          <div style="font-size:14.5px;font-weight:600;margin-bottom:3px">Şifre değiştir</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:18px">En az 6 karakter. Değişiklikten sonra oturumunuz açık kalır.</div>
+
+          <div id="sifre-mesaj" style="display:none;font-size:12.5px;padding:9px 12px;border-radius:5px;margin-bottom:14px"></div>
+          <div class="field2">
+            <div class="field"><label>YENİ ŞİFRE</label>
+              <input type="password" id="sifre-yeni" placeholder="••••••••" autocomplete="new-password"></div>
+            <div class="field"><label>YENİ ŞİFRE TEKRAR</label>
+              <input type="password" id="sifre-yeni2" placeholder="••••••••" autocomplete="new-password"></div>
           </div>
           <button id="sifre-btn" onclick="sifreDegistir()" style="padding:10px 20px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:13.5px;font-weight:500;color:var(--text);cursor:pointer;font-family:inherit">Şifreyi güncelle</button>
         </div>
 
-        <button id="kurulum-kaydet-btn" onclick="kurulumKaydet()" style="width:100%;margin-top:16px;padding:11px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Bilgileri Kaydet</button>
-        <p style="font-size:12px;color:var(--muted);margin-top:10px">Büro adı ve avukat adı hesabınıza kaydedilir. Diğer alanlar otomatik saklanır.</p>
-      </div>
-    <div style="text-align:center;padding:28px 0 8px;font-size:12px;color:var(--hint);border-top:0.5px solid var(--border);margin-top:28px"><strong style="color:var(--muted)">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:var(--gold);text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır &nbsp;·&nbsp; v3.0</div>
-      <div style="text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:24px"><strong style="color:#6B7280">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#C9A84C;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır</div>
-    </div>
+        <!-- Kurulum -->
+        <div class="card" style="padding:22px">
+          <div style="font-size:14.5px;font-weight:600;margin-bottom:3px">Kurulum</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:18px">Bilgilerinizi kaydedip kuruluma başlayın.</div>
+          <button id="kurulum-kaydet-btn" onclick="kurulumKaydet()" style="width:100%;padding:12px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Bilgileri kaydet</button>
+          <div id="kurulum-mesaj" style="display:none;font-size:12.5px;padding:10px 12px;border-radius:5px;margin-top:12px;line-height:1.55"></div>
+        </div>
 
+      </div>
+
+      <div style="text-align:center;padding:26px 0 8px;font-size:12px;color:var(--hint);border-top:1px solid var(--border);margin-top:26px;max-width:920px">
+        <strong style="color:var(--muted)">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:var(--gold);text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır
+        &nbsp;·&nbsp; <a href="mailto:hello@dosya360.com" style="color:var(--hint);text-decoration:none">hello@dosya360.com</a>
+      </div>
+    </div>
 
     <!-- ABONELİK PANELİ -->
     <div class="panel" id="panel-abonelik">
@@ -2359,13 +2417,22 @@ function renderUpgrade(abone) {
 }
 
 function loadSettings(){
-  const s=DB.ayarlar
-  document.getElementById('set-buro').value=s.buroAdi||''
-  document.getElementById('set-avukat').value=s.avukatAdi||''
-  document.getElementById('set-tel').value=s.telefon||''
-  document.getElementById('set-email').value=s.email||''
-  document.getElementById('set-wa').value=s.whatsapp||''
-  if(s.buroAdi) document.getElementById('buro-adi-logo').textContent=s.buroAdi
+  const s = DB.ayarlar
+  const esl = {
+    'set-buro':'buroAdi', 'set-avukat':'avukatAdi', 'set-tel':'telefon',
+    'set-email':'email', 'set-wa':'whatsapp',
+    'set-firma':'firmaUnvan', 'set-vergino':'vergiNo',
+    'set-vergidairesi':'vergiDairesi', 'set-adres':'adres',
+    'set-faturaEmail':'faturaEmail'
+  }
+  Object.keys(esl).forEach(function(id){
+    const e = document.getElementById(id)
+    if(e) e.value = s[esl[id]] || ''
+  })
+  if(s.buroAdi){
+    const lg = document.getElementById('buro-adi-logo')
+    if(lg) lg.textContent = s.buroAdi
+  }
   updateWaTest(s.whatsapp)
 }
 // ── SILME: baglantili kayit denetimi + geri alma ──────────
@@ -3045,9 +3112,11 @@ function ckBos(v){ return (v===undefined||v===null||v==='') ? '<span class="ck-b
 
 function ckBaslik(tur){
   const a = DB.ayarlar
+  const adres = (a.adres || '').replace(/\s*\n\s*/g, ', ')
   return '<div class="ck-bas">'
     + '<div><div class="ck-buro">' + ckKac(a.buroAdi || 'Hukuk Bürosu') + '</div>'
-    + '<div class="ck-alt">' + [a.avukatAdi, a.telefon, a.email].filter(Boolean).map(ckKac).join(' · ') + '</div></div>'
+    + '<div class="ck-alt">' + [a.avukatAdi, a.telefon, a.email].filter(Boolean).map(ckKac).join(' · ') + '</div>'
+    + (adres ? '<div class="ck-alt">' + ckKac(adres) + '</div>' : '') + '</div>'
     + '<div><div class="ck-tur">' + ckKac(tur) + '</div>'
     + '<div class="ck-tarih">' + new Date().toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'}) + '</div></div>'
     + '</div>'
@@ -3934,7 +4003,15 @@ function kurulumaGit(){
 
 async function kurulumKaydet(){
   const buro = val('set-buro'), avukat = val('set-avukat')
-  if(!buro || !avukat) return alert('Büro adı ve avukat adı zorunludur!')
+  const mesaj = function(m, ok){
+    const e = document.getElementById('kurulum-mesaj'); if(!e) return
+    e.textContent = m; e.style.display = 'block'
+    e.style.background = ok ? '#F0FDF4' : '#FEF2F2'
+    e.style.color      = ok ? '#15803D' : '#B91C1C'
+    e.style.border     = '1px solid ' + (ok ? '#BBF7D0' : '#FECACA')
+  }
+  if(!buro || !avukat) return mesaj('Büro adı ve avukat adı zorunludur.', false)
+
   const btn = document.getElementById('kurulum-kaydet-btn')
   btn.disabled = true; btn.textContent = 'Kaydediliyor...'
   try{
@@ -3944,14 +4021,19 @@ async function kurulumKaydet(){
       }).eq('id', sbUser.id)
       if(error) throw error
     }
-    document.getElementById('buro-adi-logo').textContent = buro
-    const k = document.getElementById('kurulum-karti'); if(k) k.style.display='none'
-    btn.textContent = 'Kaydedildi'
-    setTimeout(()=>{ btn.disabled=false; btn.textContent='Bilgileri Kaydet' }, 2000)
+    // Fatura ve iletisim bilgileri zaten yazarken kaydediliyor; burada teyit ediyoruz
+    const ayar = DB.ayarlar
+    ayar.buroAdi = buro; ayar.avukatAdi = avukat
+    DB.saveSet(ayar)
+
+    const lg = document.getElementById('buro-adi-logo'); if(lg) lg.textContent = buro
+    const k = document.getElementById('kurulum-karti'); if(k) k.style.display = 'none'
+    mesaj('Bilgileriniz kaydedildi.', true)
+    logla('kurulum_tamam', buro)
   }catch(e){
-    alert('Hata: '+e.message)
-    btn.disabled=false; btn.textContent='Bilgileri Kaydet'
+    mesaj('Kaydedilemedi: ' + e.message, false)
   }
+  btn.disabled = false; btn.textContent = 'Bilgileri kaydet'
 }
 
 function saveSetting(key,val){
