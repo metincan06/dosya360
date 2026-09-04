@@ -1,8 +1,9 @@
 User-agent: *
 Allow: /
-Allow: /kvkk.html
 Disallow: /uygulama.html
 Disallow: /admin.html
 Disallow: /davet.html
+Disallow: /bot.html
+Disallow: /yeni-sifre.html
 
 Sitemap: https://dosya360.com/sitemap.xml

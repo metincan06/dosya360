@@ -77,6 +77,7 @@ nav.kucuk{height:56px;background:rgba(11,22,41,.96)}
 
 /* ── Kahraman ────────────────────────────────────── */
 .hero{background:var(--navy);padding:132px 0 84px;position:relative;overflow:hidden}
+body.kampanyali .hero{padding-top:72px}
 .hero::before{content:'';position:absolute;inset:0;
   background:radial-gradient(900px 460px at 78% 8%,rgba(201,168,76,.10),transparent 62%),
              radial-gradient(700px 400px at 8% 92%,rgba(201,168,76,.05),transparent 60%)}
@@ -347,6 +348,15 @@ footer{background:var(--navy);padding:52px 0 26px;border-top:1px solid rgba(255,
   </div>
 </div></nav>
 
+<!-- KAMPANYA -->
+<div id="kampanya" style="display:none;background:#C9A84C;padding:11px 24px;position:relative;z-index:800;margin-top:64px">
+  <div class="sar" style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;text-align:center">
+    <span style="font-size:13.5px;font-weight:600;color:#0B1629">Kurucu 20 · yıllık abonelikte fiyat kilidi</span>
+    <span id="kampanya-kalan" style="font-size:12.5px;font-weight:600;color:#0B1629;background:rgba(11,22,41,.12);padding:3px 11px;border-radius:20px;white-space:nowrap"></span>
+    <button onclick="modalAc('kayit')" style="font-size:12.5px;font-weight:600;color:#C9A84C;background:#0B1629;border:none;padding:6px 15px;border-radius:5px;cursor:pointer;font-family:inherit;white-space:nowrap">Yerinizi ayırın</button>
+  </div>
+</div>
+
 <!-- KAHRAMAN -->
 <div class="hero">
   <div class="izgara-fon"></div>
@@ -597,7 +607,10 @@ footer{background:var(--navy);padding:52px 0 26px;border-top:1px solid rgba(255,
       <div class="f-ad">Başlangıç</div>
       <div class="f-tut" id="f1">₺1.500 <span>/ay</span></div>
       <div class="f-alt" id="f1a">Aylık ödeme</div>
-      <div class="f-tas" id="f1t" style="display:none">Yılda ₺4.500 tasarruf</div>
+      <div class="f-tas" id="f1t" style="display:none">3 ay bedava</div>
+      <div id="f1k" style="display:none;font-size:12.5px;color:#8A6D1F;background:rgba(201,168,76,.14);padding:6px 11px;border-radius:5px;margin-bottom:13px;line-height:1.5">
+        <strong>Kurucu 20: ₺11.900</strong><br>Fiyatınız yenilemede artmaz
+      </div>
       <div class="f-kul"><i class="ti ti-users"></i>3 kullanıcıya kadar</div>
       <ul class="f-liste">
         <li><i class="ti ti-check"></i>Bütün modüller</li>
@@ -614,7 +627,10 @@ footer{background:var(--navy);padding:52px 0 26px;border-top:1px solid rgba(255,
       <div class="f-ad">Büyüme</div>
       <div class="f-tut" id="f2">₺3.500 <span>/ay</span></div>
       <div class="f-alt" id="f2a">Aylık ödeme</div>
-      <div class="f-tas" id="f2t" style="display:none">Yılda ₺14.000 tasarruf</div>
+      <div class="f-tas" id="f2t" style="display:none">4 ay bedava</div>
+      <div id="f2k" style="display:none;font-size:12.5px;color:#8A6D1F;background:rgba(201,168,76,.14);padding:6px 11px;border-radius:5px;margin-bottom:13px;line-height:1.5">
+        <strong>Kurucu 20: ₺23.900</strong><br>Fiyatınız yenilemede artmaz
+      </div>
       <div class="f-kul"><i class="ti ti-users"></i>10 kullanıcıya kadar</div>
       <ul class="f-liste">
         <li><i class="ti ti-check"></i>Başlangıç paketindeki her şey</li>
@@ -637,7 +653,7 @@ footer{background:var(--navy);padding:52px 0 26px;border-top:1px solid rgba(255,
         <li><i class="ti ti-check"></i>Veri aktarım yardımı</li>
         <li><i class="ti ti-check"></i>Öncelikli telefon desteği</li>
       </ul>
-      <a href="https://wa.me/905304621769?text=Kurumsal%20paket%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum" target="_blank" class="btn btn-navy" style="width:100%"><i class="ti ti-brand-whatsapp"></i>İletişime geçin</a>
+      <a href="https://wa.me/905439274906?text=Kurumsal%20paket%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum" target="_blank" class="btn btn-navy" style="width:100%"><i class="ti ti-brand-whatsapp"></i>İletişime geçin</a>
     </div>
   </div>
 </div></section>
@@ -652,7 +668,7 @@ footer{background:var(--navy);padding:52px 0 26px;border-top:1px solid rgba(255,
     <div class="sk rv" onclick="ssaAc(this)"><div class="s-s">Kurulum gerekiyor mu?<i class="ti ti-chevron-down"></i></div><div class="s-c"><div>Hayır. Dosya360 tamamen web tabanlıdır; tarayıcıdan açılır. Bilgisayarınıza program yüklemeniz gerekmez, telefon ve tabletten de aynı hesapla girebilirsiniz.</div></div></div>
     <div class="sk rv rv-1" onclick="ssaAc(this)"><div class="s-s">Verilerimi başka bir büro görebilir mi?<i class="ti ti-chevron-down"></i></div><div class="s-c"><div>Hayır. İzolasyon veritabanı seviyesinde uygulanır; yazılım hatasıyla aşılabilecek bir kontrol değildir. Her büro yalnızca kendi verisine erişir, başka bir büronun müvekkil veya dosya bilgilerine hiçbir koşulda ulaşılamaz.</div></div></div>
     <div class="sk rv rv-2" onclick="ssaAc(this)"><div class="s-s">UYAP entegrasyonu nasıl çalışıyor?<i class="ti ti-chevron-down"></i></div><div class="s-c"><div>Dosya360 içinden Avukat UYAP, Vatandaş UYAP ve E-Tebligat paneline tek tıkla erişebilirsiniz. UYAP'a giriş kendi e-imzanız veya şifrenizle yapılır; Dosya360 bu bilgileri istemez ve saklamaz. Otomatik dosya senkronizasyonu üzerinde çalışılmaktadır.</div></div></div>
-    <div class="sk rv" onclick="ssaAc(this)"><div class="s-s">Mevcut kayıtlarımı aktarabilir miyim?<i class="ti ti-chevron-down"></i></div><div class="s-c"><div>Kayıtlar elle girilir. İlk kurulumda aktarım konusunda ücretsiz destek sağlıyoruz — info@otukenmedya.com adresine yazmanız yeterli.</div></div></div>
+    <div class="sk rv" onclick="ssaAc(this)"><div class="s-s">Mevcut kayıtlarımı aktarabilir miyim?<i class="ti ti-chevron-down"></i></div><div class="s-c"><div>Kayıtlar elle girilir. İlk kurulumda aktarım konusunda ücretsiz destek sağlıyoruz — hello@dosya360.com adresine yazmanız yeterli.</div></div></div>
     <div class="sk rv rv-1" onclick="ssaAc(this)"><div class="s-s">Kaç müvekkil ve dava ekleyebilirim?<i class="ti ti-chevron-down"></i></div><div class="s-c"><div>Sınır yoktur. Paketler yalnızca sisteme kaç kişinin giriş yapabileceğini belirler; kayıt sayısı her pakette sınırsızdır.</div></div></div>
     <div class="sk rv rv-2" onclick="ssaAc(this)"><div class="s-s">Aboneliğimi iptal edersem ne olur?<i class="ti ti-chevron-down"></i></div><div class="s-c"><div>Verileriniz 30 gün saklanır. Bu süre içinde talep ederseniz dışa aktarılır; sürenin sonunda kalıcı olarak silinir.</div></div></div>
   </div>
@@ -664,7 +680,7 @@ footer{background:var(--navy);padding:52px 0 26px;border-top:1px solid rgba(255,
   <p class="rv rv-1">Kredi kartı gerekmez, kurulum yoktur, istediğiniz an bırakabilirsiniz.</p>
   <div class="rv rv-2" style="display:flex;gap:11px;justify-content:center;flex-wrap:wrap">
     <button class="btn btn-gold btn-lg" onclick="modalAc('kayit')"><i class="ti ti-arrow-right"></i>Ücretsiz başlayın</button>
-    <a href="https://wa.me/905304621769?text=Dosya360%20demo%20talep%20ediyorum" target="_blank" class="btn btn-ghost btn-lg"><i class="ti ti-brand-whatsapp"></i>Demo talep edin</a>
+    <a href="https://wa.me/905439274906?text=Dosya360%20demo%20talep%20ediyorum" target="_blank" class="btn btn-ghost btn-lg"><i class="ti ti-brand-whatsapp"></i>Demo talep edin</a>
   </div>
 </div></div>
 
@@ -675,12 +691,12 @@ footer{background:var(--navy);padding:52px 0 26px;border-top:1px solid rgba(255,
       <div class="f-ac">Avukatlık büroları için tasarlanmış bulut tabanlı hukuk bürosu yönetim sistemi. Dava takibi, müvekkil yönetimi ve duruşma hatırlatmaları tek panelde.</div>
     </div>
     <div><h4>ÜRÜN</h4><a href="#ozellikler">Özellikler</a><a href="#fiyatlar">Fiyatlar</a><a href="#nasil">Nasıl çalışır</a><a href="#sss">SSS</a></div>
-    <div><h4>DESTEK</h4><a href="mailto:info@otukenmedya.com">E-posta</a><a href="https://wa.me/905304621769" target="_blank">WhatsApp</a><a href="https://otukenmedya.com" target="_blank">Ötüken Medya</a></div>
+    <div><h4>DESTEK</h4><a href="mailto:hello@dosya360.com">E-posta</a><a href="https://wa.me/905439274906" target="_blank">WhatsApp</a><a href="https://otukenmedya.com" target="_blank">Ötüken Medya</a></div>
     <div><h4>HUKUKİ</h4><a href="kvkk.html">KVKK aydınlatma metni</a><a href="kvkk.html#s9">Çerez politikası</a><a href="kvkk.html#s7">Veri güvenliği</a></div>
   </div>
   <div class="f-son">
     <div>© 2026 Dosya360 · Bir <a href="https://otukenmedya.com" target="_blank">Ötüken Medya</a> yazılımıdır</div>
-    <div>info@otukenmedya.com · +90 530 462 17 69</div>
+    <div>hello@dosya360.com · +90 543 927 49 06</div>
   </div>
 </div></footer>
 
@@ -789,7 +805,25 @@ function perDegis(p){
   document.getElementById('f2a').textContent = yil ? 'Ayda ₺2.333' : 'Aylık ödeme'
   document.getElementById('f1t').style.display = yil ? 'inline-block' : 'none'
   document.getElementById('f2t').style.display = yil ? 'inline-block' : 'none'
+  const k1 = document.getElementById('f1k'), k2 = document.getElementById('f2k')
+  const kampanyaVar = kurucuKalan > 0
+  if(k1) k1.style.display = (yil && kampanyaVar) ? 'block' : 'none'
+  if(k2) k2.style.display = (yil && kampanyaVar) ? 'block' : 'none'
 }
+
+// ── Kurucu kontenjani ────────────────────────────────────
+let kurucuKalan = 0
+sb.rpc('kurucu_kalan').then(function(r){
+  kurucuKalan = (r && typeof r.data === 'number') ? r.data : 0
+  if(kurucuKalan <= 0) return
+  const s = document.getElementById('kampanya')
+  const k = document.getElementById('kampanya-kalan')
+  if(k) k.textContent = kurucuKalan + ' yer kaldı'
+  if(s) s.style.display = 'block'
+  document.body.classList.add('kampanyali')
+  const yil = document.getElementById('p-yillik')
+  if(yil && yil.classList.contains('aktif')) perDegis('yillik')
+}).catch(function(){})
 
 /* Yumuşak kaydırma */
 document.querySelectorAll('a[href^="#"]').forEach(function(a){
@@ -889,7 +923,7 @@ function hataCoz(err) {
     return 'E-posta adresiniz doğrulanmamış.'
 
   const detay = ham && ham !== '{}' ? ham : (durum ? 'kod ' + durum : 'bilinmeyen hata')
-  return 'Kayıt tamamlanamadı (' + detay + '). Sorun sürerse info@otukenmedya.com adresine yazın.'
+  return 'Kayıt tamamlanamadı (' + detay + '). Sorun sürerse hello@dosya360.com adresine yazın.'
 }
 function basari(m) { const e=document.getElementById('m-success'); e.textContent=m; e.style.display='block'; document.getElementById('m-error').style.display='none' }
 
@@ -952,6 +986,21 @@ async function kayitOl() {
         .upsert({ id: uid, email, avukat_adi: ad, buro_adi: buro || null, telefon: telYaz(tel), rol: 'kullanici', kurulum_tamam: false })
       if (pErr) console.warn('Profil yazilamadi (trigger olusturmus olabilir):', pErr)
     }
+    // Hoş geldiniz maili — başarısız olsa da kaydı engellemesin
+    try {
+      const { data: { session: o } } = await sb.auth.getSession()
+      if (o) {
+        await fetch(SB_URL + '/functions/v1/uyelik-maili', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + o.access_token,
+            'Content-Type': 'application/json',
+            'apikey': SB_KEY
+          }
+        })
+      }
+    } catch(e) { console.warn('Üyelik maili gönderilemedi:', e) }
+
     window.location.href = 'uygulama.html'
   } catch(err) {
     hata(hataCoz(err)); btn.disabled=false; btn.textContent='Ücretsiz Hesap Oluştur'
