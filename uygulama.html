@@ -305,6 +305,17 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .ck-alt-bilgi{margin-top:26px;padding-top:10px;border-top:1px solid #E4E7EC;
   display:flex;justify-content:space-between;font-size:8pt;color:#9CA3AF}
 .ck-bos{color:#9CA3AF}
+
+.navitem.kilitli{opacity:.5}
+.navitem.kilitli .nav-label{color:var(--muted)}
+
+.ses-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border:1px solid var(--border);
+  border-radius:20px;background:var(--surface);font-size:12px;color:var(--muted);cursor:pointer;
+  font-family:inherit;transition:all .16s}
+.ses-btn:hover{border-color:var(--gold);color:var(--text)}
+.ses-btn.kayitta{background:#FEF2F2;border-color:#FECACA;color:#B42318}
+.ses-btn.kayitta i{animation:sesNabiz 1.1s infinite}
+@keyframes sesNabiz{0%,100%{opacity:1}50%{opacity:.35}}
 </style>
 </head>
 <body>
@@ -349,28 +360,28 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
   </div>
   <nav class="nav">
     <div class="navsec" id="ns1">Ana Menü</div>
-    <a class="navitem active" onclick="sp('anasayfa',this)"><i class="ti ti-layout-dashboard"></i><span class="nav-label">Anasayfa</span></a>
-    <a class="navitem" onclick="sp('muvekkiller',this)"><i class="ti ti-users"></i><span class="nav-label">Müvekkiller</span><span class="nbadge" id="nb-mv">0</span></a>
-    <a class="navitem" onclick="sp('davalar',this)"><i class="ti ti-briefcase"></i><span class="nav-label">Davalar</span><span class="nbadge" id="nb-dv">0</span></a>
+    <a class="navitem active" onclick="sp('anasayfa',this)" data-modul="core"><i class="ti ti-layout-dashboard"></i><span class="nav-label">Anasayfa</span></a>
+    <a class="navitem" onclick="sp('muvekkiller',this)" data-modul="muvekkil"><i class="ti ti-users"></i><span class="nav-label">Müvekkiller</span><span class="nbadge" id="nb-mv">0</span></a>
+    <a class="navitem" onclick="sp('davalar',this)" data-modul="dava"><i class="ti ti-briefcase"></i><span class="nav-label">Davalar</span><span class="nbadge" id="nb-dv">0</span></a>
     <div class="navsec" id="ns2">Takip</div>
-    <a class="navitem" onclick="sp('takvim',this)"><i class="ti ti-calendar"></i><span class="nav-label">Takvim</span></a>
-    <a class="navitem" onclick="sp('gorevler',this)"><i class="ti ti-checkbox"></i><span class="nav-label">Görevler</span><span class="nbadge" id="nb-gv">0</span></a>
-    <a class="navitem" onclick="sp('belgeler',this)"><i class="ti ti-folders"></i><span class="nav-label">Belgeler</span></a>
+    <a class="navitem" onclick="sp('takvim',this)" data-modul="takvim"><i class="ti ti-calendar"></i><span class="nav-label">Takvim</span></a>
+    <a class="navitem" onclick="sp('gorevler',this)" data-modul="takvim"><i class="ti ti-checkbox"></i><span class="nav-label">Görevler</span><span class="nbadge" id="nb-gv">0</span></a>
+    <a class="navitem" onclick="sp('belgeler',this)" data-modul="belge"><i class="ti ti-folders"></i><span class="nav-label">Belgeler</span></a>
     <div class="navsec" id="ns3">Mali & İletişim</div>
-    <a class="navitem" onclick="sp('finans',this)"><i class="ti ti-coin"></i><span class="nav-label">Finans</span></a>
-    <a class="navitem" onclick="sp('iletisim',this)"><i class="ti ti-message-2"></i><span class="nav-label">İletişim</span></a>
+    <a class="navitem" onclick="sp('finans',this)" data-modul="finans"><i class="ti ti-coin"></i><span class="nav-label">Finans</span></a>
+    <a class="navitem" onclick="sp('iletisim',this)" data-modul="iletisim"><i class="ti ti-message-2"></i><span class="nav-label">İletişim</span></a>
     <div class="navsec" id="ns4">Yapay Zekâ</div>
-    <a class="navitem" onclick="sp('yapay-zeka',this)"><i class="ti ti-sparkles"></i><span class="nav-label">360 Asistan</span></a>
-    <a class="navitem" onclick="sp('ayarlar',this)"><i class="ti ti-settings"></i><span class="nav-label">Ayarlar</span></a>
-    <a class="navitem" onclick="sp('abonelik',this)"><i class="ti ti-credit-card"></i><span class="nav-label">Abonelik</span></a>
-    <a class="navitem" onclick="sp('kullanici-yonetimi',this)"><i class="ti ti-user-plus"></i><span class="nav-label">Kullanıcılar</span></a>
-    <a class="navitem" onclick="sp('ai-asistan',this)"><i class="ti ti-robot"></i><span class="nav-label">Web Asistanı</span></a>
-    <a class="navitem" onclick="sp('ai-basvuru',this)"><i class="ti ti-inbox"></i><span class="nav-label">Başvurular</span><span class="nbadge" id="basvuru-rozet" style="display:none">0</span></a>
-    <a class="navitem" onclick="sp('destek',this)"><i class="ti ti-lifebuoy"></i><span class="nav-label">Destek</span></a>
+    <a class="navitem" onclick="sp('yapay-zeka',this)" data-modul="asistan"><i class="ti ti-sparkles"></i><span class="nav-label">360 Asistan</span></a>
+    <a class="navitem" onclick="sp('ayarlar',this)" data-modul="core"><i class="ti ti-settings"></i><span class="nav-label">Ayarlar</span></a>
+    <a class="navitem" onclick="sp('abonelik',this)" data-modul="core"><i class="ti ti-credit-card"></i><span class="nav-label">Abonelik</span></a>
+    <a class="navitem" onclick="sp('kullanici-yonetimi',this)" data-modul="ekip"><i class="ti ti-user-plus"></i><span class="nav-label">Kullanıcılar</span></a>
+    <a class="navitem" onclick="sp('ai-asistan',this)" data-modul="web"><i class="ti ti-robot"></i><span class="nav-label">Web Asistanı</span></a>
+    <a class="navitem" onclick="sp('ai-basvuru',this)" data-modul="web"><i class="ti ti-inbox"></i><span class="nav-label">Başvurular</span><span class="nbadge" id="basvuru-rozet" style="display:none">0</span></a>
+    <a class="navitem" onclick="sp('destek',this)" data-modul="core"><i class="ti ti-lifebuoy"></i><span class="nav-label">Destek</span></a>
 
     <div class="navsec">HUKUKİ ARAÇLAR</div>
-    <a class="navitem" onclick="sp('dilekce',this)"><i class="ti ti-file-text"></i><span class="nav-label">Dilekçe Yaz</span></a>
-    <a class="navitem" onclick="sp('sure',this)"><i class="ti ti-hourglass"></i><span class="nav-label">Süre Takibi</span><span class="nbadge" id="sure-rozet" style="display:none">0</span></a>
+    <a class="navitem" onclick="sp('dilekce',this)" data-modul="dilekce"><i class="ti ti-file-text"></i><span class="nav-label">Dilekçe Yaz</span></a>
+    <a class="navitem" onclick="sp('sure',this)" data-modul="sure"><i class="ti ti-hourglass"></i><span class="nav-label">Süre Takibi</span><span class="nbadge" id="sure-rozet" style="display:none">0</span></a>
     <div class="navsec" id="ns5">UYAP</div>
     <a class="navitem" href="https://avukat.uyap.gov.tr" target="_blank"><i class="ti ti-scale"></i><span class="nav-label">Avukat UYAP</span></a>
     <a class="navitem" href="https://vatandas.uyap.gov.tr" target="_blank"><i class="ti ti-user-check"></i><span class="nav-label">Vatandaş UYAP</span></a>
@@ -597,6 +608,12 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
               <input type="tel" id="set-tel" placeholder="0312 000 00 00" oninput="saveSetting('telefon',this.value)"></div>
             <div class="field"><label>E-POSTA</label>
               <input type="email" id="set-email" placeholder="buro@ornek.com" oninput="saveSetting('email',this.value)"></div>
+          </div>
+          <div class="field2">
+            <div class="field"><label>BARO</label>
+              <input type="text" id="set-baro" placeholder="Ankara" oninput="saveSetting('baro',this.value)"></div>
+            <div class="field"><label>BARO SİCİL NO</label>
+              <input type="text" id="set-sicil" placeholder="12345" oninput="saveSetting('baroSicil',this.value)"></div>
           </div>
 
           <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--border)">
@@ -995,11 +1012,19 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
             </optgroup>
           </select></div>
 
-          <div class="field"><label>OLAY ÖZETİ</label>
-            <textarea id="dl-olay" rows="8" maxlength="6000" placeholder="Ne oldu? Tarihler, tutarlar ve taraflar arasındaki ilişkiyi yazın. Ne kadar ayrıntı verirseniz taslak o kadar isabetli olur."></textarea>
+          <div class="field">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+              <label style="margin:0">OLAY ÖZETİ</label>
+              <button type="button" id="ses-dl-olay" onclick="sesBaslat('dl-olay')" class="ses-btn"><i class="ti ti-microphone"></i>Sesli anlat</button>
+            </div>
+            <textarea id="dl-olay" rows="8" maxlength="6000" placeholder="Ne oldu? Tarihler, tutarlar ve taraflar arasındaki ilişkiyi yazın. Sesli anlatmak için mikrofon düğmesine basın."></textarea>
           </div>
 
-          <div class="field"><label>TALEPLER <span style="color:var(--hint);font-weight:400">— isteğe bağlı</span></label>
+          <div class="field">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+              <label style="margin:0">TALEPLER <span style="color:var(--hint);font-weight:400">— isteğe bağlı</span></label>
+              <button type="button" id="ses-dl-talep" onclick="sesBaslat('dl-talep')" class="ses-btn"><i class="ti ti-microphone"></i>Sesli anlat</button>
+            </div>
             <textarea id="dl-talep" rows="3" maxlength="2000" placeholder="Neyi talep ediyorsunuz? Boş bırakırsanız olay özetinden çıkarılır."></textarea>
           </div>
 
@@ -1038,6 +1063,25 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
           </div>
         </div>
 
+      </div>
+    </div>
+
+
+    <!-- KILITLI MODUL -->
+    <div class="panel" id="panel-kilit">
+      <div style="max-width:520px;margin:60px auto;text-align:center">
+        <div style="width:64px;height:64px;border-radius:14px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+          <i class="ti ti-lock" style="font-size:28px;color:var(--gold)"></i>
+        </div>
+        <div style="font-size:19px;font-weight:600;margin-bottom:8px"><span id="kilit-ad">Bu bölüm</span> paketinizde yok</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px">
+          Paketinizi yükselterek bu bölümü ve diğer modülleri kullanmaya başlayabilirsiniz.
+          Mevcut verileriniz olduğu gibi kalır.
+        </div>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button onclick="sp('abonelik',null)" style="padding:11px 22px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Paketleri görüntüle</button>
+          <a href="https://wa.me/905439274906?text=Paket%20y%C3%BCkseltmek%20istiyorum" target="_blank" style="padding:11px 22px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:14px;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:7px"><i class="ti ti-brand-whatsapp" style="color:#25D366"></i>Bize yazın</a>
+        </div>
       </div>
     </div>
 
@@ -1229,7 +1273,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
   <div class="modal-body">
     <input type="hidden" id="duzenle-gorev" value="">
     <div class="field"><label>Görev *</label><input type="text" id="gv-baslik" placeholder="Dilekçe hazırla..."></div>
-    <div class="field2"><div class="field"><label>Son Tarih</label><input type="date" id="gv-tarih"></div><div class="field"><label>Öncelik</label><select id="gv-oncelik"><option value="normal">Normal</option><option value="yuksek">Yüksek</option><option value="kritik">Kritik</option></select></div></div>
+    <div class="field2"><div class="field"><label>Son Tarih</label><input type="date" id="gv-tarih"></div><div class="field"><label>Atanan Kişi</label><select id="gv-atanan"><option value="">Kendim</option></select></div>
+    <div class="field"><label>Öncelik</label><select id="gv-oncelik"><option value="normal">Normal</option><option value="yuksek">Yüksek</option><option value="kritik">Kritik</option></select></div></div>
     <div class="field"><label>İlgili Dava</label><select id="gv-dava"></select></div>
     <div class="modal-footer"><button class="tbtn" onclick="closeModal('gorev')">İptal</button><button class="tbtn primary" id="btn-gorev" onclick="saveGorev()">Görev Ekle</button></div>
   </div>
@@ -1424,6 +1469,11 @@ function addFooter(panelId){
 }
 
 function sp(id, el) {
+  // Kapali modul mu
+  if(el && el.getAttribute){
+    const mk = el.getAttribute('data-modul')
+    if(mk && !modulAktif(mk)){ modulKilitEkrani(mk); return }
+  }
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'))
   document.querySelectorAll('.navitem').forEach(n=>n.classList.remove('active'))
   document.getElementById('panel-'+id).classList.add('active')
@@ -1470,6 +1520,7 @@ async function showModal(type) {
       const bilgi=document.getElementById('dv-mv-bilgi'); if(bilgi) bilgi.style.display='none'
       turSecimCiz()
     }
+    if(type==='gorev') ekipSecicileriDoldur()
     if(type==='gorev') { const s=document.getElementById('gv-dava'); s.innerHTML='<option value="">Seçiniz</option>'+dvs.map(d=>`<option value="${d.id}">${d.dosyaNo||d.dosya_no}</option>`).join('') }
     if(type==='etkinlik') { const s=document.getElementById('et-dava'); s.innerHTML='<option value="">Seçiniz</option>'+dvs.map(d=>`<option value="${d.id}">${d.dosyaNo||d.dosya_no}</option>`).join('') }
     if(type==='finans') { const s=document.getElementById('fn-mv'); s.innerHTML='<option value="">Seçiniz</option>'+mvs.map(m=>`<option value="${m.id}">${m.ad} ${m.soyad}</option>`).join(''); document.getElementById('fn-tarih').value=new Date().toISOString().split('T')[0] }
@@ -1535,8 +1586,10 @@ function davaTakvimeYaz(davaId, dosyaNo, mv, mahkeme, tarih, saat){
 function saveGorev() {
   const baslik=val('gv-baslik'); if(!baslik) return alert('Görev başlığı zorunludur!')
   const dvId=val('gv-dava'); const dv=DB.davalar.find(d=>d.id==dvId)
+  const atanan = val('gv-atanan')
   const duzenlendi = duzUygula('gorev', { id:Date.now(), baslik, tarih:val('gv-tarih'),
-    oncelik:val('gv-oncelik'), dava:dv?dv.dosyaNo:'—', durum:'bekliyor' })
+    oncelik:val('gv-oncelik'), dava:dv?dv.dosyaNo:'—', durum:'bekliyor',
+    atanan: atanan || null, atananAd: atanan ? ekipAdi(atanan) : '' })
   ;['gv-baslik','gv-tarih'].forEach(clear)
   logla(duzenlendi?'gorev_duzenle':'gorev_ekle', baslik); closeModal('gorev'); renderAll()
 }
@@ -1704,7 +1757,7 @@ function renderGv(){
   el.innerHTML=gvs.map(g=>`
     <div class="list-item">
       <div class="check ${g.durum==='tamamlandi'?'done':''}" onclick="toggleGv(${g.id})">${g.durum==='tamamlandi'?'<i class="ti ti-check" style="font-size:12px"></i>':''}</div>
-      <div style="flex:1"><div class="li-name" style="${g.durum==='tamamlandi'?'text-decoration:line-through;color:var(--hint)':''}">${g.baslik}</div><div class="li-meta">${g.dava!=='—'?g.dava+' · ':''} ${g.tarih||'Tarih yok'}</div></div>
+      <div style="flex:1"><div class="li-name" style="${g.durum==='tamamlandi'?'text-decoration:line-through;color:var(--hint)':''}">${g.baslik}</div><div class="li-meta">${g.dava!=='—'?g.dava+' · ':''} ${g.tarih||'Tarih yok'}${g.atanan ? ` · <span style="color:var(--gold);font-weight:500">${g.atananAd || ekipAdi(g.atanan)}</span>` : ''}</div></div>
       ${badge(ONCELIK_CLS[g.oncelik]||'bgr',g.oncelik)}
       <button class="del-btn" onclick="duzenleGv(${g.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delGv(${g.id},event)"><i class="ti ti-trash"></i></button>
     </div>`).join('')
@@ -2423,7 +2476,8 @@ function loadSettings(){
     'set-email':'email', 'set-wa':'whatsapp',
     'set-firma':'firmaUnvan', 'set-vergino':'vergiNo',
     'set-vergidairesi':'vergiDairesi', 'set-adres':'adres',
-    'set-faturaEmail':'faturaEmail'
+    'set-faturaEmail':'faturaEmail',
+    'set-baro':'baro', 'set-sicil':'baroSicil'
   }
   Object.keys(esl).forEach(function(id){
     const e = document.getElementById(id)
@@ -2631,12 +2685,8 @@ const BS_DURUM = {
 const BILGI_KAT = { sss:'Sık sorulan soru', buro:'Büro hakkında', hizmet:'Hizmet alanı', ozel:'Özel bilgi' }
 
 async function aiPaketUygun(){
-  if(!window.sb || !sbUser) return false
-  const buro = await buroIdAl()
-  const { data } = await window.sb.from('abonelikler').select('paket_adi')
-    .eq('buro_id', buro).eq('durum','aktif').order('created_at',{ascending:false}).limit(1).maybeSingle()
-  const p = data && data.paket_adi
-  return p === 'Buyume' || p === 'Büyüme' || p === 'Kurumsal' || p === 'Demo'
+  if(!acikModuller) await modulleriYukle()
+  return modulAktif('web')
 }
 
 async function aiYukle(){
@@ -3059,6 +3109,7 @@ async function duzenleGv(id, e){
   await showModal('gorev')
   document.getElementById('duzenle-gorev').value = k.id
   alanDoldur({ 'gv-baslik':'baslik','gv-oncelik':'oncelik','gv-tarih':'tarih','gv-not':'not' }, k)
+  const as = document.getElementById('gv-atanan'); if(as) as.value = k.atanan || ''
   duzModu('gorev', true)
 }
 
@@ -3942,6 +3993,192 @@ function tarihFormat(iso){
   }catch(e){ return String(iso) }
 }
 
+// ══ MODUL YETKILENDIRME ═══════════════════════════════════
+let acikModuller = null
+
+async function modulleriYukle(){
+  if(!window.sb || !sbUser) return
+  try{
+    const { data, error } = await window.sb.rpc('aktif_moduller')
+    acikModuller = (!error && Array.isArray(data)) ? data : null
+  }catch(e){ acikModuller = null }
+  modulleriUygula()
+}
+
+function modulAktif(kod){
+  // Liste alinamadiysa engelleme — sistem calismaya devam etsin
+  if(!acikModuller) return true
+  return acikModuller.indexOf(kod) > -1
+}
+
+function modulleriUygula(){
+  if(!acikModuller) return
+  document.querySelectorAll('.navitem[data-modul]').forEach(function(el){
+    const kod = el.getAttribute('data-modul')
+    if(modulAktif(kod)){
+      el.style.display = ''
+      el.classList.remove('kilitli')
+      const k = el.querySelector('.kilit'); if(k) k.remove()
+      return
+    }
+    // Kapali modul: gizlemek yerine kilitli goster — yukseltme firsati
+    el.style.display = ''
+    el.classList.add('kilitli')
+    if(!el.querySelector('.kilit')){
+      const s = document.createElement('i')
+      s.className = 'ti ti-lock kilit'
+      s.style.cssText = 'margin-left:auto;font-size:14px;opacity:.55'
+      el.appendChild(s)
+    }
+  })
+  // Bolum basliklarini gizle: altinda acik oge kalmadiysa
+  document.querySelectorAll('.navsec').forEach(function(bas){
+    let e = bas.nextElementSibling, varMi = false
+    while(e && !e.classList.contains('navsec')){
+      if(e.classList.contains('navitem') && !e.classList.contains('kilitli')) varMi = true
+      e = e.nextElementSibling
+    }
+    bas.style.opacity = varMi ? '' : '.45'
+  })
+}
+
+// Kapali modul secilirse yukseltme ekrani
+function modulKilitEkrani(kod){
+  const adlar = {
+    belge:'Belge arşivi', finans:'Finans ve kasa', iletisim:'İletişim kayıtları',
+    sure:'Süre takibi', ekip:'Ekip yönetimi', asistan:'360 Asistan',
+    dilekce:'Dilekçe motoru', web:'Web asistanı', uyap:'UYAP aktarımı', rapor:'Raporlama'
+  }
+  const ad = adlar[kod] || 'Bu bölüm'
+  const p = document.getElementById('panel-kilit')
+  if(p){
+    document.getElementById('kilit-ad').textContent = ad
+    document.querySelectorAll('.panel').forEach(function(x){ x.classList.remove('active') })
+    p.classList.add('active')
+    const b = document.getElementById('page-title'); if(b) b.textContent = ad
+  }
+}
+
+// ══ SESLI GIRIS (tarayici yerlesik, ucretsiz) ═════════════
+let sesTanima = null, sesHedef = null
+
+function sesDestekli(){
+  return !!(window.SpeechRecognition || window.webkitSpeechRecognition)
+}
+
+function sesBaslat(alanId){
+  if(!sesDestekli()){
+    alert('Tarayıcınız sesli girişi desteklemiyor.\n\nChrome veya Edge kullanmanızı öneririz.')
+    return
+  }
+  // Ayni butona tekrar basildiysa durdur
+  if(sesTanima && sesHedef === alanId){ sesDurdur(); return }
+  if(sesTanima) sesDurdur()
+
+  const alan = document.getElementById(alanId); if(!alan) return
+  const btn = document.getElementById('ses-' + alanId)
+  const Tanima = window.SpeechRecognition || window.webkitSpeechRecognition
+
+  sesTanima = new Tanima()
+  sesTanima.lang = 'tr-TR'
+  sesTanima.continuous = true
+  sesTanima.interimResults = true
+  sesHedef = alanId
+
+  const baslangic = alan.value
+  let kesin = ''
+
+  sesTanima.onstart = function(){
+    if(btn){ btn.classList.add('kayitta'); btn.innerHTML = '<i class="ti ti-player-stop-filled"></i>Durdur' }
+  }
+
+  sesTanima.onresult = function(o){
+    let gecici = ''
+    for(let i = o.resultIndex; i < o.results.length; i++){
+      const p = o.results[i][0].transcript
+      if(o.results[i].isFinal) kesin += p + ' '
+      else gecici += p
+    }
+    const ek = (kesin + gecici).trim()
+    alan.value = baslangic ? (baslangic.trim() + '\n' + ek) : ek
+    alan.scrollTop = alan.scrollHeight
+  }
+
+  sesTanima.onerror = function(o){
+    if(o.error === 'not-allowed'){
+      alert('Mikrofon izni verilmedi.\n\nTarayıcı adres çubuğundaki kilit simgesinden mikrofona izin verin.')
+    } else if(o.error !== 'aborted' && o.error !== 'no-speech'){
+      console.warn('Ses tanıma hatası:', o.error)
+    }
+    sesDurdur()
+  }
+
+  sesTanima.onend = function(){
+    // Kullanici durdurmadiysa devam et (uzun anlatimlarda kesilmesin)
+    if(sesTanima && sesHedef === alanId){
+      try{ sesTanima.start(); return }catch(e){}
+    }
+    sesDurdur()
+  }
+
+  try{ sesTanima.start() }
+  catch(e){ sesDurdur() }
+}
+
+function sesDurdur(){
+  if(sesHedef){
+    const btn = document.getElementById('ses-' + sesHedef)
+    if(btn){ btn.classList.remove('kayitta'); btn.innerHTML = '<i class="ti ti-microphone"></i>Sesli anlat' }
+  }
+  if(sesTanima){
+    const t = sesTanima
+    sesTanima = null; sesHedef = null
+    try{ t.onend = null; t.stop() }catch(e){}
+  }
+  sesHedef = null
+}
+
+// Destek yoksa butonlari gizle
+function sesButonlariHazirla(){
+  if(sesDestekli()) return
+  document.querySelectorAll('.ses-btn').forEach(function(b){ b.style.display = 'none' })
+}
+
+// ══ EKIP UYELERI (gorev atamasi) ══════════════════════════
+let ekipUyeleri = []
+
+async function ekipYukle(){
+  if(!window.sb || !sbUser) return
+  try{
+    const { data, error } = await window.sb.rpc('buro_uyeleri_listesi')
+    if(error) throw error
+    ekipUyeleri = data || []
+  }catch(e){
+    ekipUyeleri = []
+    console.warn('Ekip listesi:', e)
+  }
+  ekipSecicileriDoldur()
+}
+
+function ekipSecicileriDoldur(){
+  const sel = document.getElementById('gv-atanan')
+  if(!sel) return
+  const secili = sel.value
+  const benim = sbUser ? sbUser.id : ''
+  sel.innerHTML = '<option value="">Kendim</option>'
+    + ekipUyeleri.filter(function(u){ return u.kullanici_id !== benim })
+        .map(function(u){
+          return '<option value="' + u.kullanici_id + '">' + u.ad + (u.rol && u.rol!=='sahip' ? ' · ' + u.rol : '') + '</option>' }).join('')
+  if(secili) sel.value = secili
+}
+
+function ekipAdi(id){
+  if(!id) return ''
+  if(sbUser && id === sbUser.id) return 'Ben'
+  const u = ekipUyeleri.find(function(x){ return x.kullanici_id === id })
+  return u ? u.ad : ''
+}
+
 // ── ISLEM GUNLUGU ──────────────────────────────────────────
 function logla(islem, detay){
   try{
@@ -4191,7 +4428,8 @@ async function uygulamaAc(user) {
   if (profil?.buro_adi) document.getElementById('buro-adi-logo').textContent = profil.buro_adi
   kurulumKartiKontrol(profil)
 
-  loadSettings(); renderAll(); setTimeout(abonelikYukle, 500)
+  loadSettings(); renderAll(); sesButonlariHazirla()
+  await modulleriYukle(); ekipYukle(); setTimeout(abonelikYukle, 500)
   logla('giris', user.email)
 }
 
