@@ -83,13 +83,30 @@ let davetBilgi = null
 
 async function init() {
   if (!token) { showError('Geçersiz davet linki.'); return }
-  const { data, error } = await sb.from('davetler').select('*').eq('token', token).single()
-  if (error || !data) { showError('Bu davet linki geçersiz veya süresi dolmuş.'); return }
-  if (data.durum !== 'bekliyor') { showError('Bu davet linki daha önce kullanılmış.'); return }
-  if (new Date(data.expires_at) < new Date()) { showError('Bu davet linkinin süresi dolmuş.'); return }
-  davetBilgi = data
+
+  const { data, error } = await sb.rpc('davet_bilgi', { p_token: token })
+
+  if (error) {
+    showError('Davet bilgisi alınamadı. Bağlantınızı kontrol edip sayfayı yenileyin.')
+    console.warn('davet_bilgi:', error)
+    return
+  }
+  if (!data || data.ok !== true) {
+    const h = data && data.hata
+    if (h === 'kullanildi') {
+      showError('Bu davet daha önce kullanılmış. Şifrenizle giriş yapmayı deneyin.')
+    } else if (h === 'suresi_doldu') {
+      showError('Bu davetin süresi dolmuş. Sizi davet eden bürodan yeni bir davet isteyin.')
+    } else {
+      showError('Bu davet bağlantısı geçersiz. Bağlantının tamamını kopyaladığınızdan emin olun.')
+    }
+    return
+  }
+
+  davetBilgi = { email: data.email, buro_adi: data.buro_adi }
   document.getElementById('davet-email').value = data.email
-  document.getElementById('davet-sub').textContent = `${data.email} adresi için davet alındı. Şifrenizi oluşturarak büronuza katılın.`
+  document.getElementById('davet-sub').textContent =
+    `${data.buro_adi} sizi ekibine davet etti. Şifrenizi oluşturarak katılın.`
 }
 
 async function davetKabul() {
