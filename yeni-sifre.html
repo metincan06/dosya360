@@ -5,50 +5,111 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Yeni şifre belirleyin — Dosya360</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C9A84C' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232E6FD4' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#0B1629;--navy3:#1A2B47;--gold:#C9A84C;--gold2:#E8C96A;
-      --kenar:#E4E7EC;--metin:#0C111D;--soluk:#475467;--silik:#98A2B3;
-      --yesil:#12805C;--kirmizi:#B42318}
+:root{
+  --mavi:#1B4FA8; --mavi-ac:#2E6FD4; --mavi-zem:#EDF3FD;
+  --derin:#0C1B33;
+  --metin:#0F1B2E; --soluk:#53627A; --silik:#8D99AE;
+  --kenar:#E3E9F2; --ince:#EFF3F8;
+  --yesil:#0C7A52; --yesil-zem:#E8F7F0;
+  --kirmizi:#C02626; --kirmizi-zem:#FDEDED;
+  --amber:#A96109;
+}
+h1,h2,h3,h4,.baslik{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-.028em;font-weight:700}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-     background:var(--navy);min-height:100vh;display:flex;align-items:center;
-     justify-content:center;padding:20px;-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
+     color:var(--metin);min-height:100vh;display:flex;align-items:center;
+     justify-content:center;padding:24px;-webkit-font-smoothing:antialiased;letter-spacing:-.009em;
+     background:
+       radial-gradient(1100px 520px at 50% -14%,rgba(46,111,212,.10),transparent 64%),
+       linear-gradient(180deg,#FFFFFF 0%,#F2F6FC 62%,#EAF0F9 100%);
+     background-color:#F4F7FC}
+:focus-visible{outline:2px solid var(--mavi-ac);outline-offset:2px;border-radius:6px}
+
 .kutu{width:100%;max-width:412px}
-.tepe{text-align:center;margin-bottom:26px}
-.lg{display:inline-flex;align-items:center;gap:8px;font-size:19px;font-weight:600;color:var(--gold)}
-.lg svg{width:21px;height:21px}
-.lg-alt{font-size:12px;color:rgba(255,255,255,.38);margin-top:4px}
-.kart{background:#fff;border-radius:12px;padding:30px 28px;box-shadow:0 20px 56px rgba(0,0,0,.28)}
-.baslik{font-size:18px;font-weight:600;color:var(--metin);margin-bottom:5px}
-.aciklama{font-size:13px;color:var(--soluk);line-height:1.65;margin-bottom:22px}
-.alan{margin-bottom:15px}
-.alan label{display:block;font-size:11px;font-weight:600;color:var(--soluk);margin-bottom:6px;letter-spacing:.03em}
-.alan input{width:100%;padding:10px 13px;border:1.5px solid var(--kenar);border-radius:7px;
-            font-size:13.5px;outline:none;font-family:inherit;transition:border-color .16s;color:var(--metin)}
-.alan input:focus{border-color:var(--gold)}
-.olcu{height:3px;background:var(--kenar);border-radius:2px;margin-top:7px;overflow:hidden}
-.olcu i{display:block;height:100%;width:0;border-radius:2px;transition:width .22s,background .22s}
-.olcu-yazi{font-size:11px;margin-top:5px;color:var(--silik)}
-.btn{width:100%;padding:12px;background:var(--navy);color:var(--gold);border:none;border-radius:7px;
-     font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .16s}
-.btn:hover{background:var(--navy3)}
-.btn:disabled{opacity:.55;cursor:not-allowed}
-.uyari{border-radius:7px;padding:10px 13px;font-size:12.5px;margin-bottom:15px;display:none;line-height:1.6}
-.uyari.hata{background:#FEF3F2;border:1px solid #FECDCA;color:var(--kirmizi)}
-.uyari.iyi{background:#ECFDF3;border:1px solid #ABEFC6;color:var(--yesil)}
-.alt{text-align:center;font-size:12.5px;color:var(--silik);margin-top:16px}
-.alt a{color:var(--navy);font-weight:500;text-decoration:none}
-.bitti{text-align:center;padding:12px 0}
-.bitti i{font-size:38px;color:var(--yesil)}
-.bitti-b{font-size:17px;font-weight:600;color:var(--metin);margin:12px 0 6px}
-.bitti-a{font-size:13px;color:var(--soluk);line-height:1.65;margin-bottom:22px}
+.tepe{text-align:center;margin-bottom:30px}
+.lg{display:inline-flex;align-items:center;gap:10px;font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:26px;font-weight:800;color:var(--metin);letter-spacing:-.034em}
+.lg svg{width:24px;height:24px;color:#A8822E}
+.lg-alt{font-size:12.5px;color:#6B7A94;margin-top:7px}
+
+.kart{background:#fff;border-radius:20px;padding:34px 32px;border:1px solid #E6EBF3;
+      box-shadow:0 1px 2px rgba(15,27,46,.05),
+                 0 10px 24px -12px rgba(15,27,46,.14),
+                 0 36px 70px -34px rgba(27,79,168,.3)}
+.baslik{font-size:19px;color:var(--metin);margin-bottom:6px;letter-spacing:-.028em}
+.aciklama{font-size:13.5px;color:var(--soluk);line-height:1.65;margin-bottom:24px}
+
+.alan{margin-bottom:16px}
+.alan label{display:block;font-size:12px;font-weight:600;color:var(--soluk);margin-bottom:7px}
+.alan input{width:100%;padding:12px 15px;border:1px solid var(--kenar);border-radius:11px;
+            font-size:14.5px;outline:none;font-family:inherit;color:var(--metin);background:#FBFCFE;
+            transition:border-color .16s,background .16s,box-shadow .16s}
+.alan input::placeholder{color:#A9B5C9}
+.alan input:focus{border-color:var(--mavi-ac);background:#fff;
+                  box-shadow:0 0 0 3.5px rgba(46,111,212,.14)}
+
+.olcu{height:4px;background:var(--ince);border-radius:99px;margin-top:9px;overflow:hidden}
+.olcu i{display:block;height:100%;width:0;border-radius:99px;transition:width .24s,background .24s}
+.olcu-yazi{font-size:11.5px;margin-top:6px;color:var(--silik)}
+
+.btn{width:100%;padding:13px;background:var(--mavi);color:#fff;border:none;border-radius:999px;
+     font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;letter-spacing:-.014em;margin-top:10px;
+     box-shadow:0 1px 2px rgba(27,79,168,.2),0 8px 20px -10px rgba(27,79,168,.6);
+     transition:background .16s,transform .12s,box-shadow .16s}
+.btn:hover{background:#174291;box-shadow:0 2px 5px rgba(27,79,168,.24),0 12px 26px -12px rgba(27,79,168,.65)}
+.btn:active{transform:scale(.985)}
+.btn:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
+
+.uyari,.error{border-radius:11px;padding:11px 14px;font-size:13px;margin-bottom:16px;line-height:1.55;display:none}
+.uyari.hata,.error{background:var(--kirmizi-zem);border:1px solid #F8D4D4;color:var(--kirmizi)}
+.uyari.iyi{background:var(--yesil-zem);border:1px solid #BDE9D6;color:var(--yesil)}
+
+.alt{text-align:center;font-size:13.5px;color:var(--soluk);margin-top:20px}
+.alt a{color:var(--mavi);font-weight:600;text-decoration:none}
+.alt a:hover{text-decoration:underline}
+
+.bitti{text-align:center;padding:14px 0}
+.bitti i{font-size:42px;color:var(--yesil)}
+.bitti-a{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;
+         margin-top:14px;letter-spacing:-.026em}
+.bitti-b{font-size:13.5px;color:var(--soluk);margin-top:7px;line-height:1.65}
 .gizle{display:none}
+
+/* davet.html uyumu */
+.card{background:#fff;border-radius:20px;padding:34px 32px;width:100%;max-width:412px;
+      border:1px solid #E6EBF3;
+      box-shadow:0 1px 2px rgba(15,27,46,.05),
+                 0 10px 24px -12px rgba(15,27,46,.14),
+                 0 36px 70px -34px rgba(27,79,168,.3)}
+.logo{display:flex;align-items:center;justify-content:center;gap:10px;
+      font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;
+      color:var(--metin);letter-spacing:-.034em;margin-bottom:7px}
+.logo svg{color:#A8822E}
+.logo-sub{text-align:center;font-size:12.5px;color:#6B7A94;margin-bottom:28px}
+.title{font-family:'Plus Jakarta Sans',sans-serif;font-size:19px;font-weight:700;
+       color:var(--metin);margin-bottom:6px;letter-spacing:-.028em}
+.sub{font-size:13.5px;color:var(--soluk);margin-bottom:24px;line-height:1.65}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--soluk);margin-bottom:7px}
+.field input{width:100%;padding:12px 15px;background:#FBFCFE;border:1px solid var(--kenar);
+             border-radius:11px;color:var(--metin);font-size:14.5px;outline:none;font-family:inherit;
+             transition:border-color .16s,background .16s,box-shadow .16s}
+.field input::placeholder{color:#A9B5C9}
+.field input:focus{border-color:var(--mavi-ac);background:#fff;
+                   box-shadow:0 0 0 3.5px rgba(46,111,212,.14)}
+.success{background:var(--yesil-zem);border:1px solid #BDE9D6;border-radius:11px;padding:11px 14px;
+         font-size:13px;color:var(--yesil);margin-bottom:16px;line-height:1.55;display:none}
+.info{font-size:12.5px;color:var(--silik);text-align:center;margin-top:18px;line-height:1.6}
+.loading{text-align:center;padding:30px 0;color:var(--soluk);font-size:13.5px}
 </style>
 </head>
 <body>

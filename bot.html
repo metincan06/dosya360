@@ -7,13 +7,17 @@
 <title>Web Asistanı</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#0B1629;--navy2:#1A2B47;--gold:#C9A84C;--gold2:#E8C96A;
-      --bg:#F8F9FC;--yzy:#fff;--kenar:#E4E7EC;--metin:#111827;--soluk:#6B7280;--silik:#9CA3AF}
+:root{--navy:#0C1B33;--navy2:#15294A;--gold:#1B4FA8;--gold2:#2E6FD4;
+      --bg:#F6F8FC;--yzy:#fff;--kenar:#E3E9F2;--metin:#0F1B2E;--soluk:#53627A;--silik:#8D99AE}
+h1,h2,h3,h4,.baslik,.bot-baslik{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-.028em;font-weight:700}
+
 html,body{height:100%;background:transparent}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
      -webkit-font-smoothing:antialiased;letter-spacing:-.006em;display:flex;
@@ -25,7 +29,7 @@ body.sag{align-items:flex-end}
 #dugme{display:inline-flex;align-items:center;gap:9px;background:var(--navy);color:var(--gold2);
        padding:0 18px;height:48px;max-width:100%;border-radius:24px;cursor:pointer;font-size:13.5px;
        font-weight:500;border:none;font-family:inherit;white-space:nowrap;
-       box-shadow:0 4px 16px rgba(11,22,41,.22)}
+       box-shadow:0 4px 16px rgba(12,27,51,.22)}
 #dugme:hover{background:var(--navy2)}
 #dugme i{font-size:19px}
 
@@ -70,7 +74,7 @@ body.sag{align-items:flex-end}
      border-radius:6px;font-size:12.5px;color:var(--metin);cursor:pointer;font-family:inherit;
      line-height:1.4}
 .sec:hover{background:var(--bg);border-color:#D0D5DD}
-.sec.vurgu{border-color:var(--gold);color:#8A6D1F;font-weight:500}
+.sec.vurgu{border-color:var(--gold);color:#1B4FA8;font-weight:500}
 
 .form{padding:0 15px 12px;flex-shrink:0}
 .form input,.form select,.form textarea{width:100%;padding:9px 11px;margin-bottom:7px;
@@ -95,6 +99,16 @@ body.sag{align-items:flex-end}
 .ks:hover{background:var(--bg)}
 .ks i{font-size:15px;display:block;margin-bottom:2px;color:var(--silik)}
 
+.avk{display:flex;align-items:flex-start;gap:11px;padding:11px 12px;background:var(--yzy);
+  border:1px solid var(--kenar);border-radius:8px;margin-bottom:7px;cursor:pointer;text-align:left;
+  width:100%;font-family:inherit}
+.avk:hover{border-color:var(--gold);background:var(--bg)}
+.avk.secili{border-color:var(--gold);background:rgba(110,160,240,.07)}
+.avk-bas{width:38px;height:38px;border-radius:50%;background:var(--navy);color:var(--gold2);
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0}
+.avk-ad{font-size:13px;font-weight:600;color:var(--metin)}
+.avk-alt{font-size:11px;color:var(--soluk);margin-top:2px;line-height:1.45}
+.avk-tan{font-size:11.5px;color:var(--soluk);margin-top:5px;line-height:1.55}
 .yaz{display:flex;gap:7px;padding:10px 15px;border-top:1px solid var(--kenar);flex-shrink:0;align-items:flex-end}
 .yaz textarea{flex:1;padding:9px 12px;border:1px solid var(--kenar);border-radius:18px;font-size:13px;
   font-family:inherit;color:var(--metin);background:var(--yzy);outline:none;resize:none;
@@ -173,7 +187,8 @@ var HOST = (p.get('host') || '').toLowerCase();
 var URL_ = p.get('url') || '';
 document.body.className = p.get('konum') === 'sol' ? 'sol' : 'sag';
 
-var ayar = null, bilgiler = [], gorusmeId = null, mesajSayisi = 0, hazir = false;
+var ayar = null, bilgiler = [], avukatlar = [], secilenAvukat = null;
+var gorusmeId = null, mesajSayisi = 0, hazir = false;
 
 function ust(tip){ try{ parent.postMessage({ kaynak:'d360', tip:tip }, '*'); }catch(e){} }
 function el(id){ return document.getElementById(id); }
@@ -234,6 +249,12 @@ async function yukle(){
     var b = await sb.from('ai_bilgi').select('*').eq('buro_id', BURO).eq('aktif', true)
               .order('kategori').order('sira');
     bilgiler = b.data || [];
+
+    if(ayar.avukat_secimi !== false){
+      var av = await sb.from('ai_avukatlar').select('*').eq('buro_id', BURO).eq('aktif', true)
+                 .order('sira');
+      avukatlar = av.data || [];
+    }
 
     el('dugme-yazi').textContent = 'Size yardımcı olalım';
     el('p-ad').textContent = ayar.bot_adi || 'Asistan';
@@ -316,19 +337,51 @@ function anahtarlar(s){
     .filter(function(k){ return k.length > 2 && DOLGU.indexOf(k) === -1 });
 }
 
+function kok(k){
+  // Turkce ekleri kabaca at — "bosanmak", "bosanmayi" → "bosan"
+  return k.replace(/(lar|ler|dan|den|tan|ten|nin|nın|nun|nün|ini|ını|unu|ünü|ya|ye|da|de|ta|te|la|le|si|sı|su|sü|im|ım|um|üm|ir|ır|ur|ür|mak|mek|mis|mış|yor|acak|ecek|di|dı|du|dü|ti|tı)$/,'');
+}
+
 function esle(soru){
   var kel = anahtarlar(soru);
   if(!kel.length) return null;
+  var kokler = kel.map(kok).filter(function(k){ return k.length > 2 });
+
   var puanli = bilgiler.map(function(b){
-    var metin = sadeles((b.baslik||'') + ' ' + (b.icerik||''));
+    var baslik = sadeles(b.baslik || '');
+    var icerik = sadeles(b.icerik || '');
     var p = 0;
-    kel.forEach(function(k){
-      if(metin.indexOf(k) > -1) p += 2;
-      else if(k.length > 4 && metin.indexOf(k.slice(0, k.length-2)) > -1) p += 1;
+    kel.forEach(function(k, i){
+      var kk = kokler[i] || k;
+      // Baslikta gecmek daha degerli
+      if(baslik.indexOf(k) > -1) p += 5;
+      else if(kk.length > 2 && baslik.indexOf(kk) > -1) p += 3;
+      if(icerik.indexOf(k) > -1) p += 2;
+      else if(kk.length > 2 && icerik.indexOf(kk) > -1) p += 1;
     });
+    // Kisa bilgi kayitlari uzunlara gore biraz avantajli olsun
     return { b:b, p:p };
-  }).filter(function(x){ return x.p > 0 }).sort(function(a,b){ return b.p - a.p });
+  }).filter(function(x){ return x.p >= 3 }).sort(function(a,b){ return b.p - a.p });
+
   return puanli.length ? puanli[0].b : null;
+}
+
+// Ikinci en iyi eslesme — "bunu da sorabilirsiniz" onerisi icin
+function ikinciEsle(soru, birinci){
+  var kel = anahtarlar(soru);
+  if(!kel.length) return null;
+  var kokler = kel.map(kok);
+  var liste = bilgiler.filter(function(b){ return !birinci || b.id !== birinci.id })
+    .map(function(b){
+      var m = sadeles((b.baslik||'') + ' ' + (b.icerik||''));
+      var p = 0;
+      kel.forEach(function(k,i){
+        if(m.indexOf(k) > -1) p += 2;
+        else if((kokler[i]||'').length > 2 && m.indexOf(kokler[i]) > -1) p += 1;
+      });
+      return { b:b, p:p };
+    }).filter(function(x){ return x.p >= 3 }).sort(function(a,b){ return b.p - a.p });
+  return liste.length ? liste[0].b : null;
 }
 
 var RANDEVU_IZ = ['randevu','görüşmek','gorusmek','avukat','danışmak','danismak','arayın','arayin',
@@ -351,17 +404,43 @@ function gonder(){
     return;
   }
 
+  // Avukat kadrosu sorusu
+  var AVUKAT_IZ = ['avukat','kim','kadro','ekip','hangi avukat','kimler'];
+  if(avukatlar.length && AVUKAT_IZ.some(function(k){ return s.indexOf(k) > -1 })
+     && s.indexOf('randevu') === -1){
+    mesajSayisi += 1;
+    var liste = avukatlar.map(function(a){
+      return '• ' + a.ad + ([a.unvan, a.uzmanlik].filter(Boolean).length
+        ? ' — ' + [a.unvan, a.uzmanlik].filter(Boolean).join(', ') : '');
+    }).join('\n');
+    botDer('Büromuzda görev yapan avukatlar:\n' + liste, secenekGoster);
+    return;
+  }
+
   var b = esle(metin);
   if(b){
     mesajSayisi += 1;
-    botDer(b.icerik, secenekGoster);
+    var ikinci = ikinciEsle(metin, b);
+    botDer(b.icerik, function(){
+      if(ikinci){
+        var h = '<button class="sec" onclick="cevapla(' + bilgiler.indexOf(ikinci) + ')">'
+              + kacisli(ikinci.baslik) + '</button>';
+        if(ayar.cta_aktif !== false){
+          h += '<button class="sec vurgu" onclick="formAc()">'
+             + kacisli(ayar.cta_metin || 'Randevu talep et') + '</button>';
+        }
+        el('secenekler').innerHTML = h;
+        goster('secenekler', true);
+        kacir();
+      } else { secenekGoster(); }
+    });
     return;
   }
 
   mesajSayisi += 1;
   var alt = ayar.cta_aktif !== false
-    ? 'Bu konuda size daha iyi yardımcı olabilmemiz için görüşmemiz gerekiyor.'
-    : 'Bu konuda bilgi bulamadım. Aşağıdaki iletişim seçeneklerinden bize ulaşabilirsiniz.';
+    ? 'Bu konuda elimde bilgi yok. Avukatımızla görüşmeniz daha doğru olur — randevu oluşturabilirim.'
+    : 'Bu konuda elimde bilgi yok. Aşağıdaki iletişim seçeneklerinden bize ulaşabilirsiniz.';
   botDer(alt, secenekGoster);
 }
 
@@ -393,7 +472,40 @@ function formAc(){
   goster('secenekler', false);
   balon(ayar.cta_metin || 'Randevu talep et', true);
   mesajSayisi += 2;
-  botDer('Sizi arayabilmemiz için birkaç bilgi alalım.', formAlanlari);
+  if(avukatlar.length && !secilenAvukat){
+    botDer('Hangi avukatımızla görüşmek istersiniz?', avukatSecimGoster);
+  } else {
+    botDer('Sizi arayabilmemiz için birkaç bilgi alalım.', formAlanlari);
+  }
+}
+
+function avukatSecimGoster(){
+  var h = avukatlar.map(function(a, i){
+    var alt = [a.unvan, a.baro ? a.baro + ' Barosu' : '', a.uzmanlik].filter(Boolean).join(' · ');
+    return '<button class="avk" onclick="avukatSec(' + i + ')">'
+      + '<span class="avk-bas">' + kacisli((a.ad || '?').trim().charAt(0).toUpperCase()) + '</span>'
+      + '<span style="flex:1;min-width:0">'
+      +   '<span class="avk-ad" style="display:block">' + kacisli(a.ad) + '</span>'
+      +   (alt ? '<span class="avk-alt" style="display:block">' + kacisli(alt) + '</span>' : '')
+      +   (a.tanitim ? '<span class="avk-tan" style="display:block">' + kacisli(a.tanitim) + '</span>' : '')
+      + '</span></button>';
+  }).join('');
+  h += '<button class="sec" onclick="avukatSec(-1)">Farketmez, uygun olan arasın</button>';
+  el('secenekler').innerHTML = h;
+  goster('secenekler', true);
+  goster('yaz', false);
+  kacir();
+}
+
+function avukatSec(i){
+  secilenAvukat = (i >= 0) ? avukatlar[i] : { id: null, ad: 'Farketmez' };
+  balon(secilenAvukat.ad, true);
+  goster('secenekler', false);
+  mesajSayisi += 1;
+  var m = (i >= 0)
+    ? kacisli(secilenAvukat.ad) + ' ile görüşmeniz için bilgilerinizi alalım.'
+    : 'Uygun olan avukatımız sizinle iletişime geçecek. Bilgilerinizi alalım.';
+  botDer(m, formAlanlari);
 }
 
 function formAlanlari(){
@@ -428,7 +540,9 @@ async function basvuruGonder(){
       ad_soyad: ad, telefon: tel,
       konu: el('f-konu').value || null,
       aciklama: el('f-not').value.trim() || null,
-      kvkk_onay: true, kaynak_url: URL_
+      kvkk_onay: true, kaynak_url: URL_,
+      avukat_id: (secilenAvukat && secilenAvukat.id) || null,
+      avukat_ad: (secilenAvukat && secilenAvukat.ad) || null
     });
     if(r.error) throw r.error;
 

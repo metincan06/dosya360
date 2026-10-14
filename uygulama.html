@@ -7,168 +7,350 @@
 <title>Dosya360 — Avukatlık Bürosu CRM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
+<style>*{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --navy:#0B1629;--navy2:#1A2B47;--gold:#C9A84C;--gold2:#E8C96A;
-  --bg:#F4F5F7;--surface:#fff;--border:#E5E7EB;
-  --text:#111827;--muted:#6B7280;--hint:#9CA3AF;
-  --green:#15803D;--red:#B91C1C;--amber:#B45309;--blue:#1D4ED8;
+  /* Zemin ve yüzeyler */
+  --zemin:#F6F8FC;      --surface:#FFFFFF;    --kuyu:#FBFCFE;
+  /* Lacivert–mavi kimlik */
+  --derin:#0C1B33;      --derin2:#15294A;     --derin3:#1E3860;
+  --mavi:#1B4FA8;       --mavi-ac:#2E6FD4;    --mavi-zem:#EDF3FD;  --mavi-ince:#D8E5F9;
+  /* Metin */
+  --text:#0F1B2E;       --muted:#53627A;      --hint:#8D99AE;
+  /* Çizgiler */
+  --border:#E3E9F2;     --hairline:#EFF3F8;
+  /* Durum */
+  --green:#0C7A52;      --green-zem:#E8F7F0;
+  --red:#C02626;        --red-zem:#FDEDED;
+  --amber:#A96109;      --amber-zem:#FDF3E6;
+  --blue:#1B4FA8;       --blue-zem:#EDF3FD;
+  --gold:#1B4FA8;       --gold2:#2E6FD4;
+  --navy:#0C1B33;       --navy2:#15294A;
+  /* Gölge: tek bir sistem, her yere aynı gölge değil */
+  --g1:0 1px 2px rgba(15,27,46,.05);
+  --g2:0 1px 3px rgba(15,27,46,.06),0 8px 20px -10px rgba(15,27,46,.12);
+  --g3:0 2px 6px rgba(15,27,46,.07),0 18px 40px -16px rgba(15,27,46,.22);
+  --r:10px; --r2:14px;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
-input,select,textarea,button{font-family:inherit;font-size:inherit}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+h1,h2,h3,h4,.card-title,.modal-head h3{
+  font-family:'Plus Jakarta Sans',-apple-system,sans-serif;
+  letter-spacing:-.025em;font-weight:700}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+     background:var(--zemin);color:var(--text);font-size:14px;line-height:1.55;
+     -webkit-font-smoothing:antialiased;letter-spacing:-.008em}
+input,select,textarea,button{font-family:inherit;font-size:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--mavi-ac);outline-offset:2px;border-radius:6px}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-thumb{background:#CBD5E4;border-radius:99px;border:3px solid var(--zemin)}
+::-webkit-scrollbar-thumb:hover{background:#B3C0D4}
 
-/* LAYOUT */
-.app{display:flex;height:100vh;overflow:hidden}
-.sidebar{width:220px;background:var(--navy);display:flex;flex-direction:column;flex-shrink:0;transition:width 0.2s}
-.sidebar.collapsed{width:60px}
-.logo{padding:18px 16px 12px;border-bottom:0.5px solid rgba(201,168,76,0.25);display:flex;align-items:center;gap:10px;overflow:hidden}
-.logo-icon{color:var(--gold);font-size:20px;flex-shrink:0}
-.logo-text{font-size:14px;font-weight:600;color:var(--gold);white-space:nowrap}
-.logo-sub{font-size:10px;color:rgba(255,255,255,0.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nav{padding:10px 8px;flex:1;overflow-y:auto;overflow-x:hidden}
-.navsec{font-size:10px;font-weight:500;color:rgba(255,255,255,0.3);letter-spacing:.08em;text-transform:uppercase;padding:8px 8px 4px;white-space:nowrap;overflow:hidden}
-.navitem{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:6px;cursor:pointer;font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:1px;transition:all .15s;white-space:nowrap;overflow:hidden;text-decoration:none}
-.navitem:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
-.navitem.active{background:rgba(201,168,76,.18);color:var(--gold2)}
-.navitem i{font-size:17px;flex-shrink:0}
-.nbadge{margin-left:auto;background:rgba(201,168,76,.25);color:var(--gold2);font-size:10px;padding:1px 7px;border-radius:5px;flex-shrink:0}
-.sidebar-bottom{padding:10px 8px;border-top:0.5px solid rgba(255,255,255,.08)}
-.collapse-btn{width:100%;padding:7px;background:rgba(255,255,255,.05);border:none;border-radius:6px;color:rgba(255,255,255,.3);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;gap:6px}
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.topbar{height:52px;background:var(--surface);border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:10px;flex-shrink:0}
-.page-title{font-size:16px;font-weight:500;flex:1}
-.tbtn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:5px;font-size:13px;cursor:pointer;border:0.5px solid var(--border);background:var(--surface);color:var(--muted);transition:all .15s}
-.tbtn:hover{background:var(--bg)}
-.tbtn.primary{background:var(--navy);color:var(--gold);border:none}
-.tbtn.primary:hover{background:var(--navy2)}
-.content{flex:1;overflow-y:auto;padding:24px;background:var(--bg)}
-.panel{display:none}.panel.active{display:block}
+/* ═══ YERLEŞİM ═══════════════════════════════════ */
+.app{display:flex;min-height:100vh}
+.sidebar{width:236px;background:var(--derin);display:flex;flex-direction:column;
+         position:fixed;top:0;bottom:0;left:0;z-index:100;transition:width .2s ease;
+         border-right:1px solid rgba(255,255,255,.05)}
+.sidebar.collapsed{width:68px}
+.logo{display:flex;align-items:center;gap:11px;padding:20px 18px 22px}
+.logo-icon{width:32px;height:32px;border-radius:9px;flex-shrink:0;
+           background:linear-gradient(145deg,#E8C96A,#C9A84C);
+           display:flex;align-items:center;justify-content:center;color:#0C1B33;font-size:17px;
+           box-shadow:0 2px 8px rgba(201,168,76,.4)}
+.logo-text{font-family:'Plus Jakarta Sans',sans-serif;font-size:16.5px;font-weight:800;
+           color:#fff;letter-spacing:-.03em;line-height:1.1;white-space:nowrap}
+.logo-sub{font-size:10.5px;color:rgba(255,255,255,.42);white-space:nowrap;margin-top:1px}
+.sidebar.collapsed .logo-text,.sidebar.collapsed .logo-sub{display:none}
+.nav{flex:1;overflow-y:auto;padding:0 10px 14px}
+.nav::-webkit-scrollbar{width:0}
+.navsec{font-size:10px;font-weight:600;color:rgba(255,255,255,.3);
+        padding:16px 10px 7px;letter-spacing:.07em;white-space:nowrap}
+.sidebar.collapsed .navsec{opacity:0;height:14px;padding:6px 0}
+.navitem{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:9px;
+         color:rgba(255,255,255,.62);cursor:pointer;font-size:13.5px;font-weight:500;
+         margin-bottom:1px;position:relative;transition:color .14s,background .14s;white-space:nowrap}
+.navitem:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.92)}
+.navitem.active{background:rgba(201,168,76,.15);color:#fff;font-weight:600;box-shadow:inset 3px 0 0 #C9A84C;
+                }
+.navitem i{font-size:18px;flex-shrink:0;width:18px;text-align:center}
+.sidebar.collapsed .nav-label{display:none}
+.nbadge{margin-left:auto;background:rgba(255,255,255,.14);color:#fff;font-size:10.5px;
+        font-weight:600;padding:1px 7px;border-radius:99px;min-width:19px;text-align:center}
+.navitem.active .nbadge{background:rgba(255,255,255,.22)}
+.sidebar.collapsed .nbadge{display:none}
+.sidebar-bottom{padding:12px 10px;border-top:1px solid rgba(255,255,255,.07)}
+.collapse-btn{width:100%;display:flex;align-items:center;gap:11px;padding:9px 11px;
+              background:transparent;border:none;border-radius:9px;cursor:pointer;
+              color:rgba(255,255,255,.5);font-size:13.5px;transition:background .14s,color .14s}
+.collapse-btn:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.9)}
+.collapse-btn i{font-size:18px;flex-shrink:0}
+.sidebar.collapsed .collapse-btn span{display:none}
 
-/* CARDS */
-.card{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:16px 20px;margin-bottom:16px}
-.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.card-title{font-size:14px;font-weight:500}
-.card-link{font-size:12px;color:var(--gold);cursor:pointer}
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.mc{background:var(--surface);border:0.5px solid var(--border);border-radius:5px;padding:16px}
-.mc-label{font-size:11px;color:var(--muted);margin-bottom:6px}
-.mc-val{font-size:26px;font-weight:500}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.main{flex:1;margin-left:236px;transition:margin-left .2s ease;min-width:0}
+.sidebar.collapsed ~ .main{margin-left:68px}
+.topbar{height:62px;background:rgba(255,255,255,.86);backdrop-filter:blur(14px) saturate(1.5);
+        border-bottom:1px solid var(--border);display:flex;align-items:center;
+        justify-content:space-between;padding:0 26px;position:sticky;top:0;z-index:50;gap:16px}
+.page-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:700;letter-spacing:-.026em}
+.content{padding:26px}
+.panel{display:none}
+.panel.active{display:block;animation:ac .22s ease}
+@keyframes ac{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 
-/* TABLE */
-.tbl-wrap{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:16px}
-.tbl{width:100%;border-collapse:collapse;font-size:13px}
-.tbl th{padding:10px 14px;text-align:left;font-size:11px;font-weight:500;color:var(--hint);background:var(--bg);border-bottom:0.5px solid var(--border)}
-.tbl td{padding:10px 14px;border-bottom:0.5px solid #F9FAFB;color:var(--text)}
+/* ═══ DÜĞMELER ═══════════════════════════════════ */
+.tbtn{display:inline-flex;align-items:center;justify-content:center;gap:7px;
+      padding:8px 15px;border-radius:999px;border:1px solid var(--border);
+      background:var(--surface);color:var(--text);font-size:13px;font-weight:600;
+      cursor:pointer;white-space:nowrap;letter-spacing:-.012em;
+      transition:background .14s,border-color .14s,box-shadow .14s,transform .12s}
+.tbtn:hover{border-color:#CBD6E6;box-shadow:var(--g1)}
+.tbtn:active{transform:scale(.97)}
+.tbtn i{font-size:16px}
+.tbtn.primary{background:#A8822E;border-color:#A8822E;color:#fff;
+              box-shadow:0 1px 2px rgba(168,130,46,.22),0 6px 16px -8px rgba(168,130,46,.5)}
+.tbtn.primary:hover{background:#8F6E25;border-color:#8F6E25;
+                    box-shadow:0 2px 4px rgba(168,130,46,.26),0 10px 22px -10px rgba(168,130,46,.55)}
+
+/* ═══ KARTLAR ════════════════════════════════════ */
+.card{background:var(--surface);border-radius:var(--r2);padding:20px 22px;margin-bottom:16px;
+      box-shadow:var(--g2)}
+.card-head{display:flex;align-items:center;justify-content:space-between;
+           margin-bottom:16px;gap:14px}
+.card-title{font-size:15px;font-weight:700;letter-spacing:-.022em}
+.card-link{font-size:12.5px;color:#A8822E;cursor:pointer;font-weight:600}
+.card-link:hover{text-decoration:underline}
+
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.mc{background:var(--surface);border-radius:var(--r2);padding:19px 20px;box-shadow:var(--g2);
+    position:relative;overflow:hidden}
+.mc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#C9A84C;
+            opacity:.9}
+.mc-label{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:7px}
+.mc-val{font-family:'Plus Jakarta Sans',sans-serif;font-size:27px;font-weight:800;
+        letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* ═══ TABLO ══════════════════════════════════════ */
+.tbl-wrap{overflow-x:auto;border-radius:var(--r);background:var(--surface)}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th{text-align:left;padding:11px 14px;font-size:11.5px;font-weight:600;color:var(--muted);
+        background:var(--kuyu);border-bottom:1px solid var(--border);white-space:nowrap;
+        letter-spacing:.012em}
+.tbl td{padding:13px 14px;border-bottom:1px solid var(--hairline);vertical-align:middle}
 .tbl tr:last-child td{border-bottom:none}
-.tbl tr:hover td{background:#FAFAFA;cursor:pointer}
+.tbl tr:hover td{background:var(--mavi-zem)}
 
-/* BADGES */
-.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:500}
-.bb{background:#EFF6FF;color:#1D4ED8}.bg{background:#F0FDF4;color:#15803D}
-.ba{background:#FFFBEB;color:#B45309}.br{background:#FEF2F2;color:#B91C1C}
-.bp{background:#F5F3FF;color:#6D28D9}.bgr{background:#F9FAFB;color:#374151}
+/* ═══ ROZETLER ═══════════════════════════════════ */
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;
+       padding:3px 10px;border-radius:999px;white-space:nowrap;letter-spacing:-.006em}
+.bb{background:var(--blue-zem);color:var(--blue)}
+.bg{background:var(--green-zem);color:var(--green)}
+.ba{background:var(--amber-zem);color:var(--amber)}
+.br{background:var(--red-zem);color:var(--red)}
+.bp{background:#F1EDFB;color:#6D3FC4}
+.bgr{background:#F0F2F6;color:var(--muted)}
 
-/* FORMS */
-.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
-.field label{font-size:12px;font-weight:500;color:#374151}
-.field input,.field select,.field textarea{padding:9px 12px;border:0.5px solid var(--border);border-radius:5px;font-size:13px;color:var(--text);outline:none;background:var(--surface)}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold)}
-.field textarea{resize:vertical}
-.field2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* ═══ FORMLAR ════════════════════════════════════ */
+.field{margin-bottom:15px}
+.field label{display:block;font-size:11.5px;font-weight:600;color:var(--muted);
+             margin-bottom:6px;letter-spacing:.008em}
+.field input,.field select,.field textarea{
+  width:100%;padding:10px 13px;border:1px solid var(--border);border-radius:var(--r);
+  background:var(--kuyu);font-size:13.5px;color:var(--text);
+  transition:border-color .14s,background .14s,box-shadow .14s}
+.field input::placeholder,.field textarea::placeholder{color:#AEB9CC}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;border-color:var(--mavi-ac);background:#fff;
+  box-shadow:0 0 0 3.5px rgba(46,111,212,.13)}
+.field textarea{resize:vertical;min-height:86px;line-height:1.6}
+.field2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
 
-/* MODAL */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+/* ═══ KALIP ══════════════════════════════════════ */
+.overlay{position:fixed;inset:0;background:rgba(12,27,51,.52);backdrop-filter:blur(4px);
+         z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
 .overlay.open{display:flex}
-.modal{background:var(--surface);border-radius:6px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto}
-.modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:0.5px solid var(--border)}
-.modal-head h3{font-size:15px;font-weight:500}
-.modal-close{background:none;border:none;cursor:pointer;color:var(--hint);font-size:22px;line-height:1}
-.modal-body{padding:20px}
-.modal-footer{display:flex;justify-content:flex-end;gap:8px;padding-top:14px;border-top:0.5px solid var(--border);margin-top:14px}
+.modal{background:var(--surface);border-radius:18px;width:100%;max-width:520px;
+       max-height:90vh;display:flex;flex-direction:column;box-shadow:var(--g3)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;
+            padding:19px 22px;border-bottom:1px solid var(--hairline)}
+.modal-head h3{font-size:16px;font-weight:700;letter-spacing:-.024em}
+.modal-close{background:transparent;border:none;cursor:pointer;color:var(--hint);
+             font-size:20px;line-height:1;padding:5px;border-radius:7px;transition:background .14s,color .14s}
+.modal-close:hover{background:var(--hairline);color:var(--text)}
+.modal-body{padding:22px;overflow-y:auto;flex:1}
+.modal-footer{display:flex;justify-content:flex-end;gap:9px;padding:16px 22px;
+              border-top:1px solid var(--hairline);background:var(--kuyu);
+              border-radius:0 0 18px 18px}
 
-/* LIST ITEMS */
-.list-item{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s}
-.list-item:hover{border-color:rgba(201,168,76,.4)}
-.avatar{width:40px;height:40px;border-radius:50%;background:#EFF6FF;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#1D4ED8;flex-shrink:0}
-.li-name{font-size:13px;font-weight:500}
-.li-meta{font-size:11px;color:var(--muted);margin-top:2px}
-.del-btn{margin-left:auto;background:none;border:none;color:var(--hint);cursor:pointer;padding:6px;border-radius:6px;font-size:16px}
-.del-btn:hover{color:var(--red);background:#FEF2F2}
+/* ═══ LİSTE ÖĞELERİ ══════════════════════════════ */
+.list-item{display:flex;align-items:center;gap:13px;padding:13px 15px;border-radius:var(--r);
+           cursor:pointer;transition:background .14s;position:relative}
+.list-item:hover{background:var(--mavi-zem)}
+.avatar{width:36px;height:36px;border-radius:10px;flex-shrink:0;
+        background:linear-gradient(145deg,#E8C96A,#C9A84C);color:#0C1B33;
+        display:flex;align-items:center;justify-content:center;
+        font-size:13px;font-weight:700;letter-spacing:-.02em}
+.li-name{font-size:13.5px;font-weight:600;letter-spacing:-.014em}
+.li-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.del-btn{background:transparent;border:none;cursor:pointer;color:#C3CCDB;font-size:16px;
+         padding:6px;border-radius:7px;flex-shrink:0;transition:background .14s,color .14s}
+.del-btn:hover{background:var(--red-zem);color:var(--red)}
 
-/* SEARCH */
-.search-bar{display:flex;align-items:center;gap:8px;background:var(--surface);border:0.5px solid var(--border);border-radius:5px;padding:8px 12px;margin-bottom:14px}
-.search-bar input{border:none;outline:none;font-size:13px;flex:1;background:transparent}
+/* ═══ ARAMA ══════════════════════════════════════ */
+.search-bar{position:relative;margin-bottom:14px}
+.search-bar i{position:absolute;left:13px;top:50%;transform:translateY(-50%);
+              color:var(--hint);font-size:17px;pointer-events:none}
+.search-bar input{width:100%;padding:10px 14px 10px 40px;border:1px solid var(--border);
+                  border-radius:999px;background:var(--surface);font-size:13.5px;
+                  transition:border-color .14s,box-shadow .14s}
+.search-bar input:focus{outline:none;border-color:var(--mavi-ac);
+                        box-shadow:0 0 0 3.5px rgba(46,111,212,.13)}
 
-/* FILTERS */
-.filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.fbtn{padding:6px 13px;border-radius:5px;font-size:12px;cursor:pointer;border:0.5px solid var(--border);background:var(--surface);color:var(--muted);transition:all .15s}
-.fbtn.active{background:var(--navy);color:var(--gold);border-color:var(--navy)}
+/* ═══ SÜZGEÇLER ══════════════════════════════════ */
+.filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:15px}
+.fbtn{padding:6px 14px;border-radius:999px;border:1px solid var(--border);
+      background:var(--surface);font-size:12.5px;font-weight:600;color:var(--muted);
+      cursor:pointer;transition:background .14s,border-color .14s,color .14s}
+.fbtn:hover{border-color:#CBD6E6;color:var(--text)}
+.fbtn.active{background:#A8822E;border-color:#A8822E;color:#fff}
 
-/* TASK CHECK */
-.check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
-.check.done{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+/* ═══ GÖREV İŞARETİ ══════════════════════════════ */
+.check{width:19px;height:19px;border:1.8px solid #C3CCDB;border-radius:6px;cursor:pointer;
+       flex-shrink:0;display:flex;align-items:center;justify-content:center;
+       font-size:12px;color:transparent;transition:background .14s,border-color .14s,color .14s}
+.check:hover{border-color:var(--mavi-ac)}
+.check.done{background:var(--green);border-color:var(--green);color:#fff}
 
-/* AI */
+/* ═══ ASİSTAN ════════════════════════════════════ */
 .ai-wrap{display:grid;grid-template-columns:1fr 280px;gap:16px}
-.ai-messages{flex:1;overflow-y:auto;padding:4px 0;display:flex;flex-direction:column;gap:12px;max-height:400px}
-.msg{max-width:85%}
-.msg.user{align-self:flex-end}
-.msg.bot{align-self:flex-start}
-.msg-bubble{padding:10px 14px;border-radius:6px;font-size:13px;line-height:1.6;white-space:pre-line}
-.msg.user .msg-bubble{background:var(--navy);color:var(--gold2);border-bottom-right-radius:3px}
-.msg.bot .msg-bubble{background:var(--bg);color:var(--text);border-bottom-left-radius:3px}
-.ai-sugg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.sg{padding:5px 10px;border-radius:5px;font-size:11px;cursor:pointer;border:0.5px solid rgba(201,168,76,.3);background:rgba(201,168,76,.07);color:#854F0B;transition:all .15s}
-.sg:hover{background:rgba(201,168,76,.15)}
-.ai-input-row{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border)}
-.ai-input{flex:1;border:0.5px solid var(--border);border-radius:5px;padding:9px 12px;font-size:13px;outline:none}
-.ai-input:focus{border-color:var(--gold)}
-.send-btn{width:38px;height:38px;background:var(--navy);border:none;border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--gold);font-size:18px}
-.dots{display:flex;gap:4px;align-items:center;padding:4px 0}
-.dots span{width:6px;height:6px;border-radius:50%;background:var(--hint);animation:dt 1.2s infinite}
-.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
-@keyframes dt{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1}}
+.ai-messages{background:var(--surface);border-radius:var(--r2);padding:20px;
+             min-height:380px;max-height:520px;overflow-y:auto;box-shadow:var(--g2)}
+.msg{display:flex;margin-bottom:13px}
+.msg.user{justify-content:flex-end}
+.msg.bot{justify-content:flex-start}
+.msg-bubble{max-width:80%;padding:11px 15px;border-radius:15px;font-size:13.5px;line-height:1.6;
+            white-space:pre-wrap;word-break:break-word}
+.msg.user .msg-bubble{background:#A8822E;color:#fff;border-bottom-right-radius:5px}
+.msg.bot .msg-bubble{background:var(--zemin);color:var(--text);border-bottom-left-radius:5px}
+.ai-sugg{display:flex;flex-direction:column;gap:8px}
+.sg{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+    padding:11px 14px;font-size:12.5px;cursor:pointer;color:var(--muted);
+    transition:border-color .14s,color .14s,background .14s}
+.sg:hover{border-color:var(--mavi-ac);color:var(--mavi);background:var(--mavi-zem)}
+.ai-input-row{display:flex;gap:9px;margin-top:14px}
+.ai-input{flex:1;padding:11px 16px;border:1px solid var(--border);border-radius:999px;
+          background:var(--surface);font-size:13.5px;transition:border-color .14s,box-shadow .14s}
+.ai-input:focus{outline:none;border-color:var(--mavi-ac);
+                box-shadow:0 0 0 3.5px rgba(46,111,212,.13)}
+.send-btn{width:42px;height:42px;border-radius:50%;background:#A8822E;color:#fff;
+          border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+          font-size:18px;flex-shrink:0;transition:background .14s,transform .12s;
+          box-shadow:0 2px 8px -2px rgba(168,130,46,.5)}
+.send-btn:hover{background:#8F6E25}
+.send-btn:active{transform:scale(.94)}
+.dots{display:flex;gap:4px;padding:5px 0}
+.dots span{width:6px;height:6px;border-radius:50%;background:var(--hint);
+           animation:zpl 1.3s infinite}
+.dots span:nth-child(2){animation-delay:.18s}
+.dots span:nth-child(3){animation-delay:.36s}
+@keyframes zpl{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
 
-/* EMPTY */
-.empty{text-align:center;padding:48px 20px;color:var(--muted)}
-.empty i{font-size:36px;color:var(--hint);margin-bottom:10px;display:block}
-.empty-title{font-size:15px;font-weight:500;color:#374151;margin-bottom:6px}
-.empty-sub{font-size:13px;margin-bottom:18px}
+/* ═══ BOŞ DURUM ══════════════════════════════════ */
+.empty{text-align:center;padding:52px 20px;color:var(--hint)}
+.empty i{font-size:40px;opacity:.5;margin-bottom:14px;display:block;color:#B9C4D6}
+.empty-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;
+             color:var(--text);margin-bottom:5px;letter-spacing:-.022em}
+.empty-sub{font-size:13px;color:var(--muted);max-width:34ch;margin:0 auto}
 
-/* FIN */
-.fin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
-.fin-card{background:var(--surface);border:0.5px solid var(--border);border-radius:5px;padding:16px}
-.fin-icon{width:36px;height:36px;border-radius:5px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px}
-.fin-amount{font-size:22px;font-weight:500;margin-bottom:2px}
-.fin-label{font-size:11px;color:var(--muted)}
+/* ═══ FİNANS ═════════════════════════════════════ */
+.fin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+.fin-card{background:var(--surface);border-radius:var(--r2);padding:19px 20px;box-shadow:var(--g2)}
+.fin-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;
+          justify-content:center;font-size:19px;margin-bottom:13px}
+.fin-amount{font-family:'Plus Jakarta Sans',sans-serif;font-size:23px;font-weight:800;
+            letter-spacing:-.035em;line-height:1.1;font-variant-numeric:tabular-nums}
+.fin-label{font-size:12.5px;color:var(--muted);margin-top:4px}
 
-/* CAL */
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:8px}
-.cdh{font-size:10px;text-align:center;color:var(--hint);font-weight:500;padding:4px 0}
-.cd{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;border-radius:4px;cursor:pointer;position:relative;transition:all .15s}
-.cd:hover{background:var(--bg)}
-.cd.today{background:var(--navy);color:var(--gold);font-weight:500}
-.cd.has-ev::after{content:'';position:absolute;bottom:3px;width:4px;height:4px;border-radius:50%;background:var(--gold)}
-.cd.other-m{color:var(--hint)}
+/* ═══ TAKVİM ═════════════════════════════════════ */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cdh{text-align:center;font-size:11px;font-weight:600;color:var(--hint);padding:7px 0}
+.cd{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:9px;
+    font-size:13px;cursor:pointer;position:relative;font-variant-numeric:tabular-nums;
+    transition:background .14s,color .14s}
+.cd:hover{background:var(--mavi-zem)}
+.cd.today{background:#A8822E;color:#fff;font-weight:700}
+.cd.has-ev::after{content:'';position:absolute;bottom:5px;left:50%;transform:translateX(-50%);
+                  width:4px;height:4px;border-radius:50%;background:var(--gold)}
+.cd.today.has-ev::after{background:#fff}
+.cd.other-m{color:#C3CCDB}
+.cd.selected{background:var(--surface);box-shadow:inset 0 0 0 1.5px #A8822E}
 
-/* MOBILE */
-@media(max-width:900px){#destek-duzen,#dl-duzen,#sr-duzen,#ay-duzen{grid-template-columns:1fr!important}}
-@media(max-width:768px){
-  .sidebar{position:fixed;z-index:100;height:100vh;transform:translateX(-100%);transition:transform .3s}
-  .sidebar.open{transform:translateX(0)}
-  .metrics{grid-template-columns:1fr 1fr}
-  .grid2{grid-template-columns:1fr}
+/* ═══ MOBİL ══════════════════════════════════════ */
+.mobile-menu-btn{display:none;background:transparent;border:none;cursor:pointer;
+                 font-size:22px;color:var(--text);padding:4px}
+@media(max-width:1024px){
+  .metrics{grid-template-columns:repeat(2,1fr)}
   .ai-wrap{grid-template-columns:1fr}
-  .fin-grid{grid-template-columns:1fr 1fr}
-  .field2{grid-template-columns:1fr}
-  .mobile-menu-btn{display:flex!important}
+  .fin-grid{grid-template-columns:1fr}
 }
-.mobile-menu-btn{display:none;align-items:center;justify-content:center;width:36px;height:36px;background:none;border:0.5px solid var(--border);border-radius:5px;cursor:pointer;color:var(--muted);margin-right:4px}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);transition:transform .22s ease;width:236px}
+  .sidebar.open{transform:none;box-shadow:var(--g3)}
+  .main{margin-left:0}
+  .sidebar.collapsed ~ .main{margin-left:0}
+  .mobile-menu-btn{display:block}
+  .metrics{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr}
+  .field2{grid-template-columns:1fr}
+  .content{padding:18px 16px}
+  .topbar{padding:0 16px}
+  .card{padding:17px 18px}
+}
+
+.auth-screen{position:fixed;inset:0;z-index:9999;padding:24px;
+  display:flex;align-items:center;justify-content:center;
+  background:
+    radial-gradient(1100px 520px at 50% -14%,rgba(46,111,212,.10),transparent 64%),
+    linear-gradient(180deg,#FFFFFF 0%,#F2F6FC 62%,#EAF0F9 100%);
+  background-color:#F4F7FC}
+.auth-box{width:100%;max-width:412px}
+.auth-logo{text-align:center;margin-bottom:30px}
+.auth-logo-text{font-family:'Plus Jakarta Sans',sans-serif;font-size:27px;font-weight:800;
+  color:#0F1B2E;letter-spacing:-.034em;display:inline-flex;align-items:center;gap:10px}
+.auth-logo-text i,.auth-logo-text svg{color:#A8822E}
+.auth-logo-sub{font-size:12.5px;color:#6B7A94;margin-top:7px;letter-spacing:-.004em}
+.auth-card{background:#fff;border-radius:20px;padding:34px 32px;
+  border:1px solid #E6EBF3;box-shadow:0 1px 2px rgba(15,27,46,.05),0 10px 24px -12px rgba(15,27,46,.14),0 36px 70px -34px rgba(27,79,168,.3)}
+.auth-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:19px;font-weight:700;
+  color:#0F1B2E;margin-bottom:24px;letter-spacing:-.028em}
+.auth-field{margin-bottom:16px}
+.auth-field label{font-size:12px;font-weight:600;color:#53627A;
+  display:block;margin-bottom:7px;letter-spacing:-.002em}
+.auth-field input{width:100%;padding:12px 15px;background:#FBFCFE;
+  border:1px solid #E3E9F2;border-radius:11px;color:#0F1B2E;font-size:14.5px;
+  outline:none;font-family:inherit;
+  transition:border-color .16s,background .16s,box-shadow .16s}
+.auth-field input::placeholder{color:#A9B5C9}
+.auth-field input:focus{border-color:#2E6FD4;background:#fff;
+  box-shadow:0 0 0 3.5px rgba(46,111,212,.14)}
+.auth-btn{width:100%;padding:13px;background:#A8822E;
+  color:#fff;border:none;border-radius:999px;font-weight:600;font-size:15px;cursor:pointer;
+  margin-top:10px;font-family:inherit;letter-spacing:-.014em;
+  box-shadow:0 1px 2px rgba(168,130,46,.22),0 8px 20px -10px rgba(168,130,46,.5);
+  transition:background .16s,transform .12s,box-shadow .16s}
+.auth-btn:hover{background:#8F6E25;box-shadow:0 2px 5px rgba(168,130,46,.26),
+  0 12px 26px -12px rgba(168,130,46,.58)}
+.auth-btn:active{transform:scale(.985)}
+.auth-btn:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
+.auth-error{display:none;background:#FDEDED;border:1px solid #F8D4D4;border-radius:11px;
+  padding:11px 14px;font-size:13px;color:#C02626;margin-bottom:16px;line-height:1.55}
+.auth-success{display:none;background:#E8F7F0;border:1px solid #BDE9D6;border-radius:11px;
+  padding:11px 14px;font-size:13px;color:#0C7A52;margin-bottom:16px;line-height:1.55}
+.auth-switch{text-align:center;font-size:13.5px;color:#53627A;margin-top:20px}
+.auth-switch span,.auth-switch a{color:#1B4FA8;font-weight:600;cursor:pointer}
+.auth-switch span:hover,.auth-switch a:hover{text-decoration:underline}
+
 </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -178,93 +360,49 @@ window.sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
 var sb = window.sb
 </script>
   <style>
-    .auth-screen{position:fixed;inset:0;background:#0B1629;display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
-    .auth-box{width:100%;max-width:400px}
-    .auth-logo{text-align:center;margin-bottom:32px}
-    .auth-logo-text{font-size:28px;font-weight:600;color:#C9A84C;letter-spacing:2px}
-    .auth-logo-sub{font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px}
-    .auth-card{background:#1A2B47;border-radius:5px;padding:32px;border:0.5px solid rgba(201,168,76,0.2)}
-    .auth-title{font-size:16px;font-weight:500;color:#fff;margin-bottom:24px}
-    .auth-field{margin-bottom:14px}
-    .auth-field label{font-size:12px;color:rgba(255,255,255,0.5);display:block;margin-bottom:6px}
-    .auth-field input{width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:5px;color:#fff;font-size:14px;outline:none;font-family:inherit}
-    .auth-field input:focus{border-color:rgba(201,168,76,0.5)}
-    .auth-btn{width:100%;padding:12px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;margin-top:8px;font-family:inherit}
-    .auth-btn:disabled{opacity:0.5;cursor:not-allowed}
-    .auth-switch{text-align:center;margin-top:18px;font-size:13px;color:rgba(255,255,255,0.4)}
-    .auth-switch span{color:#C9A84C;cursor:pointer;font-weight:500}
-    .auth-error{background:rgba(239,68,68,0.15);border:0.5px solid rgba(239,68,68,0.3);border-radius:5px;padding:10px 14px;font-size:13px;color:#FCA5A5;margin-bottom:14px;display:none}
-    .auth-success{background:rgba(34,197,94,0.15);border:0.5px solid rgba(34,197,94,0.3);border-radius:5px;padding:10px 14px;font-size:13px;color:#86EFAC;margin-bottom:14px;display:none}
-    
-    /* ADMİN PANELİ */
-    .admin-panel{position:fixed;inset:0;background:#F4F5F7;z-index:8888;display:none;flex-direction:column}
-    .admin-topbar{background:#0B1629;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
-    .admin-title{color:#C9A84C;font-size:16px;font-weight:600}
-    .admin-content{flex:1;overflow-y:auto;padding:24px}
-    .admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
-    .admin-stat{background:#fff;border:0.5px solid #E5E7EB;border-radius:5px;padding:16px}
-    .admin-stat-label{font-size:11px;color:#6B7280;margin-bottom:4px}
-    .admin-stat-val{font-size:26px;font-weight:500;color:#111827}
-    .admin-table{background:#fff;border:0.5px solid #E5E7EB;border-radius:6px;overflow:hidden}
-    .admin-table table{width:100%;border-collapse:collapse;font-size:13px}
-    .admin-table th{padding:10px 16px;text-align:left;font-size:11px;font-weight:500;color:#9CA3AF;background:#F9FAFB;border-bottom:0.5px solid #E5E7EB}
-    .admin-table td{padding:11px 16px;border-bottom:0.5px solid #F3F4F6;color:#374151}
-    .toggle-btn{padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;border:none;font-weight:500}
-    .toggle-btn.aktif{background:#FEF2F2;color:#B91C1C}
-    .toggle-btn.pasif{background:#F0FDF4;color:#15803D}
-  
-/* ── Tipografi ve yuzey rafinasyonu ─────────────────────── */
-body{
-  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-  font-feature-settings:'cv02','cv03','cv04','tnum';
-  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-  letter-spacing:-0.006em;
-}
-h1,h2,h3,h4,.card-title,.section-title{letter-spacing:-0.018em}
-/* Sayilar hizali dizilsin */
-.mc-val,.stat-num,.plan-price,.hw-stat-val,.mini-stat-val,td{font-variant-numeric:tabular-nums}
-/* Kenarliklar tek tonda */
-:root{--border:#E4E7EC;--hairline:#F0F1F3}
-table td{border-bottom:1px solid var(--hairline)}
-/* Odak halkasi - erisilebilirlik */
-a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
-  outline:2px solid #C9A84C;outline-offset:1px;border-radius:3px
-}
-/* Gecisler tek egride */
-.navitem,.btn,.tbtn,button,.plan-card,.feat-card{transition:background-color .12s ease,border-color .12s ease,color .12s ease}
+/* ═══ GİRİŞ EKRANI ═══════════════════════════════ */
 
-/* ── Kenar cubugu yogunlugu ─────────────────────────────── */
-.navitem{
-  display:flex;align-items:center;gap:10px;
-  padding:7px 12px;margin:1px 8px;border-radius:5px;
-  font-size:13.5px;font-weight:450;color:rgba(255,255,255,.62);
-  cursor:pointer;text-decoration:none;position:relative;line-height:1.35
-}
-.navitem i{font-size:17px;width:18px;text-align:center;flex-shrink:0;opacity:.8}
-.navitem:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.92)}
-.navitem:hover i{opacity:1}
-.navitem.active{background:rgba(201,168,76,.11);color:#E8C96A;font-weight:500}
-.navitem.active i{opacity:1;color:#C9A84C}
-.navitem.active::before{
-  content:'';position:absolute;left:-8px;top:6px;bottom:6px;
-  width:2px;background:#C9A84C;border-radius:0 2px 2px 0
-}
-.nav-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.nbadge{
-  font-size:11px;font-weight:500;padding:1px 6px;border-radius:3px;
-  background:rgba(255,255,255,.09);color:rgba(255,255,255,.55);
-  font-variant-numeric:tabular-nums
-}
-.navitem.active .nbadge{background:rgba(201,168,76,.18);color:#E8C96A}
-.navsec{
-  font-size:10.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
-  color:rgba(255,255,255,.32);padding:16px 20px 5px;white-space:nowrap;overflow:hidden
-}
-.navsec:first-of-type{padding-top:8px}
+/* ═══ YÖNETİM PANELİ ═════════════════════════════ */
+.admin-panel{position:fixed;inset:0;background:var(--zemin);z-index:8888;display:none;flex-direction:column}
+.admin-topbar{background:var(--derin);padding:15px 26px;display:flex;align-items:center;
+  justify-content:space-between}
+.admin-title{font-family:'Plus Jakarta Sans',sans-serif;color:#fff;font-size:16px;
+  font-weight:700;letter-spacing:-.024em}
+.admin-content{flex:1;overflow-y:auto;padding:26px}
+.admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.admin-stat{background:var(--surface);border-radius:var(--r2);padding:19px 20px;box-shadow:var(--g2)}
+.admin-stat-label{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:7px}
+.admin-stat-val{font-family:'Plus Jakarta Sans',sans-serif;font-size:27px;font-weight:800;
+  letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums}
+.admin-table{background:var(--surface);border-radius:var(--r2);overflow:hidden;box-shadow:var(--g2)}
+.admin-table table{width:100%;border-collapse:collapse;font-size:13.5px}
+.admin-table th{text-align:left;padding:12px 16px;font-size:11.5px;font-weight:600;
+  color:var(--muted);background:var(--kuyu);border-bottom:1px solid var(--border);white-space:nowrap}
+.admin-table td{padding:13px 16px;border-bottom:1px solid var(--hairline)}
+.toggle-btn{padding:5px 13px;border-radius:999px;border:1px solid var(--border);
+  background:var(--surface);font-size:12px;font-weight:600;cursor:pointer;transition:all .14s}
+.toggle-btn.aktif{background:var(--green-zem);border-color:#B6E4CE;color:var(--green)}
+.toggle-btn.pasif{background:var(--red-zem);border-color:#F4C4C4;color:var(--red)}
 
-.ai-tab{padding:9px 14px;background:none;border:none;border-bottom:2px solid transparent;font-size:13.5px;color:var(--muted);cursor:pointer;font-family:inherit;margin-bottom:-1px}
-.ai-tab.active{color:var(--text);border-bottom-color:#C9A84C;font-weight:500}
-.bs-durum{padding:3px 9px;border-radius:4px;font-size:11.5px;font-weight:500}
+/* ═══ SEKMELER VE EK ÖĞELER ══════════════════════ */
+.ai-tab{padding:8px 16px;border-radius:999px;border:1px solid var(--border);
+  background:var(--surface);font-size:13px;font-weight:600;color:var(--muted);
+  cursor:pointer;transition:background .14s,border-color .14s,color .14s}
+.ai-tab:hover{border-color:#CBD6E6;color:var(--text)}
+.ai-tab.active{background:var(--derin);border-color:var(--derin);color:#fff}
+.bs-durum{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;
+  padding:3px 10px;border-radius:999px;background:var(--blue-zem);color:var(--blue)}
+.navitem.kilitli{opacity:.38;cursor:not-allowed}
+.navitem.kilitli:hover{background:transparent}
+.navitem.kilitli .nav-label{text-decoration:none}
+.ses-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  width:38px;height:38px;border-radius:50%;border:1px solid var(--border);
+  background:var(--surface);color:var(--muted);cursor:pointer;font-size:17px;flex-shrink:0;
+  transition:background .14s,border-color .14s,color .14s}
+.ses-btn:hover{border-color:var(--mavi-ac);color:var(--mavi);background:var(--mavi-zem)}
+.ses-btn.kayitta{background:var(--red);border-color:var(--red);color:#fff}
+.ses-btn.kayitta i{animation:nabiz 1.4s ease-in-out infinite}
+@keyframes nabiz{0%,100%{opacity:1}50%{opacity:.4}}
 
 /* ── ÇIKTI / YAZDIRMA ─────────────────────────────────────── */
 #ciktikap{display:none}
@@ -295,10 +433,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .ck-sat{display:flex;padding:5px 0;border-bottom:1px solid #F0F1F3;font-size:10pt}
 .ck-et{width:42%;color:#6B7280;flex-shrink:0}
 .ck-dg{flex:1;color:#111827;font-weight:500}
-.ck-kutu{border:1px solid #E4E7EC;border-radius:4px;padding:12px 14px;margin:12px 0;background:#FAFBFC}
-.ck-vur{border-left:3px solid #C9A84C;padding-left:12px;margin:12px 0}
+.ck-kutu{border:1px solid #E4E7EC;border-radius:12px;padding:12px 14px;margin:12px 0;background:#FAFBFC}
+.ck-vur{border-left:3px solid #1B4FA8;padding-left:12px;margin:12px 0}
 .ck-ozet{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
-.ck-oz{border:1px solid #E4E7EC;border-radius:4px;padding:10px 12px}
+.ck-oz{border:1px solid #E4E7EC;border-radius:12px;padding:10px 12px}
 .ck-oz-d{font-size:15pt;font-weight:600;color:#0B1629;font-variant-numeric:tabular-nums}
 .ck-oz-e{font-size:8.5pt;color:#6B7280;margin-top:2px}
 .ck-not{font-size:9pt;color:#6B7280;line-height:1.6;white-space:pre-wrap}
@@ -322,27 +460,25 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
 
 <!-- GİRİŞ EKRANI -->
-<div id="giris-ekrani" style="position:fixed;inset:0;background:#0B1629;display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px">
-  <div style="width:100%;max-width:380px">
-    <div style="text-align:center;margin-bottom:28px">
-      <div style="font-size:26px;font-weight:600;color:#C9A84C;letter-spacing:.2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.125em;flex-shrink:0"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg> Dosya360</div>
-      <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px">Avukatlık Bürosu Yönetim Sistemi</div>
+<div id="giris-ekrani" class="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="auth-logo-text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:.92em;height:.92em;vertical-align:-0.1em;flex-shrink:0;color:#6EA0F0"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg> Dosya360</div>
+      <div class="auth-logo-sub">Avukatlık Bürosu Yönetim Sistemi</div>
     </div>
-    <div style="background:#1A2B47;border-radius:5px;padding:28px;border:0.5px solid rgba(201,168,76,0.2)">
-      <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:20px">Giriş Yap</div>
-      <div id="giris-hata" style="background:rgba(239,68,68,0.15);border:0.5px solid rgba(239,68,68,0.3);border-radius:5px;padding:9px 12px;font-size:12px;color:#FCA5A5;margin-bottom:14px;display:none"></div>
-      <div style="margin-bottom:12px">
-        <label style="font-size:12px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px">E-posta</label>
-        <input type="email" id="giris-email" placeholder="avukat@buro.com" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:5px;color:#fff;font-size:13px;outline:none;font-family:inherit">
+    <div class="auth-card">
+      <div class="auth-title">Giriş yapın</div>
+      <div id="giris-hata" class="auth-error"></div>
+      <div class="auth-field">
+        <label for="giris-email">E-POSTA</label>
+        <input type="email" id="giris-email" placeholder="avukat@buro.com" autocomplete="email">
       </div>
-      <div style="margin-bottom:16px">
-        <label style="font-size:12px;color:rgba(255,255,255,0.5);display:block;margin-bottom:5px">Şifre</label>
-        <input type="password" id="giris-sifre" placeholder="••••••••" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:5px;color:#fff;font-size:13px;outline:none;font-family:inherit" onkeydown="if(event.key==='Enter')girisYap()">
+      <div class="auth-field">
+        <label for="giris-sifre">ŞİFRE</label>
+        <input type="password" id="giris-sifre" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')girisYap()">
       </div>
-      <button id="giris-btn" onclick="girisYap()" style="width:100%;padding:12px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;font-family:inherit">Giriş Yap</button>
-      <div style="text-align:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,0.4)">
-        Hesabınız yok mu? <a href="index.html" style="color:#C9A84C;font-weight:500">Ana sayfaya git</a>
-      </div>
+      <button id="giris-btn" class="auth-btn" onclick="girisYap()">Giriş yap</button>
+      <div class="auth-switch">Hesabınız yok mu? <a href="index.html" style="color:#8FB6F0;font-weight:600">Ana sayfaya git</a></div>
     </div>
   </div>
 </div>
@@ -398,7 +534,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <button class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="ti ti-menu-2"></i></button>
     <div class="page-title" id="page-title">Anasayfa</div>
     <div style="display:flex;gap:8px;align-items:center">
-      <span id="senkron-rozet" style="font-size:11.5px;color:#9CA3AF;display:flex;align-items:center;gap:5px;white-space:nowrap" title="Bulut senkronizasyon durumu"><i class="ti ti-cloud"></i></span>
+      <span id="senkron-rozet" style="font-size:11.5px;color:#8D99AE;display:flex;align-items:center;gap:5px;white-space:nowrap" title="Bulut senkronizasyon durumu"><i class="ti ti-cloud"></i></span>
       <button class="tbtn" onclick="showModal('muvekkil')"><i class="ti ti-user-plus"></i>Müvekkil Ekle</button>
       <button class="tbtn primary" onclick="showModal('dava')"><i class="ti ti-plus"></i>Yeni Dava</button>
     </div>
@@ -410,13 +546,13 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
     <!-- DASHBOARD -->
     <div class="panel active" id="panel-anasayfa" >
-      <div id="kurulum-karti" style="display:none;align-items:center;gap:14px;background:#0B1629;border-radius:6px;padding:18px 20px;margin-bottom:20px">
-        <div style="width:44px;height:44px;border-radius:6px;background:rgba(201,168,76,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="ti ti-settings"></i></div>
+      <div id="kurulum-karti" style="display:none;align-items:center;gap:14px;background:#0C1B33;border-radius:11px;padding:18px 20px;margin-bottom:20px">
+        <div style="width:44px;height:44px;border-radius:11px;background:rgba(201,168,76,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="ti ti-settings"></i></div>
         <div style="flex:1">
           <div style="font-size:14px;font-weight:600;color:#fff">Büro bilgilerinizi tamamlayın</div>
           <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px">Büro adı ve avukat adınızı girin — 30 saniye sürer.</div>
         </div>
-        <button onclick="kurulumaGit()" style="padding:9px 18px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">Şimdi Tamamla →</button>
+        <button onclick="kurulumaGit()" style="padding:9px 18px;background:#1B4FA8;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">Şimdi Tamamla →</button>
       </div>
       <!-- YAKLAŞAN DURUŞMALAR KARTI -->
       <div class="card" id="yaklasan-kart" style="display:none;border:1.5px solid #FECACA;background:#FEF2F2;margin-bottom:16px">
@@ -462,21 +598,21 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <button class="tbtn primary" onclick="showModal('dava')"><i class="ti ti-plus"></i>Yeni Dava</button>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
-        <div style="display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--border);border-radius:5px;padding:7px 11px;flex:1;min-width:200px">
+        <div style="display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--border);border-radius:9px;padding:7px 11px;flex:1;min-width:200px">
           <i class="ti ti-search" style="color:var(--hint);font-size:15px"></i>
           <input id="dv-ara" oninput="renderDv()" placeholder="Dosya no, müvekkil, mahkeme, karşı taraf..." style="border:none;outline:none;font-size:13px;flex:1;background:transparent;color:var(--text);font-family:inherit">
         </div>
-        <select id="dv-f-tur" onchange="renderDv()" style="padding:7px 11px;border:1px solid var(--border);border-radius:5px;font-size:13px;font-family:inherit;background:#fff;color:var(--text)"><option value="">Tüm türler</option></select>
-        <select id="dv-f-mv" onchange="renderDv()" style="padding:7px 11px;border:1px solid var(--border);border-radius:5px;font-size:13px;font-family:inherit;background:#fff;color:var(--text)"><option value="">Tüm müvekkiller</option></select>
-        <select id="dv-f-durusma" onchange="renderDv()" style="padding:7px 11px;border:1px solid var(--border);border-radius:5px;font-size:13px;font-family:inherit;background:#fff;color:var(--text)">
+        <select id="dv-f-tur" onchange="renderDv()" style="padding:7px 11px;border:1px solid var(--border);border-radius:9px;font-size:13px;font-family:inherit;background:#fff;color:var(--text)"><option value="">Tüm türler</option></select>
+        <select id="dv-f-mv" onchange="renderDv()" style="padding:7px 11px;border:1px solid var(--border);border-radius:9px;font-size:13px;font-family:inherit;background:#fff;color:var(--text)"><option value="">Tüm müvekkiller</option></select>
+        <select id="dv-f-durusma" onchange="renderDv()" style="padding:7px 11px;border:1px solid var(--border);border-radius:9px;font-size:13px;font-family:inherit;background:#fff;color:var(--text)">
           <option value="">Duruşma farketmez</option>
           <option value="7">7 gün içinde</option>
           <option value="30">30 gün içinde</option>
           <option value="gecmis">Tarihi geçmiş</option>
           <option value="yok">Duruşma girilmemiş</option>
         </select>
-        <button onclick="davaFiltreSifirla()" style="padding:7px 12px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:13px;color:var(--muted);cursor:pointer;font-family:inherit">Temizle</button>
-        <button onclick="ciktiDavaListesi()" title="Listeyi yazdır" style="padding:7px 12px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:13px;color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px"><i class="ti ti-printer"></i>Yazdır</button>
+        <button onclick="davaFiltreSifirla()" style="padding:7px 12px;background:var(--surface);border:1px solid var(--border);border-radius:9px;font-size:13px;color:var(--muted);cursor:pointer;font-family:inherit">Temizle</button>
+        <button onclick="ciktiDavaListesi()" title="Listeyi yazdır" style="padding:7px 12px;background:var(--surface);border:1px solid var(--border);border-radius:9px;font-size:13px;color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px"><i class="ti ti-printer"></i>Yazdır</button>
       </div>
       <div class="filters" id="dava-filters"></div>
       <div id="dv-sonuc" style="font-size:12px;color:var(--muted);margin-bottom:10px"></div>
@@ -487,7 +623,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="panel" id="panel-takvim">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <h1 style="font-size:20px;font-weight:600">Takvim</h1>
-        <button class="tbtn primary" onclick="showModal('etkinlik')"><i class="ti ti-plus"></i>Etkinlik Ekle</button>
+        <div style="display:flex;gap:8px">
+          <button class="tbtn" onclick="icsHepsi()" title="Yaklaşan tüm etkinlikleri takvim dosyası olarak indir"><i class="ti ti-calendar-share"></i>Takvimime Aktar</button>
+          <button class="tbtn primary" onclick="showModal('etkinlik')"><i class="ti ti-plus"></i>Etkinlik Ekle</button>
+        </div>
       </div>
       <div class="grid2">
         <div class="card">
@@ -522,7 +661,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="fbtn" onclick="gvFiltre='bekliyor';renderGv();setFilter(this)">Bekliyor</div>
         <div class="fbtn" onclick="gvFiltre='tamamlandi';renderGv();setFilter(this)">Tamamlandı</div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:5px;padding:7px 11px;margin-bottom:12px;max-width:420px"><i class="ti ti-search" style="color:var(--hint);font-size:15px"></i><input id="gv-ara" oninput="renderGv()" placeholder="Görev, dosya no..." style="border:none;outline:none;font-size:13px;flex:1;background:transparent;color:var(--text);font-family:inherit"><span id="gv-sonuc" style="font-size:11.5px;color:var(--hint);white-space:nowrap"></span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:9px;padding:7px 11px;margin-bottom:12px;max-width:420px"><i class="ti ti-search" style="color:var(--hint);font-size:15px"></i><input id="gv-ara" oninput="renderGv()" placeholder="Görev, dosya no..." style="border:none;outline:none;font-size:13px;flex:1;background:transparent;color:var(--text);font-family:inherit"><span id="gv-sonuc" style="font-size:11.5px;color:var(--hint);white-space:nowrap"></span></div>
       <div id="list-gv"></div>
     </div>
 
@@ -532,7 +671,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <h1 style="font-size:20px;font-weight:600">Belgeler</h1>
         <button class="tbtn primary" onclick="showModal('belge')"><i class="ti ti-upload"></i>Belge Ekle</button>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:5px;padding:7px 11px;margin-bottom:12px;max-width:420px"><i class="ti ti-search" style="color:var(--hint);font-size:15px"></i><input id="bl-ara" oninput="renderBl()" placeholder="Belge adı, kategori, dosya..." style="border:none;outline:none;font-size:13px;flex:1;background:transparent;color:var(--text);font-family:inherit"><span id="bl-sonuc" style="font-size:11.5px;color:var(--hint);white-space:nowrap"></span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:9px;padding:7px 11px;margin-bottom:12px;max-width:420px"><i class="ti ti-search" style="color:var(--hint);font-size:15px"></i><input id="bl-ara" oninput="renderBl()" placeholder="Belge adı, kategori, dosya..." style="border:none;outline:none;font-size:13px;flex:1;background:transparent;color:var(--text);font-family:inherit"><span id="bl-sonuc" style="font-size:11.5px;color:var(--hint);white-space:nowrap"></span></div>
       <div id="list-bl"></div>
     </div>
 
@@ -550,7 +689,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="fin-card"><div class="fin-icon" style="background:#FFFBEB;color:#B45309"><i class="ti ti-clock"></i></div><div class="fin-amount" id="f-bekleyen">₺0</div><div class="fin-label">Bekleyen alacak</div></div>
         <div class="fin-card"><div class="fin-icon" style="background:#FEF2F2;color:#B91C1C"><i class="ti ti-receipt"></i></div><div class="fin-amount" id="f-masraf">₺0</div><div class="fin-label">Bu ay masraf</div></div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:5px;padding:7px 11px;margin-bottom:12px;max-width:420px"><i class="ti ti-search" style="color:var(--hint);font-size:15px"></i><input id="fn-ara" oninput="renderFn()" placeholder="Müvekkil, açıklama, tür..." style="border:none;outline:none;font-size:13px;flex:1;background:transparent;color:var(--text);font-family:inherit"><span id="fn-sonuc" style="font-size:11.5px;color:var(--hint);white-space:nowrap"></span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:9px;padding:7px 11px;margin-bottom:12px;max-width:420px"><i class="ti ti-search" style="color:var(--hint);font-size:15px"></i><input id="fn-ara" oninput="renderFn()" placeholder="Müvekkil, açıklama, tür..." style="border:none;outline:none;font-size:13px;flex:1;background:transparent;color:var(--text);font-family:inherit"><span id="fn-sonuc" style="font-size:11.5px;color:var(--hint);white-space:nowrap"></span></div>
       <div id="list-fn"></div>
     </div>
 
@@ -560,7 +699,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <h1 style="font-size:20px;font-weight:600">İletişim Merkezi</h1>
         <button class="tbtn primary" onclick="showModal('iletisim')"><i class="ti ti-plus"></i>Kayıt Ekle</button>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:5px;padding:7px 11px;margin-bottom:12px;max-width:420px"><i class="ti ti-search" style="color:var(--hint);font-size:15px"></i><input id="il-ara" oninput="renderIl()" placeholder="Müvekkil, mesaj, kanal..." style="border:none;outline:none;font-size:13px;flex:1;background:transparent;color:var(--text);font-family:inherit"><span id="il-sonuc" style="font-size:11.5px;color:var(--hint);white-space:nowrap"></span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:9px;padding:7px 11px;margin-bottom:12px;max-width:420px"><i class="ti ti-search" style="color:var(--hint);font-size:15px"></i><input id="il-ara" oninput="renderIl()" placeholder="Müvekkil, mesaj, kanal..." style="border:none;outline:none;font-size:13px;flex:1;background:transparent;color:var(--text);font-family:inherit"><span id="il-sonuc" style="font-size:11.5px;color:var(--hint);white-space:nowrap"></span></div>
       <div id="list-il"></div>
     </div>
 
@@ -568,7 +707,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="panel" id="panel-yapay-zeka">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
         <h1 style="font-size:20px;font-weight:600"><i class="ti ti-sparkles" style="color:var(--gold)"></i> 360 Asistan</h1>
-        <button onclick="sohbetTemizle()" style="padding:7px 14px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:13px;color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px"><i class="ti ti-eraser"></i>Sohbeti temizle</button>
+        <button onclick="sohbetTemizle()" style="padding:7px 14px;background:var(--surface);border:1px solid var(--border);border-radius:9px;font-size:13px;color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px"><i class="ti ti-eraser"></i>Sohbeti temizle</button>
       </div>
       <div class="ai-wrap">
         <div class="card" style="display:flex;flex-direction:column">
@@ -593,6 +732,39 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       <h1 style="font-size:20px;font-weight:600;margin-bottom:18px">Ayarlar</h1>
 
       <div id="ay-duzen" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;max-width:920px">
+
+        <!-- Takvim aboneligi -->
+        <div class="card" style="padding:22px;grid-column:1 / -1">
+          <div style="font-size:14.5px;font-weight:600;margin-bottom:3px">Takvim aboneliği</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:16px">
+            Duruşmalarınız Google, Apple veya Outlook takviminizde otomatik görünsün.
+            Hatırlatmalar duruşmadan 1 gün ve 2 saat önce telefonunuza düşer.
+          </div>
+
+          <div id="tkv-kapali">
+            <button class="tbtn primary" onclick="takvimAdresiUret()">
+              <i class="ti ti-calendar-share"></i>Takvim adresimi oluştur
+            </button>
+          </div>
+
+          <div id="tkv-acik" style="display:none">
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+              <input type="text" id="tkv-adres" readonly
+                style="flex:1;font-family:ui-monospace,monospace;font-size:11.5px;padding:9px 11px;border:1px solid var(--line);border-radius:11px;background:var(--bg);color:var(--muted)">
+              <button class="tbtn" onclick="takvimAdresKopyala()"><i class="ti ti-copy"></i>Kopyala</button>
+            </div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.7;background:var(--bg);padding:12px 14px;border-radius:11px;border:1px solid var(--line)">
+              <strong style="color:var(--text)">Google Takvim'e eklemek için:</strong><br>
+              1. <a href="https://calendar.google.com/calendar/u/0/r/settings/addbyurl" target="_blank" rel="noopener" style="color:var(--gold)">calendar.google.com</a> → Diğer takvimler → <em>URL ile takvime abone ol</em><br>
+              2. Yukarıdaki adresi yapıştırın → <em>Takvim ekle</em><br>
+              <span style="color:var(--hint)">iPhone: Ayarlar → Takvim → Hesaplar → Hesap Ekle → Diğer → Abone Olunan Takvim Ekle</span>
+            </div>
+            <div style="font-size:11.5px;color:var(--hint);margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:10px">
+              <span>Bu adres gizlidir — bilen herkes duruşma listenizi görebilir.</span>
+              <button class="tbtn" style="padding:3px 8px;font-size:11px" onclick="takvimAdresiYenile()">Adresi yenile</button>
+            </div>
+          </div>
+        </div>
 
         <!-- Büro bilgileri -->
         <div class="card" style="padding:22px">
@@ -622,13 +794,13 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
             <div class="field">
               <label>NUMARA</label>
               <div style="display:flex;gap:8px;align-items:center">
-                <span style="padding:9px 12px;background:var(--bg);border:1px solid var(--border);border-radius:5px;font-size:13px;color:var(--muted);white-space:nowrap">+90</span>
+                <span style="padding:9px 12px;background:var(--bg);border:1px solid var(--border);border-radius:9px;font-size:13px;color:var(--muted);white-space:nowrap">+90</span>
                 <input type="tel" id="set-wa" placeholder="532 000 00 00" maxlength="13" oninput="saveSetting('whatsapp',this.value)">
               </div>
               <p style="font-size:11px;color:var(--hint);margin-top:5px">Başında sıfır olmadan yazın</p>
             </div>
             <div id="wa-test-wrap" style="display:none">
-              <a id="wa-test-link" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#25D366;color:#fff;border-radius:5px;font-size:12.5px;font-weight:500;text-decoration:none">
+              <a id="wa-test-link" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#25D366;color:#fff;border-radius:9px;font-size:12.5px;font-weight:500;text-decoration:none">
                 <i class="ti ti-brand-whatsapp"></i> Numarayı test et
               </a>
             </div>
@@ -657,7 +829,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
             <input type="email" id="set-faturaEmail" placeholder="muhasebe@ornek.com" oninput="saveSetting('faturaEmail',this.value)">
             <p style="font-size:11px;color:var(--hint);margin-top:5px">Boş bırakırsanız büro e-postası kullanılır</p></div>
 
-          <div style="margin-top:6px;padding:11px 13px;background:var(--bg);border-radius:5px;font-size:11.5px;color:var(--muted);line-height:1.6">
+          <div style="margin-top:6px;padding:11px 13px;background:var(--bg);border-radius:9px;font-size:11.5px;color:var(--muted);line-height:1.6">
             Şahıs işletmesiyseniz vergi numarası yerine TC kimlik numaranızı yazabilirsiniz.
           </div>
         </div>
@@ -667,22 +839,22 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
           <div style="font-size:14.5px;font-weight:600;margin-bottom:3px">Şifre değiştir</div>
           <div style="font-size:12px;color:var(--muted);margin-bottom:18px">En az 6 karakter. Değişiklikten sonra oturumunuz açık kalır.</div>
 
-          <div id="sifre-mesaj" style="display:none;font-size:12.5px;padding:9px 12px;border-radius:5px;margin-bottom:14px"></div>
+          <div id="sifre-mesaj" style="display:none;font-size:12.5px;padding:9px 12px;border-radius:9px;margin-bottom:14px"></div>
           <div class="field2">
             <div class="field"><label>YENİ ŞİFRE</label>
               <input type="password" id="sifre-yeni" placeholder="••••••••" autocomplete="new-password"></div>
             <div class="field"><label>YENİ ŞİFRE TEKRAR</label>
               <input type="password" id="sifre-yeni2" placeholder="••••••••" autocomplete="new-password"></div>
           </div>
-          <button id="sifre-btn" onclick="sifreDegistir()" style="padding:10px 20px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:13.5px;font-weight:500;color:var(--text);cursor:pointer;font-family:inherit">Şifreyi güncelle</button>
+          <button id="sifre-btn" onclick="sifreDegistir()" style="padding:10px 20px;background:var(--surface);border:1px solid var(--border);border-radius:9px;font-size:13.5px;font-weight:500;color:var(--text);cursor:pointer;font-family:inherit">Şifreyi güncelle</button>
         </div>
 
         <!-- Kurulum -->
         <div class="card" style="padding:22px">
           <div style="font-size:14.5px;font-weight:600;margin-bottom:3px">Kurulum</div>
           <div style="font-size:12px;color:var(--muted);margin-bottom:18px">Bilgilerinizi kaydedip kuruluma başlayın.</div>
-          <button id="kurulum-kaydet-btn" onclick="kurulumKaydet()" style="width:100%;padding:12px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Bilgileri kaydet</button>
-          <div id="kurulum-mesaj" style="display:none;font-size:12.5px;padding:10px 12px;border-radius:5px;margin-top:12px;line-height:1.55"></div>
+          <button id="kurulum-kaydet-btn" onclick="kurulumKaydet()" style="width:100%;padding:12px;background:#0C1B33;color:#1B4FA8;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Bilgileri kaydet</button>
+          <div id="kurulum-mesaj" style="display:none;font-size:12.5px;padding:10px 12px;border-radius:9px;margin-top:12px;line-height:1.55"></div>
         </div>
 
       </div>
@@ -698,8 +870,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       <h1 style="font-size:20px;font-weight:600;margin-bottom:20px">Abonelik</h1>
 
       <!-- Mevcut abonelik durumu -->
-      <div id="abone-durum-kart" style="background:#fff;border:0.5px solid var(--border);border-radius:6px;padding:18px;margin-bottom:20px;display:flex;align-items:center;gap:14px">
-        <div id="abone-ikon" style="width:44px;height:44px;border-radius:6px;background:#FFFBEB;color:#B45309;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="ti ti-clock"></i></div>
+      <div id="abone-durum-kart" style="background:#fff;border:0.5px solid var(--border);border-radius:11px;padding:18px;margin-bottom:20px;display:flex;align-items:center;gap:14px">
+        <div id="abone-ikon" style="width:44px;height:44px;border-radius:11px;background:#FFFBEB;color:#B45309;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="ti ti-clock"></i></div>
         <div style="flex:1">
           <div id="abone-baslik" style="font-size:14px;font-weight:600;color:var(--text)">Aktif abonelik yok</div>
           <div id="abone-alt" style="font-size:12px;color:var(--muted);margin-top:2px">Aşağıdan bir paket seçerek başlayın.</div>
@@ -709,8 +881,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
       <!-- Periyot toggle -->
       <div style="display:flex;justify-content:center;margin-bottom:24px">
-        <div style="display:inline-flex;background:#F3F4F6;border-radius:50px;padding:4px">
-          <button id="ab-btn-aylik" onclick="abPeriyot('aylik')" style="padding:8px 24px;border-radius:50px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:inherit;background:#0B1629;color:#C9A84C;transition:all .2s">Aylık</button>
+        <div style="display:inline-flex;background:#EFF3F8;border-radius:50px;padding:4px">
+          <button id="ab-btn-aylik" onclick="abPeriyot('aylik')" style="padding:8px 24px;border-radius:50px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:inherit;background:#0C1B33;color:#1B4FA8;transition:all .2s">Aylık</button>
           <button id="ab-btn-yillik" onclick="abPeriyot('yillik')" style="padding:8px 24px;border-radius:50px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:inherit;background:transparent;color:var(--muted);transition:all .2s">Yıllık — 2 ay bedava!</button>
         </div>
       </div>
@@ -719,57 +891,57 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
 
         <!-- Başlangıç -->
-        <div style="background:#fff;border:1.5px solid var(--border);border-radius:5px;padding:24px">
+        <div style="background:#fff;border:1.5px solid var(--border);border-radius:9px;padding:24px">
           <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Başlangıç</div>
           <div id="ab-f-baslangic" style="font-size:32px;font-weight:600;color:var(--text)">₺1.500 <span style="font-size:13px;font-weight:400;color:var(--muted)">/ay</span></div>
           <div id="ab-p-baslangic" style="font-size:11px;color:var(--hint);margin-bottom:14px">Aylık ödeme</div>
-          <div style="background:#F9FAFB;border-radius:5px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:6px"><i class="ti ti-users" style="color:#C9A84C"></i> En fazla <strong>3 kullanıcı</strong></div>
+          <div style="background:#FBFCFE;border-radius:9px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:6px"><i class="ti ti-users" style="color:#1B4FA8"></i> En fazla <strong>3 kullanıcı</strong></div>
           <ul style="list-style:none;margin-bottom:20px;font-size:12px;color:var(--muted)">
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Tüm modüller</li>
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Sınırsız müvekkil & dava</li>
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>WhatsApp bildirimleri</li>
-            <li style="padding:5px 0;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>E-posta desteği</li>
+            <li style="padding:5px 0;border-bottom:1px solid #EFF3F8;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#1B4FA8"></i>Tüm modüller</li>
+            <li style="padding:5px 0;border-bottom:1px solid #EFF3F8;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#1B4FA8"></i>Sınırsız müvekkil & dava</li>
+            <li style="padding:5px 0;border-bottom:1px solid #EFF3F8;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#1B4FA8"></i>WhatsApp bildirimleri</li>
+            <li style="padding:5px 0;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#1B4FA8"></i>E-posta desteği</li>
           </ul>
-          <button onclick="abPaketSec('Başlangıç',3)" style="width:100%;padding:11px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Seç & Satın Al</button>
+          <button onclick="abPaketSec('Başlangıç',3)" style="width:100%;padding:11px;background:#0C1B33;color:#1B4FA8;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Seç & Satın Al</button>
         </div>
 
         <!-- Büyüme -->
-        <div style="background:#fff;border:1.5px solid #C9A84C;border-radius:5px;padding:24px;position:relative;box-shadow:0 0 0 1px #C9A84C">
-          <div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#C9A84C;color:#0B1629;font-size:11px;font-weight:600;padding:3px 14px;border-radius:5px;white-space:nowrap">⭐ En Popüler</div>
+        <div style="background:#fff;border:1.5px solid #2E6FD4;border-radius:9px;padding:24px;position:relative;box-shadow:0 0 0 1px #2E6FD4">
+          <div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#1B4FA8;color:#fff;font-size:11px;font-weight:600;padding:3px 14px;border-radius:9px;white-space:nowrap">⭐ En Popüler</div>
           <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Büyüme</div>
           <div id="ab-f-buyume" style="font-size:32px;font-weight:600;color:var(--text)">₺3.500 <span style="font-size:13px;font-weight:400;color:var(--muted)">/ay</span></div>
           <div id="ab-p-buyume" style="font-size:11px;color:var(--hint);margin-bottom:14px">Aylık ödeme</div>
-          <div style="background:#F9FAFB;border-radius:5px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:6px"><i class="ti ti-users" style="color:#C9A84C"></i> En fazla <strong>10 kullanıcı</strong></div>
+          <div style="background:#FBFCFE;border-radius:9px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:6px"><i class="ti ti-users" style="color:#1B4FA8"></i> En fazla <strong>10 kullanıcı</strong></div>
           <ul style="list-style:none;margin-bottom:20px;font-size:12px;color:var(--muted)">
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Başlangıç + her şey</li>
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>YZ Asistan</li>
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Personel yönetimi</li>
-            <li style="padding:5px 0;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Öncelikli destek</li>
+            <li style="padding:5px 0;border-bottom:1px solid #EFF3F8;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#1B4FA8"></i>Başlangıç + her şey</li>
+            <li style="padding:5px 0;border-bottom:1px solid #EFF3F8;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#1B4FA8"></i>YZ Asistan</li>
+            <li style="padding:5px 0;border-bottom:1px solid #EFF3F8;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#1B4FA8"></i>Personel yönetimi</li>
+            <li style="padding:5px 0;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#1B4FA8"></i>Öncelikli destek</li>
           </ul>
-          <button onclick="abPaketSec('Büyüme',10)" style="width:100%;padding:11px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Seç & Satın Al</button>
+          <button onclick="abPaketSec('Büyüme',10)" style="width:100%;padding:11px;background:#1B4FA8;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Seç & Satın Al</button>
         </div>
 
         <!-- Kurumsal -->
-        <div style="background:#fff;border:1.5px solid var(--border);border-radius:5px;padding:24px">
+        <div style="background:#fff;border:1.5px solid var(--border);border-radius:9px;padding:24px">
           <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Kurumsal</div>
           <div style="font-size:32px;font-weight:600;color:var(--text)">Özel</div>
           <div style="font-size:11px;color:var(--hint);margin-bottom:14px">Size özel teklif</div>
-          <div style="background:#F9FAFB;border-radius:5px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:6px"><i class="ti ti-users" style="color:#C9A84C"></i> <strong>Sınırsız</strong> kullanıcı</div>
+          <div style="background:#FBFCFE;border-radius:9px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;gap:6px"><i class="ti ti-users" style="color:#1B4FA8"></i> <strong>Sınırsız</strong> kullanıcı</div>
           <ul style="list-style:none;margin-bottom:20px;font-size:12px;color:var(--muted)">
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Büyüme + her şey</li>
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>Özel entegrasyonlar</li>
-            <li style="padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>API erişimi</li>
-            <li style="padding:5px 0;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#C9A84C"></i>7/24 destek</li>
+            <li style="padding:5px 0;border-bottom:1px solid #EFF3F8;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#1B4FA8"></i>Büyüme + her şey</li>
+            <li style="padding:5px 0;border-bottom:1px solid #EFF3F8;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#1B4FA8"></i>Özel entegrasyonlar</li>
+            <li style="padding:5px 0;border-bottom:1px solid #EFF3F8;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#1B4FA8"></i>API erişimi</li>
+            <li style="padding:5px 0;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:#1B4FA8"></i>7/24 destek</li>
           </ul>
-          <a href="https://wa.me/905439274906?text=Kurumsal%20paket%20hakkında%20bilgi%20almak%20istiyorum" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:11px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none"><i class="ti ti-brand-whatsapp"></i>WhatsApp İletişim</a>
+          <a href="https://wa.me/905439274906?text=Kurumsal%20paket%20hakkında%20bilgi%20almak%20istiyorum" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:11px;background:#0C1B33;color:#1B4FA8;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none"><i class="ti ti-brand-whatsapp"></i>WhatsApp İletişim</a>
         </div>
 
       </div>
 
       <!-- Banka bilgileri -->
-      <div style="background:#fff;border:0.5px solid var(--border);border-radius:6px;padding:18px">
+      <div style="background:#fff;border:0.5px solid var(--border);border-radius:11px;padding:18px">
         <div style="font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="ti ti-building-bank" style="color:var(--muted)"></i> Havale / EFT Bilgileri</div>
-        <div style="background:#F9FAFB;border-radius:5px;padding:14px">
+        <div style="background:#FBFCFE;border-radius:9px;padding:14px">
           <div style="font-size:13px;font-weight:600;margin-bottom:8px">Enpara</div>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
             <span style="font-size:11px;color:var(--hint)">Hesap Sahibi</span>
@@ -779,11 +951,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
             <span style="font-size:11px;color:var(--hint)">IBAN</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span id="ab-iban" style="font-size:12px;font-weight:500;font-family:monospace">TR16 0015 7000 0000 0098 9101 48</span>
-              <button onclick="navigator.clipboard.writeText(document.getElementById('ab-iban').textContent);alert('IBAN kopyalandı!')" style="padding:3px 10px;background:#E5E7EB;border:none;border-radius:5px;font-size:11px;cursor:pointer">Kopyala</button>
+              <button onclick="navigator.clipboard.writeText(document.getElementById('ab-iban').textContent);alert('IBAN kopyalandı!')" style="padding:3px 10px;background:#E3E9F2;border:none;border-radius:9px;font-size:11px;cursor:pointer">Kopyala</button>
             </div>
           </div>
         </div>
-        <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:5px;padding:10px;margin-top:10px;font-size:12px;color:#92400E">
+        <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:9px;padding:10px;margin-top:10px;font-size:12px;color:#92400E">
           Havale açıklamasına <strong>e-posta adresinizi</strong> yazınız. Ödeme onaylandıktan sonra 1 iş günü içinde aktif edilir.
         </div>
       </div>
@@ -792,14 +964,14 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
     <!-- WEB ASISTANI -->
     <div class="panel" id="panel-ai-asistan">
-      <div id="ai-paket-uyari" style="display:none;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:16px 18px;margin-bottom:20px">
+      <div id="ai-paket-uyari" style="display:none;background:#FFFBEB;border:1px solid #FDE68A;border-radius:11px;padding:16px 18px;margin-bottom:20px">
         <div style="font-size:14px;font-weight:600;color:#92400E;margin-bottom:4px">Bu özellik mevcut paketinizde bulunmuyor</div>
         <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Web Asistanı, Büyüme ve Kurumsal paketlerde sunulmaktadır.</div>
-        <button onclick="sp('abonelik',null)" style="padding:8px 16px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">Paketleri görüntüle</button>
+        <button onclick="sp('abonelik',null)" style="padding:8px 16px;background:#0C1B33;color:#1B4FA8;border:none;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">Paketleri görüntüle</button>
       </div>
 
       <div id="ai-icerik" style="display:none">
-        <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin-bottom:20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--border);border-radius:11px;padding:16px 18px;margin-bottom:20px">
           <div>
             <div style="font-size:14px;font-weight:600;color:var(--text)">Asistan durumu</div>
             <div style="font-size:12.5px;color:var(--muted);margin-top:2px" id="ai-durum-metin">Yükleniyor...</div>
@@ -820,6 +992,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <div style="display:flex;gap:8px;border-bottom:1px solid var(--border);margin-bottom:20px">
           <button class="ai-tab active" onclick="aiSekme('ayar',this)">Ayarlar</button>
           <button class="ai-tab" onclick="aiSekme('bilgi',this)">Bilgi bankası</button>
+          <button class="ai-tab" onclick="aiSekme('avukat',this)">Avukatlar</button>
           <button class="ai-tab" onclick="aiSekme('kod',this)">Sitenize ekleyin</button>
         </div>
 
@@ -858,25 +1031,39 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
             <div class="field"><label>İZİNLİ ALAN ADLARI</label><input id="ai-alanlar" placeholder="ornekhukuk.com, www.ornekhukuk.com">
               <p style="font-size:11px;color:var(--hint);margin-top:5px">Asistan yalnızca bu adreslerde çalışır. Virgülle ayırın.</p></div>
-            <div id="ai-mesaj" style="display:none;font-size:12.5px;padding:9px 12px;border-radius:5px;margin-bottom:12px"></div>
-            <button id="ai-kaydet-btn" onclick="aiAyarKaydet()" style="padding:10px 20px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit">Ayarları kaydet</button>
+            <div id="ai-mesaj" style="display:none;font-size:12.5px;padding:9px 12px;border-radius:9px;margin-bottom:12px"></div>
+            <button id="ai-kaydet-btn" onclick="aiAyarKaydet()" style="padding:10px 20px;background:#0C1B33;color:#1B4FA8;border:none;border-radius:9px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit">Ayarları kaydet</button>
           </div>
         </div>
 
         <div id="ai-sekme-bilgi" style="display:none">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
             <div style="font-size:12.5px;color:var(--muted);max-width:520px">Asistan yalnızca buradaki bilgilerden yanıt verir. Ziyaretçi serbest yazdığında da bu kayıtlar taranır.<br><span id="hizli-sayi" style="color:var(--text)"></span> Yıldız işaretiyle en fazla <strong>3</strong> kaydı hızlı buton yapabilirsiniz.</div>
-            <button onclick="bilgiModalAc()" style="padding:8px 16px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap"><i class="ti ti-plus"></i> Bilgi ekle</button>
+            <button onclick="bilgiModalAc()" style="padding:8px 16px;background:#0C1B33;color:#1B4FA8;border:none;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap"><i class="ti ti-plus"></i> Bilgi ekle</button>
           </div>
           <div id="ai-bilgi-liste" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+
+        <div id="ai-sekme-avukat" style="display:none">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:14px;flex-wrap:wrap">
+            <div style="font-size:12.5px;color:var(--muted);max-width:540px;line-height:1.6">
+              Ziyaretçi randevu talebinde bulunurken hangi avukatla görüşmek istediğini seçer. Kart eklemezseniz seçim adımı atlanır.
+            </div>
+            <button onclick="avukatModalAc()" style="padding:8px 16px;background:#0C1B33;color:#1B4FA8;border:none;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap"><i class="ti ti-plus"></i> Avukat ekle</button>
+          </div>
+          <label style="display:flex;align-items:center;gap:9px;margin-bottom:16px;cursor:pointer">
+            <input type="checkbox" id="ai-avukat-secimi" onchange="avukatSecimiDegistir()" style="width:auto" checked>
+            <span style="font-size:13px">Ziyaretçi avukat seçebilsin</span>
+          </label>
+          <div id="ai-avukat-liste" style="display:flex;flex-direction:column;gap:9px"></div>
         </div>
 
         <div id="ai-sekme-kod" style="display:none">
           <div class="card" style="padding:20px">
             <div style="font-size:14px;font-weight:600;margin-bottom:6px">Kodu web sitenize ekleyin</div>
             <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px">Aşağıdaki satırı sitenizin her sayfasında, kapanış &lt;/body&gt; etiketinden hemen önce ekleyin.</div>
-            <div style="background:#0B1629;border-radius:5px;padding:14px;font-family:ui-monospace,monospace;font-size:12px;color:#E8C96A;word-break:break-all;margin-bottom:10px" id="ai-embed-kod">—</div>
-            <button onclick="embedKopyala()" style="padding:9px 18px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:13px;font-weight:500;color:var(--text);cursor:pointer;font-family:inherit"><i class="ti ti-copy"></i> Kodu kopyala</button>
+            <div style="background:#0C1B33;border-radius:9px;padding:14px;font-family:ui-monospace,monospace;font-size:12px;color:#6EA0F0;word-break:break-all;margin-bottom:10px" id="ai-embed-kod">—</div>
+            <button onclick="embedKopyala()" style="padding:9px 18px;background:var(--surface);border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:500;color:var(--text);cursor:pointer;font-family:inherit"><i class="ti ti-copy"></i> Kodu kopyala</button>
             <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
               <div style="font-size:13px;font-weight:600;margin-bottom:8px">WordPress</div>
               <div style="font-size:12.5px;color:var(--muted);line-height:1.7;margin-bottom:14px">Eklentiler bölümünden <strong>WPCode</strong> eklentisini kurun. Code Snippets → Header &amp; Footer bölümüne yapıştırın. Tema dosyasına eklemeyin, tema güncellemesinde silinir.</div>
@@ -893,7 +1080,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
     <!-- SURE TAKIBI -->
     <div class="panel" id="panel-sure">
-      <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:12px 15px;margin-bottom:18px;font-size:12.5px;color:#92400E;line-height:1.6">
+      <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:11px;padding:12px 15px;margin-bottom:18px;font-size:12.5px;color:#92400E;line-height:1.6">
         Bu bölüm bir süre takip ve hatırlatma aracıdır, hukuki görüş değildir. Özel kanunlardaki farklı süreler, sürelerin başlangıcı, adli tatil ve dosyaya özgü istisnalar ayrıca kontrol edilmelidir.
       </div>
 
@@ -913,6 +1100,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
             </select></div>
             <div class="field"><label>İŞLEM</label><select id="sr-islem" onchange="sureHesapla()"></select></div>
           </div>
+          <div id="sr-kural-uyari" style="display:none;background:#FDF3E6;border:1px solid #F5DFBE;border-radius:10px;padding:11px 14px;font-size:12.5px;color:#A96109;margin-bottom:15px;line-height:1.6"></div>
 
           <div class="field"><label>TEBLİGAT TÜRÜ <span style="color:var(--hint);font-weight:400">— isteğe bağlı</span></label>
             <input id="sr-tur" placeholder="Gerekçeli karar, ödeme emri..."></div>
@@ -925,14 +1113,14 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
             <span style="font-size:12.5px;color:var(--text);line-height:1.5">E-tebligat (UETS) — beş gün sonra tebliğ edilmiş sayılır</span>
           </label>
 
-          <div id="sr-onizleme" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:14px 16px;margin-bottom:14px"></div>
+          <div id="sr-onizleme" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:14px 16px;margin-bottom:14px"></div>
 
           <div class="field"><label>NOT <span style="color:var(--hint);font-weight:400">— isteğe bağlı</span></label>
             <input id="sr-not" placeholder="Kısa açıklama"></div>
 
-          <button id="sr-btn" onclick="sureKaydet()" style="width:100%;padding:12px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit"><i class="ti ti-plus"></i> Süreyi kaydet</button>
+          <button id="sr-btn" onclick="sureKaydet()" style="width:100%;padding:12px;background:#0C1B33;color:#1B4FA8;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit"><i class="ti ti-plus"></i> Süreyi kaydet</button>
 
-          <button onclick="sureKuralAc()" style="width:100%;margin-top:9px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:13px;color:var(--muted);cursor:pointer;font-family:inherit">Süre kurallarını düzenle</button>
+          <button onclick="sureKuralAc()" style="width:100%;margin-top:9px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:9px;font-size:13px;color:var(--muted);cursor:pointer;font-family:inherit">Süre kurallarını düzenle</button>
         </div>
 
         <div>
@@ -985,7 +1173,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
           <div class="field"><label>DOSYA</label><select id="dl-dava" onchange="dilekceDavaSec()"></select></div>
           <div class="field"><label>MÜVEKKİL</label><select id="dl-muvekkil" onchange="dilekceMvSec()"></select>
             <p style="font-size:11px;color:var(--hint);margin-top:5px">Kimlik ve iletişim bilgileri dilekçeye otomatik yerleşir.</p></div>
-          <div id="dl-dava-bilgi" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:11px 13px;margin-bottom:14px;font-size:12.5px;color:var(--muted);line-height:1.65"></div>
+          <div id="dl-dava-bilgi" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px 13px;margin-bottom:14px;font-size:12.5px;color:var(--muted);line-height:1.65"></div>
 
           <div class="field"><label>DİLEKÇE TÜRÜ</label><select id="dl-tur">
             <optgroup label="Genel">
@@ -1028,11 +1216,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
             <textarea id="dl-talep" rows="3" maxlength="2000" placeholder="Neyi talep ediyorsunuz? Boş bırakırsanız olay özetinden çıkarılır."></textarea>
           </div>
 
-          <div id="dl-mesaj" style="display:none;font-size:12.5px;padding:10px 13px;border-radius:5px;margin-bottom:12px;line-height:1.55"></div>
+          <div id="dl-mesaj" style="display:none;font-size:12.5px;padding:10px 13px;border-radius:9px;margin-bottom:12px;line-height:1.55"></div>
 
-          <button id="dl-btn" onclick="dilekceUret()" style="width:100%;padding:12px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit"><i class="ti ti-sparkles"></i> Taslağı oluştur</button>
+          <button id="dl-btn" onclick="dilekceUret()" style="width:100%;padding:12px;background:#0C1B33;color:#1B4FA8;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit"><i class="ti ti-sparkles"></i> Taslağı oluştur</button>
 
-          <div style="margin-top:14px;padding:11px 13px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:5px;font-size:11.5px;color:#92400E;line-height:1.6">
+          <div style="margin-top:14px;padding:11px 13px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:9px;font-size:11.5px;color:#92400E;line-height:1.6">
             Üretilen metin bir taslaktır. Kanun maddelerini, tutarları ve tarihleri kontrol etmeden kullanmayın. Köşeli parantezli alanlar sizin doldurmanız içindir.
           </div>
         </div>
@@ -1047,11 +1235,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
                 <button onclick="dilekceKaydet()" class="tbtn primary"><i class="ti ti-device-floppy"></i>Kaydet</button>
               </div>
             </div>
-            <textarea id="dl-cikti" rows="26" style="width:100%;padding:16px 18px;border:1px solid var(--border);border-radius:6px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.5px;line-height:1.75;color:var(--text);background:#fff;outline:none;resize:vertical"></textarea>
+            <textarea id="dl-cikti" rows="26" style="width:100%;padding:16px 18px;border:1px solid var(--border);border-radius:11px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.5px;line-height:1.75;color:var(--text);background:#fff;outline:none;resize:vertical"></textarea>
             <div style="font-size:11.5px;color:var(--hint);margin-top:6px" id="dl-cikti-alt"></div>
           </div>
 
-          <div id="dl-bos" style="text-align:center;padding:60px 24px;background:var(--surface);border:1px dashed var(--border);border-radius:6px">
+          <div id="dl-bos" style="text-align:center;padding:60px 24px;background:var(--surface);border:1px dashed var(--border);border-radius:11px">
             <i class="ti ti-file-text" style="font-size:34px;color:var(--hint)"></i>
             <div style="font-size:14px;color:var(--muted);margin-top:12px">Taslak burada görünecek</div>
             <div style="font-size:12.5px;color:var(--hint);margin-top:4px">Soldaki formu doldurup oluştur düğmesine basın</div>
@@ -1079,8 +1267,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
           Mevcut verileriniz olduğu gibi kalır.
         </div>
         <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-          <button onclick="sp('abonelik',null)" style="padding:11px 22px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Paketleri görüntüle</button>
-          <a href="https://wa.me/905439274906?text=Paket%20y%C3%BCkseltmek%20istiyorum" target="_blank" style="padding:11px 22px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:14px;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:7px"><i class="ti ti-brand-whatsapp" style="color:#25D366"></i>Bize yazın</a>
+          <button onclick="sp('abonelik',null)" style="padding:11px 22px;background:#0C1B33;color:#1B4FA8;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Paketleri görüntüle</button>
+          <a href="https://wa.me/905439274906?text=Paket%20y%C3%BCkseltmek%20istiyorum" target="_blank" style="padding:11px 22px;background:var(--surface);border:1px solid var(--border);border-radius:9px;font-size:14px;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:7px"><i class="ti ti-brand-whatsapp" style="color:#25D366"></i>Bize yazın</a>
         </div>
       </div>
     </div>
@@ -1115,11 +1303,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
               <p style="font-size:11px;color:var(--hint);margin-top:5px">Hangi ekranda olduğunuzu ve adımları yazarsanız daha hızlı çözeriz.</p>
             </div>
 
-            <div id="dk-mesaj-kutu" style="display:none;font-size:12.5px;padding:10px 13px;border-radius:5px;margin-bottom:12px;line-height:1.55"></div>
+            <div id="dk-mesaj-kutu" style="display:none;font-size:12.5px;padding:10px 13px;border-radius:9px;margin-bottom:12px;line-height:1.55"></div>
 
             <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-              <button id="dk-btn" onclick="destekGonder()" style="padding:11px 22px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit"><i class="ti ti-send"></i> Talebi gönder</button>
-              <a href="https://wa.me/905439274906?text=Dosya360%20destek" target="_blank" style="padding:11px 18px;background:var(--surface);border:1px solid var(--border);border-radius:5px;font-size:13.5px;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:7px"><i class="ti ti-brand-whatsapp" style="color:#25D366"></i>Acil ise WhatsApp</a>
+              <button id="dk-btn" onclick="destekGonder()" style="padding:11px 22px;background:#0C1B33;color:#1B4FA8;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit"><i class="ti ti-send"></i> Talebi gönder</button>
+              <a href="https://wa.me/905439274906?text=Dosya360%20destek" target="_blank" style="padding:11px 18px;background:var(--surface);border:1px solid var(--border);border-radius:9px;font-size:13.5px;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:7px"><i class="ti ti-brand-whatsapp" style="color:#25D366"></i>Acil ise WhatsApp</a>
             </div>
           </div>
         </div>
@@ -1143,6 +1331,37 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="panel" id="panel-ai-basvuru">
       <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap" id="basvuru-filtre"></div>
       <div id="basvuru-liste" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+
+    <!-- AVUKAT MODAL -->
+    <div class="overlay" id="m-avukat">
+      <div class="modal" style="max-width:560px">
+        <div class="modal-head"><h3 id="baslik-avukat">Avukat ekle</h3><button class="modal-close" onclick="closeModal('avukat')"><i class="ti ti-x"></i></button></div>
+        <div class="modal-body">
+          <input type="hidden" id="avk-id">
+          <div class="field"><label>EKİPTEN SEÇ <span style="color:var(--hint);font-weight:400">— isteğe bağlı</span></label>
+            <select id="avk-ekip" onchange="avukatEkiptenDoldur()"><option value="">Elle gireceğim</option></select></div>
+          <div class="field2">
+            <div class="field"><label>AD SOYAD</label><input id="avk-ad" placeholder="Av. Ad Soyad"></div>
+            <div class="field"><label>UNVAN</label><input id="avk-unvan" placeholder="Kurucu Avukat"></div>
+          </div>
+          <div class="field2">
+            <div class="field"><label>BARO</label><input id="avk-baro" placeholder="Ankara"></div>
+            <div class="field"><label>UZMANLIK</label><input id="avk-uzmanlik" placeholder="İş hukuku, icra"></div>
+          </div>
+          <div class="field"><label>KISA TANITIM</label>
+            <textarea id="avk-tanitim" rows="3" maxlength="400" placeholder="Ziyaretçiye gösterilecek birkaç cümle"></textarea></div>
+          <div class="field2">
+            <div class="field"><label>TELEFON</label><input id="avk-telefon" placeholder="0312 000 00 00"></div>
+            <div class="field"><label>WHATSAPP</label><input id="avk-whatsapp" placeholder="5320000000"></div>
+          </div>
+          <div class="field"><label>E-POSTA</label><input id="avk-eposta" placeholder="avukat@buro.com"></div>
+          <div class="modal-footer">
+            <button class="tbtn" onclick="closeModal('avukat')">Vazgeç</button>
+            <button class="tbtn primary" onclick="avukatKaydet()">Kaydet</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- BILGI MODAL -->
@@ -1172,19 +1391,19 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       <h1 style="font-size:20px;font-weight:600;margin-bottom:6px">Kullanıcı Yönetimi</h1>
       <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Büronuzdaki kullanıcıları yönetin ve yeni üyeler davet edin.</p>
 
-      <div id="ku-abone-uyari" style="background:#FEF2F2;border:1px solid #FECACA;border-radius:5px;padding:14px;margin-bottom:16px;display:none">
+      <div id="ku-abone-uyari" style="background:#FEF2F2;border:1px solid #FECACA;border-radius:9px;padding:14px;margin-bottom:16px;display:none">
         <div style="font-size:13px;color:#B91C1C;font-weight:500">Aktif abonelik gerekli</div>
-        <div style="font-size:12px;color:#6B7280;margin-top:4px">Kullanıcı eklemek için önce abonelik sayfasından bir paket seçmelisiniz.</div>
-        <button onclick="sp('abonelik',document.querySelector('[onclick*=abonelik]'))" style="margin-top:10px;padding:7px 14px;background:#0B1629;color:#C9A84C;border:none;border-radius:4px;font-size:12px;font-weight:500;cursor:pointer">Abonelik Sayfasına Git →</button>
+        <div style="font-size:12px;color:#53627A;margin-top:4px">Kullanıcı eklemek için önce abonelik sayfasından bir paket seçmelisiniz.</div>
+        <button onclick="sp('abonelik',document.querySelector('[onclick*=abonelik]'))" style="margin-top:10px;padding:7px 14px;background:#0C1B33;color:#1B4FA8;border:none;border-radius:12px;font-size:12px;font-weight:500;cursor:pointer">Abonelik Sayfasına Git →</button>
       </div>
 
       <div id="ku-aktif-wrap">
-        <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border:0.5px solid var(--border);border-radius:6px;padding:14px 18px;margin-bottom:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border:0.5px solid var(--border);border-radius:11px;padding:14px 18px;margin-bottom:16px">
           <div>
             <div style="font-size:13px;font-weight:600" id="ku-paket-adi">—</div>
             <div style="font-size:11px;color:var(--muted);margin-top:2px" id="ku-kullanici-sayisi">— / — kullanıcı</div>
           </div>
-          <button id="ku-davet-btn" onclick="kuDavetAc()" style="display:flex;align-items:center;gap:6px;padding:9px 16px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">
+          <button id="ku-davet-btn" onclick="kuDavetAc()" style="display:flex;align-items:center;gap:6px;padding:9px 16px;background:#0C1B33;color:#1B4FA8;border:none;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">
             <i class="ti ti-user-plus"></i> Kullanıcı Davet Et
           </button>
         </div>
@@ -1202,19 +1421,19 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="modal-body">
           <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Davet etmek istediğiniz kişinin e-posta adresini girin. Sisteme katılmaları için bir link oluşturulacaktır.</p>
           <div class="field"><label>E-posta Adresi *</label><input type="email" id="ku-davet-email" placeholder="avukat@buro.com"></div>
-          <div class="field"><label>Rol</label><select id="ku-davet-rol" style="width:100%;padding:9px 12px;border:0.5px solid var(--border);border-radius:5px;font-size:13px;outline:none;font-family:inherit;background:#fff;color:var(--text)">
+          <div class="field"><label>Rol</label><select id="ku-davet-rol" style="width:100%;padding:9px 12px;border:0.5px solid var(--border);border-radius:9px;font-size:13px;outline:none;font-family:inherit;background:#fff;color:var(--text)">
             <option value="avukat">Avukat</option>
             <option value="stajyer">Stajyer</option>
             <option value="sekreter">Sekreter</option>
             <option value="muhasebe">Muhasebe</option>
           </select></div>
-          <div id="ku-eposta-durum" style="display:none;align-items:center;gap:9px;border-radius:5px;padding:10px 12px;margin-bottom:12px;font-size:12.5px;line-height:1.5"></div>
-          <div id="ku-link-wrap" style="display:none;background:#F9FAFB;border:1px solid var(--border);border-radius:5px;padding:12px;margin-bottom:14px">
+          <div id="ku-eposta-durum" style="display:none;align-items:center;gap:9px;border-radius:9px;padding:10px 12px;margin-bottom:12px;font-size:12.5px;line-height:1.5"></div>
+          <div id="ku-link-wrap" style="display:none;background:#FBFCFE;border:1px solid var(--border);border-radius:9px;padding:12px;margin-bottom:14px">
             <div style="font-size:12px;color:var(--muted);font-weight:500;margin-bottom:6px">Yedek bağlantı</div>
-            <div id="ku-link-text" style="font-size:11px;color:#374151;word-break:break-all;background:#fff;padding:8px;border-radius:6px;margin-bottom:6px"></div>
+            <div id="ku-link-text" style="font-size:11px;color:#374151;word-break:break-all;background:#fff;padding:8px;border-radius:11px;margin-bottom:6px"></div>
             <div style="display:flex;gap:8px">
-              <button onclick="navigator.clipboard.writeText(document.getElementById('ku-link-text').textContent);alert('Kopyalandı!')" style="padding:5px 12px;background:#15803D;color:#fff;border:none;border-radius:5px;font-size:12px;cursor:pointer">Linki Kopyala</button>
-              <a id="ku-wa-link" href="#" target="_blank" style="display:flex;align-items:center;gap:4px;padding:5px 12px;background:#25D366;color:#fff;border:none;border-radius:5px;font-size:12px;text-decoration:none"><i class="ti ti-brand-whatsapp"></i>WhatsApp ile Gönder</a>
+              <button onclick="navigator.clipboard.writeText(document.getElementById('ku-link-text').textContent);alert('Kopyalandı!')" style="padding:5px 12px;background:#15803D;color:#fff;border:none;border-radius:9px;font-size:12px;cursor:pointer">Linki Kopyala</button>
+              <a id="ku-wa-link" href="#" target="_blank" style="display:flex;align-items:center;gap:4px;padding:5px 12px;background:#25D366;color:#fff;border:none;border-radius:9px;font-size:12px;text-decoration:none"><i class="ti ti-brand-whatsapp"></i>WhatsApp ile Gönder</a>
             </div>
             <p style="font-size:11px;color:var(--muted);margin-top:6px">Bu linki kişiye WhatsApp veya e-posta ile gönderin. 7 gün geçerlidir.</p>
           </div>
@@ -1250,7 +1469,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
   <div class="modal-body">
     <input type="hidden" id="duzenle-dava" value="">
     <div class="field2"><div class="field"><label>Dosya No *</label><input type="text" id="dv-no" placeholder="2026/0001"></div><div class="field"><label>Müvekkil</label><select id="dv-mv"></select></div></div>
-    <div id="dv-mv-bilgi" style="display:none;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:10px 12px;margin-bottom:12px"></div>
+    <div id="dv-mv-bilgi" style="display:none;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-bottom:12px"></div>
     <div class="field2"><div class="field"><label>Mahkeme</label><input type="text" id="dv-mhk" placeholder="Ankara 3. Asliye Hukuk"></div><div class="field"><label>Karşı Taraf</label><input type="text" id="dv-kt2" placeholder="Ad Soyad"></div></div>
     <div class="field"><label>Dava Türü</label>
       <div id="dv-tur-secim" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:2px"></div>
@@ -1369,7 +1588,7 @@ function senkronGoster(durum, mesaj){
   senkronDurum = durum
   const el = document.getElementById('senkron-rozet')
   if(!el) return
-  const renk = { kaydedildi:'#15803D', kaydediliyor:'#B45309', hata:'#B91C1C' }[durum] || '#9CA3AF'
+  const renk = { kaydedildi:'#15803D', kaydediliyor:'#B45309', hata:'#B91C1C' }[durum] || '#8D99AE'
   const ikon = { kaydedildi:'ti-cloud-check', kaydediliyor:'ti-cloud-upload', hata:'ti-cloud-off' }[durum] || 'ti-cloud'
   el.style.color = renk
   el.innerHTML = '<i class="ti '+ikon+'"></i> '+(mesaj||'')
@@ -1454,7 +1673,7 @@ let calDate = new Date(); let calSel = new Date()
 
 // ── PANEL GEÇİŞ ──────────────────────────────────────────────
 const TITLES = { anasayfa:'Anasayfa', muvekkiller:'Müvekkiller', davalar:'Davalar', takvim:'Takvim', gorevler:'Görevler', belgeler:'Belgeler', finans:'Finans', iletisim:'İletişim', 'yapay-zeka':'360 Asistan', ayarlar:'Ayarlar', abonelik:'Abonelik', 'kullanici-yonetimi':'Kullanıcı Yönetimi', 'ai-asistan':'Web Asistanı', 'ai-basvuru':'Başvurular', destek:'Destek', dilekce:'Dilekçe Yaz', sure:'Süre Takibi' }
-const FOOTER_HTML = '<div style="text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:28px"><strong style=\"color:#6B7280\">Dosya360</strong> — Bir <a href=\"https://otukenmedya.com\" target=\"_blank\" style=\"color:#C9A84C;text-decoration:none;font-weight:500\">Ötüken Medya</a> yazılımıdır</div>';
+const FOOTER_HTML = '<div style="text-align:center;padding:24px 0 4px;font-size:12px;color:#8D99AE;border-top:0.5px solid #E3E9F2;margin-top:28px"><strong style=\"color:#53627A\">Dosya360</strong> — Bir <a href=\"https://otukenmedya.com\" target=\"_blank\" style=\"color:#1B4FA8;text-decoration:none;font-weight:500\">Ötüken Medya</a> yazılımıdır</div>';
 
 function addFooter(panelId){
   const p = document.getElementById('panel-'+panelId)
@@ -1463,8 +1682,8 @@ function addFooter(panelId){
   if(existing) return
   const div = document.createElement('div')
   div.className = 'ln-footer'
-  div.innerHTML = '<strong style="color:#6B7280">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#C9A84C;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır · <a href="mailto:hello@dosya360.com" style="color:#9CA3AF">hello@dosya360.com</a>'
-  div.style.cssText = 'text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:28px'
+  div.innerHTML = '<strong style="color:#53627A">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#1B4FA8;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır · <a href="mailto:hello@dosya360.com" style="color:#8D99AE">hello@dosya360.com</a>'
+  div.style.cssText = 'text-align:center;padding:24px 0 4px;font-size:12px;color:#8D99AE;border-top:0.5px solid #E3E9F2;margin-top:28px'
   p.appendChild(div)
 }
 
@@ -1495,6 +1714,7 @@ function sp(id, el) {
   if(id==='finans') renderFn()
   if(id==='iletisim') renderIl()
   if(id==='takvim') renderCal()
+  if(id==='ayarlar') takvimAdresiYukle()
   if(id==='yapay-zeka') renderAI()
   if(id==='ayarlar') loadSettings()
 }
@@ -1650,8 +1870,8 @@ function renderMv(q=''){
       ${avatar(m.ad,m.soyad)}
       <div style="flex:1"><div class="li-name">${m.ad} ${m.soyad}</div><div class="li-meta">${m.tel||m.email||'İletişim yok'} · ${m.tur||'bireysel'}</div></div>
       ${badge(m.tur==='kurumsal'?'bb':'bp',m.tur==='kurumsal'?'Kurumsal':'Bireysel')}
-      <button onclick="davaEkleMv(${m.id},event)" title="Bu müvekkile dava ekle" style="background:#0B1629;border:none;border-radius:4px;height:32px;padding:0 11px;display:flex;align-items:center;gap:5px;cursor:pointer;flex-shrink:0;color:#C9A84C;font-size:12px;font-weight:500;font-family:inherit"><i class="ti ti-plus" style="font-size:15px"></i>Dava</button>
-      ${m.tel ? `<button onclick="waAc('${m.tel}',event)" title="WhatsApp'ta aç" style="background:#25D366;border:none;border-radius:4px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0"><i class="ti ti-brand-whatsapp" style="color:#fff;font-size:17px"></i></button>` : ''}
+      <button onclick="davaEkleMv(${m.id},event)" title="Bu müvekkile dava ekle" style="background:#0C1B33;border:none;border-radius:12px;height:32px;padding:0 11px;display:flex;align-items:center;gap:5px;cursor:pointer;flex-shrink:0;color:#1B4FA8;font-size:12px;font-weight:500;font-family:inherit"><i class="ti ti-plus" style="font-size:15px"></i>Dava</button>
+      ${m.tel ? `<button onclick="waAc('${m.tel}',event)" title="WhatsApp'ta aç" style="background:#25D366;border:none;border-radius:12px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0"><i class="ti ti-brand-whatsapp" style="color:#fff;font-size:17px"></i></button>` : ''}
       <button class="del-btn" onclick="ciktiMuvekkil(${m.id},event)" title="Yazdır / PDF" style="color:var(--muted)"><i class="ti ti-printer"></i></button><button class="del-btn" onclick="duzenleMv(${m.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delMv(${m.id},event)"><i class="ti ti-trash"></i></button>
     </div>`).join('')
 }
@@ -1841,6 +2061,154 @@ function renderCal(){
   renderCalDay()
 }
 function calSelDay(ds){ calSel=new Date(ds); renderCal() }
+
+// ── TAKVİME AKTAR (Google / .ics) ─────────────────────────────
+// Sunucu gerektirmez. Etkinlik saatsizse tam gün sayilir.
+function tkvAyristir(e){
+  const ham = String(e.tarih || '')
+  const saatli = ham.indexOf('T') > -1
+  const bas = new Date(ham)
+  if(isNaN(bas)) return null
+  const bit = new Date(bas)
+  if(saatli) bit.setHours(bit.getHours() + 1)
+  else       bit.setDate(bit.getDate() + 1)
+  return { bas: bas, bit: bit, saatli: saatli }
+}
+function tkvUtc(d){ return d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'') }
+function tkvGun(d){
+  return d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0')
+}
+function tkvAciklama(e){
+  const p = []
+  if(e.dava)     p.push('Esas No: ' + e.dava)
+  if(e.mahkeme)  p.push('Mahkeme: ' + e.mahkeme)
+  if(e.muvekkil) p.push('Müvekkil: ' + e.muvekkil)
+  if(e.not)      p.push(e.not)
+  p.push('— Dosya360')
+  return p.join('\n')
+}
+// 1) Google Takvim sablon linki — tek tikla Google'da ekleme ekranini acar
+function googleTakvimAc(id){
+  const e = DB.etkinlikler.find(function(x){ return String(x.id) === String(id) })
+  if(!e) return
+  const t = tkvAyristir(e); if(!t) return alert('Etkinlik tarihi okunamadı.')
+  const tarihler = t.saatli ? (tkvUtc(t.bas) + '/' + tkvUtc(t.bit))
+                            : (tkvGun(t.bas) + '/' + tkvGun(t.bit))
+  const adres = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+    + '&text='     + encodeURIComponent(e.baslik || 'Etkinlik')
+    + '&dates='    + tarihler
+    + '&details='  + encodeURIComponent(tkvAciklama(e))
+    + '&location=' + encodeURIComponent(e.mahkeme || '')
+  window.open(adres, '_blank', 'noopener')
+  try{ logla('takvim_google', e.baslik || '') }catch(_){}
+}
+// 2) .ics dosyasi — Apple/Outlook/Google hepsinde calisir, tarayicida uretilir
+function icsKacis(s){
+  return String(s == null ? '' : s)
+    .replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n')
+}
+function icsSatirla(satir){
+  // RFC 5545: satirlar 75 oktetten uzun olamaz
+  if(satir.length <= 75) return satir
+  let out = satir.slice(0,75), kalan = satir.slice(75)
+  while(kalan.length > 74){ out += '\r\n ' + kalan.slice(0,74); kalan = kalan.slice(74) }
+  return out + (kalan ? '\r\n ' + kalan : '')
+}
+function icsUret(liste){
+  const s = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Dosya360//TR','CALSCALE:GREGORIAN','METHOD:PUBLISH']
+  const simdi = tkvUtc(new Date())
+  liste.forEach(function(e){
+    const t = tkvAyristir(e); if(!t) return
+    s.push('BEGIN:VEVENT')
+    s.push('UID:d360-' + e.id + '@dosya360.com')
+    s.push('DTSTAMP:' + simdi)
+    if(t.saatli){
+      s.push('DTSTART:' + tkvUtc(t.bas))
+      s.push('DTEND:'   + tkvUtc(t.bit))
+    } else {
+      s.push('DTSTART;VALUE=DATE:' + tkvGun(t.bas))
+      s.push('DTEND;VALUE=DATE:'   + tkvGun(t.bit))
+    }
+    s.push(icsSatirla('SUMMARY:' + icsKacis(e.baslik || 'Etkinlik')))
+    s.push(icsSatirla('DESCRIPTION:' + icsKacis(tkvAciklama(e))))
+    if(e.mahkeme) s.push(icsSatirla('LOCATION:' + icsKacis(e.mahkeme)))
+    // Durusmalara otomatik hatirlatma: 1 gun ve 2 saat once
+    if(e.tur === 'durusma' || e.otomatik){
+      s.push('BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY',
+             icsSatirla('DESCRIPTION:' + icsKacis('Yarın duruşma: ' + (e.baslik||''))),'END:VALARM')
+      s.push('BEGIN:VALARM','TRIGGER:-PT2H','ACTION:DISPLAY',
+             icsSatirla('DESCRIPTION:' + icsKacis('2 saat sonra duruşma: ' + (e.baslik||''))),'END:VALARM')
+    }
+    s.push('END:VEVENT')
+  })
+  s.push('END:VCALENDAR')
+  return s.join('\r\n')
+}
+function icsIndir(metin, dosyaAdi){
+  const blob = new Blob([metin], { type:'text/calendar;charset=utf-8' })
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(blob); a.download = dosyaAdi
+  document.body.appendChild(a); a.click()
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove() }, 1000)
+}
+function icsTek(id){
+  const e = DB.etkinlikler.find(function(x){ return String(x.id) === String(id) })
+  if(!e) return
+  icsIndir(icsUret([e]), 'dosya360-etkinlik.ics')
+  try{ logla('takvim_ics', e.baslik || '') }catch(_){}
+}
+function icsHepsi(){
+  const bugun = new Date(); bugun.setHours(0,0,0,0)
+  const liste = DB.etkinlikler.filter(function(e){
+    return e.tarih && new Date(e.tarih) >= bugun
+  })
+  if(!liste.length) return alert('Aktarılacak yaklaşan etkinlik bulunamadı.')
+  icsIndir(icsUret(liste), 'dosya360-takvim.ics')
+  try{ logla('takvim_ics_toplu', liste.length + ' etkinlik') }catch(_){}
+  alert(liste.length + ' etkinlik indirildi.\n\nDosyayı açarak Google, Apple veya Outlook takviminize ekleyebilirsiniz.')
+}
+
+// ── TAKVİM ABONELİĞİ (Ayarlar) ────────────────────────────────
+function takvimAdresiGoster(anahtar){
+  const adres = SUPABASE_URL + '/functions/v1/takvim-ics?anahtar=' + anahtar
+  document.getElementById('tkv-adres').value = adres
+  document.getElementById('tkv-kapali').style.display = 'none'
+  document.getElementById('tkv-acik').style.display = 'block'
+}
+// Ayarlar acilinca: anahtar zaten varsa goster, yoksa butonda birak
+async function takvimAdresiYukle(){
+  if(!document.getElementById('tkv-adres')) return
+  try{
+    const { data } = await window.sb.from('takvim_anahtar').select('anahtar').maybeSingle()
+    if(data && data.anahtar) takvimAdresiGoster(data.anahtar)
+  }catch(_){}
+}
+async function takvimAdresiUret(){
+  try{
+    const { data, error } = await window.sb.rpc('takvim_anahtar_al')
+    if(error || !data) return alert('Takvim adresi oluşturulamadı. Lütfen tekrar deneyin.')
+    takvimAdresiGoster(data)
+    try{ logla('takvim_adres_olustur','') }catch(_){}
+  }catch(_){ alert('Takvim adresi oluşturulamadı.') }
+}
+async function takvimAdresiYenile(){
+  if(!confirm('Adres yenilenecek. Takviminize daha önce eklediğiniz bağlantı çalışmayı durduracak ve yeniden eklemeniz gerekecek.\n\nDevam edilsin mi?')) return
+  try{
+    const { data, error } = await window.sb.rpc('takvim_anahtar_yenile')
+    if(error || !data) return alert('Adres yenilenemedi.')
+    takvimAdresiGoster(data)
+    alert('Yeni adres hazır. Takviminizdeki eski aboneliği silip bu adresi ekleyin.')
+  }catch(_){ alert('Adres yenilenemedi.') }
+}
+function takvimAdresKopyala(){
+  const el = document.getElementById('tkv-adres')
+  el.select(); el.setSelectionRange(0, 99999)
+  try{
+    navigator.clipboard.writeText(el.value)
+  }catch(_){ document.execCommand('copy') }
+  alert('Takvim adresi kopyalandı.')
+}
+
 function renderCalDay(){
   const ets=DB.etkinlikler.filter(e=>e.tarih&&new Date(e.tarih).toDateString()===calSel.toDateString())
   document.getElementById('cal-sel-title').textContent=calSel.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'})
@@ -1858,10 +2226,14 @@ function renderCalDay(){
       <div style="display:flex;align-items:center;gap:7px">
         <div style="font-size:13px;font-weight:500;flex:1">${e.baslik}</div>
         ${saat?`<span style="font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums">${saat}</span>`:''}
-        ${e.otomatik?'<span style="font-size:10px;background:#FEF2F2;color:#B91C1C;padding:1px 6px;border-radius:3px">Duruşma</span>':''}
+        ${e.otomatik?'<span style="font-size:10px;background:#FEF2F2;color:#B91C1C;padding:1px 6px;border-radius:11px">Duruşma</span>':''}
       </div>
       ${satirlar.length?`<div style="font-size:11.5px;color:var(--muted);margin-top:5px;display:flex;flex-direction:column;gap:2px">${satirlar.map(s=>'<span style="display:flex;align-items:center;gap:5px">'+s+'</span>').join('')}</div>`:''}
       ${e.not?`<div style="font-size:11.5px;color:var(--muted);margin-top:4px">${e.not}</div>`:''}
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <button class="tbtn" style="padding:3px 8px;font-size:11px" onclick="googleTakvimAc('${e.id}')" title="Google Takvim'e ekle"><i class="ti ti-brand-google" style="font-size:12px"></i>Google Takvim</button>
+        <button class="tbtn" style="padding:3px 8px;font-size:11px" onclick="icsTek('${e.id}')" title="Takvim dosyası indir"><i class="ti ti-calendar-plus" style="font-size:12px"></i>.ics</button>
+      </div>
     </div>`}).join('')
 }
 
@@ -1900,7 +2272,7 @@ function renderRisk(){
   const gvs=DB.gorevler.filter(g=>g.durum!=='tamamlandi'&&g.tarih&&new Date(g.tarih)<new Date())
   const el=document.getElementById('ai-risk')
   if(!gvs.length){ el.innerHTML='<div style="font-size:12px;color:var(--green)">Gecikmiş görev yok.</div>'; return }
-  el.innerHTML=gvs.map(g=>`<div style="padding:8px;background:#FEF2F2;border-radius:6px;font-size:12px;color:var(--red);margin-bottom:6px">${g.baslik} — ${g.tarih}</div>`).join('')
+  el.innerHTML=gvs.map(g=>`<div style="padding:8px;background:#FEF2F2;border-radius:11px;font-size:12px;color:var(--red);margin-bottom:6px">${g.baslik} — ${g.tarih}</div>`).join('')
 }
 
 function sendAI(){
@@ -2219,7 +2591,7 @@ async function abonelikYukle() {
 
     if (!data) {
       ikon.innerHTML = '<i class="ti ti-package"></i>'
-      ikon.style.background = '#F9FAFB'
+      ikon.style.background = '#FBFCFE'
       baslik.textContent = 'Aktif abonelik yok'
       alt.textContent = 'Aşağıdan bir paket seçerek başlayın.'
       return
@@ -2233,13 +2605,13 @@ async function abonelikYukle() {
       ikon.style.color = '#15803D'
       baslik.textContent = `${data.paket_adi} Paketi — Aktif`
       alt.textContent = `Bitiş: ${data.bitis_tarihi ? new Date(data.bitis_tarihi).toLocaleDateString('tr-TR') : 'Belirtilmemiş'} · Max ${data.max_kullanici} kullanıcı`
-      badge.innerHTML = '<span style="background:#F0FDF4;color:#15803D;padding:4px 12px;border-radius:5px;font-size:12px;font-weight:500">Aktif</span>'
+      badge.innerHTML = '<span style="background:#F0FDF4;color:#15803D;padding:4px 12px;border-radius:9px;font-size:12px;font-weight:500">Aktif</span>'
     } else if (data.durum === 'bekliyor') {
       ikon.textContent = '⏳'
       ikon.style.background = '#FFFBEB'
       baslik.textContent = `${data.paket_adi} — Ödeme Bekleniyor`
       alt.textContent = 'Ödemeniz onaylandıktan sonra aktif edilecektir.'
-      badge.innerHTML = '<span style="background:#FFFBEB;color:#B45309;padding:4px 12px;border-radius:5px;font-size:12px;font-weight:500">⏳ Bekliyor</span>'
+      badge.innerHTML = '<span style="background:#FFFBEB;color:#B45309;padding:4px 12px;border-radius:9px;font-size:12px;font-weight:500">⏳ Bekliyor</span>'
     }
 
     // Kullanıcı yönetimi
@@ -2284,17 +2656,17 @@ async function kuYukle(abone) {
   let html = ''
   uyeler?.forEach(u => {
     const init = (u.kullanici_profil?.avukat_adi || u.kullanici_profil?.email || '?')[0].toUpperCase()
-    html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#F9FAFB;border-radius:5px">
-      <div style="width:32px;height:32px;border-radius:50%;background:#0B1629;color:#C9A84C;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0">${init}</div>
+    html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#FBFCFE;border-radius:9px">
+      <div style="width:32px;height:32px;border-radius:50%;background:#0C1B33;color:#1B4FA8;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0">${init}</div>
       <div style="flex:1"><div style="font-size:13px;font-weight:500">${u.kullanici_profil?.avukat_adi || '—'}</div><div style="font-size:11px;color:var(--muted)">${u.kullanici_profil?.email || '—'}</div></div>
-      <span style="font-size:11px;padding:3px 9px;border-radius:5px;background:#F0FDF4;color:#15803D;font-weight:500">Aktif</span>
+      <span style="font-size:11px;padding:3px 9px;border-radius:9px;background:#F0FDF4;color:#15803D;font-weight:500">Aktif</span>
     </div>`
   })
   davetler?.forEach(d => {
-    html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#F9FAFB;border-radius:5px">
+    html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#FBFCFE;border-radius:9px">
       <div style="width:32px;height:32px;border-radius:50%;background:#FFFBEB;color:#B45309;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">?</div>
       <div style="flex:1"><div style="font-size:13px;font-weight:500">${d.email}</div><div style="font-size:11px;color:var(--muted)">Davet gönderildi</div></div>
-      <span style="font-size:11px;padding:3px 9px;border-radius:5px;background:#FFFBEB;color:#B45309;font-weight:500">⏳ Bekleniyor</span>
+      <span style="font-size:11px;padding:3px 9px;border-radius:9px;background:#FFFBEB;color:#B45309;font-weight:500">⏳ Bekleniyor</span>
     </div>`
   })
   liste.innerHTML = html
@@ -2305,14 +2677,14 @@ function abPeriyot(p) {
   const btnAylik = document.getElementById('ab-btn-aylik')
   const btnYillik = document.getElementById('ab-btn-yillik')
   if (p === 'aylik') {
-    btnAylik.style.background = '#0B1629'; btnAylik.style.color = '#C9A84C'
+    btnAylik.style.background = '#0C1B33'; btnAylik.style.color = '#2E6FD4'
     btnYillik.style.background = 'transparent'; btnYillik.style.color = 'var(--muted)'
     document.getElementById('ab-f-baslangic').innerHTML = '₺1.500 <span style="font-size:13px;font-weight:400;color:var(--muted)">/ay</span>'
     document.getElementById('ab-p-baslangic').textContent = 'Aylık ödeme'
     document.getElementById('ab-f-buyume').innerHTML = '₺3.500 <span style="font-size:13px;font-weight:400;color:var(--muted)">/ay</span>'
     document.getElementById('ab-p-buyume').textContent = 'Aylık ödeme'
   } else {
-    btnYillik.style.background = '#0B1629'; btnYillik.style.color = '#C9A84C'
+    btnYillik.style.background = '#0C1B33'; btnYillik.style.color = '#2E6FD4'
     btnAylik.style.background = 'transparent'; btnAylik.style.color = 'var(--muted)'
     document.getElementById('ab-f-baslangic').innerHTML = '₺13.500 <span style="font-size:13px;font-weight:400;color:var(--muted)">/yıl</span>'
     document.getElementById('ab-p-baslangic').textContent = 'Yıllık ödeme (aylık ₺1.125)'
@@ -2427,13 +2799,13 @@ function renderUpgrade(abone) {
   plansSection.innerHTML = `
     <div style="margin-bottom:20px">
       <div style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:14px">Mevcut Paketiniz</div>
-      <div style="background:var(--surface-1);border:1.5px solid #C9A84C;border-radius:6px;padding:20px;display:flex;align-items:center;gap:14px">
-        <div style="width:44px;height:44px;border-radius:6px;background:#F0FDF4;display:flex;align-items:center;justify-content:center;font-size:20px"><i class="ti ti-check"></i></div>
+      <div style="background:var(--surface-1);border:1.5px solid #2E6FD4;border-radius:11px;padding:20px;display:flex;align-items:center;gap:14px">
+        <div style="width:44px;height:44px;border-radius:11px;background:#F0FDF4;display:flex;align-items:center;justify-content:center;font-size:20px"><i class="ti ti-check"></i></div>
         <div style="flex:1">
           <div style="font-size:15px;font-weight:500;color:var(--text-primary)">${abone.paket_adi} Paketi — ${yillikMi?'Yıllık':'Aylık'}</div>
           <div style="font-size:13px;color:var(--text-secondary);margin-top:2px">Max ${abone.max_kullanici} kullanıcı · ${abone.bitis_tarihi?'Bitiş: '+new Date(abone.bitis_tarihi).toLocaleDateString('tr-TR'):'Süresiz'}</div>
         </div>
-        <span style="background:#F0FDF4;color:#15803D;padding:4px 12px;border-radius:5px;font-size:12px;font-weight:500">Aktif</span>
+        <span style="background:#F0FDF4;color:#15803D;padding:4px 12px;border-radius:9px;font-size:12px;font-weight:500">Aktif</span>
       </div>
     </div>
 
@@ -2441,28 +2813,28 @@ function renderUpgrade(abone) {
     <div style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:14px">Yükseltme Seçenekleri</div>
     <div style="display:grid;grid-template-columns:${upgrade.fiyatAylik?'1fr 1fr':'1fr'};gap:14px">
       ${upgrade.fiyatAylik && !yillikMi ? `
-      <div style="background:var(--surface-1);border:0.5px solid var(--border);border-radius:6px;padding:20px">
+      <div style="background:var(--surface-1);border:0.5px solid var(--border);border-radius:11px;padding:20px">
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">${upgrade.sonraki} — Aylık</div>
         <div style="font-size:26px;font-weight:500;color:var(--text-primary);margin-bottom:4px">₺${upgrade.fiyatAylik.toLocaleString('tr-TR')} <span style="font-size:13px;font-weight:400;color:var(--text-secondary)">/ay</span></div>
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:14px">Max ${upgrade.maxKullanici} kullanıcı</div>
-        <button onclick="abPaketSec('${upgrade.sonraki}',${upgrade.maxKullanici})" style="width:100%;padding:10px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">Yükselt</button>
+        <button onclick="abPaketSec('${upgrade.sonraki}',${upgrade.maxKullanici})" style="width:100%;padding:10px;background:#0C1B33;color:#1B4FA8;border:none;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">Yükselt</button>
       </div>` : ''}
       ${upgrade.fiyatYillik ? `
-      <div style="background:var(--surface-1);border:1.5px solid #C9A84C;border-radius:6px;padding:20px;position:relative">
-        <div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:#C9A84C;color:#0B1629;font-size:10px;font-weight:600;padding:3px 12px;border-radius:5px;white-space:nowrap">Önerilen</div>
+      <div style="background:var(--surface-1);border:1.5px solid #2E6FD4;border-radius:11px;padding:20px;position:relative">
+        <div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:#1B4FA8;color:#fff;font-size:10px;font-weight:600;padding:3px 12px;border-radius:9px;white-space:nowrap">Önerilen</div>
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">${upgrade.sonraki} — Yıllık</div>
         <div style="font-size:26px;font-weight:500;color:var(--text-primary);margin-bottom:4px">₺${upgrade.fiyatYillik.toLocaleString('tr-TR')} <span style="font-size:13px;font-weight:400;color:var(--text-secondary)">/yıl</span></div>
         <div style="font-size:12px;color:#15803D;margin-bottom:14px;font-weight:500">2 ay bedava · Max ${upgrade.maxKullanici} kullanıcı</div>
-        <button onclick="abPaketSec('${upgrade.sonraki}',${upgrade.maxKullanici})" style="width:100%;padding:10px;background:#C9A84C;color:#0B1629;border:none;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Yükselt</button>
+        <button onclick="abPaketSec('${upgrade.sonraki}',${upgrade.maxKullanici})" style="width:100%;padding:10px;background:#1B4FA8;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Yükselt</button>
       </div>` : `
-      <div style="background:var(--surface-1);border:0.5px solid var(--border);border-radius:6px;padding:20px">
+      <div style="background:var(--surface-1);border:0.5px solid var(--border);border-radius:11px;padding:20px">
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">Kurumsal</div>
         <div style="font-size:22px;font-weight:500;color:var(--text-primary);margin-bottom:4px">Özel teklif</div>
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:14px">Sınırsız kullanıcı, özel destek</div>
-        <a href="https://wa.me/905439274906?text=Kurumsal%20paket%20için%20teklif%20almak%20istiyorum" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px;background:#0B1629;color:#C9A84C;border:none;border-radius:5px;font-size:13px;font-weight:500;text-decoration:none">WhatsApp ile İletişim</a>
+        <a href="https://wa.me/905439274906?text=Kurumsal%20paket%20için%20teklif%20almak%20istiyorum" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px;background:#0C1B33;color:#1B4FA8;border:none;border-radius:9px;font-size:13px;font-weight:500;text-decoration:none">WhatsApp ile İletişim</a>
       </div>`}
     </div>` : `
-    <div style="background:var(--bg-success);border:0.5px solid var(--border-success);border-radius:6px;padding:16px;text-align:center">
+    <div style="background:var(--bg-success);border:0.5px solid var(--border-success);border-radius:11px;padding:16px;text-align:center">
       <div style="font-size:14px;font-weight:500;color:var(--text-success);margin-bottom:4px">En üst paketin kullanıcısısınız!</div>
       <div style="font-size:13px;color:var(--text-secondary)">Kurumsal pakette sınırsız kullanıcı ve tüm özellikler dahil.</div>
     </div>`}
@@ -2496,11 +2868,11 @@ function geriAlGoster(tur, adet, mesaj){
   const eski = document.getElementById('geri-al'); if(eski) eski.remove()
   const d = document.createElement('div')
   d.id = 'geri-al'
-  d.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0B1629;color:#fff;'
-    + 'padding:11px 16px;border-radius:6px;display:flex;align-items:center;gap:14px;font-size:13px;z-index:9000;'
+  d.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0C1B33;color:#fff;'
+    + 'padding:11px 16px;border-radius:11px;display:flex;align-items:center;gap:14px;font-size:13px;z-index:9000;'
     + 'box-shadow:0 8px 24px rgba(16,24,40,.18)'
   d.innerHTML = '<span>' + mesaj + '</span>'
-    + '<button onclick="geriAl()" style="background:none;border:none;color:#C9A84C;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;padding:0">Geri al</button>'
+    + '<button onclick="geriAl()" style="background:none;border:none;color:#1B4FA8;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;padding:0">Geri al</button>'
   document.body.appendChild(d)
   setTimeout(function(){ const x = document.getElementById('geri-al'); if(x) x.remove(); sonSilinen = null }, 8000)
 }
@@ -2662,7 +3034,7 @@ function abonelikUyarisi(abone){
   d.innerHTML = '<i class="ti ti-alert-circle" style="font-size:17px;flex-shrink:0"></i>'
     + '<span style="flex:1">' + metin + ' Verileriniz korunur.</span>'
     + '<a href="https://wa.me/905439274906?text=' + encodeURIComponent(mesaj) + '" target="_blank" '
-    + 'style="padding:6px 14px;background:' + renk + ';color:#fff;border-radius:4px;font-size:12.5px;font-weight:500;text-decoration:none;white-space:nowrap">'
+    + 'style="padding:6px 14px;background:' + renk + ';color:#fff;border-radius:12px;font-size:12.5px;font-weight:500;text-decoration:none;white-space:nowrap">'
     + (demo ? 'Aboneliğe geç' : 'Yenile') + '</a>'
     + '<button onclick="this.parentElement.remove()" style="background:none;border:none;color:' + renk
     + ';cursor:pointer;font-size:16px;opacity:.5;padding:0 2px" aria-label="Kapat"><i class="ti ti-x"></i></button>'
@@ -2680,7 +3052,7 @@ const BS_DURUM = {
   randevu:   { ad:'Randevu planlandı', arka:'#F5F3FF', renk:'#6D28D9' },
   muvekkil:  { ad:'Müvekkil oldu',     arka:'#F0FDF4', renk:'#15803D' },
   olumsuz:   { ad:'Olumsuz',           arka:'#FEF2F2', renk:'#B91C1C' },
-  arsiv:     { ad:'Arşiv',             arka:'#F9FAFB', renk:'#6B7280' }
+  arsiv:     { ad:'Arşiv',             arka:'#FBFCFE', renk:'#53627A' }
 }
 const BILGI_KAT = { sss:'Sık sorulan soru', buro:'Büro hakkında', hizmet:'Hizmet alanı', ozel:'Özel bilgi' }
 
@@ -2723,6 +3095,8 @@ async function aiYukle(){
   document.getElementById('ai-embed-kod').textContent =
     '<script src="https://dosya360.com/bot.js" data-buro="' + buro + '"><' + '/script>'
 
+  avukatlariYukle()
+
   const { data: bl } = await window.sb.from('ai_bilgi').select('*').eq('buro_id', buro).order('kategori').order('sira')
   aiBilgiler = bl || []
   bilgiRender()
@@ -2755,7 +3129,7 @@ async function aiDurumDegistir(){
 }
 
 function aiSekme(ad, el){
-  ;['ayar','bilgi','kod'].forEach(function(x){
+  ;['ayar','bilgi','avukat','kod'].forEach(function(x){
     document.getElementById('ai-sekme-'+x).style.display = (x===ad ? 'block' : 'none')
   })
   document.querySelectorAll('.ai-tab').forEach(function(t){ t.classList.remove('active') })
@@ -2812,20 +3186,20 @@ function bilgiRender(){
     return
   }
   el.innerHTML = aiBilgiler.map(function(b){
-    return '<div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:14px 16px">'
+    return '<div style="background:#fff;border:1px solid var(--border);border-radius:11px;padding:14px 16px">'
       + '<div style="display:flex;align-items:flex-start;gap:12px">'
       +   '<div style="flex:1;min-width:0">'
       +     '<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">'
-      +       '<span style="font-size:11px;color:#C9A84C;font-weight:500">' + (BILGI_KAT[b.kategori]||b.kategori) + '</span>'
+      +       '<span style="font-size:11px;color:#1B4FA8;font-weight:500">' + (BILGI_KAT[b.kategori]||b.kategori) + '</span>'
       +       (b.hizli ? '<span style="font-size:10px;background:rgba(201,168,76,.14);color:#8A6D1F;padding:2px 7px;border-radius:20px;font-weight:500">Hızlı buton</span>' : '')
       +     '</div>'
       +     '<div style="font-size:13.5px;font-weight:600;color:var(--text)">' + b.baslik + '</div>'
       +     '<div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">' + b.icerik + '</div>'
       +   '</div>'
       +   '<div style="display:flex;gap:6px;flex-shrink:0">'
-      +     '<button onclick="hizliDegistir(\'' + b.id + '\',' + (b.hizli?'false':'true') + ')" title="Widget\'te hızlı buton olarak göster" style="padding:5px 10px;background:' + (b.hizli?'#0B1629':'var(--surface)') + ';border:1px solid ' + (b.hizli?'#0B1629':'var(--border)') + ';border-radius:4px;font-size:12px;cursor:pointer;font-family:inherit;color:' + (b.hizli?'#C9A84C':'var(--muted)') + '"><i class="ti ti-' + (b.hizli?'star-filled':'star') + '"></i></button>'
-      +     '<button onclick="bilgiDuzenle(\'' + b.id + '\')" style="padding:5px 10px;background:var(--surface);border:1px solid var(--border);border-radius:4px;font-size:12px;cursor:pointer;font-family:inherit;color:var(--text)">Düzenle</button>'
-      +     '<button onclick="bilgiSil(\'' + b.id + '\')" style="padding:5px 10px;background:#FEF2F2;border:none;border-radius:4px;font-size:12px;cursor:pointer;font-family:inherit;color:#B91C1C">Sil</button>'
+      +     '<button onclick="hizliDegistir(\'' + b.id + '\',' + (b.hizli?'false':'true') + ')" title="Widget\'te hızlı buton olarak göster" style="padding:5px 10px;background:' + (b.hizli?'#0C1B33':'var(--surface)') + ';border:1px solid ' + (b.hizli?'#0C1B33':'var(--border)') + ';border-radius:12px;font-size:12px;cursor:pointer;font-family:inherit;color:' + (b.hizli?'#2E6FD4':'var(--muted)') + '"><i class="ti ti-' + (b.hizli?'star-filled':'star') + '"></i></button>'
+      +     '<button onclick="bilgiDuzenle(\'' + b.id + '\')" style="padding:5px 10px;background:var(--surface);border:1px solid var(--border);border-radius:12px;font-size:12px;cursor:pointer;font-family:inherit;color:var(--text)">Düzenle</button>'
+      +     '<button onclick="bilgiSil(\'' + b.id + '\')" style="padding:5px 10px;background:#FEF2F2;border:none;border-radius:12px;font-size:12px;cursor:pointer;font-family:inherit;color:#B91C1C">Sil</button>'
       +   '</div></div></div>'
   }).join('')
 }
@@ -2921,11 +3295,12 @@ function basvuruRender(){
   el.innerHTML = liste.map(function(b){
     const d = BS_DURUM[b.durum] || BS_DURUM.yeni
     const tel = (b.telefon||'').replace(/\D/g,'')
-    return '<div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:16px 18px">'
+    return '<div style="background:#fff;border:1px solid var(--border);border-radius:11px;padding:16px 18px">'
       + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px">'
       +   '<div style="flex:1;min-width:0">'
       +     '<div style="font-size:14px;font-weight:600;color:var(--text)">' + (b.ad_soyad||'İsim belirtilmemiş') + '</div>'
       +     '<div style="font-size:12.5px;color:var(--muted);margin-top:2px">' + (b.telefon||'—') + (b.eposta ? ' · ' + b.eposta : '') + '</div>'
+      +     (b.avukat_ad ? '<div style="font-size:12px;color:#8A6D1F;margin-top:5px"><i class="ti ti-user-check"></i> ' + b.avukat_ad + '</div>' : '')
       +     (b.konu ? '<div style="font-size:12.5px;color:var(--text);margin-top:6px">' + b.konu + '</div>' : '')
       +     (b.aciklama ? '<div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">' + b.aciklama + '</div>' : '')
       +     '<div style="font-size:11.5px;color:var(--hint);margin-top:6px">' + tarihFormat(b.created_at) + (b.kaynak_url ? ' · ' + b.kaynak_url : '') + '</div>'
@@ -2935,11 +3310,11 @@ function basvuruRender(){
       + '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">'
       +   (tel ? '<a href="tel:' + tel + '" class="tbtn"><i class="ti ti-phone"></i>Ara</a>'
       +          '<a href="https://wa.me/9' + tel + '" target="_blank" class="tbtn"><i class="ti ti-brand-whatsapp"></i>WhatsApp</a>' : '')
-      +   '<select onchange="basvuruDurum(\'' + b.id + '\',this.value)" style="padding:6px 10px;border:1px solid var(--border);border-radius:4px;font-size:12.5px;font-family:inherit;background:#fff;color:var(--text)">'
+      +   '<select onchange="basvuruDurum(\'' + b.id + '\',this.value)" style="padding:6px 10px;border:1px solid var(--border);border-radius:12px;font-size:12.5px;font-family:inherit;background:#fff;color:var(--text)">'
       +     Object.keys(BS_DURUM).map(function(k){
               return '<option value="'+k+'"'+(b.durum===k?' selected':'')+'>'+BS_DURUM[k].ad+'</option>' }).join('')
       +   '</select>'
-      +   '<button onclick="basvuruMuvekkil(\'' + b.id + '\')" style="padding:6px 14px;background:#0B1629;color:#C9A84C;border:none;border-radius:4px;font-size:12.5px;font-weight:500;cursor:pointer;font-family:inherit">Müvekkile dönüştür</button>'
+      +   '<button onclick="basvuruMuvekkil(\'' + b.id + '\')" style="padding:6px 14px;background:#0C1B33;color:#1B4FA8;border:none;border-radius:12px;font-size:12.5px;font-weight:500;cursor:pointer;font-family:inherit">Müvekkile dönüştür</button>'
       + '</div></div>'
   }).join('')
 }
@@ -2978,10 +3353,10 @@ function turSecimCiz(){
   k.innerHTML = DAVA_TURLERI.map(function(t){
     const aktif = t === secili
     return '<button type="button" onclick="turSec(\'' + t.replace(/'/g,"\\'") + '\')" '
-      + 'style="padding:6px 11px;border-radius:4px;font-size:12.5px;cursor:pointer;font-family:inherit;'
-      + 'border:1px solid ' + (aktif ? '#C9A84C' : 'var(--border)') + ';'
-      + 'background:' + (aktif ? '#0B1629' : 'var(--surface)') + ';'
-      + 'color:' + (aktif ? '#C9A84C' : 'var(--text)') + ';'
+      + 'style="padding:6px 11px;border-radius:12px;font-size:12.5px;cursor:pointer;font-family:inherit;'
+      + 'border:1px solid ' + (aktif ? '#2E6FD4' : 'var(--border)') + ';'
+      + 'background:' + (aktif ? '#0C1B33' : 'var(--surface)') + ';'
+      + 'color:' + (aktif ? '#2E6FD4' : 'var(--text)') + ';'
       + (aktif ? 'font-weight:500' : '') + '">' + t + '</button>'
   }).join('')
 }
@@ -3009,7 +3384,7 @@ function davaEkleMv(mvId, e){
     const bilgi = document.getElementById('dv-mv-bilgi')
     if(bilgi){
       bilgi.style.display = 'flex'
-      bilgi.innerHTML = '<i class="ti ti-user" style="color:#C9A84C"></i>'
+      bilgi.innerHTML = '<i class="ti ti-user" style="color:#1B4FA8"></i>'
         + '<div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--text)">' + mv.ad + ' ' + mv.soyad + '</div>'
         + '<div style="font-size:11.5px;color:var(--muted);margin-top:1px">'
         + [mv.tel, mv.email, mv.tc ? 'TC: ' + mv.tc : ''].filter(Boolean).join(' · ') + '</div></div>'
@@ -3420,7 +3795,7 @@ const DK_DURUM = {
   yeni:      { ad:'Yeni',           arka:'#EFF6FF', renk:'#1D4ED8' },
   inceleniyor:{ad:'İnceleniyor',    arka:'#FFFBEB', renk:'#B45309' },
   cevaplandi:{ ad:'Cevaplandı',     arka:'#F0FDF4', renk:'#15803D' },
-  kapandi:   { ad:'Kapandı',        arka:'#F9FAFB', renk:'#6B7280' },
+  kapandi:   { ad:'Kapandı',        arka:'#FBFCFE', renk:'#53627A' },
 }
 const DK_KAT = { hata:'Hata', kullanim:'Kullanım', ozellik:'Öneri', abonelik:'Abonelik', genel:'Genel' }
 
@@ -3479,17 +3854,17 @@ async function destekYukle(){
       .select('*').eq('buro_id', buro).order('created_at', { ascending:false }).limit(20)
 
     if(!data || !data.length){
-      el.innerHTML = '<div style="font-size:12.5px;color:var(--muted);padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:5px">Henüz talep açmadınız.</div>'
+      el.innerHTML = '<div style="font-size:12.5px;color:var(--muted);padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:9px">Henüz talep açmadınız.</div>'
       return
     }
 
     el.innerHTML = data.map(function(t){
       const d = DK_DURUM[t.durum] || DK_DURUM.yeni
       const no = 'D-' + String(t.id).slice(0,8).toUpperCase()
-      return '<div style="background:#fff;border:1px solid var(--border);border-radius:5px;padding:13px 15px">'
+      return '<div style="background:#fff;border:1px solid var(--border);border-radius:9px;padding:13px 15px">'
         + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:5px">'
         +   '<div style="font-size:13.5px;font-weight:600;color:var(--text);flex:1;min-width:0">' + t.konu + '</div>'
-        +   '<span style="font-size:11px;padding:2px 8px;border-radius:4px;background:' + d.arka + ';color:' + d.renk + ';white-space:nowrap">' + d.ad + '</span>'
+        +   '<span style="font-size:11px;padding:2px 8px;border-radius:12px;background:' + d.arka + ';color:' + d.renk + ';white-space:nowrap">' + d.ad + '</span>'
         + '</div>'
         + '<div style="font-size:11.5px;color:var(--hint)">' + no + ' · ' + (DK_KAT[t.kategori]||t.kategori) + ' · ' + tarihFormat(t.created_at) + '</div>'
         + (t.cevap ? '<div style="margin-top:10px;padding:10px 12px;background:#F0FDF4;border-left:3px solid #15803D;border-radius:0 4px 4px 0;font-size:12.5px;color:var(--text);line-height:1.6;white-space:pre-wrap">' + t.cevap + '</div>' : '')
@@ -3638,11 +4013,11 @@ function dilekceListe(){
   const el = document.getElementById('dl-liste')
   if(!el) return
   if(!dlTaslaklar.length){
-    el.innerHTML = '<div style="font-size:12.5px;color:var(--muted);padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:5px">Henüz taslak yok.</div>'
+    el.innerHTML = '<div style="font-size:12.5px;color:var(--muted);padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:9px">Henüz taslak yok.</div>'
     return
   }
   el.innerHTML = dlTaslaklar.map(function(t){
-    return '<div style="background:#fff;border:1px solid var(--border);border-radius:5px;padding:11px 13px;display:flex;align-items:center;gap:10px">'
+    return '<div style="background:#fff;border:1px solid var(--border);border-radius:9px;padding:11px 13px;display:flex;align-items:center;gap:10px">'
       + '<div style="flex:1;min-width:0">'
       +   '<div style="font-size:13px;font-weight:500;color:var(--text)">' + t.baslik + '</div>'
       +   '<div style="font-size:11.5px;color:var(--hint);margin-top:2px">' + (DL_AD[t.tur]||t.tur) + ' · ' + t.kelime + ' kelime · ' + tarihFormat(t.created_at) + '</div>'
@@ -3769,16 +4144,46 @@ function sureRozet(){
 function sureIslemDoldur(){
   const kol = val('sr-kol')
   const sel = document.getElementById('sr-islem'); if(!sel) return
-  const liste = srKurallar.filter(function(k){ return k.yargi_kolu === kol })
+  const uyari = document.getElementById('sr-kural-uyari')
+
+  // Hic kural yoksa kullaniciyi bilgilendir ve kurmayi oner
+  if(!srKurallar.length){
+    sel.innerHTML = '<option value="">Önce süre kuralları yüklenmeli</option>'
+    if(uyari){
+      uyari.style.display = 'block'
+      uyari.innerHTML = 'Süre kuralları henüz yüklenmemiş. '
+        + '<b style="cursor:pointer;text-decoration:underline" onclick="sureKurallariKur()">Varsayılan kuralları yükleyin</b>'
+    }
+    sureHesapla(); return
+  }
+  if(uyari) uyari.style.display = 'none'
+
+  const liste = srKurallar.filter(function(k){ return String(k.yargi_kolu) === String(kol) })
   sel.innerHTML = liste.length
     ? liste.map(function(k){ return '<option value="' + k.id + '">' + k.islem + ' — ' + k.sure_gun + ' gün</option>' }).join('')
-    : '<option value="">Bu kolda kural yok</option>'
+    : '<option value="">Bu yargı kolunda tanımlı kural yok</option>'
   sureHesapla()
+}
+
+// Varsayilan kural setini olusturur (sure_kurallari bos kaldiysa)
+async function sureKurallariKur(){
+  const uyari = document.getElementById('sr-kural-uyari')
+  if(uyari) uyari.textContent = 'Kurallar yükleniyor...'
+  try{
+    const { error } = await window.sb.rpc('sure_kurallari_kur')
+    if(error) throw error
+    await sureYukle()
+    if(uyari) uyari.style.display = srKurallar.length ? 'none' : 'block'
+    if(uyari && !srKurallar.length) uyari.textContent = 'Kurallar oluşturulamadı. Destek ile iletişime geçin.'
+  }catch(e){
+    if(uyari) uyari.innerHTML = 'Kurallar yüklenemedi: ' + (e.message || 'bilinmeyen hata')
+  }
 }
 
 function sureHesapla(){
   const kutu = document.getElementById('sr-onizleme'); if(!kutu) return
-  const kural = srKurallar.find(function(k){ return k.id === val('sr-islem') })
+  // id veritabaninda sayi, select'te metin — tip uyumsuzlugu olmasin
+  const kural = srKurallar.find(function(k){ return String(k.id) === String(val('sr-islem')) })
   const tarih = val('sr-tarih')
   if(!kural || !tarih){ kutu.style.display = 'none'; return }
 
@@ -3810,11 +4215,11 @@ function sureHesapla(){
     + '<div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);padding:4px 0"><span>Yasal süre</span><span>' + kural.sure_gun + ' gün · ' + (kural.dayanak||'') + '</span></div>'
     + '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0 4px;margin-top:6px;border-top:1px solid var(--border)">'
     +   '<span style="font-size:13.5px;font-weight:600;color:var(--text)">Son tarih</span>'
-    +   '<span style="font-size:15px;font-weight:700;color:' + (kalan<0?'#B91C1C':kalan<=7?'#B45309':'#0B1629') + '">' + srTr(son) + '</span>'
+    +   '<span style="font-size:15px;font-weight:700;color:' + (kalan<0?'#B91C1C':kalan<=7?'#B45309':'#0C1B33') + '">' + srTr(son) + '</span>'
     + '</div>'
     + '<div style="font-size:11.5px;color:var(--hint);text-align:right">' + (kalan<0 ? Math.abs(kalan)+' gün geçti' : kalan+' gün kaldı') + '</div>'
     + uyarilar.map(function(u){
-        return '<div style="margin-top:9px;padding:8px 10px;background:#FFFBEB;border-radius:4px;font-size:11.5px;color:#92400E;line-height:1.5">' + u + '</div>' }).join('')
+        return '<div style="margin-top:9px;padding:8px 10px;background:#FFFBEB;border-radius:12px;font-size:11.5px;color:#92400E;line-height:1.5">' + u + '</div>' }).join('')
 
   return { kural:kural, ulasma:srYaz(ulasma), teblig:srYaz(teblig), son:srYaz(son), uyari:uyarilar.join(' ') }
 }
@@ -3893,7 +4298,7 @@ function sureListe(){
   if(srFiltre === 'tamam') liste = liste.filter(function(t){ return t.durum==='tamam' })
 
   if(!liste.length){
-    el.innerHTML = '<div style="text-align:center;padding:36px;color:var(--muted);font-size:13px;background:var(--surface);border:1px solid var(--border);border-radius:6px">Bu durumda kayıt yok.</div>'
+    el.innerHTML = '<div style="text-align:center;padding:36px;color:var(--muted);font-size:13px;background:var(--surface);border:1px solid var(--border);border-radius:11px">Bu durumda kayıt yok.</div>'
     return
   }
 
@@ -3901,25 +4306,25 @@ function sureListe(){
     const kalan = Math.round((srGun(t.son_tarih) - bugun) / 86400000)
     const bitti = t.durum === 'tamam'
     let renk = '#1D4ED8', arka = '#EFF6FF', metin = kalan + ' gün'
-    if(bitti){ renk='#6B7280'; arka='#F9FAFB'; metin='Tamamlandı' }
+    if(bitti){ renk='#53627A'; arka='#FBFCFE'; metin='Tamamlandı' }
     else if(kalan < 0){ renk='#B91C1C'; arka='#FEF2F2'; metin=Math.abs(kalan)+' gün geçti' }
     else if(kalan <= 3){ renk='#B91C1C'; arka='#FEF2F2' }
     else if(kalan <= 7){ renk='#B45309'; arka='#FFFBEB' }
 
-    return '<div style="background:#fff;border:' + ((!bitti && kalan<=3)?'1.5px solid #FECACA':'1px solid var(--border)') + ';border-radius:6px;padding:14px 16px">'
+    return '<div style="background:#fff;border:' + ((!bitti && kalan<=3)?'1.5px solid #FECACA':'1px solid var(--border)') + ';border-radius:11px;padding:14px 16px">'
       + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px">'
       +   '<div style="flex:1;min-width:0">'
       +     '<div style="font-size:14px;font-weight:600;color:var(--text)' + (bitti?';text-decoration:line-through;opacity:.6':'') + '">' + t.islem + (t.tebligat_turu ? ' — ' + t.tebligat_turu : '') + '</div>'
       +     '<div style="font-size:11.5px;color:var(--hint);margin-top:3px">' + (SR_KOL[t.yargi_kolu]||t.yargi_kolu)
       +       (t.dosya_no ? ' · ' + t.dosya_no : '') + (t.dayanak ? ' · ' + t.dayanak : '') + '</div>'
       +   '</div>'
-      +   '<span style="font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:4px;background:' + arka + ';color:' + renk + ';white-space:nowrap">' + metin + '</span>'
+      +   '<span style="font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:12px;background:' + arka + ';color:' + renk + ';white-space:nowrap">' + metin + '</span>'
       + '</div>'
       + '<div style="display:flex;gap:16px;font-size:12px;color:var(--muted);margin:8px 0">'
       +   '<span>Tebliğ: ' + srTr(t.teblig_tarihi) + '</span>'
       +   '<span style="font-weight:600;color:var(--text)">Son tarih: ' + srTr(t.son_tarih) + '</span>'
       + '</div>'
-      + (t.uyari ? '<div style="font-size:11.5px;color:#92400E;background:#FFFBEB;border-radius:4px;padding:7px 9px;margin-bottom:8px;line-height:1.5">' + t.uyari + '</div>' : '')
+      + (t.uyari ? '<div style="font-size:11.5px;color:#92400E;background:#FFFBEB;border-radius:12px;padding:7px 9px;margin-bottom:8px;line-height:1.5">' + t.uyari + '</div>' : '')
       + (t.not_metni ? '<div style="font-size:12px;color:var(--muted);margin-bottom:8px">' + t.not_metni + '</div>' : '')
       + '<div style="display:flex;gap:6px">'
       +   '<button onclick="sureDurum(\'' + t.id + '\',\'' + (bitti?'acik':'tamam') + '\')" class="tbtn">' + (bitti?'Geri aç':'Tamamlandı') + '</button>'
@@ -3945,12 +4350,12 @@ function sureKuralAc(){ sureKuralListe(); document.getElementById('m-surekural')
 function sureKuralListe(){
   const el = document.getElementById('sk-liste'); if(!el) return
   el.innerHTML = srKurallar.map(function(k){
-    return '<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface);border:1px solid var(--border);border-radius:5px">'
+    return '<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface);border:1px solid var(--border);border-radius:9px">'
       + '<div style="flex:1;min-width:0">'
       +   '<div style="font-size:13px;font-weight:500;color:var(--text)">' + (SR_KOL[k.yargi_kolu]||k.yargi_kolu) + ' · ' + k.islem + '</div>'
       +   '<div style="font-size:11.5px;color:var(--hint)">' + (k.dayanak||'') + '</div>'
       + '</div>'
-      + '<input type="number" value="' + k.sure_gun + '" min="1" max="365" onchange="sureKuralGuncelle(\'' + k.id + '\',this.value)" style="width:72px;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:inherit;text-align:center">'
+      + '<input type="number" value="' + k.sure_gun + '" min="1" max="365" onchange="sureKuralGuncelle(\'' + k.id + '\',this.value)" style="width:72px;padding:5px 8px;border:1px solid var(--border);border-radius:12px;font-size:13px;font-family:inherit;text-align:center">'
       + '<span style="font-size:12px;color:var(--muted)">gün</span>'
       + '<button onclick="sureKuralSil(\'' + k.id + '\')" class="del-btn"><i class="ti ti-trash"></i></button>'
       + '</div>'
@@ -4179,6 +4584,115 @@ function ekipAdi(id){
   return u ? u.ad : ''
 }
 
+// ══ WEB ASISTANI · AVUKAT KARTLARI ════════════════════════
+let aiAvukatlar = []
+
+async function avukatlariYukle(){
+  if(!window.sb || !sbUser) return
+  try{
+    const buro = await buroIdAl()
+    const { data } = await window.sb.from('ai_avukatlar')
+      .select('*').eq('buro_id', buro).order('sira').order('created_at')
+    aiAvukatlar = data || []
+    avukatListe()
+    const sec = document.getElementById('ai-avukat-secimi')
+    if(sec && aiAyar) sec.checked = aiAyar.avukat_secimi !== false
+  }catch(e){ console.warn('Avukat listesi:', e) }
+}
+
+function avukatListe(){
+  const el = document.getElementById('ai-avukat-liste'); if(!el) return
+  if(!aiAvukatlar.length){
+    el.innerHTML = '<div style="text-align:center;padding:32px;color:var(--muted);font-size:13px;background:var(--surface);border:1px dashed var(--border);border-radius:11px">'
+      + 'Henüz avukat kartı yok. Eklemezseniz ziyaretçi doğrudan forma yönlendirilir.</div>'
+    return
+  }
+  el.innerHTML = aiAvukatlar.map(function(a){
+    return '<div style="background:#fff;border:1px solid var(--border);border-radius:11px;padding:14px 16px;display:flex;align-items:flex-start;gap:13px">'
+      + '<div style="width:44px;height:44px;border-radius:50%;background:#0C1B33;color:#1B4FA8;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;flex-shrink:0">'
+      +   (a.ad || '?').trim().charAt(0).toUpperCase() + '</div>'
+      + '<div style="flex:1;min-width:0">'
+      +   '<div style="font-size:14px;font-weight:600;color:var(--text)">' + a.ad + '</div>'
+      +   '<div style="font-size:12px;color:var(--muted);margin-top:2px">'
+      +     [a.unvan, a.baro ? a.baro + ' Barosu' : '', a.uzmanlik].filter(Boolean).join(' · ') + '</div>'
+      +   (a.tanitim ? '<div style="font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.6">' + a.tanitim + '</div>' : '')
+      + '</div>'
+      + '<div style="display:flex;gap:6px;flex-shrink:0">'
+      +   '<button onclick="avukatDuzenle(\'' + a.id + '\')" class="tbtn">Düzenle</button>'
+      +   '<button onclick="avukatSil(\'' + a.id + '\')" class="del-btn"><i class="ti ti-trash"></i></button>'
+      + '</div></div>'
+  }).join('')
+}
+
+function avukatModalAc(){
+  ;['avk-id','avk-ad','avk-unvan','avk-baro','avk-uzmanlik','avk-tanitim',
+    'avk-telefon','avk-whatsapp','avk-eposta'].forEach(clear)
+  document.getElementById('baslik-avukat').textContent = 'Avukat ekle'
+  const es = document.getElementById('avk-ekip')
+  if(es){
+    es.innerHTML = '<option value="">Elle gireceğim</option>'
+      + ekipUyeleri.map(function(u){
+          return '<option value="' + u.kullanici_id + '">' + u.ad + '</option>' }).join('')
+    es.value = ''
+  }
+  document.getElementById('m-avukat').classList.add('open')
+}
+
+function avukatEkiptenDoldur(){
+  const id = val('avk-ekip'); if(!id) return
+  const u = ekipUyeleri.find(function(x){ return x.kullanici_id === id }); if(!u) return
+  const ad = document.getElementById('avk-ad')
+  const ep = document.getElementById('avk-eposta')
+  if(ad && !ad.value) ad.value = u.ad
+  if(ep && !ep.value) ep.value = u.eposta || ''
+}
+
+function avukatDuzenle(id){
+  const a = aiAvukatlar.find(function(x){ return x.id === id }); if(!a) return
+  avukatModalAc()
+  document.getElementById('baslik-avukat').textContent = 'Avukatı düzenle'
+  const esl = { 'avk-id':'id','avk-ad':'ad','avk-unvan':'unvan','avk-baro':'baro',
+                'avk-uzmanlik':'uzmanlik','avk-tanitim':'tanitim','avk-telefon':'telefon',
+                'avk-whatsapp':'whatsapp','avk-eposta':'eposta' }
+  Object.keys(esl).forEach(function(k){
+    const e = document.getElementById(k); if(e) e.value = a[esl[k]] || ''
+  })
+}
+
+async function avukatKaydet(){
+  const ad = val('avk-ad')
+  if(!ad) return alert('Ad soyad zorunludur.')
+  const buro = await buroIdAl()
+  const kayit = {
+    buro_id: buro, ad: ad,
+    kullanici_id: val('avk-ekip') || null,
+    unvan: val('avk-unvan') || null, baro: val('avk-baro') || null,
+    uzmanlik: val('avk-uzmanlik') || null, tanitim: val('avk-tanitim') || null,
+    telefon: val('avk-telefon') || null, whatsapp: val('avk-whatsapp') || null,
+    eposta: val('avk-eposta') || null
+  }
+  const id = val('avk-id')
+  const { error } = id
+    ? await window.sb.from('ai_avukatlar').update(kayit).eq('id', id)
+    : await window.sb.from('ai_avukatlar').insert(kayit)
+  if(error) return alert('Hata: ' + error.message)
+  closeModal('avukat'); avukatlariYukle()
+}
+
+async function avukatSil(id){
+  const a = aiAvukatlar.find(function(x){ return x.id === id })
+  if(!confirm('"' + (a ? a.ad : 'Avukat') + '" kartı silinecek.\n\nDevam edilsin mi?')) return
+  await window.sb.from('ai_avukatlar').delete().eq('id', id)
+  avukatlariYukle()
+}
+
+async function avukatSecimiDegistir(){
+  const acik = document.getElementById('ai-avukat-secimi').checked
+  const buro = await buroIdAl()
+  await window.sb.from('ai_ayarlar').update({ avukat_secimi: acik }).eq('buro_id', buro)
+  if(aiAyar) aiAyar.avukat_secimi = acik
+}
+
 // ── ISLEM GUNLUGU ──────────────────────────────────────────
 function logla(islem, detay){
   try{
@@ -4198,10 +4712,10 @@ function onayEkrani(durum, sebep, email){
   el.style.display = 'flex'
   el.innerHTML = ''
     + '<div style="width:100%;max-width:420px;text-align:center">'
-    +   '<div style="font-size:22px;font-weight:600;color:#C9A84C;margin-bottom:6px">Dosya360</div>'
+    +   '<div style="font-size:22px;font-weight:600;color:#1B4FA8;margin-bottom:6px">Dosya360</div>'
     +   '<div style="font-size:12px;color:rgba(255,255,255,.35);margin-bottom:26px">Avukatlık Bürosu Yönetim Sistemi</div>'
-    +   '<div style="background:#1A2B47;border:0.5px solid rgba(201,168,76,.15);border-radius:8px;padding:32px 28px">'
-    +     '<i class="ti ' + (dondu ? 'ti-lock' : red ? 'ti-circle-x' : 'ti-clock-hour-4') + '" style="font-size:38px;color:' + (red ? '#F87171' : '#C9A84C') + '"></i>'
+    +   '<div style="background:#15294A;border:0.5px solid rgba(201,168,76,.15);border-radius:12px;padding:32px 28px">'
+    +     '<i class="ti ' + (dondu ? 'ti-lock' : red ? 'ti-circle-x' : 'ti-clock-hour-4') + '" style="font-size:38px;color:' + (red ? '#F87171' : '#2E6FD4') + '"></i>'
     +     '<div style="font-size:17px;font-weight:500;color:#fff;margin:14px 0 8px">'
     +       (dondu ? 'Hesabınız geçici olarak durduruldu'
               : red ? 'Başvurunuz onaylanmadı'
@@ -4213,11 +4727,11 @@ function onayEkrani(durum, sebep, email){
           ? (sebep ? String(sebep) : 'Başvurunuz için uygun görülmedi. Ayrıntı için bizimle iletişime geçebilirsiniz.')
           : 'Kaydınız alındı. Ekibimiz hesabınızı en kısa sürede etkinleştirecek. Onaylandığında bilgilendirileceksiniz.')
     +     '</div>'
-    +     '<div style="background:rgba(255,255,255,.04);border-radius:6px;padding:10px;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:18px">' + (email || '') + '</div>'
+    +     '<div style="background:rgba(255,255,255,.04);border-radius:11px;padding:10px;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:18px">' + (email || '') + '</div>'
     +     '<a href="https://wa.me/905439274906?text=' + encodeURIComponent('Dosya360 hesabım için bilgi almak istiyorum: ' + (email||''))
-    +       '" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:11px;background:#C9A84C;color:#0B1629;border-radius:5px;font-size:13.5px;font-weight:500;text-decoration:none;margin-bottom:8px">'
+    +       '" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:11px;background:#1B4FA8;color:#fff;border-radius:9px;font-size:13.5px;font-weight:500;text-decoration:none;margin-bottom:8px">'
     +       '<i class="ti ti-brand-whatsapp"></i>Bizimle iletişime geçin</a>'
-    +     '<button onclick="sb.auth.signOut().then(function(){location.href=\'index.html\'})" style="width:100%;padding:10px;background:transparent;border:0.5px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);border-radius:5px;font-size:13px;cursor:pointer;font-family:inherit">Çıkış yap</button>'
+    +     '<button onclick="sb.auth.signOut().then(function(){location.href=\'index.html\'})" style="width:100%;padding:10px;background:transparent;border:0.5px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);border-radius:9px;font-size:13px;cursor:pointer;font-family:inherit">Çıkış yap</button>'
     +   '</div>'
     + '</div>'
 }
@@ -4312,7 +4826,7 @@ function renderAll(){
   document.getElementById('s-mv').textContent=mv.length
   document.getElementById('s-dv').textContent=dv.filter(d=>d.durum!=='sonuclandi').length
   document.getElementById('s-gv').textContent=gv.filter(g=>g.durum!=='tamamlandi').length
-  renderMv(); renderDv(); renderGv(); renderDash(); uyariKontrol(); setTimeout(()=>{ document.querySelectorAll('.panel').forEach(p=>{ if(!p.querySelector('.ln-footer')){ const d=document.createElement('div'); d.className='ln-footer'; d.innerHTML='<strong style="color:#6B7280">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#C9A84C;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır'; d.style.cssText='text-align:center;padding:24px 0 4px;font-size:12px;color:#9CA3AF;border-top:0.5px solid #E5E7EB;margin-top:28px'; p.appendChild(d) } }) },200)
+  renderMv(); renderDv(); renderGv(); renderDash(); uyariKontrol(); setTimeout(()=>{ document.querySelectorAll('.panel').forEach(p=>{ if(!p.querySelector('.ln-footer')){ const d=document.createElement('div'); d.className='ln-footer'; d.innerHTML='<strong style="color:#53627A">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#1B4FA8;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır'; d.style.cssText='text-align:center;padding:24px 0 4px;font-size:12px;color:#8D99AE;border-top:0.5px solid #E3E9F2;margin-top:28px'; p.appendChild(d) } }) },200)
 }
 
 // ── UYARI SİSTEMİ ─────────────────────────────────────────────
@@ -4346,12 +4860,12 @@ function uyariKontrol(){
     const kalan = Math.ceil((t-bugun)/(1000*60*60*24))
     const renk = kalan<=1?'#B91C1C':kalan<=3?'#B45309':'#1D4ED8'
     const bg = kalan<=1?'#FEE2E2':kalan<=3?'#FEF3C7':'#DBEAFE'
-    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:${bg};border-radius:5px;font-size:13px">
+    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:${bg};border-radius:9px;font-size:13px">
       <span style="width:6px;height:6px;border-radius:50%;flex-shrink:0;background:${kalan<=1?'#DC2626':kalan<=3?'#D97706':'#2563EB'}"></span>
       <div style="flex:1"><strong style="color:${renk}">${d.dosyaNo} — ${d.muvekkil}</strong> · ${d.mahkeme||'Mahkeme belirtilmemiş'}</div>
       <div style="font-size:12px;color:${renk};font-weight:600">${kalan===0?'BUGÜN':kalan===1?'YARIN':kalan+' gün kaldı'}</div>
       <div style="font-size:12px;color:#374151">${t.toLocaleDateString('tr-TR')}${d.durusmaSaati?' '+d.durusmaSaati:''}</div>
-      ${d.muvekkılTel ? `<button onclick="waBildir('${d.muvekkılTel}','${d.muvekkil}','${t.toLocaleDateString('tr-TR')}','${d.durusmaSaati||''}','${d.mahkeme||''}')" title="WhatsApp hatırlatma gönder" style="background:#25D366;border:none;border-radius:6px;padding:5px 10px;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px"><i class="ti ti-brand-whatsapp"></i> Hatırlat</button>` : ''}
+      ${d.muvekkılTel ? `<button onclick="waBildir('${d.muvekkılTel}','${d.muvekkil}','${t.toLocaleDateString('tr-TR')}','${d.durusmaSaati||''}','${d.mahkeme||''}')" title="WhatsApp hatırlatma gönder" style="background:#25D366;border:none;border-radius:11px;padding:5px 10px;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px"><i class="ti ti-brand-whatsapp"></i> Hatırlat</button>` : ''}
     </div>`
   }).join('')
 
