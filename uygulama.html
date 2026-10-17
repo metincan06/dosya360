@@ -2768,19 +2768,34 @@ async function kuYukle(abone) {
     return
   }
 
+  const kac = s => String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;')
+
   let html = ''
   uyeler?.forEach(u => {
-    const init = (u.kullanici_profil?.avukat_adi || u.kullanici_profil?.email || '?')[0].toUpperCase()
+    const gercek = u.kullanici_profil?.avukat_adi || ''
+    const ad     = u.gorunen_ad || gercek || ''
+    const init   = (ad || u.kullanici_profil?.email || '?')[0].toUpperCase()
+    const takma  = u.gorunen_ad && gercek && u.gorunen_ad !== gercek
     html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#FBFCFE;border-radius:9px">
-      <div style="width:32px;height:32px;border-radius:50%;background:#0C1B33;color:#1B4FA8;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0">${init}</div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:500">${u.kullanici_profil?.avukat_adi || '—'}</div><div style="font-size:11px;color:var(--muted)">${u.kullanici_profil?.email || '—'}</div></div>
+      <div style="width:32px;height:32px;border-radius:50%;background:#0C1B33;color:#C9A84C;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0">${init}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:500">${kac(ad) || '—'}
+          ${takma ? `<span style="font-size:10.5px;color:var(--hint);font-weight:400">· ${kac(gercek)}</span>` : ''}</div>
+        <div style="font-size:11px;color:var(--muted)">${kac(u.kullanici_profil?.email) || '—'}</div>
+      </div>
+      <button class="tbtn" title="İsim ver" style="padding:5px 10px;font-size:11.5px"
+        onclick="uyeAdVer('${u.kullanici_id}','${kac(ad).replace(/'/g,'&#39;')}')"><i class="ti ti-pencil"></i>İsim</button>
       <span style="font-size:11px;padding:3px 9px;border-radius:9px;background:#F0FDF4;color:#15803D;font-weight:500">Aktif</span>
     </div>`
   })
   davetler?.forEach(d => {
     html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#FBFCFE;border-radius:9px">
       <div style="width:32px;height:32px;border-radius:50%;background:#FFFBEB;color:#B45309;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">?</div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:500">${d.email}</div><div style="font-size:11px;color:var(--muted)">Davet gönderildi</div></div>
+      <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500">${kac(d.email)}</div><div style="font-size:11px;color:var(--muted)">Davet gönderildi</div></div>
+      <button class="tbtn" title="Daveti sil" style="padding:5px 10px;font-size:11.5px;color:#B42318"
+        onclick="davetSil('${d.id}','${kac(d.email)}')"><i class="ti ti-trash"></i>Sil</button>
       <span style="font-size:11px;padding:3px 9px;border-radius:9px;background:#FFFBEB;color:#B45309;font-weight:500">⏳ Bekleniyor</span>
     </div>`
   })
@@ -2833,6 +2848,42 @@ async function abPaketSec(paket, max) {
     abonelikYukle()
   } catch(e) {
     alert('Hata: ' + e.message)
+  }
+}
+
+// Ekip uyesine gorunen isim ver — sohbette ve gorev atamalarinda bu gorunur
+async function uyeAdVer(kullaniciId, mevcut){
+  const ad = prompt('Bu kullanıcı sistemde hangi isimle görünsün?\n\n'
+    + 'Örn: Stj. Av. Ayşe Yılmaz\n(Boş bırakıp kaydederseniz kendi adına döner.)',
+    mevcut || '')
+  if(ad === null) return
+  const temiz = ad.trim()
+  if(temiz.length > 60) return alert('İsim en fazla 60 karakter olabilir.')
+  try{
+    const { error } = await window.sb.rpc('uye_adi_degistir', {
+      p_kullanici_id: kullaniciId,
+      p_ad: temiz
+    })
+    if(error) throw error
+    await abonelikYukle()
+    await ekipYukle()
+    if(typeof sohbetYenile === 'function') sohbetYenile()
+  }catch(e){
+    alert('İsim kaydedilemedi: ' + (e.message || ''))
+  }
+}
+
+// Bekleyen daveti iptal et
+async function davetSil(davetId, email){
+  if(!confirm(email + ' adresine gönderilen davet silinsin mi?\n\n'
+    + 'Davet bağlantısı geçersiz olur, kişi kayıt olamaz.')) return
+  try{
+    const { error } = await window.sb.rpc('davet_sil', { p_davet_id: davetId })
+    if(error) throw error
+    if(typeof logla === 'function') logla('davet_silindi', email)
+    await abonelikYukle()
+  }catch(e){
+    alert('Davet silinemedi: ' + (e.message || ''))
   }
 }
 
@@ -4678,6 +4729,7 @@ async function ekipYukle(){
     console.warn('Ekip listesi:', e)
   }
   ekipSecicileriDoldur()
+  sohbetArkaplanBaslat()
 }
 
 function ekipSecicileriDoldur(){
@@ -4829,10 +4881,11 @@ async function sohbetYenile(yoklama){
       .order('olusturma', { ascending:true }).limit(300)
     const gelen = data || []
 
-    // Yoklama modunda yeni mesaj geldiyse uyar (realtime calismiyorsa)
-    if(yoklama && gelen.length > shMesajlar.length && !shIlkYukleme){
-      const son = gelen[gelen.length - 1]
-      if(son && sbUser && son.gonderen_id !== sbUser.id) shYeniMesajUyar(son)
+    // Yeni mesaj geldiyse uyar — id ile karsilastir, sayiya guvenme
+    const son = gelen.length ? gelen[gelen.length - 1] : null
+    if(son && String(son.id) !== String(shSonId)){
+      if(!shIlkYukleme && sbUser && son.gonderen_id !== sbUser.id) shYeniMesajUyar(son)
+      shSonId = son.id
     }
     shIlkYukleme = false
 
@@ -4855,7 +4908,7 @@ function sohbetDipteMi(){
 
 // Gercek zamanli dinleme — ayni buroya yeni mesaj gelince ekrana dusur
 // ── Canli baglanti: yeni mesaj + "yaziyor" ───────────────
-let shYazanlar = {}, shYoklama = null, shIlkYukleme = true
+let shYazanlar = {}, shYoklama = null, shIlkYukleme = true, shSonId = null, shEskitme = null
 
 function sohbetDinle(buro){
   if(shKanal) return
@@ -4889,15 +4942,17 @@ function sohbetDinle(buro){
         b.style.background = canli ? '#0C7A52' : '#D0D5DD'
         b.title = canli ? 'Canlı bağlantı açık' : 'Bağlantı kuruluyor'
       }
-      // Canli baglanti kurulamazsa yoklamaya dus
-      if(durum === 'CHANNEL_ERROR' || durum === 'TIMED_OUT') sohbetYoklamaBaslat()
     })
+    // Yoklama her durumda acik kalir: tablo yayina eklenmemisse Realtime
+    // "SUBSCRIBED" der ama hic olay gondermez. Yedek hat hep calissin.
+    sohbetYoklamaBaslat()
   }catch(e){
     console.warn('Canlı sohbet kurulamadı:', e)
     sohbetYoklamaBaslat()
   }
   // Eskiyen "yaziyor" kayitlarini temizle
-  setInterval(function(){
+  if(shEskitme) clearInterval(shEskitme)
+  shEskitme = setInterval(function(){
     const simdi = Date.now()
     let degisti = false
     Object.keys(shYazanlar).forEach(function(k){
@@ -4907,13 +4962,23 @@ function sohbetDinle(buro){
   }, 1500)
 }
 
-// Realtime calismazsa: panel acikken 6 saniyede bir kontrol
+// Uygulama acilir acilmaz dinlemeye basla — sohbet ekranina girmek
+// gerekmesin; baska sayfadayken de ses ve bildirim gelsin
+async function sohbetArkaplanBaslat(){
+  if(shKanal || !window.sb || !sbUser) return
+  try{
+    const buro = await buroIdAl()
+    if(buro) sohbetDinle(buro)
+  }catch(e){ sohbetYoklamaBaslat() }
+}
+
+// Realtime calismazsa yedek: duzenli kontrol
 function sohbetYoklamaBaslat(){
   if(shYoklama) return
   shYoklama = setInterval(function(){
-    const p = document.getElementById('panel-sohbet')
-    if(p && p.classList.contains('active')) sohbetYenile(true)
-  }, 6000)
+    if(!window.sb || !sbUser) return
+    sohbetYenile(true)
+  }, 4000)
 }
 
 // ── "Yazıyor..." ─────────────────────────────────────────
@@ -4923,7 +4988,8 @@ function sohbetYaziyorBildir(){
   const simdi = Date.now()
   if(simdi - shYazmaZaman < 1800) return   // saniyede bir yeter
   shYazmaZaman = simdi
-  if(!shKanal || !sbUser) return
+  if(!sbUser) return
+  if(!shKanal){ sohbetArkaplanBaslat(); return }
   try{
     shKanal.send({
       type: 'broadcast', event: 'yaziyor',
@@ -4986,6 +5052,19 @@ async function sohbetSesAcKapa(){
   sohbetSesDurum()
   shSesCal()   // ornek ses — calistigini duysun
 }
+
+// Tercih acikken sayfa yenilenirse AudioContext askida baslar; tarayici
+// politikasi geregi ilk kullanici hareketinde acilabilir — orada acalim
+function shSesKilidiniAc(){
+  try{
+    const C = window.AudioContext || window.webkitAudioContext
+    if(!C) return
+    shSesCtx = shSesCtx || new C()
+    if(shSesCtx.state === 'suspended') shSesCtx.resume()
+  }catch(e){}
+}
+document.addEventListener('click',   shSesKilidiniAc, { passive:true })
+document.addEventListener('keydown', shSesKilidiniAc, { passive:true })
 
 // Kisa, yumusak iki notali bildirim — ses dosyasi gerektirmez
 function shSesCal(){
