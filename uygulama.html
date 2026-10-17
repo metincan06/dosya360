@@ -1277,18 +1277,29 @@ var sb = window.sb
 
     <!-- EKİP SOHBETİ -->
     <div class="panel" id="panel-sohbet">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h1 style="font-size:20px;font-weight:600">Ekip Sohbeti</h1>
-        <span style="font-size:12.5px;color:var(--muted)" id="sohbet-kisi"></span>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:14px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:11px">
+          <h1 style="font-size:20px;font-weight:600">Ekip Sohbeti</h1>
+          <span id="sohbet-baglanti" title="Bağlantı kuruluyor"
+                style="width:8px;height:8px;border-radius:50%;background:#D0D5DD;flex-shrink:0"></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:12.5px;color:var(--muted)" id="sohbet-kisi"></span>
+          <button class="tbtn" id="sohbet-ses-btn" onclick="sohbetSesAcKapa()"
+                  style="padding:5px 12px;font-size:12px"><i class="ti ti-bell-off"></i>Bildirimi aç</button>
+        </div>
       </div>
       <div class="card" style="padding:0;overflow:hidden">
-        <div id="sohbet-akis" style="height:calc(100vh - 290px);min-height:360px;overflow-y:auto;padding:20px 22px;background:var(--kuyu)">
+        <div id="sohbet-akis" style="height:calc(100vh - 300px);min-height:340px;overflow-y:auto;padding:20px 22px;background:var(--kuyu)">
           <div class="empty"><i class="ti ti-messages"></i>
             <div class="empty-title">Yükleniyor</div></div>
         </div>
+        <div id="sohbet-yaziyor" style="display:none;padding:7px 22px;font-size:12px;
+             color:var(--muted);background:var(--kuyu);border-top:1px solid var(--hairline)"></div>
         <div style="display:flex;gap:10px;padding:14px 18px;border-top:1px solid var(--hairline);background:var(--surface)">
           <input id="sohbet-girdi" class="ai-input" placeholder="Mesajınızı yazın..."
-                 maxlength="2000" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sohbetGonder()}">
+                 maxlength="2000" oninput="sohbetYaziyorBildir()"
+                 onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sohbetGonder()}">
           <button class="send-btn" onclick="sohbetGonder()" title="Gönder"><i class="ti ti-send"></i></button>
         </div>
       </div>
@@ -4727,6 +4738,7 @@ async function sohbetYukle(){
     sohbetCiz()
     const k = document.getElementById('sohbet-kisi')
     if(k) k.textContent = (ekipUyeleri.length || 1) + ' kişilik ekip'
+    sohbetSesDurum()
     await window.sb.rpc('sohbet_okundu')
     sohbetRozet()
     sohbetDinle(buro)
@@ -4738,7 +4750,7 @@ async function sohbetYukle(){
   }
 }
 
-function sohbetCiz(){
+function sohbetCiz(dibeKay){
   const akis = document.getElementById('sohbet-akis'); if(!akis) return
   if(!shMesajlar.length){
     akis.innerHTML = '<div class="empty"><i class="ti ti-messages"></i>'
@@ -4785,7 +4797,7 @@ function sohbetCiz(){
     }
   })
   akis.innerHTML = h
-  akis.scrollTop = akis.scrollHeight
+  if(dibeKay !== false) akis.scrollTop = akis.scrollHeight
 }
 
 async function sohbetGonder(){
@@ -4809,38 +4821,209 @@ async function sohbetGonder(){
   }
 }
 
-async function sohbetYenile(){
+async function sohbetYenile(yoklama){
   try{
     const buro = await buroIdAl()
     const { data } = await window.sb.from('ekip_mesajlari')
       .select('*').eq('buro_id', buro).eq('silindi', false)
       .order('olusturma', { ascending:true }).limit(300)
-    shMesajlar = data || []
-    sohbetCiz()
-    await window.sb.rpc('sohbet_okundu')
+    const gelen = data || []
+
+    // Yoklama modunda yeni mesaj geldiyse uyar (realtime calismiyorsa)
+    if(yoklama && gelen.length > shMesajlar.length && !shIlkYukleme){
+      const son = gelen[gelen.length - 1]
+      if(son && sbUser && son.gonderen_id !== sbUser.id) shYeniMesajUyar(son)
+    }
+    shIlkYukleme = false
+
+    const dipte = sohbetDipteMi()
+    shMesajlar = gelen
+    sohbetCiz(dipte)
+    const p = document.getElementById('panel-sohbet')
+    if(p && p.classList.contains('active')){
+      await window.sb.rpc('sohbet_okundu')
+    }
     sohbetRozet()
   }catch(e){}
 }
 
+// Kullanici yukari kaydirdiysa yeni mesaj gelince zorla dibe atma
+function sohbetDipteMi(){
+  const a = document.getElementById('sohbet-akis'); if(!a) return true
+  return (a.scrollHeight - a.scrollTop - a.clientHeight) < 90
+}
+
 // Gercek zamanli dinleme — ayni buroya yeni mesaj gelince ekrana dusur
+// ── Canli baglanti: yeni mesaj + "yaziyor" ───────────────
+let shYazanlar = {}, shYoklama = null, shIlkYukleme = true
+
 function sohbetDinle(buro){
   if(shKanal) return
   try{
-    shKanal = window.sb.channel('ekip-' + buro)
-      .on('postgres_changes',
-          { event:'INSERT', schema:'public', table:'ekip_mesajlari', filter:'buro_id=eq.'+buro },
-          function(){ sohbetYenile() })
-      .subscribe()
-  }catch(e){ console.warn('Canlı sohbet kurulamadı:', e) }
+    shKanal = window.sb.channel('ekip-' + buro, {
+      config: { broadcast: { self: false } }
+    })
+    // Yeni mesaj
+    .on('postgres_changes',
+        { event:'INSERT', schema:'public', table:'ekip_mesajlari', filter:'buro_id=eq.'+buro },
+        function(olay){
+          const m = olay && olay.new
+          if(m && sbUser && m.gonderen_id !== sbUser.id){
+            shYeniMesajUyar(m)
+            delete shYazanlar[m.gonderen_id]
+            shYazanCiz()
+          }
+          sohbetYenile()
+        })
+    // Yaziyor bildirimi
+    .on('broadcast', { event: 'yaziyor' }, function(p){
+      const d = p && p.payload
+      if(!d || !d.id || (sbUser && d.id === sbUser.id)) return
+      shYazanlar[d.id] = { ad: d.ad || 'Ekip üyesi', zaman: Date.now() }
+      shYazanCiz()
+    })
+    .subscribe(function(durum){
+      const b = document.getElementById('sohbet-baglanti')
+      if(b){
+        const canli = durum === 'SUBSCRIBED'
+        b.style.background = canli ? '#0C7A52' : '#D0D5DD'
+        b.title = canli ? 'Canlı bağlantı açık' : 'Bağlantı kuruluyor'
+      }
+      // Canli baglanti kurulamazsa yoklamaya dus
+      if(durum === 'CHANNEL_ERROR' || durum === 'TIMED_OUT') sohbetYoklamaBaslat()
+    })
+  }catch(e){
+    console.warn('Canlı sohbet kurulamadı:', e)
+    sohbetYoklamaBaslat()
+  }
+  // Eskiyen "yaziyor" kayitlarini temizle
+  setInterval(function(){
+    const simdi = Date.now()
+    let degisti = false
+    Object.keys(shYazanlar).forEach(function(k){
+      if(simdi - shYazanlar[k].zaman > 4000){ delete shYazanlar[k]; degisti = true }
+    })
+    if(degisti) shYazanCiz()
+  }, 1500)
 }
 
-async function sohbetRozet(){
+// Realtime calismazsa: panel acikken 6 saniyede bir kontrol
+function sohbetYoklamaBaslat(){
+  if(shYoklama) return
+  shYoklama = setInterval(function(){
+    const p = document.getElementById('panel-sohbet')
+    if(p && p.classList.contains('active')) sohbetYenile(true)
+  }, 6000)
+}
+
+// ── "Yazıyor..." ─────────────────────────────────────────
+let shYazmaZaman = 0
+
+function sohbetYaziyorBildir(){
+  const simdi = Date.now()
+  if(simdi - shYazmaZaman < 1800) return   // saniyede bir yeter
+  shYazmaZaman = simdi
+  if(!shKanal || !sbUser) return
   try{
-    const { data } = await window.sb.rpc('sohbet_okunmamis')
-    const r = document.getElementById('sohbet-rozet')
-    const n = (typeof data === 'number') ? data : 0
-    if(r){ r.textContent = n; r.style.display = n ? 'inline-block' : 'none' }
+    shKanal.send({
+      type: 'broadcast', event: 'yaziyor',
+      payload: { id: sbUser.id, ad: (DB.ayarlar && DB.ayarlar.avukatAdi) || sbUser.email }
+    })
   }catch(e){}
+}
+
+function shYazanCiz(){
+  const el = document.getElementById('sohbet-yaziyor'); if(!el) return
+  const adlar = Object.keys(shYazanlar).map(function(k){ return shYazanlar[k].ad })
+  if(!adlar.length){ el.style.display = 'none'; return }
+  const metin = adlar.length === 1
+    ? shKac(adlar[0]) + ' yazıyor'
+    : (adlar.length === 2
+        ? shKac(adlar[0]) + ' ve ' + shKac(adlar[1]) + ' yazıyor'
+        : adlar.length + ' kişi yazıyor')
+  el.innerHTML = '<span class="dots" style="display:inline-flex;vertical-align:-2px;margin-right:7px">'
+    + '<span></span><span></span><span></span></span>' + metin
+  el.style.display = 'block'
+}
+
+// ── Bildirim sesi ve masaüstü uyarısı ────────────────────
+let shSesAcik = false, shSesCtx = null
+
+function sohbetSesDurum(){
+  try{ shSesAcik = localStorage.getItem('d360-sohbet-ses') === '1' }catch(e){ shSesAcik = false }
+  const b = document.getElementById('sohbet-ses-btn')
+  if(b){
+    b.innerHTML = '<i class="ti ' + (shSesAcik ? 'ti-bell' : 'ti-bell-off') + '"></i>'
+      + (shSesAcik ? 'Bildirim açık' : 'Bildirimi aç')
+    b.classList.toggle('primary', shSesAcik)
+  }
+}
+
+async function sohbetSesAcKapa(){
+  if(shSesAcik){
+    shSesAcik = false
+    try{ localStorage.setItem('d360-sohbet-ses', '0') }catch(e){}
+    sohbetSesDurum(); return
+  }
+  // Tarayici sesi ancak kullanici tiklamasiyla acilir — bu an o an
+  try{
+    const C = window.AudioContext || window.webkitAudioContext
+    if(C){
+      shSesCtx = shSesCtx || new C()
+      if(shSesCtx.state === 'suspended') await shSesCtx.resume()
+    }
+  }catch(e){}
+
+  // Sekme arkadayken masaustu bildirimi icin izin
+  try{
+    if('Notification' in window && Notification.permission === 'default'){
+      await Notification.requestPermission()
+    }
+  }catch(e){}
+
+  shSesAcik = true
+  try{ localStorage.setItem('d360-sohbet-ses', '1') }catch(e){}
+  sohbetSesDurum()
+  shSesCal()   // ornek ses — calistigini duysun
+}
+
+// Kisa, yumusak iki notali bildirim — ses dosyasi gerektirmez
+function shSesCal(){
+  if(!shSesAcik) return
+  try{
+    const C = window.AudioContext || window.webkitAudioContext
+    if(!C) return
+    shSesCtx = shSesCtx || new C()
+    if(shSesCtx.state === 'suspended') shSesCtx.resume()
+    const t = shSesCtx.currentTime
+    ;[[880, 0], [1174.7, 0.11]].forEach(function(n){
+      const o = shSesCtx.createOscillator(), g = shSesCtx.createGain()
+      o.type = 'sine'; o.frequency.value = n[0]
+      g.gain.setValueAtTime(0.0001, t + n[1])
+      g.gain.exponentialRampToValueAtTime(0.14, t + n[1] + 0.015)
+      g.gain.exponentialRampToValueAtTime(0.0001, t + n[1] + 0.22)
+      o.connect(g); g.connect(shSesCtx.destination)
+      o.start(t + n[1]); o.stop(t + n[1] + 0.24)
+    })
+  }catch(e){}
+}
+
+function shYeniMesajUyar(m){
+  shSesCal()
+  // Sekme arkadaysa masaustu bildirimi
+  try{
+    if(shSesAcik && document.hidden && 'Notification' in window
+       && Notification.permission === 'granted'){
+      const n = new Notification(m.gonderen_ad || 'Ekip Sohbeti', {
+        body: String(m.metin || '').slice(0, 120),
+        tag: 'd360-sohbet'
+      })
+      n.onclick = function(){ window.focus(); n.close() }
+    }
+  }catch(e){}
+  // Panel kapaliysa rozet guncellensin
+  const p = document.getElementById('panel-sohbet')
+  if(!p || !p.classList.contains('active')) sohbetRozet()
 }
 
 // ══ TOPLANTILAR ═══════════════════════════════════════════
