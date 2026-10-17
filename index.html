@@ -312,7 +312,7 @@ footer a:hover{color:var(--altin)}
 /* ── Kalıp (giriş / kayıt) ───────────────────────── */
 .ort{position:fixed;inset:0;background:rgba(12,27,51,.58);backdrop-filter:blur(5px);
      z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
-.ort.ac{display:flex}
+.ort.ac,.ort.open{display:flex}
 .kal{background:var(--yzy);border-radius:var(--r-b);width:100%;max-width:434px;overflow:hidden;
      box-shadow:0 30px 70px -20px rgba(12,27,51,.45);max-height:94vh;overflow-y:auto}
 .k-ust{background:var(--lacivert);padding:24px;text-align:center}
@@ -677,7 +677,7 @@ footer a:hover{color:var(--altin)}
         <li><i class="ti ti-check"></i>WhatsApp bildirimleri</li>
         <li><i class="ti ti-check"></i>UYAP hızlı erişim</li>
       </ul>
-      <button class="btn btn-cizgi" onclick="modalAc('kayit')">Başlayın</button>
+      <button class="btn btn-cizgi" onclick="basvuruAc('Başlangıç')">Başlayın</button>
     </div>
     <div class="fiyat one rv rv-1">
       <span class="pop">En çok tercih edilen</span>
@@ -693,7 +693,7 @@ footer a:hover{color:var(--altin)}
         <li><i class="ti ti-check"></i>Ekip ve yetki yönetimi</li>
         <li><i class="ti ti-check"></i>Öncelikli destek</li>
       </ul>
-      <button class="btn btn-altin" onclick="modalAc('kayit')">Başlayın</button>
+      <button class="btn btn-altin" onclick="basvuruAc('Büyüme')">Başlayın</button>
     </div>
     <div class="fiyat rv rv-2">
       <h3>Kurumsal</h3>
@@ -706,7 +706,7 @@ footer a:hover{color:var(--altin)}
         <li><i class="ti ti-check"></i>Veri aktarım yardımı</li>
         <li><i class="ti ti-check"></i>Öncelikli telefon desteği</li>
       </ul>
-      <a class="btn btn-cizgi" href="mailto:hello@dosya360.com?subject=Kurumsal%20paket%20teklifi">İletişime geçin</a>
+      <button class="btn btn-cizgi" onclick="basvuruAc('Kurumsal')">Teklif alın</button>
     </div>
   </div>
 </div></section>
@@ -822,6 +822,44 @@ footer a:hover{color:var(--altin)}
         <button class="k-btn" id="k-btn" onclick="kayitOl()">Ücretsiz hesap oluşturun</button>
         <div class="k-alt">Zaten hesabınız var mı? <span onclick="tabSec('giris')">Giriş yapın</span></div>
       </div>
+
+      <!-- PAKET BAŞVURUSU -->
+      <div id="form-basvuru" style="display:none">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <span onclick="tabSec('giris')" style="cursor:pointer;color:var(--silik);font-size:19px;line-height:1">&larr;</span>
+          <div>
+            <div style="font-size:16px;font-weight:700;color:var(--murekkep);font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-.024em">Paket başvurusu</div>
+            <div style="font-size:12.5px;color:var(--soluk);margin-top:2px">Bilgilerinizi bırakın, aynı gün içinde dönelim.</div>
+          </div>
+        </div>
+
+        <div class="alan">
+          <label>SEÇTİĞİNİZ PAKET</label>
+          <select id="b-paket">
+            <option value="Başlangıç">Başlangıç · ₺1.500/ay · 3 kullanıcıya kadar</option>
+            <option value="Büyüme">Büyüme · ₺3.500/ay · 10 kullanıcıya kadar</option>
+            <option value="Kurumsal">Kurumsal · özel fiyatlandırma</option>
+          </select>
+        </div>
+        <div class="alan"><label>AD SOYAD</label><input type="text" id="b-ad" placeholder="Av. Ad Soyad"></div>
+        <div class="alan"><label>BÜRO ADI</label><input type="text" id="b-buro" placeholder="Örnek Hukuk Bürosu"></div>
+        <div class="alan"><label>E-POSTA</label><input type="email" id="b-email" placeholder="avukat@buro.com" autocomplete="email"></div>
+        <div class="alan"><label>TELEFON</label><input type="tel" id="b-tel" placeholder="0532 000 00 00" inputmode="tel" maxlength="17" oninput="telBicim(this)"></div>
+        <div class="alan">
+          <label>KAÇ KİŞİ KULLANACAK?</label>
+          <select id="b-kisi">
+            <option value="1">Tek avukat</option>
+            <option value="2-3">2 – 3 kişi</option>
+            <option value="4-10">4 – 10 kişi</option>
+            <option value="10+">10 kişiden fazla</option>
+          </select>
+        </div>
+        <div class="alan"><label>EKLEMEK İSTEDİĞİNİZ <span style="color:var(--silik);font-weight:400">— isteğe bağlı</span></label>
+          <input type="text" id="b-not" placeholder="Sorularınız, özel ihtiyaçlarınız..." onkeydown="if(event.key==='Enter')basvuruGonder()"></div>
+
+        <button class="k-btn" id="b-btn" onclick="basvuruGonder()">Başvuruyu gönderin</button>
+        <div class="k-alt">Hemen denemek ister misiniz? <span onclick="tabSec('kayit')">Ücretsiz hesap açın</span></div>
+      </div>
     </div>
   </div>
 </div>
@@ -926,7 +964,9 @@ function tabSec(t) {
   document.getElementById('form-giris').style.display = t==='giris'?'block':'none'
   document.getElementById('form-kayit').style.display = t==='kayit'?'block':'none'
   document.getElementById('form-sifre').style.display = t==='sifre'?'block':'none'
-  document.getElementById('k-sekler').style.display  = t==='sifre'?'none':'flex'
+  const fb = document.getElementById('form-basvuru')
+  if(fb) fb.style.display = t==='basvuru'?'block':'none'
+  document.getElementById('k-sekler').style.display  = (t==='sifre'||t==='basvuru')?'none':'flex'
   document.getElementById('tab-giris').className = 'ksek'+(t==='giris'?' aktif':'')
   document.getElementById('tab-kayit').className = 'ksek'+(t==='kayit'?' aktif':'')
   document.getElementById('m-error').style.display = 'none'
@@ -1093,6 +1133,58 @@ async function kayitOl() {
 }
 
 function toggleFaq(el) { el.classList.toggle('open') }
+
+// ── PAKET BAŞVURUSU ────────────────────────────────────────
+function basvuruAc(paket){
+  modalAc('basvuru')
+  const s = document.getElementById('b-paket')
+  if(s && paket) s.value = paket
+  // Pakete göre kullanıcı sayısı önerisi
+  const kisi = document.getElementById('b-kisi')
+  if(kisi){
+    if(paket === 'Başlangıç') kisi.value = '2-3'
+    else if(paket === 'Büyüme') kisi.value = '4-10'
+    else if(paket === 'Kurumsal') kisi.value = '10+'
+  }
+  setTimeout(function(){ const a=document.getElementById('b-ad'); if(a) a.focus() }, 120)
+}
+
+async function basvuruGonder(){
+  const al = id => (document.getElementById(id)?.value || '').trim()
+  const ad = al('b-ad'), email = al('b-email'), tel = al('b-tel')
+
+  if(!ad)    return hata('Adınızı girin.')
+  if(!email || email.indexOf('@') < 1) return hata('Geçerli bir e-posta girin.')
+  if(tel.replace(/\D/g,'').length < 10) return hata('Telefon numaranızı eksiksiz girin.')
+
+  const btn = document.getElementById('b-btn')
+  btn.disabled = true; btn.textContent = 'Gönderiliyor...'
+  try{
+    const { data, error } = await sb.rpc('paket_basvuru', {
+      p_ad: ad,
+      p_buro: al('b-buro') || null,
+      p_email: email,
+      p_telefon: telYaz(tel),
+      p_paket: al('b-paket'),
+      p_kisi: al('b-kisi'),
+      p_not: al('b-not') || null
+    })
+    if(error) throw error
+    if(data && data.ok === false) throw new Error(data.hata || 'Başvuru kaydedilemedi.')
+
+    basari('Başvurunuz alındı. Aynı gün içinde size döneceğiz.')
+    ;['b-ad','b-buro','b-email','b-tel','b-not'].forEach(function(i){
+      const e = document.getElementById(i); if(e) e.value = ''
+    })
+    btn.textContent = 'Gönderildi'
+    setTimeout(modalKapat, 2200)
+    return
+  }catch(e){
+    hata('Başvuru gönderilemedi: ' + (e.message || 'bilinmeyen hata') +
+         ' · hello@dosya360.com adresine yazabilirsiniz.')
+  }
+  btn.disabled = false; btn.textContent = 'Başvuruyu gönderin'
+}
 
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {

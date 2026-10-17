@@ -262,6 +262,24 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       <div id="destek-liste" style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px"></div>
     </div>
 
+    <!-- PAKET BAŞVURULARI -->
+    <div class="section-title"><span>Paket Başvuruları</span>
+      <span id="basvuru-sayisi" style="font-size:13px;color:var(--muted);font-weight:400"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Tarih</th><th>Ad Soyad</th><th>Büro</th><th>İletişim</th>
+            <th>Paket</th><th>Kişi</th><th>Not</th><th>Durum</th>
+          </tr>
+        </thead>
+        <tbody id="basvuru-tbody">
+          <tr><td colspan="8"><div class="spinner"><div class="spinner-circle"></div></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <!-- KULLANICI TABLOSU -->
     <div class="section-title"><span>Kayıtlı Kullanıcılar</span>
       <span id="kullanici-sayisi" style="font-size:13px;color:var(--muted);font-weight:400"></span>
@@ -433,9 +451,78 @@ async function veriYukle() {
   metrikleriGuncelle()
   onayRender()
   destekYukleAdmin()
+  basvurulariYukle()
   tabloRender(tumKullanicilar)
   sonKayitlariRender()
   gunlukRender()
+}
+
+// ── PAKET BAŞVURULARI ─────────────────────────────────────
+const BV_DURUM = {
+  yeni:         { ad:'Yeni',         arka:'#EFF6FF', renk:'#1D4ED8' },
+  arandi:       { ad:'Arandı',       arka:'#FFFBEB', renk:'#B45309' },
+  demo_verildi: { ad:'Demo verildi', arka:'#F5F3FF', renk:'#6D28D9' },
+  satis:        { ad:'Satış',        arka:'#F0FDF4', renk:'#15803D' },
+  olumsuz:      { ad:'Olumsuz',      arka:'#F9FAFB', renk:'#6B7280' },
+}
+
+function bvKac(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;')
+}
+
+async function basvurulariYukle(){
+  const tb = document.getElementById('basvuru-tbody'); if(!tb) return
+  try{
+    const { data, error } = await sb.rpc('basvuru_listesi')
+    if(error) throw error
+    const liste = data || []
+    const yeni = liste.filter(function(b){ return b.durum === 'yeni' }).length
+    const say = document.getElementById('basvuru-sayisi')
+    if(say) say.textContent = liste.length + ' başvuru' + (yeni ? ' · ' + yeni + ' yeni' : '')
+
+    if(!liste.length){
+      tb.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:26px;color:var(--hint)">Henüz başvuru yok.</td></tr>'
+      return
+    }
+
+    tb.innerHTML = liste.map(function(b){
+      const d = BV_DURUM[b.durum] || BV_DURUM.yeni
+      const secenekler = Object.keys(BV_DURUM).map(function(k){
+        return '<option value="' + k + '"' + (k === b.durum ? ' selected' : '') + '>' + BV_DURUM[k].ad + '</option>'
+      }).join('')
+      return '<tr>'
+        + '<td style="white-space:nowrap">' + tarihFormat(b.olusturma) + '</td>'
+        + '<td style="font-weight:600">' + bvKac(b.ad) + '</td>'
+        + '<td>' + bvKac(b.buro_adi || '—') + '</td>'
+        + '<td style="white-space:nowrap">'
+        +   '<a href="mailto:' + bvKac(b.email) + '" style="color:var(--gold);text-decoration:none">' + bvKac(b.email) + '</a>'
+        +   (b.telefon ? '<br><a href="tel:' + bvKac(b.telefon) + '" style="color:var(--muted);text-decoration:none;font-size:12px">' + bvKac(b.telefon) + '</a>' : '')
+        + '</td>'
+        + '<td><span style="font-weight:600">' + bvKac(b.paket) + '</span></td>'
+        + '<td>' + bvKac(b.kisi_sayisi || '—') + '</td>'
+        + '<td style="max-width:220px;font-size:12.5px;color:var(--muted)">' + bvKac(b.not_metni || '—') + '</td>'
+        + '<td><select onchange="basvuruDurum(\'' + b.id + '\', this.value)" '
+        +   'style="font-size:12px;font-weight:600;padding:5px 9px;border-radius:999px;cursor:pointer;'
+        +   'border:1px solid ' + d.renk + '33;background:' + d.arka + ';color:' + d.renk + ';font-family:inherit">'
+        +   secenekler + '</select></td>'
+        + '</tr>'
+    }).join('')
+  }catch(e){
+    tb.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:22px;color:var(--hint)">'
+      + 'Başvurular yüklenemedi. basvuru.sql çalıştırıldı mı?</td></tr>'
+    console.warn('basvuru_listesi:', e)
+  }
+}
+
+async function basvuruDurum(id, durum){
+  try{
+    const { data, error } = await sb.rpc('basvuru_durum_degistir', { p_id:id, p_durum:durum })
+    if(error) throw error
+    if(data && data.ok === false) throw new Error(data.hata)
+    basvurulariYukle()
+  }catch(e){ alert('Durum değiştirilemedi: ' + (e.message || '')) }
 }
 
 
