@@ -354,6 +354,10 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;color:inherit
 </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+// Google Cloud'dan aldiginiz OAuth istemci kimligi (google-kurulum.md)
+// Bos birakilirsa Google entegrasyonu ayarlarda "kurulum gerekli" gorunur.
+const GOOGLE_ISTEMCI_ID = ''
+
 const SUPABASE_URL = 'https://gzyqwbvvorgepazjpkjt.supabase.co'
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6eXF3YnZ2b3JnZXBhempwa2p0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzNjgwNjgsImV4cCI6MjA5OTk0NDA2OH0.H1aVkbCLciXCGbkvsG0jPmYkm5IBXhwstwVkM490-gI'
 window.sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
@@ -734,6 +738,60 @@ var sb = window.sb
       <h1 style="font-size:20px;font-weight:600;margin-bottom:18px">Ayarlar</h1>
 
       <div id="ay-duzen" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;max-width:920px">
+
+        <!-- Google Drive + Takvim -->
+        <div class="card" style="padding:22px;grid-column:1 / -1">
+          <div style="font-size:14.5px;font-weight:600;margin-bottom:3px">Google Drive ve Takvim</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.7">
+            Kendi Google hesabınızı bağlayın: belgeler sizin Drive'ınızdaki
+            <b>Dosya360</b> klasörüne yüklensin, duruşma ve toplantılar
+            Google Takviminize düşsün. Belgeleriniz bizim sunucumuzda tutulmaz.
+          </div>
+
+          <div id="g-kurulum" style="display:none;font-size:12.5px;line-height:1.7;
+               background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;padding:14px 16px;border-radius:11px">
+            <b>Kurulum tamamlanmadı.</b><br>
+            Google entegrasyonu için yönetici panelinden bir kerelik
+            Google istemci kimliği tanımlanması gerekiyor.
+          </div>
+
+          <div id="g-kapali" style="display:none">
+            <button class="tbtn primary" id="g-btn" onclick="googleBagla()">
+              <i class="ti ti-brand-google"></i>Google hesabımı bağla
+            </button>
+            <div style="font-size:11.5px;color:var(--hint);margin-top:10px;line-height:1.6">
+              Yalnızca Dosya360'ın oluşturduğu dosyalara ve takvim
+              etkinliklerinize erişim istenir. Diğer dosyalarınız görünmez.
+            </div>
+          </div>
+
+          <div id="g-acik" style="display:none">
+            <div style="display:flex;align-items:center;gap:11px;padding:13px 15px;
+                 background:var(--bg);border:1px solid var(--line);border-radius:11px;margin-bottom:14px">
+              <i class="ti ti-circle-check" style="color:#0C7A52;font-size:19px"></i>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:13px;font-weight:600">Bağlı</div>
+                <div style="font-size:11.5px;color:var(--muted)" id="g-eposta">—</div>
+              </div>
+              <button class="tbtn" onclick="googleKaldir()" style="padding:6px 12px;font-size:12px">
+                <i class="ti ti-unlink"></i>Bağlantıyı kes</button>
+            </div>
+
+            <div id="g-oturum" style="display:none;font-size:12px;line-height:1.6;
+                 background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;
+                 padding:11px 14px;border-radius:11px;margin-bottom:14px">
+              Oturum izni süresi doldu.
+              <a href="javascript:googleTazele()" style="color:#92400E;font-weight:600">Yenileyin</a>.
+            </div>
+
+            <label style="display:flex;align-items:center;gap:11px;font-size:13px;margin-bottom:11px;cursor:pointer">
+              <input type="checkbox" id="g-drive" onchange="googleSecim('drive',this)">
+              Belgeleri Google Drive'a yükle</label>
+            <label style="display:flex;align-items:center;gap:11px;font-size:13px;cursor:pointer">
+              <input type="checkbox" id="g-takvim" onchange="googleSecim('takvim',this)">
+              Duruşma ve toplantıları Google Takvime ekle</label>
+          </div>
+        </div>
 
         <!-- Takvim aboneligi -->
         <div class="card" style="padding:22px;grid-column:1 / -1">
@@ -1649,6 +1707,14 @@ var sb = window.sb
   <div class="modal-body">
     <input type="hidden" id="duzenle-belge" value="">
     <div class="field"><label>Belge Adı *</label><input type="text" id="bl-ad" placeholder="Dilekçe_v1.pdf"></div>
+    <div class="field"><label>Dosya</label>
+      <input type="file" id="bl-dosya" onchange="belgeDosyaSecildi(this)"
+             style="width:100%;font-size:12.5px;padding:9px 11px;border:1px solid var(--border);
+                    border-radius:9px;background:#fff;font-family:inherit">
+      <div id="bl-dosya-not" style="font-size:11.5px;color:var(--hint);margin-top:6px;line-height:1.6">
+        Dosya seçerseniz Google Drive'ınızdaki <b>Dosya360</b> klasörüne yüklenir.
+      </div>
+    </div>
     <div class="field2"><div class="field"><label>Kategori</label><select id="bl-kat"><option value="dilekce">Dilekçe</option><option value="karar">Mahkeme Kararı</option><option value="bilirkisi">Bilirkişi Raporu</option><option value="vekalet">Vekalet</option><option value="sozlesme">Sözleşme</option><option value="fatura">Fatura</option><option value="diger">Diğer</option></select></div><div class="field"><label>İlgili Dava</label><select id="bl-dava"></select></div></div>
     <div class="modal-footer"><button class="tbtn" onclick="closeModal('belge')">İptal</button><button class="tbtn primary" id="btn-belge" onclick="saveBelge()">Ekle</button></div>
   </div>
@@ -1830,6 +1896,7 @@ function sp(id, el) {
   if(id==='iletisim') renderIl()
   if(id==='takvim') renderCal()
   if(id==='ayarlar') takvimAdresiYukle()
+  if(id==='ayarlar') googleYukle()
   if(id==='yapay-zeka') renderAI()
   if(id==='ayarlar') loadSettings()
 }
@@ -1937,6 +2004,13 @@ function saveEtkinlik() {
     mahkeme: val('et-mahkeme') || (dv?dv.mahkeme:'') || '',
     muvekkil: val('et-muvekkil') || (dv?dv.muvekkil:'') || '',
     not:val('et-not') })
+  // Google Takvim bagliysa oraya da yaz
+  if(gKurulu() && gEposta && gAyar('takvim')){
+    gTakvimEkle(baslik, tarih, 60,
+      [val('et-esas'), val('et-mahkeme'), val('et-not')].filter(Boolean).join(' · '),
+      null, val('et-mahkeme'))
+      .catch(function(e){ console.warn('Google Takvim:', e) })
+  }
   ;['et-baslik','et-tarih','et-not','et-esas','et-mahkeme','et-muvekkil'].forEach(clear)
   logla(duzenlendi?'etkinlik_duzenle':'etkinlik_ekle', baslik); closeModal('etkinlik'); renderCal()
 }
@@ -1951,12 +2025,60 @@ function saveFinans() {
   logla(duzenlendi?'finans_duzenle':'finans_ekle', String(tutar)); closeModal('finans'); renderAll()
 }
 
-function saveBelge() {
+// Dosya secilince ad alanini otomatik doldur ve nereye gidecegini soyle
+function belgeDosyaSecildi(el){
+  const not = document.getElementById('bl-dosya-not')
+  const d = el.files && el.files[0]
+  if(!d){ if(not) not.innerHTML = 'Dosya seçmezseniz yalnızca kayıt oluşturulur.'; return }
+  const adEl = document.getElementById('bl-ad')
+  if(adEl && !adEl.value.trim()) adEl.value = d.name
+  const mb = (d.size / 1048576).toFixed(1)
+  if(!not) return
+  if(!gKurulu()){
+    not.innerHTML = '<span style="color:#B45309">Google bağlantısı kurulmadığı için dosya '
+      + 'yüklenemez; yalnızca kayıt oluşturulur.</span>'
+  } else if(!gEposta || !gAyar('drive')){
+    not.innerHTML = '<span style="color:#B45309">Google Drive bağlı değil. '
+      + 'Ayarlar → Google Drive ve Takvim bölümünden bağlayın.</span>'
+  } else {
+    not.innerHTML = d.name + ' · ' + mb + ' MB → Drive\'daki <b>Dosya360</b> klasörüne yüklenecek.'
+  }
+}
+
+async function saveBelge() {
   const ad=val('bl-ad'); if(!ad) return alert('Belge adı giriniz!')
   const dvId=val('bl-dava'); const dv=DB.davalar.find(d=>d.id==dvId)
-  const duzenlendi = duzUygula('belge', { id:Date.now(), ad, kategori:val('bl-kat'),
-    dava:dv?dv.dosyaNo:'—', tarih:new Date().toISOString() })
+  const secici = document.getElementById('bl-dosya')
+  const dosya = secici && secici.files && secici.files[0]
+  const btn = document.getElementById('btn-belge')
+
+  let drive = null
+  if(dosya && gKurulu() && gEposta && gAyar('drive')){
+    if(dosya.size > 50 * 1048576){
+      return alert('Dosya 50 MB\'dan büyük. Lütfen küçültüp tekrar deneyin.')
+    }
+    if(btn){ btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i>Yükleniyor...' }
+    try{
+      const y = await gDriveYukle(dosya,
+        'Dosya360 · ' + (dv ? dv.dosyaNo : 'dosyasız') + ' · ' + val('bl-kat'))
+      drive = { driveId: y.id, driveLink: y.webViewLink, boyut: Number(y.size || dosya.size) }
+    }catch(e){
+      if(btn){ btn.disabled = false; btn.textContent = 'Ekle' }
+      return alert('Drive\'a yüklenemedi: ' + (e.message || '')
+        + '\n\nKayıt oluşturulmadı. Tekrar deneyin ya da dosyayı boş bırakın.')
+    }
+    if(btn){ btn.disabled = false; btn.textContent = 'Ekle' }
+  }
+
+  const kayit = { id:Date.now(), ad, kategori:val('bl-kat'),
+    dava:dv?dv.dosyaNo:'—', tarih:new Date().toISOString() }
+  if(drive) Object.assign(kayit, drive)
+
+  const duzenlendi = duzUygula('belge', kayit)
   clear('bl-ad')
+  if(secici) secici.value = ''
+  const not = document.getElementById('bl-dosya-not')
+  if(not) not.innerHTML = 'Dosya seçerseniz Google Drive\'ınızdaki <b>Dosya360</b> klasörüne yüklenir.'
   logla(duzenlendi?'belge_duzenle':'belge_ekle', ad); closeModal('belge'); renderBl()
 }
 
@@ -2108,7 +2230,9 @@ function renderBl(){
   const el=document.getElementById('list-bl')
   if(!bls.length){ el.innerHTML=empty(q?'search':'folders', q?'Sonuç bulunamadı':'Belge bulunamadı', q?'Aramanızı değiştirin.':'Belge ekleyerek başlayın.'); return }
   el.innerHTML=`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Belge Adı</th><th>Kategori</th><th>İlgili Dava</th><th>Tarih</th><th></th></tr></thead><tbody>`+
-    bls.map(b=>`<tr><td><i class="ti ti-file" style="color:var(--hint);margin-right:6px"></i>${b.ad}</td><td>${badge('bb',b.kategori)}</td><td>${b.dava}</td><td>${b.tarih?new Date(b.tarih).toLocaleDateString('tr-TR'):'—'}</td><td><button class="del-btn" onclick="duzenleBl(${b.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delBl(${b.id},event)"><i class="ti ti-trash"></i></button></td></tr>`).join('')
+    bls.map(b=>`<tr><td>${b.driveLink
+        ? `<a href="${b.driveLink}" target="_blank" rel="noopener" title="Drive'da aç" style="color:var(--text);text-decoration:none"><i class="ti ti-brand-google-drive" style="color:#C9A84C;margin-right:6px"></i>${b.ad}</a>`
+        : `<i class="ti ti-file" style="color:var(--hint);margin-right:6px"></i>${b.ad}`}</td><td>${badge('bb',b.kategori)}</td><td>${b.dava}</td><td>${b.tarih?new Date(b.tarih).toLocaleDateString('tr-TR'):'—'}</td><td><button class="del-btn" onclick="duzenleBl(${b.id},event)" title="Düzenle" style="color:var(--muted)"><i class="ti ti-pencil"></i></button><button class="del-btn" onclick="delBl(${b.id},event)"><i class="ti ti-trash"></i></button></td></tr>`).join('')
     +`</tbody></table></div>`
 }
 
@@ -2749,8 +2873,24 @@ async function kuYukle(abone) {
 
   document.getElementById('ku-paket-adi').textContent = `${abone.paket_adi} Paketi`
 
-  const { data: davetler } = await window.sb.from('davetler').select('*').eq('buro_id', sbUser.id).eq('durum','bekliyor')
-  const { data: uyeler } = await window.sb.from('buro_uyeleri').select('*, kullanici_profil(email,avukat_adi)').eq('buro_id', sbUser.id)
+  const { data: davetler } = await window.sb.from('davetler').select('*')
+    .eq('buro_id', sbUser.id).eq('durum','bekliyor')
+
+  // Uyeler tek fonksiyondan gelir — tablo birlestirmesi PostgREST'te
+  // yabanci anahtar istedigi icin sessizce bos donuyordu
+  let uyeler = []
+  try{
+    const { data, error } = await window.sb.rpc('buro_kullanicilari')
+    if(error) throw error
+    uyeler = data || []
+  }catch(e){
+    console.warn('Kullanici listesi:', e)
+    const l = document.getElementById('ku-liste')
+    if(l) l.innerHTML = '<div style="padding:22px;border-radius:11px;background:#FEF3F2;'
+      + 'border:1px solid #FDA29B;color:#B42318;font-size:12.5px;line-height:1.7">'
+      + '<b>Kullanıcı listesi okunamadı.</b><br>'
+      + 'guncelleme-18ekim.sql çalıştırıldı mı?</div>'
+  }
 
   const toplam = (davetler?.length || 0) + (uyeler?.length || 0)
   document.getElementById('ku-kullanici-sayisi').textContent = `${toplam} / ${abone.max_kullanici} kullanıcı`
@@ -2764,7 +2904,7 @@ async function kuYukle(abone) {
 
   const liste = document.getElementById('ku-liste')
   if (!toplam) {
-    liste.innerHTML = '<div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">Henüz kullanıcı yok. Davet Et butonuyla başlayın.</div>'
+    liste.innerHTML = '<div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">Henüz kimse yok. Davet Et butonuyla başlayın.</div>'
     return
   }
 
@@ -2774,19 +2914,21 @@ async function kuYukle(abone) {
 
   let html = ''
   uyeler?.forEach(u => {
-    const gercek = u.kullanici_profil?.avukat_adi || ''
+    const gercek = u.gercek_ad || ''
     const ad     = u.gorunen_ad || gercek || ''
-    const init   = (ad || u.kullanici_profil?.email || '?')[0].toUpperCase()
+    const init   = (ad || u.eposta || '?')[0].toUpperCase()
     const takma  = u.gorunen_ad && gercek && u.gorunen_ad !== gercek
     html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#FBFCFE;border-radius:9px">
       <div style="width:32px;height:32px;border-radius:50%;background:#0C1B33;color:#C9A84C;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0">${init}</div>
       <div style="flex:1;min-width:0">
         <div style="font-size:13px;font-weight:500">${kac(ad) || '—'}
           ${takma ? `<span style="font-size:10.5px;color:var(--hint);font-weight:400">· ${kac(gercek)}</span>` : ''}</div>
-        <div style="font-size:11px;color:var(--muted)">${kac(u.kullanici_profil?.email) || '—'}</div>
+        <div style="font-size:11px;color:var(--muted)">${kac(u.eposta) || '—'}
+          ${u.sahip ? '· Büro sahibi' : (u.rol ? '· ' + kac(u.rol) : '')}</div>
       </div>
-      <button class="tbtn" title="İsim ver" style="padding:5px 10px;font-size:11.5px"
-        onclick="uyeAdVer('${u.kullanici_id}','${kac(ad).replace(/'/g,'&#39;')}')"><i class="ti ti-pencil"></i>İsim</button>
+      <button class="tbtn" title="Bu kişi sistemde hangi isimle görünsün?"
+        style="padding:5px 10px;font-size:11.5px"
+        onclick="uyeAdVer('${u.kullanici_id}','${kac(ad).replace(/'/g,"&#39;")}')"><i class="ti ti-pencil"></i>İsim ver</button>
       <span style="font-size:11px;padding:3px 9px;border-radius:9px;background:#F0FDF4;color:#15803D;font-weight:500">Aktif</span>
     </div>`
   })
@@ -2868,6 +3010,7 @@ async function uyeAdVer(kullaniciId, mevcut){
     await abonelikYukle()
     await ekipYukle()
     if(typeof sohbetYenile === 'function') sohbetYenile()
+    if(typeof sohbetCiz === 'function') sohbetCiz(false)
   }catch(e){
     alert('İsim kaydedilemedi: ' + (e.message || ''))
   }
@@ -4751,6 +4894,237 @@ function ekipAdi(id){
   return u ? u.ad : ''
 }
 
+
+// ══ GOOGLE DRIVE + TAKVİM ═════════════════════════════════
+// Her avukat KENDİ Google hesabını bağlar. Erişim anahtarı yalnızca
+// tarayıcı oturumunda durur, veritabanına yazılmaz.
+
+const G_KAPSAM = [
+  'https://www.googleapis.com/auth/drive.file',     // yalnızca bu uygulamanın oluşturduğu dosyalar
+  'https://www.googleapis.com/auth/calendar.events',
+  'email'
+].join(' ')
+
+let gToken = null, gBitis = 0, gIstemci = null, gEposta = '', gKlasor = ''
+
+function gKurulu(){ return typeof GOOGLE_ISTEMCI_ID === 'string' && GOOGLE_ISTEMCI_ID.length > 10 }
+function gBagli(){ return !!(gToken && Date.now() < gBitis) }
+function gAyar(k){ try{ return localStorage.getItem('d360-g-' + k) === '1' }catch(e){ return false } }
+function gAyarla(k, v){ try{ localStorage.setItem('d360-g-' + k, v ? '1' : '0') }catch(e){} }
+
+// GIS betiğini ilk ihtiyaçta yükle
+function gBetik(){
+  return new Promise(function(coz, red){
+    if(window.google && google.accounts && google.accounts.oauth2) return coz()
+    const s = document.createElement('script')
+    s.src = 'https://accounts.google.com/gsi/client'
+    s.async = true; s.defer = true
+    s.onload = coz
+    s.onerror = function(){ red(new Error('Google betiği yüklenemedi')) }
+    document.head.appendChild(s)
+  })
+}
+
+// Yetki iste. sessiz=true ise onay ekranı açmadan tazelemeyi dener.
+async function gYetki(sessiz){
+  if(!gKurulu()) throw new Error('Google istemci kimliği tanımlı değil')
+  await gBetik()
+  return new Promise(function(coz, red){
+    try{
+      gIstemci = google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_ISTEMCI_ID,
+        scope: G_KAPSAM,
+        callback: function(c){
+          if(c && c.access_token){
+            gToken = c.access_token
+            gBitis = Date.now() + ((c.expires_in || 3600) - 90) * 1000
+            try{ sessionStorage.setItem('d360-g', JSON.stringify({ t: gToken, b: gBitis })) }catch(e){}
+            coz(gToken)
+          } else red(new Error('Yetki alınamadı'))
+        },
+        error_callback: function(e){ red(new Error((e && e.type) || 'Yetki penceresi kapatıldı')) }
+      })
+      gIstemci.requestAccessToken({ prompt: sessiz ? '' : 'consent' })
+    }catch(e){ red(e) }
+  })
+}
+
+// Oturumdaki anahtarı geri yükle
+function gOturumAc(){
+  try{
+    const k = JSON.parse(sessionStorage.getItem('d360-g') || 'null')
+    if(k && k.t && Date.now() < k.b){ gToken = k.t; gBitis = k.b }
+  }catch(e){}
+}
+
+async function gAnahtar(){
+  if(gBagli()) return gToken
+  return await gYetki(true)
+}
+
+// Google API isteği — anahtar süresi dolmuşsa bir kez tazeler
+async function gIstek(url, secenek){
+  const anahtar = await gAnahtar()
+  secenek = secenek || {}
+  secenek.headers = Object.assign({}, secenek.headers, { 'Authorization': 'Bearer ' + anahtar })
+  let c = await fetch(url, secenek)
+  if(c.status === 401){
+    gToken = null
+    const yeni = await gYetki(true)
+    secenek.headers['Authorization'] = 'Bearer ' + yeni
+    c = await fetch(url, secenek)
+  }
+  if(!c.ok){
+    let m = ''
+    try{ const j = await c.json(); m = (j.error && (j.error.message || j.error)) || '' }catch(e){}
+    throw new Error(m || ('Google hatası (' + c.status + ')'))
+  }
+  return await c.json()
+}
+
+// ── Bağlan / kaldır ───────────────────────────────────────
+async function googleBagla(){
+  const b = document.getElementById('g-btn')
+  if(b){ b.disabled = true; b.innerHTML = '<i class="ti ti-loader-2"></i>Bağlanıyor...' }
+  try{
+    await gYetki(false)
+    const bilgi = await gIstek('https://www.googleapis.com/oauth2/v3/userinfo')
+    gEposta = (bilgi && bilgi.email) || ''
+    await gKlasorHazirla()
+    try{
+      await window.sb.from('kullanici_profil')
+        .update({ google_eposta: gEposta, google_klasor_id: gKlasor })
+        .eq('id', sbUser.id)
+    }catch(e){ console.warn('Google bilgisi kaydedilemedi:', e) }
+    gAyarla('drive', true); gAyarla('takvim', true)
+    googleDurum()
+  }catch(e){
+    alert('Google hesabı bağlanamadı: ' + (e.message || ''))
+    googleDurum()
+  }
+}
+
+async function googleKaldir(){
+  if(!confirm('Google bağlantısı kaldırılsın mı?\n\nDrive\'daki belgeleriniz silinmez, yalnızca bağlantı kesilir.')) return
+  try{ if(gToken && window.google && google.accounts) google.accounts.oauth2.revoke(gToken) }catch(e){}
+  gToken = null; gBitis = 0; gEposta = ''; gKlasor = ''
+  try{ sessionStorage.removeItem('d360-g') }catch(e){}
+  gAyarla('drive', false); gAyarla('takvim', false)
+  try{
+    await window.sb.from('kullanici_profil')
+      .update({ google_eposta: null, google_klasor_id: null }).eq('id', sbUser.id)
+  }catch(e){}
+  googleDurum()
+}
+
+// ── Klasör ────────────────────────────────────────────────
+async function gKlasorHazirla(){
+  if(gKlasor){
+    try{ await gIstek('https://www.googleapis.com/drive/v3/files/' + gKlasor + '?fields=id,trashed')
+         ; return gKlasor }catch(e){ gKlasor = '' }
+  }
+  const y = await gIstek('https://www.googleapis.com/drive/v3/files', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: 'Dosya360', mimeType: 'application/vnd.google-apps.folder' })
+  })
+  gKlasor = y.id
+  return gKlasor
+}
+
+// Belgeyi Drive'a yükle — çok parçalı istek, ek kütüphane gerektirmez
+async function gDriveYukle(dosya, aciklama){
+  await gKlasorHazirla()
+  const sinir = 'd360' + Math.random().toString(36).slice(2)
+  const ust = {
+    name: dosya.name,
+    parents: [gKlasor],
+    description: aciklama || 'Dosya360 üzerinden yüklendi'
+  }
+  const icerik = await dosya.arrayBuffer()
+  const bas = '--' + sinir + '\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'
+            + JSON.stringify(ust) + '\r\n--' + sinir + '\r\nContent-Type: '
+            + (dosya.type || 'application/octet-stream') + '\r\n\r\n'
+  const son = '\r\n--' + sinir + '--'
+  const govde = new Blob([bas, icerik, son])
+
+  return await gIstek(
+    'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,webViewLink,size',
+    { method: 'POST', headers: { 'Content-Type': 'multipart/related; boundary=' + sinir }, body: govde })
+}
+
+// ── Takvim ────────────────────────────────────────────────
+// baslangic: ISO metin, sure: dakika
+async function gTakvimEkle(baslik, baslangic, sureDk, aciklama, katilimcilar, konum){
+  const bas = new Date(baslangic)
+  if(isNaN(bas)) throw new Error('Geçersiz tarih')
+  const bit = new Date(bas.getTime() + (sureDk || 60) * 60000)
+  const olay = {
+    summary: baslik,
+    description: aciklama || '',
+    start: { dateTime: bas.toISOString(), timeZone: 'Europe/Istanbul' },
+    end:   { dateTime: bit.toISOString(), timeZone: 'Europe/Istanbul' },
+    reminders: { useDefault: false, overrides: [
+      { method: 'popup', minutes: 24 * 60 }, { method: 'popup', minutes: 120 }
+    ]}
+  }
+  if(konum) olay.location = konum
+  if(katilimcilar && katilimcilar.length){
+    olay.attendees = katilimcilar.map(function(e){ return { email: e } })
+  }
+  const ek = (olay.attendees && olay.attendees.length) ? '&sendUpdates=all' : ''
+  return await gIstek(
+    'https://www.googleapis.com/calendar/v3/calendars/primary/events?conferenceDataVersion=0' + ek,
+    { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(olay) })
+}
+
+// ── Ayarlar ekranı ────────────────────────────────────────
+async function googleYukle(){
+  gOturumAc()
+  try{
+    const { data } = await window.sb.from('kullanici_profil')
+      .select('google_eposta,google_klasor_id').eq('id', sbUser.id).maybeSingle()
+    if(data){ gEposta = data.google_eposta || ''; gKlasor = data.google_klasor_id || '' }
+  }catch(e){}
+  googleDurum()
+}
+
+function googleDurum(){
+  const kur  = document.getElementById('g-kurulum')
+  const kap  = document.getElementById('g-kapali')
+  const ack  = document.getElementById('g-acik')
+  if(!kap || !ack) return
+
+  if(!gKurulu()){
+    if(kur) kur.style.display = 'block'
+    kap.style.display = 'none'; ack.style.display = 'none'
+    return
+  }
+  if(kur) kur.style.display = 'none'
+
+  const bagli = !!gEposta
+  kap.style.display = bagli ? 'none' : 'block'
+  ack.style.display = bagli ? 'block' : 'none'
+  if(bagli){
+    const e = document.getElementById('g-eposta')
+    if(e) e.textContent = gEposta
+    const d = document.getElementById('g-drive'); if(d) d.checked = gAyar('drive')
+    const t = document.getElementById('g-takvim'); if(t) t.checked = gAyar('takvim')
+    const o = document.getElementById('g-oturum')
+    if(o) o.style.display = gBagli() ? 'none' : 'block'
+  }
+  const b = document.getElementById('g-btn')
+  if(b){ b.disabled = false; b.innerHTML = '<i class="ti ti-brand-google"></i>Google hesabımı bağla' }
+}
+
+function googleSecim(hangi, el){ gAyarla(hangi, el.checked) }
+
+// Oturum anahtarı düştüyse tek tıkla tazele
+async function googleTazele(){
+  try{ await gYetki(true); googleDurum() }
+  catch(e){ try{ await gYetki(false); googleDurum() }catch(e2){ alert('Yetki yenilenemedi: ' + (e2.message||'')) } }
+}
+
 // ══ EKİP SOHBETİ ══════════════════════════════════════════
 let shMesajlar = [], shKanal = null, shSonTarih = ''
 
@@ -5325,6 +5699,20 @@ async function toplantiKaydet(){
         not: (kayit.toplanti_url ? kayit.toplanti_url + ' · ' : '') + kayit.sure_dk + ' dakika'
       })
       DB.saveEt(ets)
+
+      // Google Takvim bagliysa oraya da yaz — katilimcilara Google davet gonderir
+      if(gKurulu() && gEposta && gAyar('takvim')){
+        try{
+          await gTakvimEkle(
+            'Toplantı — ' + baslik,
+            tarih,
+            kayit.sure_dk,
+            [kayit.aciklama, kayit.toplanti_url, mvAd && ('Müvekkil: ' + mvAd), davaNo]
+              .filter(Boolean).join('\n'),
+            kat.map(function(k){ return k.email }),
+            kayit.toplanti_url || '')
+        }catch(e){ console.warn('Google Takvim:', e) }
+      }
     }
 
     // Davet maili

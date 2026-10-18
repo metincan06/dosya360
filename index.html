@@ -327,6 +327,12 @@ footer a:hover{color:var(--altin)}
 .k-gov{padding:26px}
 .alan{margin-bottom:15px}
 .alan label{display:block;font-size:11.5px;font-weight:600;color:var(--soluk);margin-bottom:6px;letter-spacing:.01em}
+.alan select{width:100%;font-family:inherit;font-size:14.5px;padding:12px 14px;
+  border:1px solid var(--kenar);border-radius:10px;background:var(--kuyu);
+  color:var(--murekkep);cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%236B7A90' stroke-width='1.6'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 13px center;background-size:15px;padding-right:38px}
+.alan select:focus{outline:none;border-color:var(--altin);background-color:#fff}
 .alan input{width:100%;font-family:inherit;font-size:14.5px;padding:12px 14px;border:1px solid var(--kenar);
             border-radius:10px;background:var(--kuyu);color:var(--murekkep);transition:border-color .16s,background .16s}
 .alan input:focus{outline:none;border-color:var(--altin);background:#fff}
@@ -819,6 +825,20 @@ footer a:hover{color:var(--altin)}
         <div class="alan"><label>CEP TELEFONU</label><input type="tel" id="k-tel" placeholder="0532 000 00 00" inputmode="tel" autocomplete="tel" maxlength="17" oninput="telBicim(this)">
           <div style="font-size:11px;color:var(--silik);margin-top:5px">Hesabınız onaylandığında sizi bilgilendirmek için kullanılır.</div></div>
         <div class="alan"><label>ŞİFRE</label><input type="password" id="k-sifre" placeholder="En az 6 karakter" autocomplete="new-password" onkeydown="if(event.key==='Enter')kayitOl()"></div>
+        <div class="alan"><label>DOSYA360'I NEREDE GÖRDÜNÜZ?</label>
+          <select id="k-kaynak" onchange="kaynakDegisti()">
+            <option value="">Seçiniz</option>
+            <option value="sosyal_medya">Sosyal medya (Instagram, LinkedIn, X)</option>
+            <option value="tv">Televizyon / dijital yayın platformu</option>
+            <option value="referans">Meslektaş tavsiyesi</option>
+            <option value="arama">Google'da arattım</option>
+            <option value="baro">Baro, staj veya meslek etkinliği</option>
+            <option value="reklam">Reklam gördüm</option>
+            <option value="diger">Diğer</option>
+          </select>
+          <input type="text" id="k-kaynak-detay" maxlength="80" style="display:none;margin-top:9px"
+                 placeholder="Kısaca yazar mısınız?">
+        </div>
         <button class="k-btn" id="k-btn" onclick="kayitOl()">Ücretsiz hesap oluşturun</button>
         <div class="k-alt">Zaten hesabınız var mı? <span onclick="tabSec('giris')">Giriş yapın</span></div>
       </div>
@@ -1077,13 +1097,27 @@ async function sicilKontrol(){
   }catch(e){ el.style.display = 'none' }
 }
 
+// Referans ve "diger" seceneklerinde tek satirlik aciklama sorulur
+function kaynakDegisti(){
+  const s = document.getElementById('k-kaynak')
+  const d = document.getElementById('k-kaynak-detay')
+  if(!s || !d) return
+  const sor = { referans:'Kim tavsiye etti?', tv:'Hangi program veya platform?',
+                diger:'Nereden duydunuz?', sosyal_medya:'Hangi hesap veya gönderi? (isteğe bağlı)' }
+  if(sor[s.value]){ d.style.display = 'block'; d.placeholder = sor[s.value] }
+  else { d.style.display = 'none'; d.value = '' }
+}
+
 async function kayitOl() {
   const ad = document.getElementById('k-ad').value.trim()
   const buro = document.getElementById('k-buro').value.trim()
   const email = document.getElementById('k-email').value.trim()
   const tel = document.getElementById('k-tel').value.replace(/\D/g,'')
   const sifre = document.getElementById('k-sifre').value
+  const kaynak = (document.getElementById('k-kaynak') || {}).value || ''
+  const kaynakDetay = ((document.getElementById('k-kaynak-detay') || {}).value || '').trim()
   if (!email||!sifre) { hata('E-posta ve şifre zorunludur'); return }
+  if (!kaynak) { hata('Dosya360\'ı nerede gördüğünüzü seçin'); return }
   if (!tel) { hata('Cep telefonu zorunludur'); return }
   if (!telGecerli(tel)) { hata('Geçerli bir cep telefonu girin — örnek: 0532 000 00 00'); return }
   const baro = document.getElementById('k-baro').value.trim()
@@ -1108,7 +1142,9 @@ async function kayitOl() {
     const uid = session?.user?.id || data.user?.id
     if (uid) {
       const { error: pErr } = await sb.from('kullanici_profil')
-        .upsert({ id: uid, email, avukat_adi: ad, buro_adi: buro || null, telefon: telYaz(tel), baro: baro, baro_sicil: sicil, rol: 'kullanici', kurulum_tamam: false })
+        .upsert({ id: uid, email, avukat_adi: ad, buro_adi: buro || null, telefon: telYaz(tel),
+                  baro: baro, baro_sicil: sicil, rol: 'kullanici', kurulum_tamam: false,
+                  kaynak: kaynak || null, kaynak_detay: kaynakDetay || null })
       if (pErr) console.warn('Profil yazilamadi (trigger olusturmus olabilir):', pErr)
     }
     // Hoş geldiniz maili — başarısız olsa da kaydı engellemesin
