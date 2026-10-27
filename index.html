@@ -2,7 +2,18 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<!-- Ana ekrana eklenebilsin (iOS + Android) -->
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0C1B33">
+<link rel="icon" type="image/png" sizes="192x192" href="/d360-192.png">
+<link rel="apple-touch-icon" href="/d360-apple-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dosya360">
+<meta name="format-detection" content="telephone=no">
 <title>Dosya360 — Yapay Zekâ Destekli Hukuk Bürosu Yönetim Sistemi</title>
 <meta name="description" content="Dosya360; dava takibi, müvekkil yönetimi, duruşma hatırlatmaları, finans ve ekip yönetimini tek panelde toplayan bulut tabanlı avukat programı. UYAP hızlı erişim, WhatsApp bildirimleri, 360 Asistan.">
 <meta name="keywords" content="hukuk bürosu yönetim sistemi, dava takip programı, avukat programı, yapay zekâ destekli hukuk yazılımı, UYAP entegrasyonlu hukuk programı, bulut tabanlı hukuk yazılımı, müvekkil yönetimi, duruşma takibi">
@@ -67,7 +78,8 @@ nav.kucuk{height:58px;border-bottom-color:var(--kenar);background:rgba(252,253,2
 .nav-bag{display:flex;gap:4px}
 .nav-bag a{font-size:14px;font-weight:500;color:var(--soluk);padding:8px 14px;border-radius:9px;transition:color .16s,background .16s}
 .nav-bag a:hover{color:var(--murekkep);background:rgba(13,21,38,.045)}
-.nav-cta{display:flex;align-items:center;gap:9px}
+.nav-cta{display:flex;align-items:center;gap:9px;flex-shrink:0}
+.et-kisa{display:none}
 
 /* ── Düğmeler: hap biçimli ───────────────────────── */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
@@ -363,6 +375,13 @@ footer a:hover{color:var(--altin)}
 @media(max-width:680px){
   nav{height:60px}
   .nav-bag{display:none}
+  .nav-ic{gap:10px}
+  .nav-cta{gap:5px}
+  .nav-cta .btn{padding:9px 13px;font-size:13px}
+  .et-uzun{display:none}
+  .et-kisa{display:inline}
+  .logo{font-size:16px}
+  .logo img{height:26px!important}
   .kahraman{padding-top:104px}
   section{padding:60px 0}
   .kart-izg,.adim-izg{grid-template-columns:1fr}
@@ -381,7 +400,7 @@ footer a:hover{color:var(--altin)}
 <script>document.body.classList.remove('js-yok')</script>
 
 <nav id="nav"><div class="sar nav-ic">
-  <a href="#" class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg>Dosya360</a>
+  <a href="#" class="logo"><img src="/dosya360-logo.png" alt="" style="height:30px;width:auto">Dosya360</a>
   <div class="nav-bag">
     <a href="#ozellikler">Özellikler</a>
     <a href="#nasil">Nasıl çalışır</a>
@@ -390,7 +409,7 @@ footer a:hover{color:var(--altin)}
   </div>
   <div class="nav-cta">
     <button class="btn btn-sade" onclick="modalAc('giris')">Giriş yap</button>
-    <button class="btn btn-koyu" onclick="modalAc('kayit')">Ücretsiz başlayın</button>
+    <button class="btn btn-koyu" onclick="modalAc('kayit')"><span class="et-uzun">Ücretsiz başlayın</span><span class="et-kisa">Başlayın</span></button>
   </div>
 </div></nav>
 
@@ -417,7 +436,7 @@ footer a:hover{color:var(--altin)}
     </div>
     <div class="p-gov">
       <aside class="p-yan">
-        <div class="mrk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg>Dosya360</div>
+        <div class="mrk"><img src="/dosya360-logo.png" alt="" style="height:28px;width:auto">Dosya360</div>
         <a><i class="ti ti-layout-dashboard"></i>Anasayfa</a>
         <a><i class="ti ti-users"></i>Müvekkiller</a>
         <a><i class="ti ti-folder"></i>Davalar</a>
@@ -753,7 +772,7 @@ footer a:hover{color:var(--altin)}
 <footer><div class="sar">
   <div class="f-izg">
     <div>
-      <div class="f-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:19px;height:19px"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg>Dosya360</div>
+      <div class="f-logo"><img src="/dosya360-logo.png" alt="" style="height:26px;width:auto">Dosya360</div>
       <div class="f-ac">Avukatlık büroları için tasarlanmış bulut tabanlı hukuk bürosu yönetim sistemi. Dava takibi, müvekkil yönetimi ve duruşma hatırlatmaları tek panelde.</div>
     </div>
     <div><h4>Ürün</h4><a href="#ozellikler">Özellikler</a><a href="#fiyatlar">Fiyatlar</a><a href="#nasil">Nasıl çalışır</a><a href="#sss">SSS</a></div>
@@ -769,7 +788,7 @@ footer a:hover{color:var(--altin)}
 <div class="ort" id="modal" onclick="if(event.target===this)modalKapat()">
   <div class="kal">
     <div class="k-ust">
-      <div class="k-lg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:19px;height:19px"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg>Dosya360</div>
+      <div class="k-lg"><img src="/dosya360-logo.png" alt="" style="height:26px;width:auto">Dosya360</div>
       <div class="k-al">Hukuk Bürosu Yönetim Sistemi</div>
     </div>
     <div class="k-sek" id="k-sekler">
@@ -823,7 +842,7 @@ footer a:hover{color:var(--altin)}
         <div id="sicil-durum" style="display:none;font-size:11.5px;margin:-8px 0 12px;line-height:1.5"></div>
         <div class="alan"><label>E-POSTA</label><input type="email" id="k-email" placeholder="avukat@buro.com" autocomplete="email"></div>
         <div class="alan"><label>CEP TELEFONU</label><input type="tel" id="k-tel" placeholder="0532 000 00 00" inputmode="tel" autocomplete="tel" maxlength="17" oninput="telBicim(this)">
-          <div style="font-size:11px;color:var(--silik);margin-top:5px">Hesabınız onaylandığında sizi bilgilendirmek için kullanılır.</div></div>
+          <div style="font-size:11px;color:var(--silik);margin-top:5px">Yalnızca kurulum desteği için kullanılır, paylaşılmaz.</div></div>
         <div class="alan"><label>ŞİFRE</label><input type="password" id="k-sifre" placeholder="En az 6 karakter" autocomplete="new-password" onkeydown="if(event.key==='Enter')kayitOl()"></div>
         <div class="alan"><label>DOSYA360'I NEREDE GÖRDÜNÜZ?</label>
           <select id="k-kaynak" onchange="kaynakDegisti()">
@@ -1172,6 +1191,7 @@ function toggleFaq(el) { el.classList.toggle('open') }
 
 // ── PAKET BAŞVURUSU ────────────────────────────────────────
 function basvuruAc(paket){
+  try{ if(window.d360Say) window.d360Say('basvuru_acildi') }catch(e){}
   modalAc('basvuru')
   const s = document.getElementById('b-paket')
   if(s && paket) s.value = paket
@@ -1232,5 +1252,140 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 
 <!-- Dosya360 Web Asistanı -->
 <script src="https://dosya360.com/bot.js" data-buro="c5dd3cb7-99e7-4199-864d-918f353de93f"></script>
+
+<!-- ══ PAROLAYI GÖSTER ══════════════════════════════════ -->
+<script>
+(function(){
+  var KAPALI = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor"'
+    + ' stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/>'
+    + '<circle cx="12" cy="12" r="3"/></svg>'
+  var ACIK = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor"'
+    + ' stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M3 3l18 18"/>'
+    + '<path d="M10.6 6.1A8.9 8.9 0 0 1 12 6c6 0 9.5 6 9.5 6a16 16 0 0 1-2.9 3.5"/>'
+    + '<path d="M6.3 7.8A16 16 0 0 0 2.5 12s3.5 6 9.5 6a8.8 8.8 0 0 0 3.5-.7"/>'
+    + '<path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>'
+
+  function kur(){
+    var alanlar = document.querySelectorAll('input[type="password"]')
+    for(var i = 0; i < alanlar.length; i++){
+      var g = alanlar[i]
+      if(g.getAttribute('data-goz')) continue
+      g.setAttribute('data-goz', '1')
+
+      var sar = document.createElement('span')
+      sar.style.cssText = 'position:relative;display:block;width:100%'
+      g.parentNode.insertBefore(sar, g)
+      sar.appendChild(g)
+
+      // metin dugmenin altina girmesin
+      var mevcut = parseInt(getComputedStyle(g).paddingRight, 10) || 12
+      g.style.paddingRight = (mevcut + 34) + 'px'
+
+      var d = document.createElement('button')
+      d.type = 'button'
+      d.tabIndex = -1
+      d.setAttribute('aria-label', 'Parolayı göster')
+      d.title = 'Parolayı göster'
+      d.style.cssText = 'position:absolute;right:7px;top:50%;transform:translateY(-50%);'
+        + 'background:none;border:none;padding:8px;cursor:pointer;line-height:0;'
+        + 'color:currentColor;opacity:.52;transition:opacity .15s'
+      d.innerHTML = KAPALI
+      d.onmouseenter = function(){ this.style.opacity = '.9' }
+      d.onmouseleave = function(){ this.style.opacity = '.52' }
+
+      ;(function(girdi, dugme){
+        dugme.onclick = function(e){
+          e.preventDefault()
+          var gizli = girdi.type === 'password'
+          girdi.type = gizli ? 'text' : 'password'
+          dugme.innerHTML = gizli ? ACIK : KAPALI
+          var yazi = gizli ? 'Parolayı gizle' : 'Parolayı göster'
+          dugme.setAttribute('aria-label', yazi); dugme.title = yazi
+          try{ girdi.focus() }catch(_){}
+        }
+      })(g, d)
+
+      sar.appendChild(d)
+    }
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', kur)
+  } else { kur() }
+  // sonradan açılan ekranlar (modal, şifre değiştirme) için
+  setInterval(kur, 1500)
+})()
+</script>
+
+
+<!-- ══ ZİYARET SAYACI ══════════════════════════════════
+     Çerez kullanmaz, kişi tanımlamaz, dışarıya veri göndermez.
+     Yalnızca sayfa, geliş kaynağı ve cihaz türü sayılır. -->
+<script>
+(function(){
+  function kaynakBul(){
+    try{
+      var u = new URLSearchParams(location.search)
+      var k = u.get('utm_source') || u.get('kaynak')
+      if(k) return k.toLowerCase().slice(0,40)
+      var r = document.referrer
+      if(!r) return 'dogrudan'
+      var a = new URL(r).hostname.replace(/^www\./,'').toLowerCase()
+      if(a === location.hostname) return 'ic'
+      if(a.indexOf('instagram') > -1) return 'instagram'
+      if(a.indexOf('linkedin')  > -1) return 'linkedin'
+      if(a.indexOf('google')    > -1) return 'google'
+      if(a.indexOf('facebook')  > -1 || a.indexOf('fb.')  > -1) return 'facebook'
+      if(a.indexOf('youtube')   > -1) return 'youtube'
+      if(a.indexOf('whatsapp')  > -1 || a.indexOf('wa.me') > -1) return 'whatsapp'
+      if(a.indexOf('bing')      > -1 || a.indexOf('yandex') > -1) return 'arama'
+      if(a.indexOf('t.co') > -1 || a.indexOf('x.com') > -1) return 'x'
+      return a.slice(0,40)
+    }catch(e){ return 'dogrudan' }
+  }
+
+  var KAYNAK = kaynakBul()
+  var CIHAZ  = (window.innerWidth < 760) ? 'mobil' : 'masaustu'
+  var gonderildi = {}
+
+  function say(olay){
+    if(gonderildi[olay]) return
+    gonderildi[olay] = true
+    try{
+      if(!window.sb) return
+      window.sb.rpc('ziyaret_kaydet', {
+        p_sayfa:  location.pathname.slice(0,120) || '/',
+        p_kaynak: KAYNAK,
+        p_olay:   olay,
+        p_cihaz:  CIHAZ
+      }).then(function(){}, function(){})
+    }catch(e){}
+  }
+  window.d360Say = say
+
+  function basla(){
+    if(KAYNAK === 'ic') return     // kendi sayfalarımız arası gezinme sayılmasın
+    say('goruntuleme')
+
+    // fiyat bölümü ekrana girdiğinde
+    var f = document.getElementById('fiyatlar')
+    if(f && 'IntersectionObserver' in window){
+      var g = new IntersectionObserver(function(k){
+        if(k[0] && k[0].isIntersecting){ say('fiyat'); g.disconnect() }
+      }, { threshold: 0.35 })
+      g.observe(f)
+    }
+  }
+
+  // sb hazır olana kadar bekle
+  var dene = 0
+  var t = setInterval(function(){
+    if(window.sb || ++dene > 40){ clearInterval(t); if(window.sb) basla() }
+  }, 250)
+})()
+</script>
+
 </body>
 </html>

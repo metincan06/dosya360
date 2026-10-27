@@ -1,0 +1,62 @@
+DOSYA360 · 27 EKİM GÜNCELLEMESİ
+════════════════════════════════
+
+KURULUM SIRASI
+──────────────
+1) Supabase → SQL Editor → self-servis.sql dosyasını çalıştır.
+   Son satırdaki doğrulama şöyle çıkmalı:
+     bekleyen_kalmadi = 0 · sayac_fn = 1 · rapor_fn = 1 · deneme_tetik = 1
+
+2) Supabase → Edge Functions → uyelik-maili
+   İçeriği uyelik-maili.ts ile değiştir, Deploy.
+   (Metin artık "onay bekleniyor" değil, "hesabınız hazır" diyor.)
+
+3) GitHub deposuna şu dosyaları yükle (üzerine yaz):
+     index.html  uygulama.html  admin.html  davet.html
+     yeni-sifre.html  404.html  kvkk.html
+     manifest.webmanifest  sw.js
+     dosya360-logo.png  d360-192.png  d360-512.png  d360-apple-180.png
+
+4) Tarayıcıyı sert yenile (Ctrl+Shift+R).
+
+
+BU GÜNCELLEMEDE NE DEĞİŞTİ
+───────────────────────────
+· SELF SERVİS
+  Kayıt olan avukat onay beklemiyor, aynı anda içeri giriyor.
+  Herkese 14 günlük "Deneme" aboneliği otomatik açılıyor.
+  Kontrol admin panelinde duruyor: bir hesabı dondurmak gerekirse
+  Kullanıcılar ekranından aktif/pasif yapılabiliyor.
+
+· KAYIT MAİLİ
+  Müşteriye "hesabınız hazır" maili, sana da "yeni kayıt" bildirimi
+  gidiyor. İkisi tek seferde, tekrar göndermiyor.
+
+· ÇEREZSİZ ZİYARETÇİ SAYACI
+  Site trafiği ölçülüyor ama IP ve tarayıcı bilgisi KAYDEDİLMİYOR,
+  çerez de konulmuyor. Bu yüzden çerez onayı bandına gerek yok.
+  Ölçülenler: sayfa görüntüleme, trafik kaynağı (instagram, linkedin,
+  google, doğrudan…), fiyat bölümüne inen kişi, başvuru formunu açan
+  kişi, mobil/masaüstü dağılımı.
+  Rapor: admin panelinde "Site Trafiği" bölümü, 7 / 30 / 90 gün.
+  Buradaki huni sana şunu söyler: 100 kişi geldi → kaçı fiyata baktı
+  → kaçı formu açtı → kaçı gönderdi → kaçı kayıt oldu.
+
+· PAROLAYI GÖSTER
+  Bütün şifre alanlarında göz düğmesi var (giriş, kayıt, davet,
+  şifre sıfırlama, admin).
+
+· DÜZEN DÜZELTMELERİ
+  Telefonda üst menüdeki düğmeler taşıyordu — düzeltildi
+  ("Ücretsiz başlayın" küçük ekranda "Başlayın" oluyor).
+  320px'e kadar hiçbir sayfada yatay kaydırma yok.
+  Göz düğmesinin dokunma alanı 35px'e çıkarıldı.
+
+
+SIRADA NE VAR
+──────────────
+· KVKK: Kurul standart sözleşmesi hâlâ imzalanmadı (yurt dışı aktarım).
+· Müvekkil verisi işlediğin için büroyla "veri işleyen sözleşmesi" şart.
+· Instagram ve LinkedIn hesapları hâlâ açılmadı — sayaç kaynak ayırıyor
+  ama yönlendirecek hesap yok.
+· İlk ücretli müşteri.

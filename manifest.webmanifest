@@ -1,0 +1,24 @@
+{
+  "name": "Dosya360 — Hukuk Bürosu Yönetimi",
+  "short_name": "Dosya360",
+  "description": "Müvekkil, dosya, süre ve ekip yönetimi tek panelde.",
+  "start_url": "/uygulama.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F6F8FC",
+  "theme_color": "#0C1B33",
+  "lang": "tr",
+  "dir": "ltr",
+  "categories": ["business", "productivity"],
+  "icons": [
+    { "src": "/d360-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/d360-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/d360-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Takvim", "url": "/uygulama.html#takvim" },
+    { "name": "Süre Takibi", "url": "/uygulama.html#sure" },
+    { "name": "Ekip Sohbeti", "url": "/uygulama.html#sohbet" }
+  ]
+}

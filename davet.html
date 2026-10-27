@@ -219,5 +219,72 @@ function showError(msg) {
 
 init()
 </script>
+
+<!-- ══ PAROLAYI GÖSTER ══════════════════════════════════ -->
+<script>
+(function(){
+  var KAPALI = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor"'
+    + ' stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/>'
+    + '<circle cx="12" cy="12" r="3"/></svg>'
+  var ACIK = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor"'
+    + ' stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M3 3l18 18"/>'
+    + '<path d="M10.6 6.1A8.9 8.9 0 0 1 12 6c6 0 9.5 6 9.5 6a16 16 0 0 1-2.9 3.5"/>'
+    + '<path d="M6.3 7.8A16 16 0 0 0 2.5 12s3.5 6 9.5 6a8.8 8.8 0 0 0 3.5-.7"/>'
+    + '<path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>'
+
+  function kur(){
+    var alanlar = document.querySelectorAll('input[type="password"]')
+    for(var i = 0; i < alanlar.length; i++){
+      var g = alanlar[i]
+      if(g.getAttribute('data-goz')) continue
+      g.setAttribute('data-goz', '1')
+
+      var sar = document.createElement('span')
+      sar.style.cssText = 'position:relative;display:block;width:100%'
+      g.parentNode.insertBefore(sar, g)
+      sar.appendChild(g)
+
+      // metin dugmenin altina girmesin
+      var mevcut = parseInt(getComputedStyle(g).paddingRight, 10) || 12
+      g.style.paddingRight = (mevcut + 34) + 'px'
+
+      var d = document.createElement('button')
+      d.type = 'button'
+      d.tabIndex = -1
+      d.setAttribute('aria-label', 'Parolayı göster')
+      d.title = 'Parolayı göster'
+      d.style.cssText = 'position:absolute;right:7px;top:50%;transform:translateY(-50%);'
+        + 'background:none;border:none;padding:8px;cursor:pointer;line-height:0;'
+        + 'color:currentColor;opacity:.52;transition:opacity .15s'
+      d.innerHTML = KAPALI
+      d.onmouseenter = function(){ this.style.opacity = '.9' }
+      d.onmouseleave = function(){ this.style.opacity = '.52' }
+
+      ;(function(girdi, dugme){
+        dugme.onclick = function(e){
+          e.preventDefault()
+          var gizli = girdi.type === 'password'
+          girdi.type = gizli ? 'text' : 'password'
+          dugme.innerHTML = gizli ? ACIK : KAPALI
+          var yazi = gizli ? 'Parolayı gizle' : 'Parolayı göster'
+          dugme.setAttribute('aria-label', yazi); dugme.title = yazi
+          try{ girdi.focus() }catch(_){}
+        }
+      })(g, d)
+
+      sar.appendChild(d)
+    }
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', kur)
+  } else { kur() }
+  // sonradan açılan ekranlar (modal, şifre değiştirme) için
+  setInterval(kur, 1500)
+})()
+</script>
+
 </body>
 </html>

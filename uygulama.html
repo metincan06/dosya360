@@ -2,7 +2,18 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<!-- Ana ekrana eklenebilsin (iOS + Android) -->
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0C1B33">
+<link rel="icon" type="image/png" sizes="192x192" href="/d360-192.png">
+<link rel="apple-touch-icon" href="/d360-apple-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dosya360">
+<meta name="format-detection" content="telephone=no">
 <meta name="robots" content="noindex, nofollow">
 <title>Dosya360 — Avukatlık Bürosu CRM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,10 +65,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;color:inherit
          border-right:1px solid rgba(255,255,255,.05)}
 .sidebar.collapsed{width:68px}
 .logo{display:flex;align-items:center;gap:11px;padding:20px 18px 22px}
-.logo-icon{width:32px;height:32px;border-radius:9px;flex-shrink:0;
-           background:linear-gradient(145deg,#E8C96A,#C9A84C);
-           display:flex;align-items:center;justify-content:center;color:#0C1B33;font-size:17px;
-           box-shadow:0 2px 8px rgba(201,168,76,.4)}
+.logo-icon{height:30px;width:auto;flex-shrink:0;display:block}
 .logo-text{font-family:'Plus Jakarta Sans',sans-serif;font-size:16.5px;font-weight:800;
            color:#fff;letter-spacing:-.03em;line-height:1.1;white-space:nowrap}
 .logo-sub{font-size:10.5px;color:rgba(255,255,255,.42);white-space:nowrap;margin-top:1px}
@@ -492,7 +500,7 @@ var sb = window.sb
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="logo">
-    <i class="ti ti-scale logo-icon"></i>
+    <img src="/dosya360-logo.png" alt="Dosya360" class="logo-icon">
     <div id="logo-texts">
       <div class="logo-text">Dosya360</div>
       <div class="logo-sub" id="buro-adi-logo">Avukatlık CRM</div>
@@ -4931,30 +4939,55 @@ async function gYetki(sessiz){
   await gBetik()
   return new Promise(function(coz, red){
     try{
-      gIstemci = google.accounts.oauth2.initTokenClient({
+      const ayar = {
         client_id: GOOGLE_ISTEMCI_ID,
         scope: G_KAPSAM,
         callback: function(c){
           if(c && c.access_token){
             gToken = c.access_token
-            gBitis = Date.now() + ((c.expires_in || 3600) - 90) * 1000
-            try{ sessionStorage.setItem('d360-g', JSON.stringify({ t: gToken, b: gBitis })) }catch(e){}
+            gBitis = Date.now() + ((c.expires_in || 3600) - 120) * 1000
+            gAnahtarSakla()
+            gTazelemeKur()
             coz(gToken)
           } else red(new Error('Yetki alınamadı'))
         },
         error_callback: function(e){ red(new Error((e && e.type) || 'Yetki penceresi kapatıldı')) }
-      })
+      }
+      // Hangi hesap oldugunu soylersek Google hesap seçtirmeden tazeler
+      if(gEposta) ayar.hint = gEposta
+      gIstemci = google.accounts.oauth2.initTokenClient(ayar)
       gIstemci.requestAccessToken({ prompt: sessiz ? '' : 'consent' })
     }catch(e){ red(e) }
   })
 }
 
-// Oturumdaki anahtarı geri yükle
+function gAnahtarSakla(){
+  const veri = JSON.stringify({ t: gToken, b: gBitis })
+  try{ sessionStorage.setItem('d360-g', veri) }catch(e){}
+  // Sekme kapanip acilsa da bir saatlik omru bosa gitmesin
+  try{ localStorage.setItem('d360-g', veri) }catch(e){}
+}
+
+// Kayitli anahtari geri yukle
 function gOturumAc(){
-  try{
-    const k = JSON.parse(sessionStorage.getItem('d360-g') || 'null')
-    if(k && k.t && Date.now() < k.b){ gToken = k.t; gBitis = k.b }
-  }catch(e){}
+  let k = null
+  try{ k = JSON.parse(sessionStorage.getItem('d360-g') || 'null') }catch(e){}
+  if(!k){ try{ k = JSON.parse(localStorage.getItem('d360-g') || 'null') }catch(e){} }
+  if(k && k.t && Date.now() < k.b){
+    gToken = k.t; gBitis = k.b
+    gTazelemeKur()
+  }
+}
+
+// Suresi dolmadan once arka planda tazele — kullanici hic fark etmesin
+let gTazeleZaman = null
+function gTazelemeKur(){
+  if(gTazeleZaman) clearTimeout(gTazeleZaman)
+  const kalan = gBitis - Date.now() - 5 * 60 * 1000   // bitmesine 5 dk kala
+  if(kalan <= 0) return
+  gTazeleZaman = setTimeout(function(){
+    gYetki(true).catch(function(){ /* basarisiz olursa ilk istekte denenir */ })
+  }, kalan)
 }
 
 async function gAnahtar(){
@@ -5009,6 +5042,8 @@ async function googleKaldir(){
   try{ if(gToken && window.google && google.accounts) google.accounts.oauth2.revoke(gToken) }catch(e){}
   gToken = null; gBitis = 0; gEposta = ''; gKlasor = ''
   try{ sessionStorage.removeItem('d360-g') }catch(e){}
+  try{ localStorage.removeItem('d360-g') }catch(e){}
+  if(gTazeleZaman){ clearTimeout(gTazeleZaman); gTazeleZaman = null }
   gAyarla('drive', false); gAyarla('takvim', false)
   try{
     await window.sb.from('kullanici_profil')
@@ -6152,5 +6187,178 @@ sb.auth.getSession().then(async ({ data: { session } }) => {
 
 
 <div id="ciktikap"></div>
+
+<!-- ══ ANA EKRANA EKLE ══════════════════════════════════ -->
+<div id="pwa-cubuk" style="display:none;position:fixed;left:12px;right:12px;bottom:12px;
+     z-index:9000;background:#0C1B33;color:#fff;border-radius:16px;
+     padding:15px 17px;box-shadow:0 18px 44px rgba(12,27,51,.34);
+     font-family:inherit;max-width:520px;margin:0 auto">
+  <div style="display:flex;align-items:flex-start;gap:13px">
+    <img src="/d360-apple-180.png" alt="" width="42" height="42"
+         style="border-radius:11px;flex-shrink:0">
+    <div style="flex:1;min-width:0">
+      <div style="font-size:14px;font-weight:600;margin-bottom:3px">Dosya360'ı telefonunuza ekleyin</div>
+      <div id="pwa-metin" style="font-size:12.5px;line-height:1.6;color:#B9C7DD"></div>
+      <div id="pwa-dugme" style="margin-top:11px"></div>
+    </div>
+    <button onclick="pwaKapat()" aria-label="Kapat"
+            style="background:none;border:none;color:#7E90AC;font-size:19px;
+                   cursor:pointer;line-height:1;padding:0 2px">&times;</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var kurulum = null
+
+  function ayriPencere(){
+    return window.matchMedia('(display-mode: standalone)').matches
+        || window.navigator.standalone === true
+  }
+  function iosMu(){
+    return /iPad|iPhone|iPod/.test(navigator.userAgent)
+        || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  }
+  function safariMi(){
+    var u = navigator.userAgent
+    return iosMu() && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(u)
+  }
+  function gizlendiMi(){
+    try{
+      var t = localStorage.getItem('d360-pwa-kapali')
+      return t && (Date.now() - Number(t)) < 14 * 24 * 3600 * 1000
+    }catch(e){ return false }
+  }
+
+  window.pwaKapat = function(){
+    var c = document.getElementById('pwa-cubuk')
+    if(c) c.style.display = 'none'
+    try{ localStorage.setItem('d360-pwa-kapali', String(Date.now())) }catch(e){}
+  }
+
+  // Giris ekrani acikken rahatsiz etme — once oturum acsin
+  function girisAcik(){
+    var g = document.querySelector('.auth-screen')
+    return !!(g && getComputedStyle(g).display !== 'none')
+  }
+
+  function goster(ic, dugme){
+    if(ayriPencere() || gizlendiMi()) return
+    if(girisAcik()){ setTimeout(function(){ goster(ic, dugme) }, 4000); return }
+    var c = document.getElementById('pwa-cubuk'); if(!c) return
+    document.getElementById('pwa-metin').innerHTML = ic
+    document.getElementById('pwa-dugme').innerHTML = dugme || ''
+    c.style.display = 'block'
+  }
+
+  // Android / masaustu Chrome — gercek kurulum istemi
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault(); kurulum = e
+    goster('Uygulama gibi açılır, adres çubuğu görünmez.',
+      '<button onclick="pwaKur()" style="background:linear-gradient(145deg,#E8C96A,#C9A84C);'
+      + 'color:#0C1B33;border:none;border-radius:999px;padding:9px 20px;font-size:13px;'
+      + 'font-weight:600;cursor:pointer;font-family:inherit">Ana ekrana ekle</button>')
+  })
+
+  window.pwaKur = function(){
+    if(!kurulum) return
+    kurulum.prompt()
+    kurulum.userChoice.then(function(){ kurulum = null; window.pwaKapat() })
+  }
+
+  // iPhone / iPad — otomatik istem yok, elle tarif edilir
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      if(!iosMu() || ayriPencere()) return
+      if(safariMi()){
+        goster('Alttaki <b>Paylaş</b> düğmesine '
+          + '<span style="display:inline-block;transform:translateY(2px)">'
+          + '<svg width="13" height="16" viewBox="0 0 24 24" fill="none" stroke="#B9C7DD" '
+          + 'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+          + '<path d="M12 16V4M8 8l4-4 4 4"/><path d="M4 14v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/>'
+          + '</svg></span> dokunun, açılan listede '
+          + '<b>Ana Ekrana Ekle</b> seçeneğini seçin.')
+      } else {
+        goster('iPhone\'da ana ekrana eklemek için bu sayfayı '
+          + '<b>Safari</b> ile açmanız gerekir.')
+      }
+    }, 2500)
+  })
+
+  // Kurulabilirlik icin servis calisani — onbellek yapmaz
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('/sw.js').catch(function(){})
+    })
+  }
+})()
+</script>
+
+<!-- ══ PAROLAYI GÖSTER ══════════════════════════════════ -->
+<script>
+(function(){
+  var KAPALI = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor"'
+    + ' stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/>'
+    + '<circle cx="12" cy="12" r="3"/></svg>'
+  var ACIK = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor"'
+    + ' stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M3 3l18 18"/>'
+    + '<path d="M10.6 6.1A8.9 8.9 0 0 1 12 6c6 0 9.5 6 9.5 6a16 16 0 0 1-2.9 3.5"/>'
+    + '<path d="M6.3 7.8A16 16 0 0 0 2.5 12s3.5 6 9.5 6a8.8 8.8 0 0 0 3.5-.7"/>'
+    + '<path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>'
+
+  function kur(){
+    var alanlar = document.querySelectorAll('input[type="password"]')
+    for(var i = 0; i < alanlar.length; i++){
+      var g = alanlar[i]
+      if(g.getAttribute('data-goz')) continue
+      g.setAttribute('data-goz', '1')
+
+      var sar = document.createElement('span')
+      sar.style.cssText = 'position:relative;display:block;width:100%'
+      g.parentNode.insertBefore(sar, g)
+      sar.appendChild(g)
+
+      // metin dugmenin altina girmesin
+      var mevcut = parseInt(getComputedStyle(g).paddingRight, 10) || 12
+      g.style.paddingRight = (mevcut + 34) + 'px'
+
+      var d = document.createElement('button')
+      d.type = 'button'
+      d.tabIndex = -1
+      d.setAttribute('aria-label', 'Parolayı göster')
+      d.title = 'Parolayı göster'
+      d.style.cssText = 'position:absolute;right:7px;top:50%;transform:translateY(-50%);'
+        + 'background:none;border:none;padding:8px;cursor:pointer;line-height:0;'
+        + 'color:currentColor;opacity:.52;transition:opacity .15s'
+      d.innerHTML = KAPALI
+      d.onmouseenter = function(){ this.style.opacity = '.9' }
+      d.onmouseleave = function(){ this.style.opacity = '.52' }
+
+      ;(function(girdi, dugme){
+        dugme.onclick = function(e){
+          e.preventDefault()
+          var gizli = girdi.type === 'password'
+          girdi.type = gizli ? 'text' : 'password'
+          dugme.innerHTML = gizli ? ACIK : KAPALI
+          var yazi = gizli ? 'Parolayı gizle' : 'Parolayı göster'
+          dugme.setAttribute('aria-label', yazi); dugme.title = yazi
+          try{ girdi.focus() }catch(_){}
+        }
+      })(g, d)
+
+      sar.appendChild(d)
+    }
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', kur)
+  } else { kur() }
+  // sonradan açılan ekranlar (modal, şifre değiştirme) için
+  setInterval(kur, 1500)
+})()
+</script>
+
 </body>
 </html>
