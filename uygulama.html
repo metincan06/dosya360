@@ -139,6 +139,102 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;color:inherit
         letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 
+/* ═══ ANASAYFA · metrik kartları ════════════════ */
+.mc{display:flex;align-items:center;gap:14px;cursor:pointer;
+    transition:box-shadow .16s,transform .16s}
+.mc:hover{box-shadow:var(--g3);transform:translateY(-1px)}
+.mc::after{content:'';position:absolute;right:-26px;top:-26px;width:104px;height:104px;
+  border-radius:50%;background:currentColor;opacity:.05;pointer-events:none}
+.mc-ik{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;background:currentColor}
+.mc-ik i{font-size:21px;color:#fff}
+.mc-gov{min-width:0}
+.mc[data-renk]{color:var(--mavi)}
+.mc[data-renk="mavi"]{color:#1B4FA8}
+.mc[data-renk="yesil"]{color:#0C7A52}
+.mc[data-renk="amber"]{color:#A96109}
+.mc[data-renk="mor"]{color:#5B3FA8}
+.mc[data-renk]::before{background:currentColor}
+.mc .mc-val{color:var(--text);margin-bottom:4px}
+.mc .mc-label{margin-bottom:0}
+
+/* ═══ FAVORİLER çubuğu ══════════════════════════ */
+.fav-bar{display:flex;align-items:center;gap:14px;background:var(--surface);
+  border-radius:var(--r2);padding:11px 16px;margin-bottom:18px;box-shadow:var(--g1);
+  border:1px solid var(--hairline);flex-wrap:wrap}
+.fav-bas{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:700;
+  letter-spacing:.09em;color:#A96109;white-space:nowrap}
+.fav-bas i{font-size:14px}
+.fav-liste{display:flex;gap:7px;flex-wrap:wrap;flex:1;min-width:0;align-items:center}
+.fav-cip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:9px;
+  background:var(--kuyu);border:1px solid var(--border);font-size:12.5px;font-weight:500;
+  color:var(--text);cursor:pointer;transition:border-color .14s,background .14s}
+.fav-cip:hover{border-color:var(--mavi-ince);background:var(--mavi-zem)}
+.fav-cip i{font-size:15px;color:var(--muted)}
+.fav-bos{font-size:12.5px;color:var(--hint)}
+.navyil{margin-left:auto;font-size:14px;opacity:0;color:rgba(255,255,255,.45);
+  transition:opacity .14s,color .14s;flex-shrink:0}
+.navitem:hover .navyil{opacity:.8}
+.navyil.dolu{opacity:1;color:#E8C96A}
+.sidebar.collapsed .navyil{display:none}
+
+/* ═══ Duyurular ═════════════════════════════════ */
+.dy{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--hairline)}
+.dy:last-child{border-bottom:none;padding-bottom:0}
+.dy-ik{width:28px;height:28px;border-radius:8px;background:var(--mavi-zem);color:var(--mavi);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+.dy-gov{min-width:0;flex:1}
+.dy-bas{font-size:13.5px;font-weight:600;color:var(--text);line-height:1.4}
+.dy-alt{display:flex;align-items:center;gap:8px;margin-top:4px}
+.dy-et{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:7px;
+  background:var(--mavi-zem);color:var(--mavi)}
+.dy-et.yeni{background:var(--green-zem);color:var(--green)}
+.dy-tar{font-size:11.5px;color:var(--hint)}
+
+/* ═══ Isı haritası ══════════════════════════════ */
+.isi-sar{overflow-x:auto;padding-bottom:4px}
+.isi{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,11px);gap:3px;min-width:min-content}
+.isi i{width:11px;height:11px;border-radius:2.5px;background:#EEF1F6;display:block}
+.isi i[data-s="1"]{background:#CFE0F7}
+.isi i[data-s="2"]{background:#9CC0EE}
+.isi i[data-s="3"]{background:#5B92DC}
+.isi i[data-s="4"]{background:#1B4FA8}
+.isi-ac{display:flex;align-items:center;gap:4px;margin-top:11px;font-size:11px;color:var(--hint)}
+.isi-ac i{width:11px;height:11px;border-radius:2.5px;background:#EEF1F6;display:block}
+.isi-ac i[data-s="1"]{background:#CFE0F7}
+.isi-ac i[data-s="2"]{background:#9CC0EE}
+.isi-ac i[data-s="3"]{background:#5B92DC}
+.isi-ac i[data-s="4"]{background:#1B4FA8}
+.isi-ac span:first-child{margin-right:3px}
+.isi-ac span:last-child{margin-left:3px}
+
+/* ═══ Üçlü ızgara ═══════════════════════════════ */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid2>*,.grid3>*,.metrics>*{min-width:0}
+.mini{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--hairline)}
+.mini:last-child{border-bottom:none;padding-bottom:0}
+.mini-nk{width:3px;border-radius:2px;flex-shrink:0;background:var(--mavi)}
+.mini-gov{min-width:0;flex:1}
+.mini-bas{font-size:13px;font-weight:600;color:var(--text);line-height:1.4;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini-alt{font-size:11.5px;color:var(--hint);margin-top:2px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini-rz{font-size:11px;font-weight:600;padding:2px 8px;border-radius:7px;white-space:nowrap;
+  align-self:flex-start}
+.ana-bos{text-align:center;padding:22px 0;color:var(--hint);font-size:12.5px}
+
+@media(max-width:1100px){
+  .grid3{grid-template-columns:1fr}
+}
+@media(max-width:820px){
+  .metrics{grid-template-columns:1fr 1fr}
+}
+@media(max-width:520px){
+  .metrics{grid-template-columns:1fr}
+  .mc-val{font-size:24px}
+}
+
+
 /* ═══ TABLO ══════════════════════════════════════ */
 .tbl-wrap{overflow-x:auto;border-radius:var(--r);background:var(--surface)}
 .tbl{width:100%;border-collapse:collapse;font-size:13.5px}
@@ -314,6 +410,9 @@ input,select,textarea,button{font-family:inherit;font-size:inherit;color:inherit
   .content{padding:18px 16px}
   .topbar{padding:0 16px}
   .card{padding:17px 18px}
+  .tbtn-ad{display:none}
+  .topbar .tbtn{padding-left:11px;padding-right:11px}
+  .page-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 }
 
 .auth-screen{position:fixed;inset:0;z-index:9999;padding:24px;
@@ -549,8 +648,8 @@ var sb = window.sb
     <div class="page-title" id="page-title">Anasayfa</div>
     <div style="display:flex;gap:8px;align-items:center">
       <span id="senkron-rozet" style="font-size:11.5px;color:#8D99AE;display:flex;align-items:center;gap:5px;white-space:nowrap" title="Bulut senkronizasyon durumu"><i class="ti ti-cloud"></i></span>
-      <button class="tbtn" onclick="showModal('muvekkil')"><i class="ti ti-user-plus"></i>Müvekkil Ekle</button>
-      <button class="tbtn primary" onclick="showModal('dava')"><i class="ti ti-plus"></i>Yeni Dava</button>
+      <button class="tbtn" onclick="showModal('muvekkil')"><i class="ti ti-user-plus"></i><span class="tbtn-ad">Müvekkil Ekle</span></button>
+      <button class="tbtn primary" onclick="showModal('dava')"><i class="ti ti-plus"></i><span class="tbtn-ad">Yeni Dava</span></button>
     </div>
   </div>
 
@@ -574,11 +673,73 @@ var sb = window.sb
         <div id="yaklasan-liste"></div>
       </div>
       <div class="metrics">
-        <div class="mc"><div class="mc-label">Müvekkil</div><div class="mc-val" id="s-mv">0</div></div>
-        <div class="mc"><div class="mc-label">Açık Dava</div><div class="mc-val" id="s-dv">0</div></div>
-        <div class="mc"><div class="mc-label">Bekleyen Görev</div><div class="mc-val" id="s-gv">0</div></div>
-        <div class="mc"><div class="mc-label">Bu Ay Tahsilat</div><div class="mc-val" id="s-th">₺0</div></div>
+        <div class="mc" data-renk="mavi" onclick="sp('muvekkiller',null)">
+          <div class="mc-ik"><i class="ti ti-users"></i></div>
+          <div class="mc-gov"><div class="mc-val" id="s-mv">0</div><div class="mc-label">Aktif Müvekkil</div></div>
+        </div>
+        <div class="mc" data-renk="yesil" onclick="sp('davalar',null)">
+          <div class="mc-ik"><i class="ti ti-briefcase"></i></div>
+          <div class="mc-gov"><div class="mc-val" id="s-dv">0</div><div class="mc-label">Açık Dava</div></div>
+        </div>
+        <div class="mc" data-renk="amber" onclick="sp('gorevler',null)">
+          <div class="mc-ik"><i class="ti ti-checkbox"></i></div>
+          <div class="mc-gov"><div class="mc-val" id="s-gv">0</div><div class="mc-label">Bekleyen Görev</div></div>
+        </div>
+        <div class="mc" data-renk="mor" onclick="sp('finans',null)">
+          <div class="mc-ik"><i class="ti ti-coin"></i></div>
+          <div class="mc-gov"><div class="mc-val" id="s-th">₺0</div><div class="mc-label">Bu Ay Tahsilat</div></div>
+        </div>
       </div>
+
+      <!-- FAVORİLER -->
+      <div class="fav-bar">
+        <span class="fav-bas"><i class="ti ti-star-filled"></i>FAVORİLER</span>
+        <div class="fav-liste" id="fav-liste"></div>
+      </div>
+
+      <div class="grid2">
+        <!-- DUYURULAR -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title"><i class="ti ti-speakerphone" style="color:var(--mavi);margin-right:7px"></i>Duyurular</div>
+            <div class="card-link" id="duyuru-tum" style="display:none" onclick="duyuruTumu()">Tümünü göster →</div>
+          </div>
+          <div id="d-duyuru"></div>
+        </div>
+
+        <!-- AKTİFLİK -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title"><i class="ti ti-chart-dots" style="color:var(--mavi);margin-right:7px"></i>Dosya Hareketliliği</div>
+            <div style="text-align:right">
+              <div style="font-size:10px;letter-spacing:.07em;color:var(--hint);font-weight:600">EN UZUN SERİ</div>
+              <div style="font-size:13px;font-weight:700" id="isi-seri">0 gün</div>
+            </div>
+          </div>
+          <div style="font-size:19px;font-weight:700;letter-spacing:-.03em;margin-bottom:12px" id="isi-aktif">0 günlük seri</div>
+          <div class="isi-sar"><div class="isi" id="isi-grid"></div></div>
+          <div class="isi-ac"><span>Az</span><i data-s="0"></i><i data-s="1"></i><i data-s="2"></i><i data-s="3"></i><i data-s="4"></i><span>Çok</span></div>
+        </div>
+      </div>
+
+      <div class="grid3">
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-calendar-event" style="color:var(--mavi);margin-right:7px"></i>Bu Hafta</div>
+            <div class="card-link" onclick="sp('takvim',null)">Takvim →</div></div>
+          <div id="d-hafta"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-hourglass-high" style="color:var(--red);margin-right:7px"></i>Dolan Süreler</div>
+            <div class="card-link" onclick="sp('sure',null)">Tümü →</div></div>
+          <div id="d-sure"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-file-text" style="color:var(--mavi);margin-right:7px"></i>Son Belgeler</div>
+            <div class="card-link" onclick="sp('belgeler',null)">Tümü →</div></div>
+          <div id="d-belge"></div>
+        </div>
+      </div>
+
       <div class="grid2">
         <div class="card">
           <div class="card-head"><div class="card-title">Son Müvekkiller</div><div class="card-link" onclick="sp('muvekkiller',null)">Tümü →</div></div>
@@ -594,6 +755,7 @@ var sb = window.sb
         <div id="d-dv"></div>
       </div>
     </div>
+
 
     <!-- MÜVEKKİLLER -->
     <div class="panel" id="panel-muvekkiller">
@@ -3884,7 +4046,8 @@ function ckYazdir(icerik){
 function ciktiDava(id, e){
   if(e) e.stopPropagation()
   const d = DB.davalar.find(function(x){ return String(x.id)===String(id) }); if(!d) return
-  const mv = DB.muvekkiller.find(function(m){ return String(m.id)===String(d.muvekkılId) })
+  const mv = DB.muvekkiller.find(function(m){
+    return String(m.id)===String(d.muvekkilId) || (m.ad+' '+m.soyad)===d.muvekkil })
   const gv = DB.gorevler.filter(function(g){ return g.dava===d.dosyaNo })
   const bl = DB.belgeler.filter(function(b){ return b.dava===d.dosyaNo })
   const fn = DB.finanslar.filter(function(f){
@@ -6045,7 +6208,7 @@ function renderAll(){
   document.getElementById('s-mv').textContent=mv.length
   document.getElementById('s-dv').textContent=dv.filter(d=>d.durum!=='sonuclandi').length
   document.getElementById('s-gv').textContent=gv.filter(g=>g.durum!=='tamamlandi').length
-  renderMv(); renderDv(); renderGv(); renderDash(); uyariKontrol(); setTimeout(()=>{ document.querySelectorAll('.panel').forEach(p=>{ if(!p.querySelector('.ln-footer')){ const d=document.createElement('div'); d.className='ln-footer'; d.innerHTML='<strong style="color:#53627A">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#1B4FA8;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır'; d.style.cssText='text-align:center;padding:24px 0 4px;font-size:12px;color:#8D99AE;border-top:0.5px solid #E3E9F2;margin-top:28px'; p.appendChild(d) } }) },200)
+  renderMv(); renderDv(); renderGv(); renderDash(); uyariKontrol(); anaYenile(); setTimeout(()=>{ document.querySelectorAll('.panel').forEach(p=>{ if(!p.querySelector('.ln-footer')){ const d=document.createElement('div'); d.className='ln-footer'; d.innerHTML='<strong style="color:#53627A">Dosya360</strong> — Bir <a href="https://otukenmedya.com" target="_blank" style="color:#1B4FA8;text-decoration:none;font-weight:500">Ötüken Medya</a> yazılımıdır'; d.style.cssText='text-align:center;padding:24px 0 4px;font-size:12px;color:#8D99AE;border-top:0.5px solid #E3E9F2;margin-top:28px'; p.appendChild(d) } }) },200)
 }
 
 // ── UYARI SİSTEMİ ─────────────────────────────────────────────
@@ -6072,7 +6235,8 @@ function uyariKontrol(){
   }
 
   banner.style.display='flex'
-  kart.style.display='block'
+  // Ust bantta zaten gorunuyor; anasayfada tekrar etmesin
+  kart.style.display='none'
 
   const bannerHTML = yaklasan.map(d=>{
     const t = new Date(d.durusmaTarihi)
@@ -6164,6 +6328,7 @@ async function uygulamaAc(user) {
   loadSettings(); renderAll(); sesButonlariHazirla()
   await modulleriYukle(); ekipYukle(); setTimeout(abonelikYukle, 500)
   setTimeout(sohbetRozet, 1200)
+  duyuruYukle(); setTimeout(function(){ sureYukle().then(anaYenile) }, 700)
   logla('giris', user.email)
 }
 
@@ -6545,5 +6710,257 @@ sb.auth.getSession().then(async ({ data: { session } }) => {
 })()
 </script>
 
+<script>
+
+// ══ ANASAYFA · favoriler, duyurular, ısı haritası ═══════════
+let duyurular = []
+
+function favOku(){
+  try{ return JSON.parse(localStorage.getItem('d360-fav') || '[]') }catch(e){ return [] }
+}
+function favYaz(l){
+  try{ localStorage.setItem('d360-fav', JSON.stringify(l)) }catch(e){}
+}
+function favCevir(panel, ad, ikon, olay){
+  if(olay) olay.stopPropagation()
+  const l = favOku()
+  const i = l.findIndex(function(x){ return x.panel === panel })
+  if(i > -1) l.splice(i, 1)
+  else { if(l.length >= 6) l.shift(); l.push({ panel: panel, ad: ad, ikon: ikon }) }
+  favYaz(l); favKur(); favCiz()
+}
+function favGit(panel){
+  document.querySelectorAll('.sidebar .navitem').forEach(function(n){
+    if((n.getAttribute('onclick')||'').indexOf("'" + panel + "'") > -1) n.click()
+  })
+}
+function favKur(){
+  const l = favOku()
+  document.querySelectorAll('.sidebar .navitem').forEach(function(n){
+    const o = n.getAttribute('onclick') || ''
+    const m = o.match(/sp\('([^']+)'/)
+    if(!m) return
+    const panel = m[1]
+    const ad = (n.querySelector('.nav-label') || {}).textContent || panel
+    const ik = n.querySelector('i')
+    const ikon = (ik && ik.className.replace('ti ', '').split(' ')[0]) || 'ti-square'
+    let y = n.querySelector('.navyil')
+    if(!y){
+      y = document.createElement('i')
+      y.className = 'ti navyil'
+      n.appendChild(y)
+      y.onclick = function(e){ favCevir(panel, ad.trim(), ikon, e) }
+    }
+    const dolu = l.some(function(x){ return x.panel === panel })
+    y.classList.toggle('dolu', dolu)
+    y.classList.toggle('ti-star-filled', dolu)
+    y.classList.toggle('ti-star', !dolu)
+    y.title = dolu ? 'Favorilerden çıkar' : 'Favorilere ekle'
+  })
+}
+function favCiz(){
+  const el = document.getElementById('fav-liste')
+  if(!el) return
+  const l = favOku()
+  if(!l.length){
+    el.innerHTML = '<span class="fav-bos">Sık kullandığın ekranları sol menüden yıldızla, burada kısa yol olarak görünsün.</span>'
+    return
+  }
+  el.innerHTML = l.map(function(x){
+    return '<span class="fav-cip" onclick="favGit(\'' + x.panel + '\')">'
+         + '<i class="ti ' + x.ikon + '"></i>' + anaKac(x.ad) + '</span>'
+  }).join('')
+}
+
+function anaKac(s){
+  return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){
+    return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c] })
+}
+function anaTr(t){
+  if(!t) return '—'
+  const d = new Date(t)
+  if(isNaN(d)) return String(t)
+  return d.toLocaleDateString('tr-TR', { day:'2-digit', month:'short' })
+}
+
+// ── Duyurular ──────────────────────────────────────────────
+async function duyuruYukle(){
+  const el = document.getElementById('d-duyuru')
+  if(!el) return
+  if(!window.sb || !sbUser){ duyuruCiz([]); return }
+  try{
+    const { data, error } = await window.sb.from('duyurular')
+      .select('id,baslik,tur,yayin_tarihi,icerik')
+      .lte('yayin_tarihi', new Date().toISOString().slice(0,10))
+      .order('yayin_tarihi', { ascending:false }).limit(20)
+    if(error) throw error
+    duyurular = data || []
+  }catch(e){ duyurular = [] }
+  duyuruCiz(duyurular.slice(0, 5))
+  const t = document.getElementById('duyuru-tum')
+  if(t) t.style.display = duyurular.length > 5 ? 'block' : 'none'
+}
+function duyuruCiz(liste){
+  const el = document.getElementById('d-duyuru')
+  if(!el) return
+  if(!liste.length){
+    el.innerHTML = '<div class="ana-bos">Şu an duyuru yok.<br>Yeni özellikler burada görünecek.</div>'
+    return
+  }
+  const bugun = new Date(); bugun.setHours(0,0,0,0)
+  el.innerHTML = liste.map(function(d){
+    const t = new Date(d.yayin_tarihi)
+    const yeni = !isNaN(t) && (bugun - t) / 86400000 <= 7
+    return '<div class="dy">'
+      + '<span class="dy-ik"><i class="ti ti-speakerphone"></i></span>'
+      + '<div class="dy-gov">'
+      +   '<div class="dy-bas">' + anaKac(d.baslik) + '</div>'
+      +   '<div class="dy-alt">'
+      +     '<span class="dy-et' + (yeni ? ' yeni' : '') + '">' + anaKac(d.tur || 'Duyuru') + '</span>'
+      +     '<span class="dy-tar">' + anaTr(d.yayin_tarihi) + '</span>'
+      +   '</div>'
+      + '</div></div>'
+  }).join('')
+}
+function duyuruTumu(){ duyuruCiz(duyurular) }
+
+// ── Isı haritası ───────────────────────────────────────────
+function isiCiz(){
+  const grid = document.getElementById('isi-grid')
+  if(!grid) return
+  const say = {}
+  function ekle(t){
+    if(!t) return
+    const g = String(t).slice(0, 10)
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(g)) return
+    say[g] = (say[g] || 0) + 1
+  }
+  try{
+    DB.davalar.forEach(function(d){ ekle(d.durusmaTarihi); ekle(d.acilisTarihi) })
+    DB.gorevler.forEach(function(g){ ekle(g.tarih) })
+    DB.finanslar.forEach(function(f){ ekle(f.tarih) })
+    DB.belgeler.forEach(function(b){ ekle(b.tarih) })
+    DB.etkinlikler.forEach(function(e){ ekle(e.tarih) })
+  }catch(e){}
+
+  const HAFTA = 26
+  const bugun = new Date(); bugun.setHours(0,0,0,0)
+  const bitis = new Date(bugun)
+  bitis.setDate(bitis.getDate() + (6 - bitis.getDay()))   // haftanın sonu (cmt)
+  const bas = new Date(bitis)
+  bas.setDate(bas.getDate() - (HAFTA * 7 - 1))
+
+  let html = '', seri = 0, enUzun = 0, suan = 0
+  const gunler = []
+  for(let d = new Date(bas); d <= bitis; d.setDate(d.getDate() + 1)){
+    const g = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0')
+            + '-' + String(d.getDate()).padStart(2,'0')
+    const n = say[g] || 0
+    gunler.push({ gun:g, n:n, ileri: d > bugun })
+    const s = n === 0 ? 0 : n === 1 ? 1 : n <= 3 ? 2 : n <= 6 ? 3 : 4
+    html += '<i data-s="' + s + '" title="' + g + ' · ' + n + ' kayıt"></i>'
+  }
+  grid.innerHTML = html
+
+  gunler.forEach(function(x){
+    if(x.ileri) return
+    if(x.n > 0){ seri++; if(seri > enUzun) enUzun = seri } else seri = 0
+  })
+  // bugünden geriye doğru kesintisiz seri
+  for(let i = gunler.length - 1; i >= 0; i--){
+    if(gunler[i].ileri) continue
+    if(gunler[i].n > 0) suan++
+    else break
+  }
+  const a = document.getElementById('isi-aktif'); if(a) a.textContent = suan + ' günlük seri'
+  const b = document.getElementById('isi-seri');  if(b) b.textContent = enUzun + ' gün'
+}
+
+// ── Bu hafta · Dolan süreler · Son belgeler ────────────────
+function anaHafta(){
+  const el = document.getElementById('d-hafta')
+  if(!el) return
+  const bugun = new Date(); bugun.setHours(0,0,0,0)
+  const son = new Date(bugun); son.setDate(son.getDate() + 7)
+  const sat = []
+  DB.davalar.forEach(function(d){
+    if(!d.durusmaTarihi || d.durum === 'sonuclandi') return
+    const t = new Date(d.durusmaTarihi); t.setHours(0,0,0,0)
+    if(t < bugun || t > son) return
+    sat.push({ t:t, bas:(d.dosyaNo||'Dosya') + ' · duruşma', alt:d.mahkeme||'', renk:'#1B4FA8' })
+  })
+  try{
+    DB.etkinlikler.forEach(function(e){
+      if(!e.tarih) return
+      const t = new Date(e.tarih); t.setHours(0,0,0,0)
+      if(t < bugun || t > son) return
+      sat.push({ t:t, bas:e.baslik||'Etkinlik', alt:e.aciklama||e.tur||'', renk:'#0C7A52' })
+    })
+  }catch(e){}
+  DB.gorevler.forEach(function(g){
+    if(g.durum === 'tamamlandi' || !g.tarih) return
+    const t = new Date(g.tarih); t.setHours(0,0,0,0)
+    if(t < bugun || t > son) return
+    sat.push({ t:t, bas:g.baslik||'Görev', alt:g.dava && g.dava !== '—' ? g.dava : 'Görev', renk:'#A96109' })
+  })
+  sat.sort(function(a,b){ return a.t - b.t })
+  if(!sat.length){ el.innerHTML = '<div class="ana-bos">Bu hafta planlanmış bir şey yok.</div>'; return }
+  el.innerHTML = sat.slice(0, 5).map(function(s){
+    return '<div class="mini"><span class="mini-nk" style="background:' + s.renk + '"></span>'
+      + '<div class="mini-gov"><div class="mini-bas">' + anaKac(s.bas) + '</div>'
+      + '<div class="mini-alt">' + anaKac(s.alt) + '</div></div>'
+      + '<span class="mini-rz" style="background:var(--mavi-zem);color:var(--mavi)">'
+      + anaTr(s.t) + '</span></div>'
+  }).join('')
+}
+
+function anaSure(){
+  const el = document.getElementById('d-sure')
+  if(!el) return
+  const liste = (typeof srTakipler !== 'undefined' ? srTakipler : [])
+    .filter(function(t){ return t.durum === 'acik' })
+  if(!liste.length){
+    el.innerHTML = '<div class="ana-bos">Takip edilen açık süre yok.</div>'
+    return
+  }
+  const bugun = new Date(); bugun.setHours(0,0,0,0)
+  liste.sort(function(a,b){ return new Date(a.son_tarih) - new Date(b.son_tarih) })
+  el.innerHTML = liste.slice(0, 5).map(function(t){
+    const kalan = Math.round((new Date(t.son_tarih) - bugun) / 86400000)
+    let renk = '#1B4FA8', zem = 'var(--mavi-zem)', metin = kalan + ' gün'
+    if(kalan < 0){ renk = '#C02626'; zem = 'var(--red-zem)'; metin = Math.abs(kalan) + ' gün geçti' }
+    else if(kalan <= 3){ renk = '#C02626'; zem = 'var(--red-zem)' }
+    else if(kalan <= 7){ renk = '#A96109'; zem = 'var(--amber-zem)' }
+    return '<div class="mini"><span class="mini-nk" style="background:' + renk + '"></span>'
+      + '<div class="mini-gov"><div class="mini-bas">' + anaKac(t.islem) + '</div>'
+      + '<div class="mini-alt">' + anaKac(t.dosya_no || t.dayanak || '') + '</div></div>'
+      + '<span class="mini-rz" style="background:' + zem + ';color:' + renk + '">' + metin + '</span></div>'
+  }).join('')
+}
+
+function anaBelge(){
+  const el = document.getElementById('d-belge')
+  if(!el) return
+  const bl = DB.belgeler.slice(-5).reverse()
+  if(!bl.length){ el.innerHTML = '<div class="ana-bos">Henüz belge yok.</div>'; return }
+  el.innerHTML = bl.map(function(b){
+    return '<div class="mini"><span class="mini-nk"></span>'
+      + '<div class="mini-gov"><div class="mini-bas">' + anaKac(b.ad || 'Belge') + '</div>'
+      + '<div class="mini-alt">' + anaKac(b.kategori || '') + (b.dava ? ' · ' + anaKac(b.dava) : '') + '</div></div>'
+      + '<span class="mini-rz" style="background:var(--kuyu);color:var(--muted)">'
+      + anaTr(b.tarih) + '</span></div>'
+  }).join('')
+}
+
+function anaYenile(){
+  try{ favKur(); favCiz() }catch(e){}
+  try{ isiCiz() }catch(e){}
+  try{ anaHafta() }catch(e){}
+  try{ anaSure() }catch(e){}
+  try{ anaBelge() }catch(e){}
+}
+window.anaYenile = anaYenile
+
+</script>
 </body>
 </html>
