@@ -6360,5 +6360,190 @@ sb.auth.getSession().then(async ({ data: { session } }) => {
 })()
 </script>
 
+
+<!-- ══ HIZLI ARAMA (Ctrl+K) ═════════════════════════════ -->
+<style>
+#ka-ort{position:fixed;inset:0;z-index:4000;display:none;background:rgba(10,18,32,.5);
+        backdrop-filter:blur(3px);padding:90px 20px 20px}
+#ka-ort.acik{display:block}
+#ka-kutu{max-width:560px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden;
+         box-shadow:0 24px 60px rgba(10,18,32,.3);border:1px solid rgba(10,18,32,.08)}
+#ka-ust{display:flex;align-items:center;gap:11px;padding:15px 18px;border-bottom:1px solid #EBEEF2}
+#ka-ust i{font-size:19px;color:#98A2B3}
+#ka-gir{flex:1;border:none;outline:none;font-size:15.5px;font-family:inherit;color:#0C111D;background:none}
+#ka-gir::placeholder{color:#98A2B3}
+#ka-esc{font-size:10.5px;color:#98A2B3;border:1px solid #E4E7EC;border-radius:5px;padding:2px 6px}
+#ka-liste{max-height:380px;overflow-y:auto;padding:7px}
+.ka-bas{font-size:10px;font-weight:600;color:#98A2B3;letter-spacing:.07em;padding:10px 11px 5px}
+.ka-sat{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:9px;cursor:pointer}
+.ka-sat i{font-size:17px;color:#667085;width:17px;text-align:center;flex-shrink:0}
+.ka-ad{font-size:13.5px;color:#1D2939;font-weight:500}
+.ka-alt{font-size:11.5px;color:#98A2B3;margin-left:auto;white-space:nowrap}
+.ka-sat.sec{background:rgba(201,168,76,.13)}
+.ka-sat.sec i,.ka-sat.sec .ka-ad{color:#0C111D}
+.ka-yok{padding:26px 14px;text-align:center;color:#98A2B3;font-size:13px}
+#ka-dip{display:flex;gap:14px;padding:9px 16px;border-top:1px solid #EBEEF2;
+        font-size:11px;color:#98A2B3;background:#FBFCFD}
+#ka-ac{display:flex;align-items:center;gap:7px;width:100%;margin:0 0 4px;padding:8px 11px;
+       background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:9px;
+       color:rgba(255,255,255,.5);font-size:12.5px;font-family:inherit;cursor:pointer;
+       transition:background .14s,color .14s}
+#ka-ac:hover{background:rgba(255,255,255,.12);color:rgba(255,255,255,.85)}
+#ka-ac i{font-size:16px;flex-shrink:0}
+#ka-ac kbd{margin-left:auto;font-family:inherit;font-size:10px;border:1px solid rgba(255,255,255,.18);
+           border-radius:4px;padding:1px 5px}
+.sidebar.collapsed #ka-ac span,.sidebar.collapsed #ka-ac kbd{display:none}
+.sidebar.collapsed #ka-ac{justify-content:center}
+@media(max-width:900px){#ka-ort{padding-top:60px}}
+</style>
+<div id="ka-ort" onclick="if(event.target===this)kaKapat()">
+  <div id="ka-kutu">
+    <div id="ka-ust">
+      <i class="ti ti-search"></i>
+      <input id="ka-gir" placeholder="Müvekkil, dosya no veya ekran ara..." autocomplete="off">
+      <span id="ka-esc">ESC</span>
+    </div>
+    <div id="ka-liste"></div>
+    <div id="ka-dip"><span>↑↓ gezin</span><span>↵ aç</span><span>esc kapat</span></div>
+  </div>
+</div>
+<script>
+(function(){
+  var sec = 0, sonuc = []
+
+  function ekranlar(){
+    var out = []
+    document.querySelectorAll('.sidebar .navitem').forEach(function(n){
+      if(n.classList.contains('kilitli')) return
+      var ad = n.querySelector('.nav-label')
+      var ik = n.querySelector('i')
+      if(!ad) return
+      out.push({ tur:'Ekran', ad:ad.textContent.trim(),
+                 ikon:(ik && ik.className.replace('ti ','')) || 'ti-square',
+                 git:function(){ kaKapat(); n.click() } })
+    })
+    return out
+  }
+
+  function kayitlar(q){
+    var out = []
+    try{
+      if(typeof DB === 'undefined') return out
+      var mv = DB.muvekkiller || []
+      for(var i=0; i<mv.length && out.length<6; i++){
+        var m = mv[i]
+        var tam = ((m.ad||'')+' '+(m.soyad||'')).trim()
+        if(!((tam+' '+(m.tel||'')+' '+(m.tc||'')).toLowerCase().indexOf(q) > -1)) continue
+        out.push({ tur:'Müvekkil', ad:tam, alt:m.tel||'', ikon:'ti-user',
+                   git:(function(ad){ return function(){ ekranaGit('muvekkiller', ad) } })(tam) })
+      }
+    }catch(e){}
+    try{
+      var dv = (typeof DB !== 'undefined' && DB.davalar) || []
+      for(var j=0; j<dv.length && out.length<12; j++){
+        var d = dv[j]
+        var et = [d.dosyaNo, d.mahkeme, d.muvekkilAd, d.karsiTaraf].join(' ')
+        if(et.toLowerCase().indexOf(q) === -1) continue
+        out.push({ tur:'Dava', ad:d.dosyaNo || 'Dosya', alt:d.mahkeme||'', ikon:'ti-briefcase',
+                   git:(function(no){ return function(){ ekranaGit('davalar', no) } })(d.dosyaNo||'') })
+      }
+    }catch(e){}
+    return out
+  }
+
+  function ekranaGit(panel, arama){
+    var hedef = null
+    document.querySelectorAll('.sidebar .navitem').forEach(function(n){
+      var o = n.getAttribute('onclick') || ''
+      if(o.indexOf("'" + panel + "'") > -1) hedef = n
+    })
+    if(hedef) hedef.click()
+    kaKapat()
+    setTimeout(function(){
+      try{
+        if(panel === 'muvekkiller'){
+          var g = document.querySelector('#panel-muvekkiller .search-bar input')
+          if(g){ g.value = arama; renderMv(arama) }
+        } else if(panel === 'davalar'){
+          var d = document.getElementById('dv-ara')
+          if(d){ d.value = arama; renderDv() }
+        }
+      }catch(e){}
+    }, 120)
+  }
+
+  function ciz(){
+    var q = (document.getElementById('ka-gir').value || '').trim().toLowerCase()
+    var ek = ekranlar().filter(function(x){ return !q || x.ad.toLowerCase().indexOf(q) > -1 })
+    var ky = q.length >= 2 ? kayitlar(q) : []
+    sonuc = ky.concat(ek.slice(0, q ? 6 : 8))
+    if(sec >= sonuc.length) sec = 0
+
+    var h = '', onceki = null
+    if(!sonuc.length){
+      h = '<div class="ka-yok">Sonuç yok</div>'
+    } else {
+      for(var i=0; i<sonuc.length; i++){
+        var s = sonuc[i]
+        if(s.tur !== onceki){ h += '<div class="ka-bas">' + s.tur.toUpperCase() + '</div>'; onceki = s.tur }
+        h += '<div class="ka-sat' + (i===sec ? ' sec' : '') + '" data-i="' + i + '">'
+           + '<i class="ti ' + s.ikon + '"></i><span class="ka-ad">' + kaKac(s.ad) + '</span>'
+           + (s.alt ? '<span class="ka-alt">' + kaKac(s.alt) + '</span>' : '') + '</div>'
+      }
+    }
+    var l = document.getElementById('ka-liste')
+    l.innerHTML = h
+    l.querySelectorAll('.ka-sat').forEach(function(r){
+      r.onclick = function(){ var x = sonuc[+r.getAttribute('data-i')]; if(x) x.git() }
+    })
+    var akt = l.querySelector('.ka-sat.sec')
+    if(akt && akt.scrollIntoView) akt.scrollIntoView({ block:'nearest' })
+  }
+
+  function kaKac(s){
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c] })
+  }
+
+  window.kaAc = function(){
+    var o = document.getElementById('ka-ort')
+    if(document.querySelector('.auth-screen') &&
+       getComputedStyle(document.querySelector('.auth-screen')).display !== 'none') return
+    o.classList.add('acik'); sec = 0
+    var g = document.getElementById('ka-gir'); g.value = ''
+    ciz(); setTimeout(function(){ g.focus() }, 30)
+  }
+  window.kaKapat = function(){ document.getElementById('ka-ort').classList.remove('acik') }
+
+  document.getElementById('ka-gir').addEventListener('input', function(){ sec = 0; ciz() })
+
+  document.addEventListener('keydown', function(e){
+    var acik = document.getElementById('ka-ort').classList.contains('acik')
+    if((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')){
+      e.preventDefault(); acik ? kaKapat() : kaAc(); return
+    }
+    if(!acik) return
+    if(e.key === 'Escape'){ kaKapat() }
+    else if(e.key === 'ArrowDown'){ e.preventDefault(); if(sonuc.length){ sec = (sec+1) % sonuc.length; ciz() } }
+    else if(e.key === 'ArrowUp'){ e.preventDefault(); if(sonuc.length){ sec = (sec-1+sonuc.length) % sonuc.length; ciz() } }
+    else if(e.key === 'Enter'){ e.preventDefault(); if(sonuc[sec]) sonuc[sec].git() }
+  })
+
+  // kenar cubuguna arama dugmesi
+  function dugmeKur(){
+    var nav = document.querySelector('.sidebar .nav')
+    if(!nav || document.getElementById('ka-ac')) return
+    var d = document.createElement('button')
+    d.id = 'ka-ac'; d.type = 'button'; d.title = 'Hızlı arama'
+    d.innerHTML = '<i class="ti ti-search"></i><span>Ara</span><kbd>Ctrl K</kbd>'
+    d.onclick = kaAc
+    nav.insertBefore(d, nav.firstChild)
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', dugmeKur)
+  } else { dugmeKur() }
+})()
+</script>
+
 </body>
 </html>
