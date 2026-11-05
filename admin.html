@@ -971,7 +971,7 @@ async function durumDegistir(id, mevcutDurum) {
   const mesaj = yeniDurum
     ? 'Bu büronun erişimi yeniden açılacak. Onaylıyor musunuz?'
     : 'Bu büro dondurulacak. Büro ve tüm ekip üyeleri sisteme erişemeyecek, verileri korunacak. Onaylıyor musunuz?'
-  if (!confirm(mesaj)) return
+  if (!await d360Onay(yeniDurum ? 'Büro erişimi açılsın mı?' : 'Büro dondurulsun mu?', mesaj, { onay: yeniDurum ? 'Erişimi aç' : 'Dondur', tehlike: !yeniDurum })) return
 
   const { data, error } = await sb.rpc('buro_durum_degistir', { p_buro_id: id, p_aktif: yeniDurum })
   if (error) { alert('Hata: ' + error.message); return }
@@ -1096,6 +1096,211 @@ sb.auth.getSession().then(({ data: { session } }) => {
   } else { kur() }
   // sonradan açılan ekranlar (modal, şifre değiştirme) için
   setInterval(kur, 1500)
+})()
+</script>
+
+<!-- ── Onay / bilgi penceresi ─────────────────────────────────────────
+     Tarayıcının confirm() ve alert() kutularının yerine geçer.
+     Kullanım:  if(!await d360Onay('Başlık', 'Açıklama')) return
+                await d360Bilgi('Kaydedildi')                        -->
+<style>
+.d360o-ort{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;
+  justify-content:center;padding:20px;background:rgba(12,27,51,.46);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  opacity:0;transition:opacity .16s ease}
+.d360o-ort.ac{opacity:1}
+.d360o-kutu{width:100%;max-width:440px;background:var(--surface,#fff);
+  border-radius:16px;box-shadow:0 4px 12px rgba(15,27,46,.09),0 32px 64px -24px rgba(15,27,46,.34);
+  overflow:hidden;transform:translateY(10px) scale(.975);
+  transition:transform .19s cubic-bezier(.2,.8,.3,1);
+  font-family:inherit}
+.d360o-ort.ac .d360o-kutu{transform:none}
+.d360o-ic{padding:30px 30px 24px;display:flex;gap:18px;align-items:flex-start}
+.d360o-ik{width:46px;height:46px;border-radius:13px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--mavi-zem,#EDF3FD);color:var(--mavi,#1B4FA8)}
+.d360o-kutu[data-tur="tehlike"] .d360o-ik{background:var(--red-zem,#FDEDED);color:var(--red,#C02626)}
+.d360o-ik svg{width:23px;height:23px;display:block}
+.d360o-yazi{flex:1;min-width:0;padding-top:1px}
+.d360o-bas{font-size:17px;font-weight:700;line-height:1.35;color:var(--text,#0F1B2E);
+  letter-spacing:-.012em;margin:0 0 7px;
+  font-family:'Plus Jakarta Sans',inherit}
+.d360o-mes{font-size:14.5px;line-height:1.55;color:var(--muted,#53627A);margin:0;
+  white-space:pre-wrap;word-break:break-word}
+.d360o-mes:empty{display:none}
+.d360o-dip{display:flex;gap:9px;justify-content:flex-end;padding:0 30px 26px}
+.d360o-dg{appearance:none;border:0;cursor:pointer;font:inherit;font-size:14.5px;
+  font-weight:600;padding:10px 18px;border-radius:9px;line-height:1.2;
+  transition:background .13s ease,box-shadow .13s ease,transform .08s ease}
+.d360o-dg:active{transform:translateY(1px)}
+.d360o-dg:focus-visible{outline:2px solid var(--mavi-ac,#2E6FD4);outline-offset:2px}
+.d360o-ipt{background:transparent;color:var(--muted,#53627A);
+  box-shadow:inset 0 0 0 1px var(--border,#E3E9F2)}
+.d360o-ipt:hover{background:var(--kuyu,#F6F8FC);color:var(--text,#0F1B2E)}
+.d360o-ony{background:var(--mavi,#1B4FA8);color:#fff;
+  box-shadow:0 1px 2px rgba(15,27,46,.14)}
+.d360o-ony:hover{background:var(--mavi-ac,#2E6FD4)}
+.d360o-kutu[data-tur="tehlike"] .d360o-ony{background:var(--red,#C02626)}
+.d360o-kutu[data-tur="tehlike"] .d360o-ony:hover{background:#A81F1F}
+@media(max-width:520px){
+  .d360o-ic{padding:26px 22px 20px;gap:15px}
+  .d360o-dip{padding:0 22px 22px;flex-direction:column-reverse}
+  .d360o-dg{width:100%;padding:12px 18px}
+}
+@media(prefers-reduced-motion:reduce){
+  .d360o-ort,.d360o-kutu{transition:none}
+}
+</style>
+<script>
+(function(){
+  'use strict'
+
+  var IK = {
+    soru:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4"/><path d="M12 17.5h.01"/></svg>',
+    uyari:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+    bilgi:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>'
+  }
+
+  /* Metinden tehlike sezgisi — açıkça belirtilmediğinde */
+  function tehlikeMi(s){
+    return /\b(sil|silin|siliniyor|silinecek|kaldır|dondur|dondurul|iptal edil|çıkar|sonland|kapat[ıi]l)/i.test(s || '')
+  }
+
+  function ac(ayar){
+    return new Promise(function(coz){
+      var onayli = false
+
+      var ort = document.createElement('div')
+      ort.className = 'd360o-ort'
+      ort.setAttribute('role','dialog')
+      ort.setAttribute('aria-modal','true')
+
+      var tur = ayar.tehlike ? 'tehlike' : 'normal'
+      var ikon = ayar.bilgi ? IK.bilgi : (ayar.tehlike ? IK.uyari : IK.soru)
+
+      var kutu = document.createElement('div')
+      kutu.className = 'd360o-kutu'
+      kutu.setAttribute('data-tur', tur)
+
+      var ic = document.createElement('div')
+      ic.className = 'd360o-ic'
+      var ik = document.createElement('div')
+      ik.className = 'd360o-ik'
+      ik.innerHTML = ikon
+      var yazi = document.createElement('div')
+      yazi.className = 'd360o-yazi'
+      var h = document.createElement('p')
+      h.className = 'd360o-bas'
+      h.textContent = ayar.baslik || 'Onaylıyor musunuz?'
+      var m = document.createElement('p')
+      m.className = 'd360o-mes'
+      m.textContent = ayar.mesaj || ''
+      yazi.appendChild(h); yazi.appendChild(m)
+      ic.appendChild(ik); ic.appendChild(yazi)
+
+      var dip = document.createElement('div')
+      dip.className = 'd360o-dip'
+
+      var iptal = null
+      if(!ayar.bilgi){
+        iptal = document.createElement('button')
+        iptal.type = 'button'
+        iptal.className = 'd360o-dg d360o-ipt'
+        iptal.textContent = ayar.iptal || 'Vazgeç'
+        dip.appendChild(iptal)
+      }
+      var onay = document.createElement('button')
+      onay.type = 'button'
+      onay.className = 'd360o-dg d360o-ony'
+      onay.textContent = ayar.onay || (ayar.bilgi ? 'Tamam' : (ayar.tehlike ? 'Sil' : 'Onayla'))
+      dip.appendChild(onay)
+
+      kutu.appendChild(ic); kutu.appendChild(dip)
+      ort.appendChild(kutu)
+      document.body.appendChild(ort)
+
+      var oncekiOdak = document.activeElement
+      requestAnimationFrame(function(){
+        ort.classList.add('ac')
+        /* Yıkıcı işlemde odak "Vazgeç"te başlasın: yanlışlıkla Enter'a basan zarar görmesin */
+        var ilkOdak = (ayar.tehlike && iptal) ? iptal : onay
+        try{ ilkOdak.focus() }catch(_){}
+      })
+
+      function kapat(sonuc){
+        onayli = sonuc
+        ort.classList.remove('ac')
+        document.removeEventListener('keydown', tus, true)
+        setTimeout(function(){
+          if(ort.parentNode) ort.parentNode.removeChild(ort)
+          try{ if(oncekiOdak && oncekiOdak.focus) oncekiOdak.focus() }catch(_){}
+          coz(onayli)
+        }, 170)
+      }
+
+      function tus(e){
+        if(e.key === 'Escape'){ e.preventDefault(); e.stopPropagation(); kapat(false) }
+        else if(e.key === 'Enter' && !ayar.tehlike){ e.preventDefault(); e.stopPropagation(); kapat(true) }
+        else if(e.key === 'Tab'){
+          /* odak kutunun içinde dönsün */
+          var odaklanir = kutu.querySelectorAll('button')
+          if(!odaklanir.length) return
+          var ilk = odaklanir[0], son = odaklanir[odaklanir.length - 1]
+          if(e.shiftKey && document.activeElement === ilk){ e.preventDefault(); son.focus() }
+          else if(!e.shiftKey && document.activeElement === son){ e.preventDefault(); ilk.focus() }
+        }
+      }
+
+      onay.addEventListener('click', function(){ kapat(true) })
+      if(iptal) iptal.addEventListener('click', function(){ kapat(false) })
+      ort.addEventListener('mousedown', function(e){ if(e.target === ort) kapat(false) })
+      document.addEventListener('keydown', tus, true)
+    })
+  }
+
+  /* Tek metin verildiğinde ilk paragrafı başlık, gerisini açıklama yapar.
+     Sondaki "Devam edilsin mi?" gibi kalıpları ayıklar. */
+  function coz(baslik, mesaj, secenek){
+    var a = secenek || {}
+    if(mesaj && typeof mesaj === 'object' && !Array.isArray(mesaj)){ a = mesaj; mesaj = undefined }
+    var b = String(baslik == null ? '' : baslik)
+    var m = mesaj == null ? '' : String(mesaj)
+
+    if(!m && b.indexOf('\n\n') > -1){
+      var p = b.split('\n\n')
+      b = p.shift()
+      m = p.join('\n\n')
+    }
+    m = m.replace(/\s*\n*\s*(Devam edilsin mi\?|Onaylıyor musunuz\?|Emin misiniz\?)\s*$/i, '').trim()
+    if(!b){ b = m; m = '' }
+
+    return {
+      baslik: b,
+      mesaj: m,
+      onay: a.onay,
+      iptal: a.iptal,
+      bilgi: !!a.bilgi,
+      tehlike: a.tehlike === undefined ? tehlikeMi(b + ' ' + m) : !!a.tehlike
+    }
+  }
+
+  window.d360Onay = function(baslik, mesaj, secenek){
+    return ac(coz(baslik, mesaj, secenek))
+  }
+
+  window.d360Bilgi = function(mesaj, baslik){
+    var a = coz(baslik || mesaj, baslik ? mesaj : '', { bilgi:true, tehlike:false })
+    a.bilgi = true
+    return ac(a)
+  }
+
+  /* Tarayıcının alert() kutusu da aynı pencereyi kullansın.
+     Geri dönüş değeri kullanılmadığı için çağrı yerlerini değiştirmeye gerek yok. */
+  var yerliAlert = window.alert
+  window.alert = function(mesaj){
+    try{ window.d360Bilgi(String(mesaj == null ? '' : mesaj)) }
+    catch(_){ yerliAlert(mesaj) }
+  }
 })()
 </script>
 
