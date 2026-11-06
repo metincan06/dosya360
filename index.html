@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<!-- Ana ekrana eklenebilsin (iOS + Android) -->
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0C1B33">
+<link rel="icon" type="image/png" sizes="192x192" href="/d360-192.png">
+<link rel="apple-touch-icon" href="/d360-apple-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dosya360">
+<meta name="format-detection" content="telephone=no">
+<title>Dosya360 — Yapay Zekâ Destekli Hukuk Bürosu Yönetim Sistemi</title>
+<meta name="description" content="Dosya360; dava takibi, müvekkil yönetimi, duruşma hatırlatmaları, finans ve ekip yönetimini tek panelde toplayan bulut tabanlı avukat programı. UYAP hızlı erişim, WhatsApp bildirimleri, 360 Asistan.">
+<meta name="keywords" content="hukuk bürosu yönetim sistemi, dava takip programı, avukat programı, yapay zekâ destekli hukuk yazılımı, UYAP entegrasyonlu hukuk programı, bulut tabanlı hukuk yazılımı, müvekkil yönetimi, duruşma takibi">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Ötüken Medya">
+<link rel="canonical" href="https://dosya360.com">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232E6FD4' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z'/></svg>">
+<meta property="og:title" content="Dosya360 — Hukuk Bürosu Yönetim Sistemi">
+<meta property="og:description" content="Dava, müvekkil, duruşma, finans ve ekip yönetimi tek panelde. Bulut tabanlı, kurulum gerektirmez.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dosya360.com">
+<meta property="og:site_name" content="Dosya360">
+<meta property="og:locale" content="tr_TR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dosya360 — Hukuk Bürosu Yönetim Sistemi">
+<meta name="twitter:description" content="Bulut tabanlı avukat programı. Duruşma hatırlatmaları, WhatsApp bildirimleri, 360 Asistan.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Dosya360","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"Avukatlık büroları için bulut tabanlı hukuk bürosu yönetim sistemi.","url":"https://dosya360.com","author":{"@type":"Organization","name":"Ötüken Medya","url":"https://otukenmedya.com"},"offers":{"@type":"Offer","price":"1500","priceCurrency":"TRY"},"inLanguage":"tr"}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --zemin:#F6F8FC;  --yzy:#FFFFFF;    --kuyu:#FAFBFC;
+  --murekkep:#0D1526; --soluk:#58637A; --silik:#8E99AD;
+  --kenar:#E3E9F2;  --ince:#EDF0F4;
+  --altin:#1B4FA8;  --altin-ac:#6EA0F0; --altin-zem:#EDF3FD;
+  --lacivert:#0C1B33; --lacivert2:#15294A;
+  --yesil:#0F7A55;  --kirmizi:#B42318; --amber:#B54708;
+  --r:14px; --r-b:22px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+     background:var(--zemin);color:var(--murekkep);line-height:1.62;
+     -webkit-font-smoothing:antialiased;letter-spacing:-.009em;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+h1,h2,h3,h4{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-.032em;line-height:1.12;font-weight:800}
+.sar{max-width:1120px;margin:0 auto;padding:0 24px}
+.dar{max-width:760px;margin:0 auto;padding:0 24px}
+
+/* ── Giriş canlanması: tek seferlik, ölçülü ──────── */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .55s cubic-bezier(.16,1,.3,1),transform .55s cubic-bezier(.16,1,.3,1)}
+.rv.gor{opacity:1;transform:none}
+.rv-1{transition-delay:.05s}.rv-2{transition-delay:.1s}.rv-3{transition-delay:.15s}
+.rv-4{transition-delay:.2s}.rv-5{transition-delay:.25s}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}*{animation:none!important;transition:none!important}}
+/* JavaScript calismazsa icerik gizli kalmasin */
+.js-yok .rv{opacity:1;transform:none}
+:focus-visible{outline:2.5px solid var(--altin);outline-offset:3px;border-radius:6px}
+
+/* ── Gezinti ─────────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;height:68px;
+    background:rgba(244,246,248,.78);backdrop-filter:blur(16px) saturate(1.4);
+    border-bottom:1px solid transparent;transition:height .22s,border-color .22s,background .22s}
+nav.kucuk{height:58px;border-bottom-color:var(--kenar);background:rgba(252,253,254,.9)}
+.nav-ic{height:100%;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Plus Jakarta Sans',sans-serif;
+      font-weight:800;font-size:17.5px;letter-spacing:-.034em;color:var(--murekkep)}
+.logo svg{width:21px;height:21px;color:#C9A84C;flex-shrink:0}
+.nav-bag{display:flex;gap:4px}
+.nav-bag a{font-size:14px;font-weight:500;color:var(--soluk);padding:8px 14px;border-radius:9px;transition:color .16s,background .16s}
+.nav-bag a:hover{color:var(--murekkep);background:rgba(13,21,38,.045)}
+.nav-cta{display:flex;align-items:center;gap:9px;flex-shrink:0}
+.et-kisa{display:none}
+
+/* ── Düğmeler: hap biçimli ───────────────────────── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+     font-family:inherit;font-size:14.5px;font-weight:600;letter-spacing:-.012em;
+     padding:11px 22px;border-radius:999px;border:1px solid transparent;cursor:pointer;
+     transition:background .16s,border-color .16s,color .16s,transform .16s;white-space:nowrap}
+.btn:active{transform:scale(.985)}
+.btn-koyu{background:var(--lacivert);color:#fff}
+.btn-koyu:hover{background:var(--lacivert2)}
+.btn-altin{background:var(--altin);color:#fff}
+.btn-altin:hover{background:#96742a}
+.btn-cizgi{background:var(--yzy);color:var(--murekkep);border-color:var(--kenar)}
+.btn-cizgi:hover{border-color:#C9CFD9;background:#fff}
+.btn-sade{background:transparent;color:var(--soluk)}
+.btn-sade:hover{color:var(--murekkep);background:rgba(13,21,38,.045)}
+.btn-bk{padding:14px 28px;font-size:15.5px}
+
+/* ── Rozet ───────────────────────────────────────── */
+.rozet{display:inline-flex;align-items:center;gap:8px;background:var(--yzy);
+       border:1px solid var(--kenar);border-radius:999px;padding:6px 15px 6px 11px;
+       font-size:13px;font-weight:500;color:var(--soluk)}
+.rozet i{font-size:15px;color:var(--altin)}
+.rozet b{color:var(--murekkep);font-weight:600}
+
+/* ── Bölüm iskeleti ──────────────────────────────── */
+section{padding:84px 0}
+.bas{margin-bottom:46px}
+.bas h2{font-size:clamp(28px,4.2vw,42px);margin-bottom:14px}
+.bas p{font-size:16.5px;color:var(--soluk);max-width:620px;line-height:1.68}
+.bas.ort{text-align:center}
+.bas.ort p{margin-left:auto;margin-right:auto}
+
+/* ── Kampanya şeridi ─────────────────────────────── */
+
+/* ── Kahraman ────────────────────────────────────── */
+.kahraman{padding:138px 0 0;text-align:center}
+.kahraman h1{font-size:clamp(34px,6.4vw,62px);line-height:1.05;margin:22px auto 20px;max-width:14ch}
+.kahraman .alt{font-size:clamp(16px,2vw,18.5px);color:var(--soluk);max-width:560px;margin:0 auto;line-height:1.66}
+.k-dug{display:flex;gap:11px;justify-content:center;margin:34px 0 18px;flex-wrap:wrap}
+.k-not{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--silik)}
+.k-not span{display:flex;align-items:center;gap:6px}
+.k-not i{font-size:15px;color:var(--yesil)}
+
+/* ── Ürün penceresi (kahramanın altındaki) ───────── */
+.pencere{margin-top:52px;background:var(--yzy);border:1px solid var(--kenar);
+         border-radius:var(--r-b);overflow:hidden;text-align:left;
+         box-shadow:0 1px 2px rgba(13,21,38,.04),0 24px 56px -18px rgba(13,21,38,.16)}
+.p-cub{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--kuyu);border-bottom:1px solid var(--ince)}
+.p-nok{width:10px;height:10px;border-radius:50%;background:#DFE3EA}
+.p-url{flex:1;text-align:center;font-size:12px;color:var(--silik);font-variant-numeric:tabular-nums}
+.p-gov{display:grid;grid-template-columns:200px 1fr;min-height:400px}
+.p-yan{background:var(--lacivert);padding:18px 14px;display:flex;flex-direction:column;gap:3px}
+.p-yan .mrk{display:flex;align-items:center;gap:8px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;
+            font-weight:700;font-size:14.5px;padding:0 8px 16px}
+.p-yan .mrk svg{width:17px;height:17px;color:var(--altin-ac)}
+.p-yan a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;
+         font-size:13px;color:rgba(255,255,255,.62);font-weight:500}
+.p-yan a i{font-size:16px}
+.p-yan a.sec{background:rgba(110,160,240,.16);color:#fff}
+.p-yan a.sec i{color:var(--altin-ac)}
+.p-ana{padding:22px;background:var(--kuyu)}
+.p-ust{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.p-ust h3{font-size:16px;font-weight:700}
+.p-eti{font-size:11.5px;color:var(--soluk);background:var(--yzy);border:1px solid var(--kenar);padding:4px 11px;border-radius:999px}
+.sira{display:flex;flex-direction:column;gap:9px}
+.sat{display:flex;align-items:center;gap:13px;background:var(--yzy);border:1px solid var(--kenar);
+     border-left:3px solid var(--kenar);border-radius:10px;padding:13px 15px}
+.sat.acil{border-left-color:var(--kirmizi)}
+.sat.yakin{border-left-color:var(--amber)}
+.sat.ileri{border-left-color:#2563EB}
+.sat .ad{flex:1;min-width:0}
+.sat .ad b{display:block;font-size:13.5px;font-weight:600;letter-spacing:-.014em}
+.sat .ad span{display:block;font-size:12px;color:var(--silik);margin-top:2px;font-variant-numeric:tabular-nums}
+.sat .gun{font-size:12px;font-weight:600;padding:4px 11px;border-radius:999px;white-space:nowrap}
+.sat.acil .gun{background:#FEF2F2;color:var(--kirmizi)}
+.sat.yakin .gun{background:#FFF7ED;color:var(--amber)}
+.sat.ileri .gun{background:#EFF6FF;color:#1D4ED8}
+.sat .hat{font-size:12px;font-weight:600;color:var(--altin);background:var(--altin-zem);
+          border:1px solid #CFE0F7;padding:5px 12px;border-radius:999px;white-space:nowrap}
+.asis{margin-top:16px;background:var(--lacivert);border-radius:12px;padding:15px 17px;color:#fff}
+.asis .et{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--altin-ac);font-weight:600;margin-bottom:7px}
+.asis p{font-size:13px;color:rgba(255,255,255,.88);line-height:1.6}
+
+/* ── Kurum şeridi (kayan) ────────────────────────── */
+.kurum{padding:30px 0;background:var(--yzy);border-bottom:1px solid var(--kenar);overflow:hidden}
+.kurum .et{text-align:center;font-size:12.5px;color:var(--silik);margin-bottom:18px}
+.ray{position:relative;display:flex;overflow:hidden;
+     -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);
+             mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+.ray-ic{display:flex;gap:46px;padding-right:46px;flex-shrink:0;animation:kay 42s linear infinite}
+.kurum:hover .ray-ic{animation-play-state:paused}
+@keyframes kay{to{transform:translateX(-100%)}}
+.ray-ic span{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:600;
+             letter-spacing:-.018em;color:var(--soluk);white-space:nowrap}
+.ray-ic i{font-size:18px;color:var(--altin);opacity:.9}
+@media(prefers-reduced-motion:reduce){
+  .ray-ic{animation:none}
+  .ray{overflow-x:auto;-webkit-mask-image:none;mask-image:none}
+}
+
+/* ── Kanıt şeridi ────────────────────────────────── */
+.kanit{border-top:1px solid var(--kenar);border-bottom:1px solid var(--kenar);
+       background:var(--yzy);padding:26px 0;margin-top:76px}
+.kanit-ic{display:flex;align-items:center;justify-content:center;gap:14px 44px;flex-wrap:wrap}
+.kanit-ic div{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--soluk);font-weight:500}
+.kanit-ic i{font-size:18px;color:var(--altin)}
+.kanit-ic b{color:var(--murekkep);font-weight:600}
+
+/* ── Sayaç şeridi ────────────────────────────────── */
+.serit-ic{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--kenar);
+          border:1px solid var(--kenar);border-radius:var(--r-b);overflow:hidden}
+.serit-ic > div{background:var(--yzy);padding:30px 24px;text-align:center}
+.serit-ic .sy{font-family:'Plus Jakarta Sans',sans-serif;font-size:36px;font-weight:800;
+              letter-spacing:-.04em;color:var(--murekkep);font-variant-numeric:tabular-nums}
+.serit-ic .et{font-size:13.5px;color:var(--soluk);margin-top:5px;font-weight:500}
+.serit-ic .ac{font-size:12px;color:var(--silik);margin-top:3px}
+
+/* ── Özellik kartları ────────────────────────────── */
+.kart-izg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.kart{background:var(--yzy);border:1px solid var(--kenar);border-radius:var(--r);padding:26px 24px;
+      transition:border-color .18s,box-shadow .18s}
+.kart:hover{border-color:#CFD6E0;box-shadow:0 8px 24px -14px rgba(13,21,38,.18)}
+.kart .ik{width:40px;height:40px;border-radius:11px;background:var(--altin-zem);
+          display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.kart .ik i{font-size:21px;color:var(--altin)}
+.kart h3{font-size:16px;font-weight:700;margin-bottom:7px;letter-spacing:-.022em}
+.kart p{font-size:14px;color:var(--soluk);line-height:1.62}
+.kart.one{grid-column:span 2;background:var(--lacivert);border-color:var(--lacivert)}
+.kart.one:hover{border-color:var(--lacivert);box-shadow:0 10px 30px -16px rgba(12,27,51,.5)}
+.kart.one .ik{background:rgba(110,160,240,.15)}
+.kart.one .ik i{color:var(--altin-ac)}
+.kart.one h3{color:#fff;font-size:19px}
+.kart.one p{color:rgba(255,255,255,.72);max-width:46ch}
+.yeni{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.04em;
+      color:var(--altin-ac);background:rgba(110,160,240,.16);padding:3px 9px;border-radius:999px;margin-left:8px;vertical-align:2px}
+
+/* ── İkili bölüm ─────────────────────────────────── */
+.ikili{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.ikili.ters .sol{order:2}
+.ikili h2{font-size:clamp(26px,3.4vw,36px);margin-bottom:16px}
+.ikili > div > p{font-size:16px;color:var(--soluk);line-height:1.68;margin-bottom:24px}
+.liste{display:flex;flex-direction:column;gap:12px;margin-bottom:28px}
+.liste div{display:flex;gap:11px;font-size:14.5px;color:var(--murekkep);line-height:1.55}
+.liste i{font-size:18px;color:var(--yesil);flex-shrink:0;margin-top:1px}
+
+/* ── Sohbet gösterimi ────────────────────────────── */
+.sohbet{background:var(--yzy);border:1px solid var(--kenar);border-radius:var(--r-b);padding:20px;
+        box-shadow:0 1px 2px rgba(13,21,38,.04),0 18px 44px -22px rgba(13,21,38,.2)}
+.s-ust{display:flex;align-items:center;gap:9px;padding-bottom:14px;border-bottom:1px solid var(--ince);margin-bottom:15px}
+.s-ust .av{width:30px;height:30px;border-radius:9px;background:var(--lacivert);display:flex;align-items:center;justify-content:center}
+.s-ust .av i{font-size:16px;color:var(--altin-ac)}
+.s-ust b{font-size:14px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif}
+.bal{max-width:84%;padding:11px 15px;border-radius:14px;font-size:13.5px;line-height:1.6;margin-bottom:11px}
+.bal.ben{background:var(--lacivert);color:#fff;margin-left:auto;border-bottom-right-radius:5px}
+.bal.o{background:var(--ince);color:var(--murekkep);border-bottom-left-radius:5px}
+.bal.o b{display:block;margin-bottom:5px;font-weight:600}
+.bal.o .dk{font-size:12.5px;color:var(--soluk);font-variant-numeric:tabular-nums;line-height:1.75}
+
+/* ── Karşılaştırma ───────────────────────────────── */
+.tablo{background:var(--yzy);border:1px solid var(--kenar);border-radius:var(--r-b);overflow:hidden}
+.tablo table{width:100%;border-collapse:collapse}
+.tablo th{text-align:left;padding:15px 20px;font-size:13px;font-weight:600;color:var(--soluk);
+          background:var(--kuyu);border-bottom:1px solid var(--kenar)}
+.tablo th.biz{color:var(--altin)}
+.tablo td{padding:14px 20px;font-size:14px;border-bottom:1px solid var(--ince);vertical-align:top}
+.tablo tr:last-child td{border-bottom:none}
+.tablo td:first-child{font-weight:600;color:var(--murekkep)}
+.tablo td.biz{color:var(--murekkep)}
+.tablo td.biz i{color:var(--yesil);margin-right:7px;font-size:16px;vertical-align:-2px}
+.tablo td.o{color:var(--silik)}
+.tablo td.o i{color:#C8CEDA;margin-right:7px;font-size:16px;vertical-align:-2px}
+
+/* ── Adımlar (gerçek sıra) ───────────────────────── */
+.adim-izg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:ad}
+.adim{background:var(--yzy);border:1px solid var(--kenar);border-radius:var(--r);padding:26px 24px;counter-increment:ad;position:relative}
+.adim::before{content:counter(ad);display:flex;align-items:center;justify-content:center;
+              width:30px;height:30px;border-radius:50%;background:var(--lacivert);color:var(--altin-ac);
+              font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;margin-bottom:15px}
+.adim h3{font-size:16px;font-weight:700;margin-bottom:7px}
+.adim p{font-size:14px;color:var(--soluk);line-height:1.62}
+
+/* ── Fiyatlar ────────────────────────────────────── */
+.per{display:inline-flex;background:var(--yzy);border:1px solid var(--kenar);border-radius:999px;
+     padding:4px;margin:0 auto 38px;gap:3px}
+.per button{font-family:inherit;font-size:13.5px;font-weight:600;padding:8px 20px;border-radius:999px;
+            border:none;background:transparent;color:var(--soluk);cursor:pointer;transition:background .16s,color .16s}
+.per button.aktif{background:var(--lacivert);color:#fff}
+.fi-izg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
+.fiyat{background:var(--yzy);border:1px solid var(--kenar);border-radius:var(--r-b);padding:30px 26px;position:relative}
+.fiyat.one{border-color:var(--altin);box-shadow:0 0 0 1px var(--altin),0 18px 44px -24px rgba(168,130,46,.5)}
+.fiyat .pop{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--altin);
+            color:#fff;font-size:11.5px;font-weight:600;padding:5px 15px;border-radius:999px;white-space:nowrap}
+.fiyat h3{font-size:17px;font-weight:700;margin-bottom:14px}
+.fiyat .tut{font-family:'Plus Jakarta Sans',sans-serif;font-size:38px;font-weight:800;letter-spacing:-.04em;line-height:1}
+.fiyat .tut span{font-size:15px;font-weight:600;color:var(--silik);letter-spacing:-.01em}
+.fiyat .per-et{font-size:13px;color:var(--soluk);margin-top:7px}
+.fiyat .tsv{display:none;font-size:11.5px;font-weight:600;color:var(--yesil);background:#ECFDF5;
+            padding:4px 11px;border-radius:999px;margin-top:11px}
+.fiyat ul{list-style:none;margin:24px 0;display:flex;flex-direction:column;gap:11px}
+.fiyat li{display:flex;gap:10px;font-size:14px;color:var(--soluk);line-height:1.5}
+.fiyat li i{font-size:17px;color:var(--yesil);flex-shrink:0;margin-top:1px}
+.fiyat .btn{width:100%}
+
+/* ── SSS ─────────────────────────────────────────── */
+.sk{background:var(--yzy);border:1px solid var(--kenar);border-radius:var(--r);margin-bottom:10px;
+    overflow:hidden;transition:border-color .18s}
+.sk.acik{border-color:#CFD6E0}
+.sk-s{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:19px 22px;
+      cursor:pointer;font-size:15.5px;font-weight:600;letter-spacing:-.016em;list-style:none}
+.sk-s i{font-size:19px;color:var(--silik);transition:transform .22s;flex-shrink:0}
+.sk.acik .sk-s i{transform:rotate(45deg);color:var(--altin)}
+.sk-c{max-height:0;overflow:hidden;transition:max-height .28s cubic-bezier(.16,1,.3,1)}
+.sk.acik .sk-c{max-height:340px}
+.sk-c p{padding:0 22px 20px;font-size:14.5px;color:var(--soluk);line-height:1.68}
+
+/* ── Kapanış ─────────────────────────────────────── */
+.kapanis{background:var(--lacivert);border-radius:var(--r-b);padding:64px 40px;text-align:center;position:relative;overflow:hidden}
+.kapanis::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(900px 300px at 50% -10%,rgba(110,160,240,.16),transparent 70%);pointer-events:none}
+.kapanis h2{font-size:clamp(26px,3.8vw,38px);color:#fff;margin-bottom:14px;position:relative}
+.kapanis p{font-size:16px;color:rgba(255,255,255,.7);max-width:480px;margin:0 auto 30px;position:relative}
+.kapanis .k-dug{margin:0;position:relative}
+.btn-beyaz{background:#fff;color:var(--lacivert)}
+.btn-beyaz:hover{background:#F0F2F5}
+.btn-seffaf{background:transparent;color:#fff;border-color:rgba(255,255,255,.26)}
+.btn-seffaf:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.07)}
+
+/* ── Alt bilgi ───────────────────────────────────── */
+footer{background:var(--yzy);border-top:1px solid var(--kenar);padding:56px 0 30px;margin-top:84px}
+.f-izg{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.f-logo{display:flex;align-items:center;gap:9px;font-family:'Plus Jakarta Sans',sans-serif;
+        font-weight:800;font-size:16.5px;margin-bottom:13px;letter-spacing:-.032em}
+.f-logo svg{color:#C9A84C}
+.f-ac{font-size:13.5px;color:var(--soluk);line-height:1.68;max-width:34ch}
+footer h4{font-size:12px;font-weight:600;color:var(--murekkep);margin-bottom:14px;letter-spacing:0}
+footer a{display:block;font-size:13.5px;color:var(--soluk);margin-bottom:9px;transition:color .16s}
+footer a:hover{color:var(--altin)}
+.f-sos{display:flex;gap:9px;margin-top:17px}
+.f-sos a{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;
+        margin:0;border:1px solid var(--kenar);border-radius:10px;color:var(--soluk);
+        background:#fff;transition:color .16s,border-color .16s,background .16s,transform .16s}
+.f-sos a:hover{color:var(--altin);border-color:#C9A84C66;background:#FFFDF7;transform:translateY(-1px)}
+.f-sos i{font-size:19px}
+.f-son{border-top:1px solid var(--ince);padding-top:22px;display:flex;justify-content:space-between;
+       gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--silik)}
+.f-son a{display:inline;color:var(--soluk)}
+
+/* ── Kalıp (giriş / kayıt) ───────────────────────── */
+.ort{position:fixed;inset:0;background:rgba(12,27,51,.58);backdrop-filter:blur(5px);
+     z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.ort.ac,.ort.open{display:flex}
+.kal{background:var(--yzy);border-radius:var(--r-b);width:100%;max-width:434px;overflow:hidden;
+     box-shadow:0 30px 70px -20px rgba(12,27,51,.45);max-height:94vh;overflow-y:auto}
+.k-ust{background:var(--lacivert);padding:24px;text-align:center}
+.k-lg{display:inline-flex;align-items:center;gap:9px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;
+      font-weight:800;font-size:18px;letter-spacing:-.034em}
+.k-lg svg{color:var(--altin-ac)}
+.k-al{font-size:12.5px;color:rgba(255,255,255,.56);margin-top:5px}
+.k-sek{display:flex;border-bottom:1px solid var(--kenar)}
+.ksek{flex:1;font-family:inherit;font-size:14px;font-weight:600;padding:15px;border:none;
+      background:transparent;color:var(--silik);cursor:pointer;border-bottom:2px solid transparent;transition:color .16s,border-color .16s}
+.ksek.aktif{color:var(--murekkep);border-bottom-color:var(--altin)}
+.k-gov{padding:26px}
+.alan{margin-bottom:15px}
+.alan label{display:block;font-size:11.5px;font-weight:600;color:var(--soluk);margin-bottom:6px;letter-spacing:.01em}
+.alan select{width:100%;font-family:inherit;font-size:14.5px;padding:12px 14px;
+  border:1px solid var(--kenar);border-radius:10px;background:var(--kuyu);
+  color:var(--murekkep);cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%236B7A90' stroke-width='1.6'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 13px center;background-size:15px;padding-right:38px}
+.alan select:focus{outline:none;border-color:var(--altin);background-color:#fff}
+.alan input{width:100%;font-family:inherit;font-size:14.5px;padding:12px 14px;border:1px solid var(--kenar);
+            border-radius:10px;background:var(--kuyu);color:var(--murekkep);transition:border-color .16s,background .16s}
+.alan input:focus{outline:none;border-color:var(--altin);background:#fff}
+.alan input::placeholder{color:#B4BCCA}
+.k-btn{width:100%;font-family:inherit;font-size:15px;font-weight:600;padding:13px;border:none;
+       border-radius:999px;background:var(--lacivert);color:#fff;cursor:pointer;margin-top:4px;transition:background .16s}
+.k-btn:hover{background:var(--lacivert2)}
+.k-btn:disabled{opacity:.6;cursor:not-allowed}
+.k-alt{text-align:center;font-size:13px;color:var(--soluk);margin-top:16px}
+.k-alt span{color:var(--altin);font-weight:600;cursor:pointer}
+.k-hata,.k-ok{display:none;font-size:13px;padding:11px 14px;border-radius:10px;margin-bottom:15px;line-height:1.55}
+.k-hata{background:#FEF2F2;color:var(--kirmizi);border:1px solid #FECDCA}
+.k-ok{background:#ECFDF5;color:var(--yesil);border:1px solid #A7F3D0}
+
+/* ── Duyarlı ─────────────────────────────────────── */
+@media(max-width:940px){
+  .kart-izg,.adim-izg,.fi-izg{grid-template-columns:1fr 1fr}
+  .kart.one{grid-column:span 2}
+  .fi-izg{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+  .ikili{grid-template-columns:1fr;gap:34px}
+  .ikili.ters .sol{order:0}
+  .p-gov{grid-template-columns:1fr}
+  .p-yan{flex-direction:row;overflow-x:auto;gap:4px;padding:12px}
+  .p-yan .mrk{display:none}
+  .p-yan a{white-space:nowrap;padding:7px 12px}
+  .f-izg{grid-template-columns:1fr 1fr;gap:30px}
+}
+@media(max-width:680px){
+  nav{height:60px}
+  .nav-bag{display:none}
+  .nav-ic{gap:10px}
+  .nav-cta{gap:5px}
+  .nav-cta .btn{padding:9px 13px;font-size:13px}
+  .et-uzun{display:none}
+  .et-kisa{display:inline}
+  .logo{font-size:16px}
+  .logo img{height:26px!important}
+  .kahraman{padding-top:104px}
+  section{padding:60px 0}
+  .kart-izg,.adim-izg{grid-template-columns:1fr}
+  .kart.one{grid-column:span 1}
+  .serit-ic{grid-template-columns:1fr}
+  .kanit-ic{gap:12px 26px}
+  .f-izg{grid-template-columns:1fr}
+  .kapanis{padding:46px 24px}
+  .tablo{overflow-x:auto}
+  .tablo table{min-width:560px}
+  .k-dug .btn{width:100%}
+}
+</style>
+</head>
+<body class="js-yok">
+<script>document.body.classList.remove('js-yok')</script>
+
+<nav id="nav"><div class="sar nav-ic">
+  <a href="#" class="logo"><img src="/dosya360-logo.png" alt="" style="height:30px;width:auto">Dosya360</a>
+  <div class="nav-bag">
+    <a href="#ozellikler">Özellikler</a>
+    <a href="#nasil">Nasıl çalışır</a>
+    <a href="#fiyatlar">Fiyatlar</a>
+    <a href="#sss">SSS</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn btn-sade" onclick="modalAc('giris')">Giriş yap</button>
+    <button class="btn btn-koyu" onclick="modalAc('kayit')"><span class="et-uzun">Ücretsiz başlayın</span><span class="et-kisa">Başlayın</span></button>
+  </div>
+</div></nav>
+
+<!-- KAHRAMAN -->
+<header class="kahraman"><div class="sar">
+  <span class="rozet rv gor"><i class="ti ti-scale"></i>Avukatlık büroları için geliştirildi</span>
+  <h1 class="rv gor rv-1">Yapay zekâ destekli hukuk işletim sistemi</h1>
+  <p class="alt rv gor rv-2">Dava, müvekkil, duruşma, belge ve finansı tek panelde toplayın. Duruşma tarihleri kendiliğinden takvime düşsün, müvekkile hatırlatma tek tıkla gitsin.</p>
+  <div class="k-dug rv gor rv-3">
+    <button class="btn btn-altin btn-bk" onclick="modalAc('kayit')">Ücretsiz başlayın</button>
+    <a href="#ozellikler" class="btn btn-cizgi btn-bk">Özellikleri inceleyin</a>
+  </div>
+  <div class="k-not rv gor rv-4">
+    <span><i class="ti ti-circle-check"></i>Kurulum yok</span>
+    <span><i class="ti ti-circle-check"></i>Kredi kartı istemez</span>
+    <span><i class="ti ti-circle-check"></i>KVKK uyumlu</span>
+  </div>
+
+  <!-- Ürün penceresi -->
+  <div class="pencere rv rv-5">
+    <div class="p-cub">
+      <span class="p-nok"></span><span class="p-nok"></span><span class="p-nok"></span>
+      <span class="p-url">dosya360.com</span>
+    </div>
+    <div class="p-gov">
+      <aside class="p-yan">
+        <div class="mrk"><img src="/dosya360-logo.png" alt="" style="height:28px;width:auto">Dosya360</div>
+        <a><i class="ti ti-layout-dashboard"></i>Anasayfa</a>
+        <a><i class="ti ti-users"></i>Müvekkiller</a>
+        <a><i class="ti ti-folder"></i>Davalar</a>
+        <a class="sec"><i class="ti ti-calendar"></i>Takvim</a>
+        <a><i class="ti ti-checkbox"></i>Görevler</a>
+        <a><i class="ti ti-wallet"></i>Finans</a>
+        <a><i class="ti ti-sparkles"></i>360 Asistan</a>
+      </aside>
+      <main class="p-ana">
+        <div class="p-ust">
+          <h3>Yaklaşan duruşmalar</h3>
+          <span class="p-eti">Önümüzdeki 7 gün</span>
+        </div>
+        <div class="sira">
+          <div class="sat acil">
+            <div class="ad"><b>Gökdemir — İcra takibi</b><span>Ankara 3. Asliye · 2026/0142</span></div>
+            <span class="gun">Yarın 09:00</span>
+            <span class="hat">Hatırlat</span>
+          </div>
+          <div class="sat yakin">
+            <div class="ad"><b>Yılmaz — İşe iade</b><span>Ankara 12. İş · 2026/0089</span></div>
+            <span class="gun">3 gün</span>
+            <span class="hat">Hatırlat</span>
+          </div>
+          <div class="sat ileri">
+            <div class="ad"><b>Demir — Ticari alacak</b><span>BAM 2. HD · 2025/3341</span></div>
+            <span class="gun">7 gün</span>
+            <span class="hat">Hatırlat</span>
+          </div>
+        </div>
+        <div class="asis">
+          <div class="et"><i class="ti ti-sparkles"></i>360 Asistan</div>
+          <p>Gökdemir duruşması yarın 09:00 — müvekkile hatırlatma gönderilsin mi?</p>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<div class="kurum">
+  <div class="et">Panelden tek tıkla erişim</div>
+  <div class="ray">
+    <div class="ray-ic" aria-label="Hızlı erişim sağlanan kurumlar">
+      <span><i class="ti ti-building-bank"></i>Yargıtay</span>
+      <span><i class="ti ti-scale"></i>Adalet Bakanlığı</span>
+      <span><i class="ti ti-gavel"></i>Hâkimler ve Savcılar Kurulu</span>
+      <span><i class="ti ti-building-arch"></i>Danıştay</span>
+      <span><i class="ti ti-book"></i>Anayasa Mahkemesi</span>
+      <span><i class="ti ti-school"></i>Adalet Akademisi</span>
+      <span><i class="ti ti-users-group"></i>Türkiye Barolar Birliği</span>
+      <span><i class="ti ti-device-laptop"></i>UYAP</span>
+      <span><i class="ti ti-mail-forward"></i>e-Tebligat</span>
+    </div>
+    <div class="ray-ic" aria-hidden="true">
+      <span><i class="ti ti-building-bank"></i>Yargıtay</span>
+      <span><i class="ti ti-scale"></i>Adalet Bakanlığı</span>
+      <span><i class="ti ti-gavel"></i>Hâkimler ve Savcılar Kurulu</span>
+      <span><i class="ti ti-building-arch"></i>Danıştay</span>
+      <span><i class="ti ti-book"></i>Anayasa Mahkemesi</span>
+      <span><i class="ti ti-school"></i>Adalet Akademisi</span>
+      <span><i class="ti ti-users-group"></i>Türkiye Barolar Birliği</span>
+      <span><i class="ti ti-device-laptop"></i>UYAP</span>
+      <span><i class="ti ti-mail-forward"></i>e-Tebligat</span>
+    </div>
+  </div>
+</div>
+
+<div class="kanit"><div class="sar kanit-ic">
+  <div><i class="ti ti-shield-lock"></i><b>KVKK</b> uyumlu veri yönetimi</div>
+  <div><i class="ti ti-cloud"></i>Bulut tabanlı, <b>kurulumsuz</b></div>
+  <div><i class="ti ti-database"></i>Veritabanı seviyesinde <b>izolasyon</b></div>
+  <div><i class="ti ti-device-mobile"></i>Telefon ve tabletten <b>aynı hesap</b></div>
+</div></div>
+</header>
+
+
+<!-- ÖZELLİKLER -->
+<section id="ozellikler"><div class="sar">
+  <div class="bas rv">
+    <h2>Bir hukuk bürosunun ihtiyacı olan her şey</h2>
+    <p>Dağınık Excel dosyaları, kağıt ajandalar ve tek bilgisayara bağlı kayıtlar yerine birbirine bağlı tek sistem.</p>
+  </div>
+  <div class="kart-izg">
+    <div class="kart one rv">
+      <div class="ik"><i class="ti ti-bell-ringing"></i></div>
+      <h3>Duruşma uyarı sistemi</h3>
+      <p>Duruşma tarihi girdiğiniz an takvime düşer. Yedi gün kala renk kodlu uyarı belirir — üç günden az kaldıysa kırmızı. Tek tıkla müvekkile WhatsApp hatırlatması gider.</p>
+    </div>
+    <div class="kart rv rv-1">
+      <div class="ik"><i class="ti ti-sparkles"></i></div>
+      <h3>360 Asistan<span class="yeni" style="color:var(--altin);background:var(--altin-zem)">Yeni</span></h3>
+      <p>Müvekkil adı veya dosya numarası yazın; dosyaları, duruşmaları ve hesabı önünüze gelsin.</p>
+    </div>
+    <div class="kart rv">
+      <div class="ik"><i class="ti ti-users"></i></div>
+      <h3>Müvekkil yönetimi</h3>
+      <p>Kimlik, iletişim ve dava geçmişi tek kartta. Karttan doğrudan dava açın.</p>
+    </div>
+    <div class="kart rv rv-1">
+      <div class="ik"><i class="ti ti-folder"></i></div>
+      <h3>Dava takibi</h3>
+      <p>Dosya no, mahkeme, tür ve duruşma. Türe, müvekkile ve duruşma yakınlığına göre süzün.</p>
+    </div>
+    <div class="kart rv rv-2">
+      <div class="ik"><i class="ti ti-external-link"></i></div>
+      <h3>UYAP hızlı erişim</h3>
+      <p>Avukat UYAP, Vatandaş UYAP ve E-Tebligat sol menüde. Giriş kendi e-imzanızla.</p>
+    </div>
+    <div class="kart rv">
+      <div class="ik"><i class="ti ti-wallet"></i></div>
+      <h3>Finans ve kasa</h3>
+      <p>Tahsilat, dava masrafı, ofis, kurum ve kişisel gider ayrı ayrı. Aylık özet hazır.</p>
+    </div>
+    <div class="kart rv rv-1">
+      <div class="ik"><i class="ti ti-shield-lock"></i></div>
+      <h3>Ekip ve yetki yönetimi</h3>
+      <p>Avukat, stajyer, sekreter ve muhasebeyi davet edin. Herkes aynı veriyi görür; başka bir büro dosyalarınıza hiçbir koşulda erişemez.</p>
+    </div>
+    <div class="kart rv rv-2">
+      <div class="ik"><i class="ti ti-calendar"></i></div>
+      <h3>Takvim ve görevler</h3>
+      <p>Duruşma, keşif ve süre sonları. Esas no, mahkeme ve müvekkil tek bakışta.</p>
+    </div>
+    <div class="kart rv">
+      <div class="ik"><i class="ti ti-file-text"></i></div>
+      <h3>Belge arşivi</h3>
+      <p>Dilekçe, karar, bilirkişi raporu ve vekaletname kategorilere göre saklanır.</p>
+    </div>
+    <div class="kart rv rv-1">
+      <div class="ik"><i class="ti ti-message-chatbot"></i></div>
+      <h3>Web asistanı</h3>
+      <p>Kendi sitenize soru-cevap asistanı ekleyin; gelen başvurular panele düşsün.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- DURUŞMA -->
+<section style="background:var(--yzy);border-top:1px solid var(--kenar);border-bottom:1px solid var(--kenar)">
+<div class="sar">
+  <div class="ikili">
+    <div class="sol rv">
+      <h2>Hiçbir duruşma gözden kaçmasın</h2>
+      <p>Sistem her açılışta tüm dosyaların duruşma tarihlerini denetler. Yaklaşan varsa siz aramadan karşınıza çıkar.</p>
+      <div class="liste">
+        <div><i class="ti ti-check"></i>Yedi gün kala renk kodlu uyarı — kırmızı, sarı, mavi</div>
+        <div><i class="ti ti-check"></i>Duruşma girildiği anda takvime otomatik kayıt</div>
+        <div><i class="ti ti-check"></i>Müvekkile hazır WhatsApp mesajı, tek tıkla</div>
+        <div><i class="ti ti-check"></i>Tarih ertelenince takvim kendiliğinden güncellenir</div>
+      </div>
+      <button class="btn btn-koyu btn-bk" onclick="modalAc('kayit')">Ücretsiz deneyin</button>
+    </div>
+    <div class="rv rv-2">
+      <div class="sohbet">
+        <div class="s-ust"><div class="av"><i class="ti ti-calendar"></i></div><b>Yaklaşan duruşmalar</b></div>
+        <div class="sira">
+          <div class="sat acil">
+            <div class="ad"><b>Gökdemir — Ankara 3. Asliye</b><span>2026/0142 · İcra takibi</span></div>
+            <span class="gun">Yarın</span>
+          </div>
+          <div class="sat yakin">
+            <div class="ad"><b>Yılmaz — İcra Mahkemesi</b><span>2026/0089 · Bilirkişi aşaması</span></div>
+            <span class="gun">3 gün</span>
+          </div>
+          <div class="sat ileri">
+            <div class="ad"><b>Demir — BAM 2. HD</b><span>2025/3341 · İstinaf</span></div>
+            <span class="gun">7 gün</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ASİSTAN -->
+<section><div class="sar">
+  <div class="ikili ters">
+    <div class="sol rv rv-2">
+      <div class="sohbet">
+        <div class="s-ust"><div class="av"><i class="ti ti-sparkles"></i></div><b>360 Asistan</b></div>
+        <div class="bal ben">Ahmet Yılmaz'ın dosyaları neler?</div>
+        <div class="bal o">
+          <b>Ahmet Yılmaz</b>
+          <div class="dk">Telefon: 0532 000 00 00<br>Dosya sayısı: 2<br><br>
+          • 2026/0089 — Ankara 12. İş (İşe iade) · duruşma 24.08.2026<br>
+          • 2025/3341 — Ankara Tic. 2. (Ticari alacak)<br><br>
+          Tahsilat: ₺18.000 · Masraf: ₺2.400</div>
+        </div>
+      </div>
+    </div>
+    <div class="rv">
+      <h2>Aradığınızı saniyeler içinde bulun</h2>
+      <p>Menülerde gezinmeyin. Bir müvekkil adı, dosya numarası ya da serbest bir soru yazın; 360 Asistan kendi verinizi tarayıp yanıtlasın.</p>
+      <div class="liste">
+        <div><i class="ti ti-check"></i>Müvekkil adı yazın — dosyaları, duruşmaları ve hesabı gelsin</div>
+        <div><i class="ti ti-check"></i>Dosya numarası yazın — mahkeme, taraf ve süre bilgisi çıksın</div>
+        <div><i class="ti ti-check"></i>"Bu ay özeti", "yaklaşan duruşmalar", "giderler" gibi sorular</div>
+        <div><i class="ti ti-check"></i>Yanıtlar yalnızca sizin verinizden üretilir, dışarı hiçbir şey çıkmaz</div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- KARŞILAŞTIRMA -->
+<section style="background:var(--yzy);border-top:1px solid var(--kenar);border-bottom:1px solid var(--kenar)">
+<div class="sar">
+  <div class="bas ort rv">
+    <h2>Dosya360 ile fark ortada</h2>
+    <p>Excel tabloları ve kağıt ajandalarla yürütülen büro yönetiminden farkı.</p>
+  </div>
+  <div class="tablo rv">
+    <table>
+      <thead><tr><th>Konu</th><th class="biz">Dosya360 ile</th><th>Excel ve kağıt ile</th></tr></thead>
+      <tbody>
+        <tr><td>Duruşma takibi</td><td class="biz"><i class="ti ti-check"></i>Otomatik uyarı, renk kodlu</td><td class="o"><i class="ti ti-minus"></i>Ajanda, unutma riski</td></tr>
+        <tr><td>Müvekkil bilgilendirme</td><td class="biz"><i class="ti ti-check"></i>Tek tıkla WhatsApp</td><td class="o"><i class="ti ti-minus"></i>Numara arayıp elle yazma</td></tr>
+        <tr><td>Dosya arama</td><td class="biz"><i class="ti ti-check"></i>Anlık filtreleme, 360 Asistan</td><td class="o"><i class="ti ti-minus"></i>Klasör klasör bakma</td></tr>
+        <tr><td>Ekip çalışması</td><td class="biz"><i class="ti ti-check"></i>Herkes aynı veriyi görür</td><td class="o"><i class="ti ti-minus"></i>Dosya paylaşımı, sürüm karmaşası</td></tr>
+        <tr><td>Finans takibi</td><td class="biz"><i class="ti ti-check"></i>Kategorili, aylık özet hazır</td><td class="o"><i class="ti ti-minus"></i>Ayrı Excel, elle toplama</td></tr>
+        <tr><td>Erişim</td><td class="biz"><i class="ti ti-check"></i>Her cihazdan, buluttan</td><td class="o"><i class="ti ti-minus"></i>Tek bilgisayara bağlı</td></tr>
+        <tr><td>Veri güvenliği</td><td class="biz"><i class="ti ti-check"></i>Şifreli, yedekli, KVKK uyumlu</td><td class="o"><i class="ti ti-minus"></i>Bilgisayar arızasında kayıp</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div></section>
+
+<!-- NASIL -->
+<section id="nasil"><div class="sar">
+  <div class="bas ort rv">
+    <h2>Dakikalar içinde başlayın</h2>
+    <p>Kurulum, bakım ya da teknik bilgi gerekmez.</p>
+  </div>
+  <div class="adim-izg">
+    <div class="adim rv"><h3>Hesabınızı açın</h3><p>E-posta ve şifreyle 30 saniyede kaydolun. Kredi kartı istenmez, program indirilmez.</p></div>
+    <div class="adim rv rv-1"><h3>Büronuzu tanıtın</h3><p>Büro adı, avukat bilgileri ve WhatsApp numaranızı girin. Beş dakika yeterli.</p></div>
+    <div class="adim rv rv-2"><h3>Kullanmaya başlayın</h3><p>Müvekkil ve dava ekleyin, ekibinizi davet edin. Sistem o an çalışmaya başlar.</p></div>
+  </div>
+</div></section>
+
+<!-- FİYATLAR -->
+<section id="fiyatlar" style="background:var(--yzy);border-top:1px solid var(--kenar);border-bottom:1px solid var(--kenar)">
+<div class="sar">
+  <div class="bas ort rv">
+    <h2>Büronuza uygun plan</h2>
+    <p>Tüm planlar bütün modülleri içerir. Fark yalnızca kullanıcı sayısında.</p>
+  </div>
+  <div style="text-align:center">
+    <div class="per rv">
+      <button id="p-aylik" class="aktif" onclick="perDegis('aylik')">Aylık</button>
+      <button id="p-yillik" onclick="perDegis('yillik')">Yıllık · 2 ay bedava</button>
+    </div>
+  </div>
+  <div class="fi-izg">
+    <div class="fiyat rv">
+      <h3>Başlangıç</h3>
+      <div class="tut" id="f1">₺1.500 <span>/ay</span></div>
+      <div class="per-et" id="f1a">Aylık ödeme</div>
+      <div class="tsv" id="f1t">3 ay bedava</div>
+      <ul>
+        <li><i class="ti ti-check"></i>3 kullanıcıya kadar</li>
+        <li><i class="ti ti-check"></i>Bütün modüller</li>
+        <li><i class="ti ti-check"></i>Sınırsız müvekkil ve dava</li>
+        <li><i class="ti ti-check"></i>Duruşma uyarıları</li>
+        <li><i class="ti ti-check"></i>WhatsApp bildirimleri</li>
+        <li><i class="ti ti-check"></i>UYAP hızlı erişim</li>
+      </ul>
+      <button class="btn btn-cizgi" onclick="basvuruAc('Başlangıç')">Başlayın</button>
+    </div>
+    <div class="fiyat one rv rv-1">
+      <span class="pop">En çok tercih edilen</span>
+      <h3>Büyüme</h3>
+      <div class="tut" id="f2">₺3.500 <span>/ay</span></div>
+      <div class="per-et" id="f2a">Aylık ödeme</div>
+      <div class="tsv" id="f2t">4 ay bedava</div>
+      <ul>
+        <li><i class="ti ti-check"></i>10 kullanıcıya kadar</li>
+        <li><i class="ti ti-check"></i>Başlangıç paketindeki her şey</li>
+        <li><i class="ti ti-check"></i>360 Asistan</li>
+        <li><i class="ti ti-check"></i>Web asistanı ve başvuru yönetimi</li>
+        <li><i class="ti ti-check"></i>Ekip ve yetki yönetimi</li>
+        <li><i class="ti ti-check"></i>Öncelikli destek</li>
+      </ul>
+      <button class="btn btn-altin" onclick="basvuruAc('Büyüme')">Başlayın</button>
+    </div>
+    <div class="fiyat rv rv-2">
+      <h3>Kurumsal</h3>
+      <div class="tut">Özel</div>
+      <div class="per-et">Size özel fiyatlandırma</div>
+      <ul>
+        <li><i class="ti ti-check"></i>Sınırsız kullanıcı</li>
+        <li><i class="ti ti-check"></i>Büyüme paketindeki her şey</li>
+        <li><i class="ti ti-check"></i>Özel kurulum desteği</li>
+        <li><i class="ti ti-check"></i>Veri aktarım yardımı</li>
+        <li><i class="ti ti-check"></i>Öncelikli telefon desteği</li>
+      </ul>
+      <button class="btn btn-cizgi" onclick="basvuruAc('Kurumsal')">Teklif alın</button>
+    </div>
+  </div>
+</div></section>
+
+<!-- SSS -->
+<section id="sss"><div class="dar">
+  <div class="bas ort rv">
+    <h2>Sık sorulan sorular</h2>
+  </div>
+  <div class="rv">
+    <div class="sk" onclick="ssaAc(this)"><div class="sk-s">Kurulum gerekiyor mu?<i class="ti ti-plus"></i></div>
+      <div class="sk-c"><p>Hayır. Dosya360 tamamen web tabanlıdır; tarayıcıdan açılır. Bilgisayarınıza program yüklemeniz gerekmez, telefon ve tabletten de aynı hesapla girebilirsiniz.</p></div></div>
+    <div class="sk" onclick="ssaAc(this)"><div class="sk-s">Verilerimi başka bir büro görebilir mi?<i class="ti ti-plus"></i></div>
+      <div class="sk-c"><p>Hayır. İzolasyon veritabanı seviyesinde uygulanır; yazılım hatasıyla aşılabilecek bir kontrol değildir. Her büro yalnızca kendi verisine erişir, başka bir büronun müvekkil veya dosya bilgilerine hiçbir koşulda ulaşılamaz.</p></div></div>
+    <div class="sk" onclick="ssaAc(this)"><div class="sk-s">UYAP entegrasyonu nasıl çalışıyor?<i class="ti ti-plus"></i></div>
+      <div class="sk-c"><p>Dosya360 içinden Avukat UYAP, Vatandaş UYAP ve E-Tebligat paneline tek tıkla erişebilirsiniz. UYAP'a giriş kendi e-imzanız veya şifrenizle yapılır; Dosya360 bu bilgileri istemez ve saklamaz. Otomatik dosya senkronizasyonu üzerinde çalışılmaktadır.</p></div></div>
+    <div class="sk" onclick="ssaAc(this)"><div class="sk-s">Mevcut kayıtlarımı aktarabilir miyim?<i class="ti ti-plus"></i></div>
+      <div class="sk-c"><p>Kayıtlar elle girilir. İlk kurulumda aktarım konusunda ücretsiz destek sağlıyoruz — hello@dosya360.com adresine yazmanız yeterli.</p></div></div>
+    <div class="sk" onclick="ssaAc(this)"><div class="sk-s">Kaç müvekkil ve dava ekleyebilirim?<i class="ti ti-plus"></i></div>
+      <div class="sk-c"><p>Sınır yoktur. Paketler yalnızca sisteme kaç kişinin giriş yapabileceğini belirler; kayıt sayısı her pakette sınırsızdır.</p></div></div>
+    <div class="sk" onclick="ssaAc(this)"><div class="sk-s">Aboneliğimi iptal edersem ne olur?<i class="ti ti-plus"></i></div>
+      <div class="sk-c"><p>Verileriniz 30 gün saklanır. Bu süre içinde talep ederseniz dışa aktarılır; sürenin sonunda kalıcı olarak silinir.</p></div></div>
+  </div>
+</div></section>
+
+<!-- KAPANIŞ -->
+<section style="padding-bottom:0"><div class="sar">
+  <div class="kapanis rv">
+    <h2>Büronuzu bugün dijitalleştirin</h2>
+    <p>Kredi kartı gerekmez, kurulum yoktur, istediğiniz an bırakabilirsiniz.</p>
+    <div class="k-dug">
+      <button class="btn btn-beyaz btn-bk" onclick="modalAc('kayit')">Ücretsiz başlayın</button>
+      <a class="btn btn-seffaf btn-bk" href="https://wa.me/905439274906" target="_blank" rel="noopener">Demo talep edin</a>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="sar">
+  <div class="f-izg">
+    <div>
+      <div class="f-logo"><img src="/dosya360-logo.png" alt="" style="height:26px;width:auto">Dosya360</div>
+      <div class="f-ac">Avukatlık büroları için tasarlanmış bulut tabanlı hukuk bürosu yönetim sistemi. Dava takibi, müvekkil yönetimi ve duruşma hatırlatmaları tek panelde.</div>
+      <div class="f-sos">
+        <a href="https://www.instagram.com/dosya360com/" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram"><i class="ti ti-brand-instagram"></i></a>
+        <a href="https://www.linkedin.com/posts/dosya360-legaltech-hukukteknolojileri-share-7487523820686172161-B9KS/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><i class="ti ti-brand-linkedin"></i></a>
+      </div>
+    </div>
+    <div><h4>Ürün</h4><a href="#ozellikler">Özellikler</a><a href="#fiyatlar">Fiyatlar</a><a href="#nasil">Nasıl çalışır</a><a href="#sss">SSS</a></div>
+    <div><h4>Destek</h4><a href="mailto:hello@dosya360.com">E-posta</a><a href="https://wa.me/905439274906" target="_blank" rel="noopener">WhatsApp</a><a href="https://otukenmedya.com" target="_blank" rel="noopener">Ötüken Medya</a></div>
+    <div><h4>Hukuki</h4><a href="kvkk.html">KVKK aydınlatma metni</a><a href="kvkk.html#s9">Çerez politikası</a><a href="kvkk.html#s7">Veri güvenliği</a></div>
+  </div>
+  <div class="f-son">
+    <div>© 2026 Dosya360 · Bir <a href="https://otukenmedya.com" target="_blank" rel="noopener">Ötüken Medya</a> yazılımıdır</div>
+    <div>hello@dosya360.com · +90 543 927 49 06</div>
+  </div>
+</div></footer>
+<!-- KALIP -->
+<div class="ort" id="modal" onclick="if(event.target===this)modalKapat()">
+  <div class="kal">
+    <div class="k-ust">
+      <div class="k-lg"><img src="/dosya360-logo.png" alt="" style="height:26px;width:auto">Dosya360</div>
+      <div class="k-al">Hukuk Bürosu Yönetim Sistemi</div>
+    </div>
+    <div class="k-sek" id="k-sekler">
+      <button class="ksek aktif" id="tab-giris" onclick="tabSec('giris')">Giriş yap</button>
+      <button class="ksek" id="tab-kayit" onclick="tabSec('kayit')">Kayıt ol</button>
+    </div>
+    <div class="k-gov">
+      <div class="k-hata" id="m-error"></div>
+      <div class="k-ok" id="m-success"></div>
+      <div id="form-giris">
+        <div class="alan"><label>E-POSTA</label><input type="email" id="g-email" placeholder="avukat@buro.com" autocomplete="email"></div>
+        <div class="alan">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <label style="margin:0">ŞİFRE</label>
+            <span onclick="tabSec('sifre')" style="font-size:11.5px;color:var(--gold3);cursor:pointer;font-weight:500">Şifremi unuttum</span>
+          </div>
+          <input type="password" id="g-sifre" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')girisYap()">
+        </div>
+        <button class="k-btn" id="g-btn" onclick="girisYap()">Giriş yap</button>
+        <div class="k-alt">Hesabınız yok mu? <span onclick="tabSec('kayit')">Kayıt olun</span></div>
+      </div>
+      <div id="form-sifre" style="display:none">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px">
+          <span onclick="tabSec('giris')" style="cursor:pointer;color:var(--silik);font-size:18px;line-height:1"><i class="ti ti-arrow-left"></i></span>
+          <div>
+            <div style="font-size:15px;font-weight:600;color:var(--metin)">Şifrenizi mi unuttunuz?</div>
+            <div style="font-size:12.5px;color:var(--soluk);margin-top:2px">Hesabınızın e-posta adresini girin, sıfırlama bağlantısı gönderelim.</div>
+          </div>
+        </div>
+        <div class="alan"><label>E-POSTA</label><input type="email" id="s-email" placeholder="avukat@buro.com" autocomplete="email" onkeydown="if(event.key==='Enter')sifreSifirla()"></div>
+        <button class="k-btn" id="s-btn" onclick="sifreSifirla()">Sıfırlama bağlantısı gönder</button>
+        <div class="k-alt">Şifrenizi hatırladınız mı? <span onclick="tabSec('giris')">Giriş yapın</span></div>
+      </div>
+
+      <div id="form-kayit" style="display:none">
+        <div class="alan"><label>AD SOYAD</label><input type="text" id="k-ad" placeholder="Av. Ad Soyad"></div>
+        <div class="alan"><label>BÜRO ADI</label><input type="text" id="k-buro" placeholder="Örnek Hukuk Bürosu"></div>
+        <div class="alan" style="display:flex;gap:10px">
+          <div style="flex:1.3"><label>BARO</label><input type="text" id="k-baro" placeholder="Ankara" list="baro-listesi"></div>
+          <div style="flex:1"><label>SİCİL NO</label><input type="text" id="k-sicil" placeholder="12345" inputmode="numeric" maxlength="12" onblur="sicilKontrol()"></div>
+        </div>
+        <datalist id="baro-listesi">
+          <option>Adana</option><option>Ankara</option><option>Antalya</option><option>Aydın</option>
+          <option>Balıkesir</option><option>Bursa</option><option>Denizli</option><option>Diyarbakır</option>
+          <option>Erzurum</option><option>Eskişehir</option><option>Gaziantep</option><option>Hatay</option>
+          <option>İstanbul</option><option>İzmir</option><option>Kayseri</option><option>Kocaeli</option>
+          <option>Konya</option><option>Malatya</option><option>Manisa</option><option>Mersin</option>
+          <option>Muğla</option><option>Sakarya</option><option>Samsun</option><option>Şanlıurfa</option>
+          <option>Tekirdağ</option><option>Trabzon</option><option>Van</option>
+        </datalist>
+        <div id="sicil-durum" style="display:none;font-size:11.5px;margin:-8px 0 12px;line-height:1.5"></div>
+        <div class="alan"><label>E-POSTA</label><input type="email" id="k-email" placeholder="avukat@buro.com" autocomplete="email"></div>
+        <div class="alan"><label>CEP TELEFONU</label><input type="tel" id="k-tel" placeholder="0532 000 00 00" inputmode="tel" autocomplete="tel" maxlength="17" oninput="telBicim(this)">
+          <div style="font-size:11px;color:var(--silik);margin-top:5px">Yalnızca kurulum desteği için kullanılır, paylaşılmaz.</div></div>
+        <div class="alan"><label>ŞİFRE</label><input type="password" id="k-sifre" placeholder="En az 6 karakter" autocomplete="new-password" onkeydown="if(event.key==='Enter')kayitOl()"></div>
+        <div class="alan"><label>DOSYA360'I NEREDE GÖRDÜNÜZ?</label>
+          <select id="k-kaynak" onchange="kaynakDegisti()">
+            <option value="">Seçiniz</option>
+            <option value="sosyal_medya">Sosyal medya (Instagram, LinkedIn, X)</option>
+            <option value="tv">Televizyon / dijital yayın platformu</option>
+            <option value="referans">Meslektaş tavsiyesi</option>
+            <option value="arama">Google'da arattım</option>
+            <option value="baro">Baro, staj veya meslek etkinliği</option>
+            <option value="reklam">Reklam gördüm</option>
+            <option value="diger">Diğer</option>
+          </select>
+          <input type="text" id="k-kaynak-detay" maxlength="80" style="display:none;margin-top:9px"
+                 placeholder="Kısaca yazar mısınız?">
+        </div>
+        <button class="k-btn" id="k-btn" onclick="kayitOl()">Ücretsiz hesap oluşturun</button>
+        <div class="k-alt">Zaten hesabınız var mı? <span onclick="tabSec('giris')">Giriş yapın</span></div>
+      </div>
+
+      <!-- PAKET BAŞVURUSU -->
+      <div id="form-basvuru" style="display:none">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <span onclick="tabSec('giris')" style="cursor:pointer;color:var(--silik);font-size:19px;line-height:1">&larr;</span>
+          <div>
+            <div style="font-size:16px;font-weight:700;color:var(--murekkep);font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-.024em">Paket başvurusu</div>
+            <div style="font-size:12.5px;color:var(--soluk);margin-top:2px">Bilgilerinizi bırakın, aynı gün içinde dönelim.</div>
+          </div>
+        </div>
+
+        <div class="alan">
+          <label>SEÇTİĞİNİZ PAKET</label>
+          <select id="b-paket">
+            <option value="Başlangıç">Başlangıç · ₺1.500/ay · 3 kullanıcıya kadar</option>
+            <option value="Büyüme">Büyüme · ₺3.500/ay · 10 kullanıcıya kadar</option>
+            <option value="Kurumsal">Kurumsal · özel fiyatlandırma</option>
+          </select>
+        </div>
+        <div class="alan"><label>AD SOYAD</label><input type="text" id="b-ad" placeholder="Av. Ad Soyad"></div>
+        <div class="alan"><label>BÜRO ADI</label><input type="text" id="b-buro" placeholder="Örnek Hukuk Bürosu"></div>
+        <div class="alan"><label>E-POSTA</label><input type="email" id="b-email" placeholder="avukat@buro.com" autocomplete="email"></div>
+        <div class="alan"><label>TELEFON</label><input type="tel" id="b-tel" placeholder="0532 000 00 00" inputmode="tel" maxlength="17" oninput="telBicim(this)"></div>
+        <div class="alan">
+          <label>KAÇ KİŞİ KULLANACAK?</label>
+          <select id="b-kisi">
+            <option value="1">Tek avukat</option>
+            <option value="2-3">2 – 3 kişi</option>
+            <option value="4-10">4 – 10 kişi</option>
+            <option value="10+">10 kişiden fazla</option>
+          </select>
+        </div>
+        <div class="alan"><label>EKLEMEK İSTEDİĞİNİZ <span style="color:var(--silik);font-weight:400">— isteğe bağlı</span></label>
+          <input type="text" id="b-not" placeholder="Sorularınız, özel ihtiyaçlarınız..." onkeydown="if(event.key==='Enter')basvuruGonder()"></div>
+
+        <button class="k-btn" id="b-btn" onclick="basvuruGonder()">Başvuruyu gönderin</button>
+        <div class="k-alt">Hemen denemek ister misiniz? <span onclick="tabSec('kayit')">Ücretsiz hesap açın</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Canlanmalar ─────────────────────────────────── */
+const goz = new IntersectionObserver(function(girisler){
+  girisler.forEach(function(g){
+    if(g.isIntersecting){ g.target.classList.add('gor'); goz.unobserve(g.target) }
+  })
+}, { threshold:.12, rootMargin:'0px 0px -40px 0px' })
+document.querySelectorAll('.rv').forEach(function(e){ goz.observe(e) })
+
+/* Sayaç */
+const sayGoz = new IntersectionObserver(function(girisler){
+  girisler.forEach(function(g){
+    if(!g.isIntersecting) return
+    sayGoz.unobserve(g.target)
+    const el = g.target.querySelector('[data-say]')
+    if(!el) return
+    const hedef = parseInt(el.dataset.say, 10)
+    const on = el.dataset.on || '', son = el.dataset.son || ''
+    let n = 0
+    const adim = Math.max(1, Math.ceil(hedef / 34))
+    const zam = setInterval(function(){
+      n += adim
+      if(n >= hedef){ n = hedef; clearInterval(zam) }
+      el.textContent = on + n + son
+    }, 26)
+  })
+}, { threshold:.4 })
+document.querySelectorAll('.serit-ic > div').forEach(function(e){ sayGoz.observe(e) })
+
+/* Gezinti küçülmesi */
+addEventListener('scroll', function(){
+  document.getElementById('nav').classList.toggle('kucuk', scrollY > 40)
+}, { passive:true })
+
+/* SSS */
+function ssaAc(el){
+  const acikti = el.classList.contains('acik')
+  document.querySelectorAll('.sk').forEach(function(s){ s.classList.remove('acik') })
+  if(!acikti) el.classList.add('acik')
+}
+
+/* Fiyat dönemi */
+function perDegis(p){
+  const yil = p === 'yillik'
+  document.getElementById('p-aylik').classList.toggle('aktif', !yil)
+  document.getElementById('p-yillik').classList.toggle('aktif', yil)
+  document.getElementById('f1').innerHTML = yil ? '₺13.500 <span>/yıl</span>' : '₺1.500 <span>/ay</span>'
+  document.getElementById('f2').innerHTML = yil ? '₺28.000 <span>/yıl</span>' : '₺3.500 <span>/ay</span>'
+  document.getElementById('f1a').textContent = yil ? 'Ayda ₺1.125' : 'Aylık ödeme'
+  document.getElementById('f2a').textContent = yil ? 'Ayda ₺2.333' : 'Aylık ödeme'
+  document.getElementById('f1t').style.display = yil ? 'inline-block' : 'none'
+  document.getElementById('f2t').style.display = yil ? 'inline-block' : 'none'
+}
+
+
+/* Yumuşak kaydırma */
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click', function(e){
+    const h = a.getAttribute('href')
+    if(h === '#') return
+    const t = document.querySelector(h)
+    if(t){ e.preventDefault(); window.scrollTo({ top:t.offsetTop - 72, behavior:'smooth' }) }
+  })
+})
+
+addEventListener('keydown', function(e){ if(e.key === 'Escape') modalKapat() })
+</script>
+
+<script>
+const SB_URL = 'https://gzyqwbvvorgepazjpkjt.supabase.co'
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6eXF3YnZ2b3JnZXBhempwa2p0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzNjgwNjgsImV4cCI6MjA5OTk0NDA2OH0.H1aVkbCLciXCGbkvsG0jPmYkm5IBXhwstwVkM490-gI'
+const sb = supabase.createClient(SB_URL, SB_KEY)
+window.sb = sb   // ziyaret sayacı bu referansı kullanıyor — silme
+
+// Oturum varsa SADECE nav butonunu degistir (otomatik yonlendirme YOK)
+sb.auth.getSession().then(async ({ data: { session } }) => {
+  if (!session) return
+  const nav = document.querySelector('.nav-cta')
+  if (nav) nav.innerHTML = '<button class="btn btn-ghost" onclick="cikisYap()">Çıkış</button><button class="btn btn-gold" onclick="panelGit()">Panele Git</button>'
+})
+
+async function panelGit() {
+  const { data: { session } } = await sb.auth.getSession()
+  if (!session) { modalAc('giris'); return }
+  window.location.href = await hedefSayfa(session.user.id)
+}
+
+async function cikisYap() { await sb.auth.signOut(); location.reload() }
+
+// Tek merkezden hedef belirle
+async function hedefSayfa(uid) {
+  const { data: p } = await sb.from('kullanici_profil').select('rol').eq('id', uid).maybeSingle()
+  return p?.rol === 'admin' ? 'admin.html' : 'uygulama.html'
+}
+
+function modalAc(tab) { document.getElementById('modal').classList.add('open'); tabSec(tab) }
+function modalKapat() { document.getElementById('modal').classList.remove('open') }
+function tabSec(t) {
+  document.getElementById('form-giris').style.display = t==='giris'?'block':'none'
+  document.getElementById('form-kayit').style.display = t==='kayit'?'block':'none'
+  document.getElementById('form-sifre').style.display = t==='sifre'?'block':'none'
+  const fb = document.getElementById('form-basvuru')
+  if(fb) fb.style.display = t==='basvuru'?'block':'none'
+  document.getElementById('k-sekler').style.display  = (t==='sifre'||t==='basvuru')?'none':'flex'
+  document.getElementById('tab-giris').className = 'ksek'+(t==='giris'?' aktif':'')
+  document.getElementById('tab-kayit').className = 'ksek'+(t==='kayit'?' aktif':'')
+  document.getElementById('m-error').style.display = 'none'
+  document.getElementById('m-success').style.display = 'none'
+}
+
+// ── SIFRE SIFIRLAMA ────────────────────────────────────────
+async function sifreSifirla(){
+  const email = document.getElementById('s-email').value.trim()
+  if(!email){ hata('E-posta adresinizi girin'); return }
+  const btn = document.getElementById('s-btn')
+  btn.disabled = true; btn.textContent = 'Gönderiliyor...'
+  try{
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/yeni-sifre.html'
+    })
+    if(error) throw error
+    basari('Sıfırlama bağlantısı ' + email + ' adresine gönderildi. Gelen kutunuzu ve spam klasörünü kontrol edin.')
+    document.getElementById('s-email').value = ''
+  }catch(err){
+    hata(hataCoz(err))
+  }
+  btn.disabled = false; btn.textContent = 'Sıfırlama bağlantısı gönder'
+}
+function hata(m) { const e=document.getElementById('m-error'); e.textContent=m; e.style.display='block'; document.getElementById('m-success').style.display='none' }
+
+// Supabase hatalarini okunabilir Turkce mesaja cevir
+function hataCoz(err) {
+  console.error('Dosya360 hata:', err)
+  const ham = (err && (err.message || err.error_description || err.msg)) || ''
+  const kod = (err && (err.code || err.error || '')) + ''
+  const durum = (err && err.status) || 0
+  const t = (ham + ' ' + kod).toLowerCase()
+
+  if (t.includes('already registered') || t.includes('already been registered') || kod === 'user_already_exists')
+    return 'Bu e-posta zaten kayıtlı. Giriş yapmayı deneyin.'
+  if (t.includes('invalid login') || kod === 'invalid_credentials')
+    return 'E-posta veya şifre hatalı.'
+  if (t.includes('rate limit') || t.includes('too many') || durum === 429)
+    return 'Çok fazla deneme yapıldı. Lütfen bir saat sonra tekrar deneyin.'
+  if (t.includes('email address') && t.includes('invalid'))
+    return 'Geçersiz e-posta adresi.'
+  if (t.includes('password') && (t.includes('short') || t.includes('least')))
+    return 'Şifre en az 6 karakter olmalı.'
+  if (t.includes('database error') || t.includes('unexpected_failure') || durum >= 500)
+    return 'Sunucu tarafında bir sorun oluştu. Birazdan tekrar deneyin.'
+  if (t.includes('failed to fetch') || t.includes('networkerror'))
+    return 'İnternet bağlantısı kurulamadı.'
+  if (t.includes('not confirmed'))
+    return 'E-posta adresiniz doğrulanmamış.'
+
+  const detay = ham && ham !== '{}' ? ham : (durum ? 'kod ' + durum : 'bilinmeyen hata')
+  return 'Kayıt tamamlanamadı (' + detay + '). Sorun sürerse hello@dosya360.com adresine yazın.'
+}
+function basari(m) { const e=document.getElementById('m-success'); e.textContent=m; e.style.display='block'; document.getElementById('m-error').style.display='none' }
+
+async function girisYap() {
+  const email = document.getElementById('g-email').value.trim()
+  const sifre = document.getElementById('g-sifre').value
+  if (!email||!sifre) { hata('E-posta ve şifre zorunludur'); return }
+  const btn = document.getElementById('g-btn')
+  btn.disabled=true; btn.textContent='Giriş yapılıyor...'
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: sifre })
+    if (error) throw error
+    window.location.href = await hedefSayfa(data.user.id)
+  } catch(err) {
+    hata(hataCoz(err)); btn.disabled=false; btn.textContent='Giriş Yap'
+  }
+}
+
+// Turk cep numarasi: 10 hane, 5 ile baslar
+function telGecerli(ham){
+  const t = String(ham||'').replace(/\D/g,'').replace(/^90/,'').replace(/^0/,'')
+  return t.length === 10 && t[0] === '5'
+}
+function telYaz(ham){
+  const t = String(ham||'').replace(/\D/g,'').replace(/^90/,'').replace(/^0/,'')
+  return '0' + t
+}
+function telBicim(el){
+  let t = el.value.replace(/\D/g,'')
+  if(t.startsWith('90')) t = t.slice(2)
+  if(!t.startsWith('0')) t = '0' + t
+  t = t.slice(0,11)
+  let g = t
+  if(t.length > 4)  g = t.slice(0,4) + ' ' + t.slice(4)
+  if(t.length > 7)  g = t.slice(0,4) + ' ' + t.slice(4,7) + ' ' + t.slice(7)
+  if(t.length > 9)  g = t.slice(0,4) + ' ' + t.slice(4,7) + ' ' + t.slice(7,9) + ' ' + t.slice(9)
+  el.value = g
+}
+
+async function sicilKontrol(){
+  const baro = document.getElementById('k-baro').value.trim()
+  const sicil = document.getElementById('k-sicil').value.trim()
+  const el = document.getElementById('sicil-durum')
+  if(!baro || !sicil){ el.style.display = 'none'; return }
+  try{
+    const { data } = await sb.rpc('sicil_musait', { p_baro: baro, p_sicil: sicil })
+    el.style.display = 'block'
+    if(data === false){
+      el.textContent = 'Bu sicil numarası zaten kayıtlı.'
+      el.style.color = '#B42318'
+    } else {
+      el.textContent = 'Sicil numarası uygun.'
+      el.style.color = '#12805C'
+    }
+  }catch(e){ el.style.display = 'none' }
+}
+
+// Referans ve "diger" seceneklerinde tek satirlik aciklama sorulur
+function kaynakDegisti(){
+  const s = document.getElementById('k-kaynak')
+  const d = document.getElementById('k-kaynak-detay')
+  if(!s || !d) return
+  const sor = { referans:'Kim tavsiye etti?', tv:'Hangi program veya platform?',
+                diger:'Nereden duydunuz?', sosyal_medya:'Hangi hesap veya gönderi? (isteğe bağlı)' }
+  if(sor[s.value]){ d.style.display = 'block'; d.placeholder = sor[s.value] }
+  else { d.style.display = 'none'; d.value = '' }
+}
+
+async function kayitOl() {
+  const ad = document.getElementById('k-ad').value.trim()
+  const buro = document.getElementById('k-buro').value.trim()
+  const email = document.getElementById('k-email').value.trim()
+  const tel = document.getElementById('k-tel').value.replace(/\D/g,'')
+  const sifre = document.getElementById('k-sifre').value
+  const kaynak = (document.getElementById('k-kaynak') || {}).value || ''
+  const kaynakDetay = ((document.getElementById('k-kaynak-detay') || {}).value || '').trim()
+  if (!email||!sifre) { hata('E-posta ve şifre zorunludur'); return }
+  if (!kaynak) { hata('Dosya360\'ı nerede gördüğünüzü seçin'); return }
+  if (!tel) { hata('Cep telefonu zorunludur'); return }
+  if (!telGecerli(tel)) { hata('Geçerli bir cep telefonu girin — örnek: 0532 000 00 00'); return }
+  const baro = document.getElementById('k-baro').value.trim()
+  const sicil = document.getElementById('k-sicil').value.trim()
+  if (!baro)  { hata('Baro bilgisi zorunludur'); return }
+  if (!sicil) { hata('Baro sicil numarası zorunludur'); return }
+  try {
+    const { data: musait } = await sb.rpc('sicil_musait', { p_baro: baro, p_sicil: sicil })
+    if (musait === false) {
+      hata('Bu baro ve sicil numarasıyla kayıtlı bir hesap var. Giriş yapmayı deneyin ya da bizimle iletişime geçin.')
+      return
+    }
+  } catch(e) { console.warn('Sicil kontrolü yapılamadı:', e) }
+  if (sifre.length < 6) { hata('Şifre en az 6 karakter olmalı'); return }
+  const btn = document.getElementById('k-btn')
+  btn.disabled=true; btn.textContent='Hesap oluşturuluyor...'
+  try {
+    const { data, error } = await sb.auth.signUp({ email, password: sifre })
+    if (error) throw error
+    if (!data.session) { await sb.auth.signInWithPassword({ email, password: sifre }) }
+    const { data: { session } } = await sb.auth.getSession()
+    const uid = session?.user?.id || data.user?.id
+    if (uid) {
+      const { error: pErr } = await sb.from('kullanici_profil')
+        .upsert({ id: uid, email, avukat_adi: ad, buro_adi: buro || null, telefon: telYaz(tel),
+                  baro: baro, baro_sicil: sicil, rol: 'kullanici', kurulum_tamam: false,
+                  kaynak: kaynak || null, kaynak_detay: kaynakDetay || null })
+      if (pErr) console.warn('Profil yazilamadi (trigger olusturmus olabilir):', pErr)
+    }
+    // Hoş geldiniz maili — başarısız olsa da kaydı engellemesin
+    try {
+      const { data: { session: o } } = await sb.auth.getSession()
+      if (o) {
+        await fetch(SB_URL + '/functions/v1/uyelik-maili', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + o.access_token,
+            'Content-Type': 'application/json',
+            'apikey': SB_KEY
+          }
+        })
+      }
+    } catch(e) { console.warn('Üyelik maili gönderilemedi:', e) }
+
+    window.location.href = 'uygulama.html'
+  } catch(err) {
+    hata(hataCoz(err)); btn.disabled=false; btn.textContent='Ücretsiz Hesap Oluştur'
+  }
+}
+
+function toggleFaq(el) { el.classList.toggle('open') }
+
+// ── PAKET BAŞVURUSU ────────────────────────────────────────
+function basvuruAc(paket){
+  try{ if(window.d360Say) window.d360Say('basvuru_acildi') }catch(e){}
+  modalAc('basvuru')
+  const s = document.getElementById('b-paket')
+  if(s && paket) s.value = paket
+  // Pakete göre kullanıcı sayısı önerisi
+  const kisi = document.getElementById('b-kisi')
+  if(kisi){
+    if(paket === 'Başlangıç') kisi.value = '2-3'
+    else if(paket === 'Büyüme') kisi.value = '4-10'
+    else if(paket === 'Kurumsal') kisi.value = '10+'
+  }
+  setTimeout(function(){ const a=document.getElementById('b-ad'); if(a) a.focus() }, 120)
+}
+
+async function basvuruGonder(){
+  const al = id => (document.getElementById(id)?.value || '').trim()
+  const ad = al('b-ad'), email = al('b-email'), tel = al('b-tel')
+
+  if(!ad)    return hata('Adınızı girin.')
+  if(!email || email.indexOf('@') < 1) return hata('Geçerli bir e-posta girin.')
+  if(tel.replace(/\D/g,'').length < 10) return hata('Telefon numaranızı eksiksiz girin.')
+
+  const btn = document.getElementById('b-btn')
+  btn.disabled = true; btn.textContent = 'Gönderiliyor...'
+  try{
+    const { data, error } = await sb.rpc('paket_basvuru', {
+      p_ad: ad,
+      p_buro: al('b-buro') || null,
+      p_email: email,
+      p_telefon: telYaz(tel),
+      p_paket: al('b-paket'),
+      p_kisi: al('b-kisi'),
+      p_not: al('b-not') || null
+    })
+    if(error) throw error
+    if(data && data.ok === false) throw new Error(data.hata || 'Başvuru kaydedilemedi.')
+
+    basari('Başvurunuz alındı. Aynı gün içinde size döneceğiz.')
+    ;['b-ad','b-buro','b-email','b-tel','b-not'].forEach(function(i){
+      const e = document.getElementById(i); if(e) e.value = ''
+    })
+    btn.textContent = 'Gönderildi'
+    setTimeout(modalKapat, 2200)
+    return
+  }catch(e){
+    hata('Başvuru gönderilemedi: ' + (e.message || 'bilinmeyen hata') +
+         ' · hello@dosya360.com adresine yazabilirsiniz.')
+  }
+  btn.disabled = false; btn.textContent = 'Başvuruyu gönderin'
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'))
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior:'smooth' }) }
+  })
+})
+</script>
+
+<!-- Dosya360 Web Asistanı -->
+<script src="https://dosya360.com/bot.js" data-buro="c5dd3cb7-99e7-4199-864d-918f353de93f"></script>
+
+<!-- ══ PAROLAYI GÖSTER ══════════════════════════════════ -->
+<script>
+(function(){
+  var KAPALI = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor"'
+    + ' stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/>'
+    + '<circle cx="12" cy="12" r="3"/></svg>'
+  var ACIK = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor"'
+    + ' stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M3 3l18 18"/>'
+    + '<path d="M10.6 6.1A8.9 8.9 0 0 1 12 6c6 0 9.5 6 9.5 6a16 16 0 0 1-2.9 3.5"/>'
+    + '<path d="M6.3 7.8A16 16 0 0 0 2.5 12s3.5 6 9.5 6a8.8 8.8 0 0 0 3.5-.7"/>'
+    + '<path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>'
+
+  function kur(){
+    var alanlar = document.querySelectorAll('input[type="password"]')
+    for(var i = 0; i < alanlar.length; i++){
+      var g = alanlar[i]
+      if(g.getAttribute('data-goz')) continue
+      g.setAttribute('data-goz', '1')
+
+      var sar = document.createElement('span')
+      sar.style.cssText = 'position:relative;display:block;width:100%'
+      g.parentNode.insertBefore(sar, g)
+      sar.appendChild(g)
+
+      // metin dugmenin altina girmesin
+      var mevcut = parseInt(getComputedStyle(g).paddingRight, 10) || 12
+      g.style.paddingRight = (mevcut + 34) + 'px'
+
+      var d = document.createElement('button')
+      d.type = 'button'
+      d.tabIndex = -1
+      d.setAttribute('aria-label', 'Parolayı göster')
+      d.title = 'Parolayı göster'
+      d.style.cssText = 'position:absolute;right:7px;top:50%;transform:translateY(-50%);'
+        + 'background:none;border:none;padding:8px;cursor:pointer;line-height:0;'
+        + 'color:currentColor;opacity:.52;transition:opacity .15s'
+      d.innerHTML = KAPALI
+      d.onmouseenter = function(){ this.style.opacity = '.9' }
+      d.onmouseleave = function(){ this.style.opacity = '.52' }
+
+      ;(function(girdi, dugme){
+        dugme.onclick = function(e){
+          e.preventDefault()
+          var gizli = girdi.type === 'password'
+          girdi.type = gizli ? 'text' : 'password'
+          dugme.innerHTML = gizli ? ACIK : KAPALI
+          var yazi = gizli ? 'Parolayı gizle' : 'Parolayı göster'
+          dugme.setAttribute('aria-label', yazi); dugme.title = yazi
+          try{ girdi.focus() }catch(_){}
+        }
+      })(g, d)
+
+      sar.appendChild(d)
+    }
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', kur)
+  } else { kur() }
+  // sonradan açılan ekranlar (modal, şifre değiştirme) için
+  setInterval(kur, 1500)
+})()
+</script>
+
+
+<!-- ══ ZİYARET SAYACI ══════════════════════════════════
+     Çerez kullanmaz, kişi tanımlamaz, dışarıya veri göndermez.
+     Yalnızca sayfa, geliş kaynağı ve cihaz türü sayılır. -->
+<script>
+(function(){
+  function kaynakBul(){
+    try{
+      var u = new URLSearchParams(location.search)
+      var k = u.get('utm_source') || u.get('kaynak')
+      if(k) return k.toLowerCase().slice(0,40)
+      var r = document.referrer
+      if(!r) return 'dogrudan'
+      var a = new URL(r).hostname.replace(/^www\./,'').toLowerCase()
+      if(a === location.hostname) return 'ic'
+      if(a.indexOf('instagram') > -1) return 'instagram'
+      if(a.indexOf('linkedin')  > -1) return 'linkedin'
+      if(a.indexOf('google')    > -1) return 'google'
+      if(a.indexOf('facebook')  > -1 || a.indexOf('fb.')  > -1) return 'facebook'
+      if(a.indexOf('youtube')   > -1) return 'youtube'
+      if(a.indexOf('whatsapp')  > -1 || a.indexOf('wa.me') > -1) return 'whatsapp'
+      if(a.indexOf('bing')      > -1 || a.indexOf('yandex') > -1) return 'arama'
+      if(a.indexOf('t.co') > -1 || a.indexOf('x.com') > -1) return 'x'
+      return a.slice(0,40)
+    }catch(e){ return 'dogrudan' }
+  }
+
+  var KAYNAK = kaynakBul()
+  var CIHAZ  = (window.innerWidth < 760) ? 'mobil' : 'masaustu'
+  var gonderildi = {}
+
+  function say(olay){
+    if(gonderildi[olay]) return
+    gonderildi[olay] = true
+    try{
+      if(!window.sb){
+        console.warn('[Dosya360] sayaç: Supabase istemcisi hazır değil, "' + olay + '" kaydedilemedi')
+        gonderildi[olay] = false
+        return
+      }
+      window.sb.rpc('ziyaret_kaydet', {
+        p_sayfa:  location.pathname.slice(0,120) || '/',
+        p_kaynak: KAYNAK,
+        p_olay:   olay,
+        p_cihaz:  CIHAZ
+      }).then(function(c){
+        if(c && c.error) console.warn('[Dosya360] sayaç yazamadı (' + olay + '):', c.error.message)
+      }, function(e){
+        console.warn('[Dosya360] sayaç yazamadı (' + olay + '):', e && e.message)
+      })
+    }catch(e){
+      console.warn('[Dosya360] sayaç hatası:', e && e.message)
+    }
+  }
+  window.d360Say = say
+
+  function basla(){
+    if(KAYNAK === 'ic') return     // kendi sayfalarımız arası gezinme sayılmasın
+    say('goruntuleme')
+
+    // fiyat bölümü ekrana girdiğinde
+    var f = document.getElementById('fiyatlar')
+    if(f && 'IntersectionObserver' in window){
+      var g = new IntersectionObserver(function(k){
+        if(k[0] && k[0].isIntersecting){ say('fiyat'); g.disconnect() }
+      }, { threshold: 0.35 })
+      g.observe(f)
+    }
+  }
+
+  // sb hazır olana kadar bekle
+  var dene = 0
+  var t = setInterval(function(){
+    if(window.sb || ++dene > 40){ clearInterval(t); if(window.sb) basla() }
+  }, 250)
+})()
+</script>
+
+</body>
+</html>
