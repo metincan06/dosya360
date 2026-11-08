@@ -1408,5 +1408,167 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 })()
 </script>
 
+<!-- ── 14 gün ücretsiz deneme penceresi ───────────────────────────────
+     Ziyaret başına bir kez açılır; kapatılırsa 30 gün geri gelmez.
+     Tetik: 25 saniye · sayfanın yarısına inme · çıkış niyeti (masaüstü)  -->
+<style>
+#dn-ort{position:fixed;inset:0;z-index:9000;display:none;align-items:center;
+  justify-content:center;padding:24px;background:rgba(12,27,51,.52);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);opacity:0;
+  transition:opacity .22s ease}
+#dn-ort.ac{display:flex}
+#dn-ort.gor{opacity:1}
+#dn-kutu{position:relative;width:100%;max-width:480px;background:#fff;
+  border-radius:var(--r-b,22px);overflow:hidden;
+  box-shadow:0 30px 90px -20px rgba(12,27,51,.55),0 2px 8px rgba(12,27,51,.1);
+  transform:translateY(14px) scale(.98);transition:transform .26s cubic-bezier(.2,.8,.3,1)}
+#dn-ort.gor #dn-kutu{transform:none}
+#dn-serit{height:4px;background:linear-gradient(90deg,var(--altin,#1B4FA8),var(--altin-ac,#6EA0F0))}
+#dn-ic{padding:38px 40px 32px}
+#dn-kapat{position:absolute;top:14px;right:14px;width:34px;height:34px;border:0;
+  border-radius:10px;background:transparent;color:var(--silik,#8E99AD);font-size:17px;
+  cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center}
+#dn-kapat:hover{background:var(--ince,#EDF0F4);color:var(--soluk,#58637A)}
+.dn-rozet{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;
+  background:var(--altin-zem,#EDF3FD);color:var(--altin,#1B4FA8);font-size:12.5px;
+  font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:20px}
+.dn-rozet i{width:7px;height:7px;border-radius:50%;background:var(--altin,#1B4FA8);display:block}
+#dn-kutu h2{margin:0 0 12px;font-size:31px;line-height:1.2;font-weight:800;
+  letter-spacing:-.03em;color:var(--murekkep,#0D1526)}
+#dn-kutu h2 span{color:var(--altin,#1B4FA8)}
+#dn-alt{margin:0 0 26px;font-size:15.5px;line-height:1.6;color:var(--soluk,#58637A)}
+#dn-liste{list-style:none;margin:0 0 30px;padding:0;display:flex;flex-direction:column;gap:13px}
+#dn-liste li{display:flex;gap:12px;align-items:flex-start;font-size:15px;line-height:1.45;
+  color:var(--murekkep,#0D1526)}
+#dn-liste svg{width:19px;height:19px;flex-shrink:0;margin-top:1px;color:var(--yesil,#0F7A55)}
+#dn-btn{display:block;width:100%;padding:16px;border:0;border-radius:14px;
+  background:var(--altin,#1B4FA8);color:#fff;font-family:inherit;font-size:16px;
+  font-weight:700;letter-spacing:-.01em;cursor:pointer;
+  box-shadow:0 8px 20px -6px rgba(27,79,168,.55)}
+#dn-btn:hover{background:var(--lacivert2,#15294A)}
+#dn-not{margin:14px 0 0;text-align:center;font-size:13px;color:var(--silik,#8E99AD)}
+#dn-gec{display:block;width:100%;margin-top:14px;background:none;border:0;font-family:inherit;
+  font-size:13.5px;color:var(--silik,#8E99AD);cursor:pointer;text-decoration:underline;
+  text-underline-offset:3px}
+#dn-gec:hover{color:var(--soluk,#58637A)}
+@media(max-width:520px){
+  #dn-ort{padding:16px}
+  #dn-ic{padding:30px 24px 26px}
+  #dn-kutu h2{font-size:26px}
+  #dn-alt{font-size:15px;margin-bottom:22px}
+}
+@media(prefers-reduced-motion:reduce){ #dn-ort,#dn-kutu{transition:none} }
+</style>
+
+<div id="dn-ort" role="dialog" aria-modal="true" aria-labelledby="dn-bas">
+  <div id="dn-kutu">
+    <div id="dn-serit"></div>
+    <button id="dn-kapat" type="button" aria-label="Kapat">&#10005;</button>
+    <div id="dn-ic">
+      <span class="dn-rozet"><i></i>Kurulum gerektirmez</span>
+      <h2 id="dn-bas">14 gün <span>ücretsiz</span> deneyin</h2>
+      <p id="dn-alt">Büronuzu bugün kurun, dosyalarınızı girin, süre uyarılarını çalışırken görün. Beğenmezseniz hiçbir şey ödemezsiniz.</p>
+      <ul id="dn-liste">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Kredi kartı istemiyoruz</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Kurulum yok, tarayıcıdan açılır</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>İlk kurulumu biz yapıyoruz</li>
+      </ul>
+      <button id="dn-btn" type="button">Ücretsiz hesabımı aç</button>
+      <p id="dn-not">3 kullanıcıya kadar &middot; 2 dakikada hazır</p>
+      <button id="dn-gec" type="button">Şimdi değil, önce bakayım</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict'
+  var ANAHTAR = 'd360-deneme-pencere'
+  var SESSIZ_GUN = 30
+  var BEKLE_MS = 25000
+  var KAYDIR_ORAN = 0.5
+
+  var ort = document.getElementById('dn-ort')
+  if(!ort) return
+  var acildi = false, bitti = false
+
+  function oku(){
+    try{ return parseInt(localStorage.getItem(ANAHTAR) || '0', 10) || 0 }
+    catch(e){ return 0 }
+  }
+  function yaz(){
+    try{ localStorage.setItem(ANAHTAR, String(Date.now())) }catch(e){}
+  }
+  function susturulmus(){
+    var t = oku()
+    return t > 0 && (Date.now() - t) < SESSIZ_GUN * 86400000
+  }
+  function say(olay){
+    try{ if(window.d360Say) window.d360Say(olay) }catch(e){}
+  }
+  /* Kayıt kutusu zaten açıksa araya girme */
+  function mesgul(){
+    var m = document.getElementById('modal')
+    return !!(m && m.classList.contains('open'))
+  }
+
+  function ac(){
+    if(acildi || bitti || susturulmus() || mesgul()) return
+    acildi = true
+    temizle()
+    ort.classList.add('ac')
+    requestAnimationFrame(function(){ ort.classList.add('gor') })
+    document.addEventListener('keydown', tus, true)
+    say('popup_gosterildi')
+  }
+
+  function kapat(sebep){
+    if(!acildi) return
+    acildi = false; bitti = true
+    yaz()
+    ort.classList.remove('gor')
+    document.removeEventListener('keydown', tus, true)
+    setTimeout(function(){ ort.classList.remove('ac') }, 240)
+    if(sebep === 'kayit'){
+      say('popup_tiklandi')
+      if(typeof window.modalAc === 'function') window.modalAc('kayit')
+    }
+  }
+
+  function tus(e){
+    if(e.key === 'Escape'){ e.preventDefault(); e.stopPropagation(); kapat('esc') }
+  }
+
+  document.getElementById('dn-btn').addEventListener('click', function(){ kapat('kayit') })
+  document.getElementById('dn-kapat').addEventListener('click', function(){ kapat('x') })
+  document.getElementById('dn-gec').addEventListener('click', function(){ kapat('gec') })
+  ort.addEventListener('mousedown', function(e){ if(e.target === ort) kapat('dis') })
+
+  /* ── tetikler ── */
+  var zaman = setTimeout(ac, BEKLE_MS)
+
+  function kaydirma(){
+    var yuk = document.documentElement.scrollHeight - window.innerHeight
+    if(yuk > 0 && (window.scrollY / yuk) >= KAYDIR_ORAN) ac()
+  }
+  window.addEventListener('scroll', kaydirma, { passive:true })
+
+  /* çıkış niyeti — yalnızca fare olan cihazlarda */
+  function cikis(e){ if(e.clientY <= 0) ac() }
+  if(window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+    document.addEventListener('mouseout', cikis)
+  }
+
+  function temizle(){
+    clearTimeout(zaman)
+    window.removeEventListener('scroll', kaydirma)
+    document.removeEventListener('mouseout', cikis)
+  }
+
+  /* Daha önce kapatmışsa hiç dinleme */
+  if(susturulmus()) temizle()
+})()
+</script>
+
 </body>
 </html>
