@@ -523,6 +523,17 @@ function ziyaretCiz(d, gun){
     + zKutu('Kayıt olan', d.kayit || 0, zOran(d.kayit, toplam))
     + '</div>'
 
+  // Pop-up · 14 gün ücretsiz deneme penceresi
+  const pg = Number(d.popup_gosterildi) || 0
+  const pt = Number(d.popup_tiklandi) || 0
+  const po = pg ? pt / pg : 0
+  h += '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">'
+    + zKutu('Pop-up gösterimi', pg, zOran(pg, toplam) + ' ziyaretin')
+    + zKutu('Pop-up tıklaması', pt, pg ? zOran(pt, pg) + ' gösterimin' : '—')
+    + zKutu('Pop-up dönüşümü', pg ? (100 * po).toFixed(1) + '%' : '—',
+            pg < 30 ? 'veri az' : (po >= 0.08 ? 'iyi' : (po < 0.03 ? 'metni değiştir' : 'normal')))
+    + '</div>'
+
   // Kaynaklar
   const kay = Array.isArray(d.kaynaklar) ? d.kaynaklar : []
   h += '<div style="display:flex;gap:12px;flex-wrap:wrap">'
