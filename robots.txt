@@ -1,8 +1,74 @@
+# Dosya360 — https://dosya360.com
+
 User-agent: *
 Allow: /
-Allow: /index.html
 Disallow: /uygulama.html
 Disallow: /admin.html
-Disallow: /onboarding.html
+Disallow: /davet.html
+Disallow: /bot.html
+Disallow: /yeni-sifre.html
+
+# ── Yapay zekâ tarayıcıları ────────────────────────────────
+# Tanıtım sayfalarının okunmasına açıkça izin veriliyor.
+# Uygulama ve yönetim sayfaları yukarıdaki kurallarla kapalıdır.
+
+User-agent: GPTBot
+Allow: /
+Disallow: /uygulama.html
+Disallow: /admin.html
+Disallow: /davet.html
+Disallow: /bot.html
+Disallow: /yeni-sifre.html
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /uygulama.html
+Disallow: /admin.html
+Disallow: /davet.html
+Disallow: /bot.html
+Disallow: /yeni-sifre.html
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /uygulama.html
+Disallow: /admin.html
+Disallow: /davet.html
+Disallow: /bot.html
+Disallow: /yeni-sifre.html
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /uygulama.html
+Disallow: /admin.html
+Disallow: /davet.html
+Disallow: /bot.html
+Disallow: /yeni-sifre.html
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
 
 Sitemap: https://dosya360.com/sitemap.xml

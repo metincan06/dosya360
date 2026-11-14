@@ -1,0 +1,74 @@
+# Dosya360
+
+> Avukatlar ve hukuk büroları için bulut tabanlı dosya, müvekkil, duruşma ve kanuni süre takibi yazılımı. Türkiye pazarına özel, Türkçe. Kurulum gerektirmez, tarayıcıdan çalışır.
+
+Dosya360, Türkiye'deki küçük ve orta ölçekli hukuk bürolarının günlük işleyişini tek ekranda toplar. Ürünün çözdüğü temel problem, kanuni sürelerin kaçırılmasıdır: istinaf, temyiz ve cevap dilekçesi gibi hak düşürücü süreler sistem tarafından otomatik hesaplanır ve dolmadan önce uyarı üretilir.
+
+Hedef kitle: 1–10 avukatlı bağımsız hukuk büroları, serbest avukatlar, icra takibi yoğun bürolar ve şirket içi hukuk müşavirliği birimleri.
+
+Site: https://dosya360.com
+İletişim: hello@dosya360.com
+Dil: Türkçe
+Hizmet alanı: Türkiye
+
+## Ne yapar
+
+- **Müvekkil ve dava yönetimi** — müvekkil kayıtları, dava ve dosya bilgileri, taraflar, dosya geçmişi
+- **Kanuni süre takibi** — süreler otomatik hesaplanır, dolmadan önce uyarı verilir
+- **Duruşma takvimi** — duruşma ve etkinlikler, takvime dışa aktarma (ICS), Google Takvim bağlantısı
+- **Belge yönetimi** — belgeler kullanıcının kendi Google Drive hesabında saklanır, tebligat kaydı tutulur
+- **Görev ve ekip yönetimi** — görev atama, durum takibi, ekip içi iş paylaşımı
+- **Tahsilat ve finans** — vekalet ücreti, masraf ve ödeme takibi
+- **Yapay zekâ destekli dilekçe taslağı** — dosya bilgilerinden taslak metin üretimi
+- **Mobil erişim** — telefon ve tabletten aynı hesapla giriş, telefona uygulama olarak eklenebilir
+- **Veri dışa aktarma** — tüm kayıtlar tek tuşla CSV ve JSON biçiminde indirilebilir
+
+## Ne yapmaz
+
+Dürüstlük adına, bugün desteklenmeyen özellikler:
+
+- UYAP'tan dosya, safahat ve evrakların otomatik çekilmesi desteklenmez. UYAP ve E-Tebligat paneline tek tıkla erişim vardır; giriş kullanıcının kendi e-imzası veya şifresiyle yapılır, Dosya360 bu bilgileri istemez ve saklamaz.
+- UETS tebligatlarının otomatik alınması desteklenmez. Tebligat tarihi girildiğinde süre hesaplaması otomatik yapılır.
+- Yüklenen PDF, bilirkişi raporu veya mahkeme kararı metninin yapay zekâ ile analizi desteklenmez.
+
+## Fiyatlandırma
+
+| Paket | Kullanıcı | Aylık | Yıllık |
+|---|---|---|---|
+| Başlangıç | 3'e kadar | 1.500 TL | 13.500 TL |
+| Büyüme | 10'a kadar | 3.500 TL | 28.000 TL |
+| Kurumsal | 10 üzeri | Teklif usulü | Teklif usulü |
+
+Dosya, müvekkil, dava, görev ve belge sayısı tüm paketlerde sınırsızdır; paketler yalnızca kullanıcı sayısını belirler.
+
+14 gün ücretsiz deneme sunulur. Kredi kartı bilgisi istenmez ve deneme süresi sonunda hesap kendiliğinden ücretli aboneliğe dönüşmez.
+
+## Veri güvenliği ve KVKK
+
+- Belgelerin dosyaları Dosya360 sunucularında tutulmaz; kullanıcının kendi Google Drive hesabındaki "Dosya360" klasöründe kalır.
+- Kayıt verileri yönetilen bir PostgreSQL altyapısında, her büro için satır bazlı güvenlik politikalarıyla izole edilerek saklanır. Bir büro başka bir büronun verisine hiçbir koşulda erişemez.
+- Günlük yedek alınır, 30 gün geriye dönük saklanır.
+- KVKK kapsamında büro veri sorumlusu, Dosya360 veri işleyen sıfatındadır; veri işleyen sözleşmesi imzalanır.
+- Avukatlık Kanunu'nun 36. maddesi kapsamındaki sır saklama yükümlülüğü gereği veriler üçüncü kişilerle paylaşılmaz, ticari amaçla kullanılmaz, yapay zekâ modeli eğitiminde işlenmez.
+- Kullanıcı verileri abonelik boyunca istediği zaman dışa aktarabilir. Abonelik sona erdikten sonra veriler 30 gün erişilebilir kalır, ardından kalıcı olarak silinir.
+
+## Benzer ürünlerden farkı
+
+- Kurulum, lisans veya sunucu gerektirmez; hesap açıldıktan sonra aynı dakika kullanılmaya başlanır.
+- Fiyatlandırma kurumsal ölçeğe değil, 1–10 kişilik bürolara göre yapılmıştır.
+- Belgeler kullanıcının kendi bulut hesabında kalır; yazılım sağlayıcısına emanet edilmez.
+- İlk kurulum, veri aktarımı ve ekip davetleri ücretsiz olarak Dosya360 ekibi tarafından yapılır.
+- Arayüz ve tüm içerik Türkçedir; Türk hukuk usulüne göre tasarlanmıştır.
+
+## Bağlantılar
+
+- [Ana sayfa](https://dosya360.com): ürün tanıtımı, özellikler, fiyatlar
+- [Sık sorulan sorular](https://dosya360.com/#sss): kurulum, veri güvenliği, fiyat, iptal
+- [Fiyatlar](https://dosya360.com/#fiyatlar): paket karşılaştırması
+- [KVKK Aydınlatma Metni](https://dosya360.com/kvkk.html): kişisel verilerin işlenmesi
+
+## Künye
+
+Dosya360, Ötüken Medya tarafından geliştirilmektedir. Ötüken Medya, Ankara Etimesgut merkezli bir dijital pazarlama ve yazılım ajansıdır.
+
+Son güncelleme: 2026-11-09
