@@ -771,7 +771,7 @@ var sb = window.sb
     <div class="panel" id="panel-davalar">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <h1 style="font-size:20px;font-weight:600">Davalar</h1>
-        <button class="tbtn primary" onclick="showModal('dava')"><i class="ti ti-plus"></i>Yeni Dava</button>
+        <div style="display:flex;gap:8px"><button class="tbtn" onclick="uyapAktarAc()" title="UYAP dosya listesini içe aktar"><i class="ti ti-file-import"></i>UYAP'tan Aktar</button><button class="tbtn primary" onclick="showModal('dava')"><i class="ti ti-plus"></i>Yeni Dava</button></div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
         <div style="display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--border);border-radius:9px;padding:7px 11px;flex:1;min-width:200px">
@@ -908,6 +908,26 @@ var sb = window.sb
       <h1 style="font-size:20px;font-weight:600;margin-bottom:18px">Ayarlar</h1>
 
       <div id="ay-duzen" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;max-width:920px">
+
+        <!-- Verilerimi indir -->
+        <div class="card" style="padding:22px;grid-column:1 / -1">
+          <div style="font-size:14.5px;font-weight:600;margin-bottom:3px">Verilerimi indir</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.7">
+            Bürodaki tüm kayıtlarınızı tek bir arşiv dosyası olarak indirin: müvekkiller, davalar,
+            görevler, duruşma ve etkinlikler, finans kayıtları, belge listesi, iletişim geçmişi ve
+            süre takipleri. Hem Excel'de açılabilen CSV hem de JSON biçiminde.
+            <b>Veriniz size aittir; istediğiniz zaman, hiçbir koşula bağlı olmadan indirebilirsiniz.</b>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <button class="tbtn primary" id="btn-disa-aktar" onclick="veriDisaAktar()">
+              <i class="ti ti-download"></i>Tüm verilerimi indir</button>
+            <span id="disa-aktar-durum" style="font-size:12px;color:var(--muted)"></span>
+          </div>
+          <div style="font-size:11.5px;color:var(--hint);margin-top:12px;line-height:1.7">
+            Belgelerinizin dosyaları zaten kendi Google Drive'ınızdaki <b>Dosya360</b> klasöründe
+            duruyor; arşivdeki belge listesi bu dosyaların bağlantılarını içerir.
+          </div>
+        </div>
 
         <!-- Google Drive + Takvim -->
         <div class="card" style="padding:22px;grid-column:1 / -1">
@@ -1898,6 +1918,19 @@ var sb = window.sb
     <div class="field"><label>Mesaj *</label><textarea id="il-mesaj" rows="4" placeholder="Görüşme içeriği..."></textarea></div>
     <div class="modal-footer"><button class="tbtn" onclick="closeModal('iletisim')">İptal</button><button class="tbtn primary" id="btn-iletisim" onclick="saveIletisim()">Kaydet</button></div>
   </div>
+</div></div>
+
+<div class="overlay" id="m-uyap"><div class="modal" style="max-width:720px">
+  <div class="modal-head">
+    <h3>UYAP'tan İçe Aktar</h3>
+    <button class="modal-close" onclick="document.getElementById('m-uyap').classList.remove('open')"><i class="ti ti-x"></i></button>
+  </div>
+  <div style="display:flex;gap:18px;font-size:11.5px;padding:0 20px 14px;border-bottom:1px solid var(--border)">
+    <span id="uyap-adim-1">1 · Dosya</span>
+    <span id="uyap-adim-2">2 · Eşleştirme</span>
+    <span id="uyap-adim-3">3 · Önizleme</span>
+  </div>
+  <div class="modal-body" id="uyap-govde"></div>
 </div></div>
 
 <script>
@@ -7165,6 +7198,667 @@ window.anaYenile = anaYenile
     catch(_){ yerliAlert(mesaj) }
   }
 })()
+</script>
+
+<!-- ── Toplu veri dışa aktarma ───────────────────────────────────
+     Ayarlar → "Tüm verilerimi indir". Tek bir .zip üretir:
+     her kayıt türü için CSV + tüm veri tek JSON + OKUBENI.txt
+     Hiçbir dış kütüphane kullanmaz; zip "store" yöntemiyle yazılır. -->
+<script>
+(function(){
+  'use strict'
+
+  /* ── CRC32 ── */
+  var CRC = (function(){
+    var t = new Uint32Array(256)
+    for(var i = 0; i < 256; i++){
+      var c = i
+      for(var k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1)
+      t[i] = c >>> 0
+    }
+    return function(u8){
+      var c = 0xFFFFFFFF
+      for(var i = 0; i < u8.length; i++) c = t[(c ^ u8[i]) & 0xFF] ^ (c >>> 8)
+      return (c ^ 0xFFFFFFFF) >>> 0
+    }
+  })()
+
+  function utf8(s){ return new TextEncoder().encode(s) }
+
+  function dosTarih(d){
+    var t = ((d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() / 2)) & 0xFFFF
+    var g = (((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate()) & 0xFFFF
+    return { t: t, g: g }
+  }
+
+  /* ── sıkıştırmasız zip ── */
+  function zipYap(dosyalar){
+    var parcalar = [], merkez = [], ofset = 0, simdi = dosTarih(new Date())
+
+    dosyalar.forEach(function(f){
+      var ad = utf8(f.ad), veri = f.veri, crc = CRC(veri)
+
+      var yerel = new DataView(new ArrayBuffer(30))
+      yerel.setUint32(0, 0x04034b50, true)
+      yerel.setUint16(4, 20, true)
+      yerel.setUint16(6, 0x0800, true)      // UTF-8 bayrağı
+      yerel.setUint16(8, 0, true)           // store
+      yerel.setUint16(10, simdi.t, true)
+      yerel.setUint16(12, simdi.g, true)
+      yerel.setUint32(14, crc, true)
+      yerel.setUint32(18, veri.length, true)
+      yerel.setUint32(22, veri.length, true)
+      yerel.setUint16(26, ad.length, true)
+      yerel.setUint16(28, 0, true)
+
+      parcalar.push(new Uint8Array(yerel.buffer), ad, veri)
+
+      var m = new DataView(new ArrayBuffer(46))
+      m.setUint32(0, 0x02014b50, true)
+      m.setUint16(4, 20, true)
+      m.setUint16(6, 20, true)
+      m.setUint16(8, 0x0800, true)
+      m.setUint16(10, 0, true)
+      m.setUint16(12, simdi.t, true)
+      m.setUint16(14, simdi.g, true)
+      m.setUint32(16, crc, true)
+      m.setUint32(20, veri.length, true)
+      m.setUint32(24, veri.length, true)
+      m.setUint16(28, ad.length, true)
+      m.setUint32(42, ofset, true)
+      merkez.push(new Uint8Array(m.buffer), ad)
+
+      ofset += 30 + ad.length + veri.length
+    })
+
+    var merkezBoy = merkez.reduce(function(a, b){ return a + b.length }, 0)
+    var son = new DataView(new ArrayBuffer(22))
+    son.setUint32(0, 0x06054b50, true)
+    son.setUint16(8, dosyalar.length, true)
+    son.setUint16(10, dosyalar.length, true)
+    son.setUint32(12, merkezBoy, true)
+    son.setUint32(16, ofset, true)
+
+    return new Blob(parcalar.concat(merkez, [new Uint8Array(son.buffer)]),
+                    { type: 'application/zip' })
+  }
+
+  /* ── CSV ── */
+  function csv(satirlar){
+    if(!satirlar || !satirlar.length) return ''
+    var basliklar = []
+    satirlar.forEach(function(s){
+      Object.keys(s || {}).forEach(function(k){
+        if(basliklar.indexOf(k) === -1) basliklar.push(k)
+      })
+    })
+    function h(v){
+      if(v === null || v === undefined) return ''
+      if(typeof v === 'object') v = JSON.stringify(v)
+      v = String(v)
+      return /[";\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v
+    }
+    var cikti = basliklar.join(';') + '\r\n'
+    satirlar.forEach(function(s){
+      cikti += basliklar.map(function(k){ return h((s || {})[k]) }).join(';') + '\r\n'
+    })
+    return '﻿' + cikti      // Excel'in Türkçe karakterleri doğru okuması için
+  }
+
+  function gun(){
+    var d = new Date()
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0')
+         + '-' + String(d.getDate()).padStart(2, '0')
+  }
+
+  function durum(m){
+    var el = document.getElementById('disa-aktar-durum')
+    if(el) el.textContent = m || ''
+  }
+
+  window.veriDisaAktar = async function(){
+    var dg = document.getElementById('btn-disa-aktar')
+    if(dg) dg.disabled = true
+    durum('Veriler toplanıyor…')
+
+    try{
+      var kumeler = [
+        ['muvekkiller',  'Müvekkiller',            DB.muvekkiller],
+        ['davalar',      'Davalar ve dosyalar',    DB.davalar],
+        ['gorevler',     'Görevler',               DB.gorevler],
+        ['etkinlikler',  'Duruşma ve etkinlikler', DB.etkinlikler],
+        ['finanslar',    'Finans kayıtları',       DB.finanslar],
+        ['belgeler',     'Belge listesi',          DB.belgeler],
+        ['iletisimler',  'İletişim geçmişi',       DB.iletisimler]
+      ]
+
+      /* süre takipleri varsa ekle */
+      try{
+        if(typeof srTakipler !== 'undefined' && Array.isArray(srTakipler))
+          kumeler.push(['sure_takipleri', 'Süre takipleri', srTakipler])
+      }catch(e){}
+
+      var dosyalar = [], tumu = {}, ozet = []
+
+      kumeler.forEach(function(k){
+        var ad = k[0], baslik = k[1], veri = Array.isArray(k[2]) ? k[2] : []
+        tumu[ad] = veri
+        ozet.push('  ' + baslik + ': ' + veri.length + ' kayıt')
+        if(veri.length) dosyalar.push({ ad: 'csv/' + ad + '.csv', veri: utf8(csv(veri)) })
+      })
+
+      durum('Arşiv hazırlanıyor…')
+
+      var ayar = {}
+      try{ ayar = DB.ayarlar || {} }catch(e){}
+      var buroAdi = (ayar.buroAdi || ayar.buro || 'Büro')
+
+      tumu._bilgi = {
+        uygulama: 'Dosya360',
+        buro: buroAdi,
+        disa_aktarma_tarihi: new Date().toISOString(),
+        surum: 1
+      }
+
+      dosyalar.push({ ad: 'tum-veri.json', veri: utf8(JSON.stringify(tumu, null, 2)) })
+
+      var oku =
+        'DOSYA360 — VERİ DIŞA AKTARMA\r\n' +
+        '================================\r\n\r\n' +
+        'Büro: ' + buroAdi + '\r\n' +
+        'Tarih: ' + new Date().toLocaleString('tr-TR') + '\r\n\r\n' +
+        'İÇİNDEKİLER\r\n' +
+        ozet.join('\r\n') + '\r\n\r\n' +
+        'KLASÖRLER\r\n' +
+        '  csv/          Her kayıt türü ayrı dosyada. Excel ile açılabilir.\r\n' +
+        '                Ayraç noktalı virgül (;), kodlama UTF-8.\r\n' +
+        '  tum-veri.json Tüm veriler tek dosyada, başka bir sisteme\r\n' +
+        '                aktarım için uygun biçimde.\r\n\r\n' +
+        'BELGELERİNİZ\r\n' +
+        '  Belgelerin dosyaları Dosya360 sunucularında tutulmaz.\r\n' +
+        '  Kendi Google Drive hesabınızdaki "Dosya360" klasöründe\r\n' +
+        '  bulunurlar. csv/belgeler.csv dosyası bu belgelerin\r\n' +
+        '  listesini ve bağlantılarını içerir.\r\n\r\n' +
+        'Bu veriler size aittir. Dilediğiniz zaman, herhangi bir\r\n' +
+        'koşula bağlı olmadan indirebilirsiniz.\r\n\r\n' +
+        'dosya360.com\r\n'
+
+      dosyalar.push({ ad: 'OKUBENI.txt', veri: utf8(oku) })
+
+      var blob = zipYap(dosyalar)
+      var url = URL.createObjectURL(blob)
+      var a = document.createElement('a')
+      a.href = url
+      a.download = 'dosya360-veri-' + gun() + '.zip'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      setTimeout(function(){ URL.revokeObjectURL(url) }, 4000)
+
+      var kb = Math.max(1, Math.round(blob.size / 1024))
+      durum('İndirildi · ' + dosyalar.length + ' dosya, ' + kb + ' KB')
+      try{ if(window.islemGunlugu) window.islemGunlugu('veri_disa_aktarma', {}) }catch(e){}
+
+    }catch(e){
+      durum('')
+      console.error('[Dosya360] dışa aktarma hatası:', e)
+      if(window.d360Bilgi) window.d360Bilgi('Veriler indirilemedi: ' + (e && e.message))
+      else alert('Veriler indirilemedi: ' + (e && e.message))
+    }finally{
+      if(dg) dg.disabled = false
+    }
+  }
+})();
+
+
+// ══════════════════════════════════════════════════════════════
+// UYAP'TAN İÇE AKTARMA
+// Avukat UYAP'tan dosya listesini indirir, buraya yükler.
+// Sütunları kendisi eşleştirir — UYAP biçimi değişse de çalışır.
+// E-imza ve UYAP şifresi hiçbir şekilde buraya gelmez.
+// ══════════════════════════════════════════════════════════════
+(function(){
+  'use strict'
+
+  var SHEETJS = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
+
+  // Eşleştirilebilir dava alanları. anahtar → dava kaydındaki alan adı
+  var ALANLAR = [
+    { k:'dosyaNo',       ad:'Esas / Dosya No',   zorunlu:true,
+      ipuclari:['esas','dosya no','dosyano','esasno','esas no'] },
+    { k:'mahkeme',       ad:'Mahkeme / Birim',   ipuclari:['birim','mahkeme','yargı','yargi'] },
+    { k:'tur',           ad:'Dava Türü',         ipuclari:['tür','tur','dava tip','dosya tür','tip'] },
+    { k:'_muvekkil',     ad:'Müvekkil Adı',      ipuclari:['müvekkil','muvekkil','vekil eden','taraf','davacı','davaci'] },
+    { k:'karsiTaraf',    ad:'Karşı Taraf',       ipuclari:['karşı','karsi','davalı','davali','borçlu','borclu'] },
+    { k:'durum',         ad:'Durum',             ipuclari:['durum','aşama','asama','safahat'] },
+    { k:'tarih',         ad:'Açılış Tarihi',     ipuclari:['açılış','acilis','kayıt tarih','kayit tarih','başlangıç'] },
+    { k:'durusmaTarihi', ad:'Duruşma Tarihi',    ipuclari:['duruşma','durusma','celse','sonraki'] },
+    { k:'not',           ad:'Not / Açıklama',    ipuclari:['açıklama','aciklama','not','konu'] }
+  ]
+
+  var durumAdlari = ['devam','beklemede','temyiz','karara','kapandi','kapandı','infaz']
+
+  var S = { basliklar:[], satirlar:[], esleme:{}, plan:[], muvekkilOlustur:true }
+
+  // ── yardımcılar ───────────────────────────────────────────────
+  function sade(s){
+    return String(s == null ? '' : s).toLowerCase()
+      .replace(/ı/g,'i').replace(/ş/g,'s').replace(/ğ/g,'g')
+      .replace(/ü/g,'u').replace(/ö/g,'o').replace(/ç/g,'c')
+      .replace(/\s+/g,' ').trim()
+  }
+  function kacir(s){
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+  }
+  // Esas no karşılaştırması: 2024/00123 ile 2024/123 aynı dosyadır
+  function esasAnahtar(s){
+    var m = String(s == null ? '' : s).match(/(\d{4})\s*[\/\-]\s*0*(\d+)/)
+    if(m) return m[1] + '/' + m[2]
+    return sade(s).replace(/[^0-9a-z\/]/g,'')
+  }
+  // Excel seri numarası, 01.02.2026, 2026-02-01 → 2026-02-01
+  function tariheCevir(v){
+    if(v == null || v === '') return ''
+    if(typeof v === 'number' && v > 20000 && v < 60000){
+      var t = new Date(Date.UTC(1899,11,30) + v*86400000)
+      return t.toISOString().slice(0,10)
+    }
+    var s = String(v).trim()
+    var a = s.match(/^(\d{4})[-.\/](\d{1,2})[-.\/](\d{1,2})/)
+    if(a) return a[1] + '-' + ('0'+a[2]).slice(-2) + '-' + ('0'+a[3]).slice(-2)
+    var b = s.match(/^(\d{1,2})[-.\/](\d{1,2})[-.\/](\d{4})/)
+    if(b) return b[3] + '-' + ('0'+b[2]).slice(-2) + '-' + ('0'+b[1]).slice(-2)
+    return ''
+  }
+  function durumaCevir(v){
+    var s = sade(v)
+    if(!s) return 'devam'
+    for(var i=0;i<durumAdlari.length;i++){
+      if(s.indexOf(sade(durumAdlari[i])) >= 0){
+        var d = sade(durumAdlari[i])
+        return d === 'kapandi' ? 'kapandi' : d === 'karara' ? 'karara' : d
+      }
+    }
+    if(s.indexOf('acik')>=0 || s.indexOf('derdest')>=0) return 'devam'
+    if(s.indexOf('kapa')>=0 || s.indexOf('kesin')>=0) return 'kapandi'
+    return 'devam'
+  }
+  function govde(){ return document.getElementById('uyap-govde') }
+  function kutu(){ return document.getElementById('m-uyap') }
+
+  function adim(n){
+    ['1','2','3'].forEach(function(i){
+      var e = document.getElementById('uyap-adim-'+i)
+      if(e){
+        e.style.color = i <= n ? 'var(--primary)' : 'var(--hint)'
+        e.style.fontWeight = i === String(n) ? '600' : '400'
+      }
+    })
+  }
+
+  // ── SheetJS'i ilk ihtiyaçta yükle ────────────────────────────
+  function kutuphane(){
+    if(window.XLSX) return Promise.resolve()
+    return new Promise(function(coz, red){
+      var s = document.createElement('script')
+      s.src = SHEETJS
+      s.onload = function(){ coz() }
+      s.onerror = function(){ red(new Error('Okuyucu yüklenemedi. İnternet bağlantınızı kontrol edin.')) }
+      document.head.appendChild(s)
+    })
+  }
+
+  // ── ADIM 1 · dosya seçimi ────────────────────────────────────
+  window.uyapAktarAc = function(){
+    S = { basliklar:[], satirlar:[], esleme:{}, plan:[], muvekkilOlustur:true }
+    kutu().classList.add('open')
+    adim(1)
+    govde().innerHTML =
+      '<div style="font-size:12.5px;color:var(--muted);line-height:1.8;margin-bottom:18px">'
+      + 'UYAP Avukat Portalı\'nda <b>Dosyalarım</b> ekranını açın, listeyi Excel olarak indirin '
+      + 've indirdiğiniz dosyayı buraya yükleyin. Sütunları bir sonraki adımda siz eşleştireceksiniz, '
+      + 'bu yüzden UYAP\'ın liste biçimi ne olursa olsun çalışır.'
+      + '</div>'
+      + '<div id="uyap-birak" style="border:1.5px dashed var(--border);border-radius:12px;padding:30px 20px;'
+      + 'text-align:center;background:var(--surface);cursor:pointer">'
+      +   '<i class="ti ti-file-spreadsheet" style="font-size:30px;color:var(--hint)"></i>'
+      +   '<div style="font-size:13.5px;font-weight:600;margin-top:10px">Dosyayı buraya bırakın</div>'
+      +   '<div style="font-size:11.5px;color:var(--hint);margin-top:4px">veya tıklayıp seçin · .xlsx, .xls, .csv</div>'
+      +   '<input type="file" id="uyap-dosya" accept=".xlsx,.xls,.csv,.txt" style="display:none">'
+      + '</div>'
+      + '<div id="uyap-hata" style="font-size:12px;color:#B91C1C;margin-top:12px;display:none"></div>'
+      + '<div style="font-size:11.5px;color:var(--hint);margin-top:16px;line-height:1.7;'
+      + 'border-top:1px solid var(--border);padding-top:14px">'
+      + 'Dosya tarayıcınızda okunur. UYAP şifreniz ve e-imzanız bu işlemin hiçbir aşamasında istenmez.'
+      + '</div>'
+
+    var brk = document.getElementById('uyap-birak')
+    var inp = document.getElementById('uyap-dosya')
+    brk.onclick = function(){ inp.click() }
+    inp.onchange = function(){ if(inp.files && inp.files[0]) oku(inp.files[0]) }
+    brk.ondragover = function(e){ e.preventDefault(); brk.style.borderColor = 'var(--primary)' }
+    brk.ondragleave = function(){ brk.style.borderColor = 'var(--border)' }
+    brk.ondrop = function(e){
+      e.preventDefault(); brk.style.borderColor = 'var(--border)'
+      if(e.dataTransfer.files && e.dataTransfer.files[0]) oku(e.dataTransfer.files[0])
+    }
+  }
+
+  function hata(m){
+    var e = document.getElementById('uyap-hata')
+    if(e){ e.textContent = m; e.style.display = 'block' }
+  }
+
+  function oku(dosya){
+    var brk = document.getElementById('uyap-birak')
+    if(brk) brk.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:8px">'
+      + kacir(dosya.name) + ' okunuyor…</div>'
+    kutuphane().then(function(){
+      return new Promise(function(coz, red){
+        var fr = new FileReader()
+        fr.onload = function(){ coz(new Uint8Array(fr.result)) }
+        fr.onerror = function(){ red(new Error('Dosya okunamadı.')) }
+        fr.readAsArrayBuffer(dosya)
+      })
+    }).then(function(bayt){
+      var kt = window.XLSX.read(bayt, { type:'array', cellDates:false, codepage:65001 })
+      var sayfa = kt.Sheets[kt.SheetNames[0]]
+      if(!sayfa) throw new Error('Dosyada okunabilir sayfa bulunamadı.')
+      var tablo = window.XLSX.utils.sheet_to_json(sayfa, { header:1, blankrows:false, defval:'' })
+      // Başlık satırı: en çok dolu hücresi olan ilk satır
+      var bi = 0, enIyi = -1
+      for(var i=0;i<Math.min(tablo.length,10);i++){
+        var dolu = (tablo[i]||[]).filter(function(h){ return String(h).trim() !== '' }).length
+        if(dolu > enIyi){ enIyi = dolu; bi = i }
+      }
+      S.basliklar = (tablo[bi]||[]).map(function(h,ix){
+        var t = String(h).trim()
+        return t === '' ? ('Sütun ' + (ix+1)) : t
+      })
+      S.satirlar = tablo.slice(bi+1).filter(function(r){
+        return (r||[]).some(function(c){ return String(c).trim() !== '' })
+      })
+      if(!S.satirlar.length) throw new Error('Dosyada veri satırı bulunamadı.')
+      esleStep()
+    }).catch(function(e){
+      window.uyapAktarAc()
+      setTimeout(function(){ hata(e.message || 'Dosya okunamadı.') }, 30)
+    })
+  }
+
+  // ── ADIM 2 · sütun eşleştirme ────────────────────────────────
+  function tahmin(){
+    var e = {}
+    var kullanildi = {}
+    ALANLAR.forEach(function(a){
+      for(var i=0;i<S.basliklar.length;i++){
+        if(kullanildi[i]) continue
+        var b = sade(S.basliklar[i])
+        for(var j=0;j<(a.ipuclari||[]).length;j++){
+          if(b.indexOf(sade(a.ipuclari[j])) >= 0){
+            e[a.k] = i; kullanildi[i] = true; return
+          }
+        }
+      }
+    })
+    return e
+  }
+
+  function esleStep(){
+    adim(2)
+    S.esleme = tahmin()
+    var ornek = S.satirlar[0] || []
+    var secenekler = '<option value="">— kullanmıyorum —</option>'
+      + S.basliklar.map(function(b,i){
+          var o = String(ornek[i] == null ? '' : ornek[i]).slice(0,22)
+          return '<option value="'+i+'">' + kacir(b) + (o ? '  ·  ' + kacir(o) : '') + '</option>'
+        }).join('')
+
+    govde().innerHTML =
+      '<div style="font-size:12.5px;color:var(--muted);line-height:1.8;margin-bottom:16px">'
+      + '<b>' + S.satirlar.length + ' satır</b> okundu. Hangi sütun neye karşılık geliyor? '
+      + 'Tahmin ettiklerimi işaretledim, hatalıysa düzeltin. Esas numarası dışındakiler boş kalabilir.'
+      + '</div>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 14px">'
+      + ALANLAR.map(function(a){
+          return '<div class="field" style="margin:0">'
+            + '<label style="font-size:11.5px">' + a.ad
+            + (a.zorunlu ? ' <span style="color:#B91C1C">*</span>' : '') + '</label>'
+            + '<select id="uyap-e-'+a.k+'" style="width:100%;padding:7px 9px;border:1px solid var(--border);'
+            + 'border-radius:9px;font-size:12.5px;font-family:inherit;background:#fff;color:var(--text)">'
+            + secenekler + '</select></div>'
+        }).join('')
+      + '</div>'
+      + '<label style="display:flex;align-items:flex-start;gap:8px;margin-top:18px;font-size:12.5px;'
+      + 'color:var(--muted);line-height:1.6;cursor:pointer">'
+      +   '<input type="checkbox" id="uyap-mv-olustur" checked style="margin-top:2px">'
+      +   '<span>Müvekkil adı eşleştirdiysem, kayıtlarımda olmayan müvekkilleri de oluştur</span>'
+      + '</label>'
+      + '<div id="uyap-hata" style="font-size:12px;color:#B91C1C;margin-top:12px;display:none"></div>'
+      + '<div style="display:flex;justify-content:space-between;gap:10px;margin-top:20px;'
+      + 'border-top:1px solid var(--border);padding-top:16px">'
+      +   '<button class="tbtn" onclick="uyapAktarAc()">← Başka dosya</button>'
+      +   '<button class="tbtn primary" id="uyap-ileri">Önizlemeye geç →</button>'
+      + '</div>'
+
+    ALANLAR.forEach(function(a){
+      var s = document.getElementById('uyap-e-'+a.k)
+      if(s && S.esleme[a.k] != null) s.value = String(S.esleme[a.k])
+    })
+    document.getElementById('uyap-ileri').onclick = planStep
+  }
+
+  // ── ADIM 3 · önizleme ────────────────────────────────────────
+  function planStep(){
+    S.esleme = {}
+    ALANLAR.forEach(function(a){
+      var s = document.getElementById('uyap-e-'+a.k)
+      if(s && s.value !== '') S.esleme[a.k] = parseInt(s.value,10)
+    })
+    if(S.esleme.dosyaNo == null) return hata('Esas / Dosya No sütununu eşleştirmeniz gerekiyor.')
+    var mvo = document.getElementById('uyap-mv-olustur')
+    S.muvekkilOlustur = !!(mvo && mvo.checked)
+
+    var mevcut = {}
+    DB.davalar.forEach(function(d){
+      var a = esasAnahtar(d.dosyaNo || d.dosya_no || '')
+      if(a) mevcut[a] = d
+    })
+
+    S.plan = []
+    var gorulen = {}
+    S.satirlar.forEach(function(r){
+      var ham = {}
+      Object.keys(S.esleme).forEach(function(k){ ham[k] = r[S.esleme[k]] })
+      var no = String(ham.dosyaNo == null ? '' : ham.dosyaNo).trim()
+      if(!no) return
+      var ank = esasAnahtar(no)
+      if(gorulen[ank]) return            // dosyanın içinde tekrar eden satır
+      gorulen[ank] = true
+
+      var eski = mevcut[ank]
+      S.plan.push({
+        sec: true,
+        durum: eski ? 'guncelle' : 'yeni',
+        eski: eski || null,
+        anahtar: ank,
+        no: no,
+        mahkeme: String(ham.mahkeme || '').trim(),
+        muvekkil: String(ham._muvekkil || '').trim(),
+        karsiTaraf: String(ham.karsiTaraf || '').trim(),
+        tur: String(ham.tur || '').trim(),
+        durumAd: durumaCevir(ham.durum),
+        tarih: tariheCevir(ham.tarih),
+        durusmaTarihi: tariheCevir(ham.durusmaTarihi),
+        not: String(ham.not || '').trim()
+      })
+    })
+
+    if(!S.plan.length){
+      return hata('Esas numarası okunabilen satır bulunamadı. Doğru sütunu seçtiğinizden emin olun.')
+    }
+
+    var yeni = S.plan.filter(function(p){ return p.durum === 'yeni' }).length
+    var gun  = S.plan.length - yeni
+
+    adim(3)
+    govde().innerHTML =
+      '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">'
+      +   rozet(yeni + ' yeni dosya', '#15803D', '#F0FDF4')
+      +   rozet(gun + ' mevcut dosya güncellenecek', '#B45309', '#FFFBEB')
+      + '</div>'
+      + '<div style="font-size:12.5px;color:var(--muted);line-height:1.8;margin-bottom:14px">'
+      + 'Aktarmak istemediğiniz satırların işaretini kaldırın. Güncellenen dosyalarda '
+      + 'yalnızca dolu gelen alanlar değişir, kendi notlarınız ve girdiğiniz diğer bilgiler korunur.'
+      + '</div>'
+      + '<div style="max-height:320px;overflow:auto;border:1px solid var(--border);border-radius:10px">'
+      + '<table style="width:100%;border-collapse:collapse;font-size:12px">'
+      + '<thead><tr style="background:var(--surface);position:sticky;top:0">'
+      +   '<th style="padding:8px 10px;text-align:left;width:34px">'
+      +     '<input type="checkbox" id="uyap-tum" checked></th>'
+      +   '<th style="padding:8px 10px;text-align:left">Esas No</th>'
+      +   '<th style="padding:8px 10px;text-align:left">Mahkeme</th>'
+      +   '<th style="padding:8px 10px;text-align:left">Müvekkil</th>'
+      +   '<th style="padding:8px 10px;text-align:left">Duruşma</th>'
+      +   '<th style="padding:8px 10px;text-align:left">Durum</th>'
+      + '</tr></thead><tbody>'
+      + S.plan.map(function(p,i){
+          return '<tr style="border-top:1px solid var(--border)">'
+            + '<td style="padding:7px 10px"><input type="checkbox" class="uyap-sec" data-i="'+i+'" checked></td>'
+            + '<td style="padding:7px 10px;font-weight:500">' + kacir(p.no) + '</td>'
+            + '<td style="padding:7px 10px;color:var(--muted)">' + kacir(p.mahkeme || '—') + '</td>'
+            + '<td style="padding:7px 10px;color:var(--muted)">' + kacir(p.muvekkil || '—') + '</td>'
+            + '<td style="padding:7px 10px;color:var(--muted)">' + kacir(p.durusmaTarihi || '—') + '</td>'
+            + '<td style="padding:7px 10px">'
+            + (p.durum === 'yeni'
+                ? '<span style="color:#15803D">Yeni</span>'
+                : '<span style="color:#B45309">Güncellenecek</span>')
+            + '</td></tr>'
+        }).join('')
+      + '</tbody></table></div>'
+      + '<div style="display:flex;justify-content:space-between;gap:10px;margin-top:18px;'
+      + 'border-top:1px solid var(--border);padding-top:16px">'
+      +   '<button class="tbtn" id="uyap-geri">← Eşleştirmeye dön</button>'
+      +   '<button class="tbtn primary" id="uyap-uygula"><i class="ti ti-download"></i>Aktar</button>'
+      + '</div>'
+      + '<div id="uyap-sonuc" style="font-size:12px;color:var(--muted);margin-top:10px"></div>'
+
+    document.getElementById('uyap-geri').onclick = esleStep
+    document.getElementById('uyap-uygula').onclick = uygula
+    document.getElementById('uyap-tum').onchange = function(){
+      var a = this.checked
+      document.querySelectorAll('.uyap-sec').forEach(function(c){ c.checked = a })
+    }
+  }
+
+  function rozet(metin, renk, zemin){
+    return '<span style="font-size:12px;font-weight:600;color:'+renk+';background:'+zemin+';'
+      + 'border-radius:999px;padding:4px 12px">' + metin + '</span>'
+  }
+
+  // ── Yazma ────────────────────────────────────────────────────
+  function uygula(){
+    document.querySelectorAll('.uyap-sec').forEach(function(c){
+      S.plan[parseInt(c.getAttribute('data-i'),10)].sec = c.checked
+    })
+    var secili = S.plan.filter(function(p){ return p.sec })
+    if(!secili.length) return
+
+    var btn = document.getElementById('uyap-uygula')
+    if(btn) btn.disabled = true
+    var simdi = new Date().toISOString()
+    var sira = 0
+    var kimlik = function(){ sira++; return Date.now()*1000 + sira }
+
+    // Müvekkiller
+    var mvListe = DB.muvekkiller.slice()
+    var mvDizin = {}
+    mvListe.forEach(function(m){ mvDizin[sade((m.ad||'')+' '+(m.soyad||''))] = m })
+    var yeniMv = 0
+    if(S.muvekkilOlustur && S.esleme._muvekkil != null){
+      secili.forEach(function(p){
+        if(!p.muvekkil) return
+        var ank = sade(p.muvekkil)
+        if(mvDizin[ank]) return
+        var parca = p.muvekkil.trim().split(/\s+/)
+        var soyad = parca.length > 1 ? parca.pop() : ''
+        var kayit = {
+          id: kimlik(),
+          ad: parca.join(' '), soyad: soyad, tur:'bireysel',
+          tc:'', tel:'', email:'', il:'',
+          not:'UYAP aktarımıyla oluşturuldu',
+          kaynak:'uyap', olusturma: simdi
+        }
+        mvListe.push(kayit); mvDizin[ank] = kayit; yeniMv++
+      })
+    }
+
+    // Davalar
+    var dvListe = DB.davalar.slice()
+    var yeniDv = 0, gunDv = 0
+    secili.forEach(function(p){
+      var mv = p.muvekkil ? mvDizin[sade(p.muvekkil)] : null
+      var uyap = {
+        uyapEsasNo: p.no,
+        uyapBirim: p.mahkeme || '',
+        uyapAnahtar: p.anahtar,
+        sonSenkron: simdi,
+        kaynak: 'uyap'
+      }
+      if(p.eski){
+        var ix = dvListe.findIndex(function(d){ return String(d.id) === String(p.eski.id) })
+        if(ix < 0) return
+        var g = Object.assign({}, dvListe[ix])
+        if(p.mahkeme)       g.mahkeme = p.mahkeme
+        if(p.karsiTaraf)    g.karsiTaraf = p.karsiTaraf
+        if(p.tur)           g.tur = g.tur || p.tur
+        if(p.tarih)         g.tarih = g.tarih || p.tarih
+        if(p.durusmaTarihi) g.durusmaTarihi = p.durusmaTarihi
+        if(p.not)           g.not = g.not ? g.not : p.not
+        if(mv){ g.muvekkil = (mv.ad+' '+mv.soyad).trim(); g.muvekkılId = mv.id }
+        Object.assign(g, uyap)
+        dvListe[ix] = g
+        gunDv++
+      }else{
+        dvListe.push(Object.assign({
+          id: kimlik(),
+          dosyaNo: p.no,
+          mahkeme: p.mahkeme,
+          karsiTaraf: p.karsiTaraf,
+          tur: p.tur,
+          durum: p.durumAd,
+          tarih: p.tarih,
+          durusmaTarihi: p.durusmaTarihi,
+          durusmaSaati: '',
+          not: p.not,
+          muvekkil: mv ? (mv.ad+' '+mv.soyad).trim() : '',
+          muvekkılId: mv ? mv.id : '',
+          olusturma: simdi
+        }, uyap))
+        yeniDv++
+      }
+    })
+
+    if(yeniMv) DB.saveMv(mvListe)
+    DB.saveDv(dvListe)
+    try{ if(window.islemGunlugu) window.islemGunlugu('uyap_ice_aktarma',
+      { yeni:yeniDv, guncel:gunDv, muvekkil:yeniMv }) }catch(e){}
+
+    var ozet = yeniDv + ' yeni dosya'
+      + (gunDv ? ', ' + gunDv + ' dosya güncellendi' : '')
+      + (yeniMv ? ', ' + yeniMv + ' müvekkil oluşturuldu' : '')
+
+    kutu().classList.remove('open')
+    try{
+      if(typeof renderAll === 'function') renderAll()
+      else if(typeof renderDv === 'function') renderDv()
+    }catch(e){ console.warn('[Dosya360] aktarım sonrası ekran yenilenemedi:', e) }
+    if(window.d360Bilgi) window.d360Bilgi('Aktarım tamamlandı: ' + ozet + '.', 'UYAP aktarımı')
+  }
+})()
+
 </script>
 
 </body>
