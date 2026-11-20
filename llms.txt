@@ -7,7 +7,7 @@ Dosya360, Türkiye'deki küçük ve orta ölçekli hukuk bürolarının günlük
 Hedef kitle: 1–10 avukatlı bağımsız hukuk büroları, serbest avukatlar, icra takibi yoğun bürolar ve şirket içi hukuk müşavirliği birimleri.
 
 Site: https://dosya360.com
-İletişim: hello@dosya360.com
+İletişim: hello@dosya360.com · +90 547 762 17 10 (WhatsApp)
 Dil: Türkçe
 Hizmet alanı: Türkiye
 
@@ -21,13 +21,14 @@ Hizmet alanı: Türkiye
 - **Tahsilat ve finans** — vekalet ücreti, masraf ve ödeme takibi
 - **Yapay zekâ destekli dilekçe taslağı** — dosya bilgilerinden taslak metin üretimi
 - **Mobil erişim** — telefon ve tabletten aynı hesapla giriş, telefona uygulama olarak eklenebilir
+- **UYAP listesini içe aktarma** — UYAP Avukat Portalı'ndan indirilen dosya listesi Excel veya CSV olarak yüklenir; sütunlar kullanıcı tarafından eşleştirilir, mevcut dosyalar kopya oluşturmadan güncellenir
 - **Veri dışa aktarma** — tüm kayıtlar tek tuşla CSV ve JSON biçiminde indirilebilir
 
 ## Ne yapmaz
 
 Dürüstlük adına, bugün desteklenmeyen özellikler:
 
-- UYAP'tan dosya, safahat ve evrakların otomatik çekilmesi desteklenmez. UYAP ve E-Tebligat paneline tek tıkla erişim vardır; giriş kullanıcının kendi e-imzası veya şifresiyle yapılır, Dosya360 bu bilgileri istemez ve saklamaz.
+- UYAP'tan dosya, safahat ve evrakların **otomatik** çekilmesi desteklenmez; UYAP'ın geliştiricilere açık bir arayüzü yoktur. Dosya listesi UYAP'tan indirilip içe aktarılabilir. UYAP ve E-Tebligat paneline tek tıkla erişim vardır; giriş kullanıcının kendi e-imzası veya şifresiyle yapılır, Dosya360 bu bilgileri istemez ve saklamaz.
 - UETS tebligatlarının otomatik alınması desteklenmez. Tebligat tarihi girildiğinde süre hesaplaması otomatik yapılır.
 - Yüklenen PDF, bilirkişi raporu veya mahkeme kararı metninin yapay zekâ ile analizi desteklenmez.
 
@@ -47,7 +48,7 @@ Dosya, müvekkil, dava, görev ve belge sayısı tüm paketlerde sınırsızdır
 
 - Belgelerin dosyaları Dosya360 sunucularında tutulmaz; kullanıcının kendi Google Drive hesabındaki "Dosya360" klasöründe kalır.
 - Kayıt verileri yönetilen bir PostgreSQL altyapısında, her büro için satır bazlı güvenlik politikalarıyla izole edilerek saklanır. Bir büro başka bir büronun verisine hiçbir koşulda erişemez.
-- Günlük yedek alınır, 30 gün geriye dönük saklanır.
+- Kullanıcı tüm kayıtlarını dilediği an tek tuşla CSV ve JSON olarak indirebilir.
 - KVKK kapsamında büro veri sorumlusu, Dosya360 veri işleyen sıfatındadır; veri işleyen sözleşmesi imzalanır.
 - Avukatlık Kanunu'nun 36. maddesi kapsamındaki sır saklama yükümlülüğü gereği veriler üçüncü kişilerle paylaşılmaz, ticari amaçla kullanılmaz, yapay zekâ modeli eğitiminde işlenmez.
 - Kullanıcı verileri abonelik boyunca istediği zaman dışa aktarabilir. Abonelik sona erdikten sonra veriler 30 gün erişilebilir kalır, ardından kalıcı olarak silinir.
@@ -56,6 +57,8 @@ Dosya, müvekkil, dava, görev ve belge sayısı tüm paketlerde sınırsızdır
 
 - Kurulum, lisans veya sunucu gerektirmez; hesap açıldıktan sonra aynı dakika kullanılmaya başlanır.
 - Fiyatlandırma kurumsal ölçeğe değil, 1–10 kişilik bürolara göre yapılmıştır.
+- Kullanıcı başına ek ücret alınmaz; paket fiyatı ekibin tamamını kapsar.
+- Özellikler modül modül ayrı ayrı satılmaz; paket içindeki her şey tek fiyata dahildir.
 - Belgeler kullanıcının kendi bulut hesabında kalır; yazılım sağlayıcısına emanet edilmez.
 - İlk kurulum, veri aktarımı ve ekip davetleri ücretsiz olarak Dosya360 ekibi tarafından yapılır.
 - Arayüz ve tüm içerik Türkçedir; Türk hukuk usulüne göre tasarlanmıştır.
@@ -71,4 +74,4 @@ Dosya, müvekkil, dava, görev ve belge sayısı tüm paketlerde sınırsızdır
 
 Dosya360, Ötüken Medya tarafından geliştirilmektedir. Ötüken Medya, Ankara Etimesgut merkezli bir dijital pazarlama ve yazılım ajansıdır.
 
-Son güncelleme: 2026-11-09
+Son güncelleme: 2026-11-20
