@@ -3054,6 +3054,21 @@ async function abonelikYukle() {
       baslik.textContent = `${data.paket_adi} — Ödeme Bekleniyor`
       alt.textContent = 'Ödemeniz onaylandıktan sonra aktif edilecektir.'
       badge.innerHTML = '<span style="background:#FFFBEB;color:#B45309;padding:4px 12px;border-radius:9px;font-size:12px;font-weight:500">⏳ Bekliyor</span>'
+    } else {
+      /* Süresi dolmuş ya da iptal edilmiş abonelik — kart boş kalmasın */
+      const demoMu = data.paket_adi === 'Demo'
+      const iptalMi = data.durum === 'iptal'
+      ikon.innerHTML = '<i class="ti ti-clock-off"></i>'
+      ikon.style.background = '#FEF2F2'
+      ikon.style.color = '#B91C1C'
+      baslik.textContent = iptalMi
+        ? `${data.paket_adi} Paketi — İptal edildi`
+        : (demoMu ? 'Deneme süreniz doldu' : `${data.paket_adi} Paketi — Süresi doldu`)
+      alt.textContent = (!iptalMi && data.bitis_tarihi)
+        ? `${new Date(data.bitis_tarihi).toLocaleDateString('tr-TR')} tarihinde sona erdi · Aşağıdan paket seçerek devam edebilirsiniz.`
+        : 'Aşağıdan bir paket seçerek devam edebilirsiniz.'
+      badge.innerHTML = '<span style="background:#FEF2F2;color:#B91C1C;padding:4px 12px;border-radius:9px;font-size:12px;font-weight:500">'
+        + (iptalMi ? 'İptal' : 'Süresi doldu') + '</span>'
     }
 
     // Kullanıcı yönetimi
@@ -3513,7 +3528,8 @@ async function sifreDegistir(){
 // ── ABONELIK BITIS UYARISI ────────────────────────────────
 function abonelikUyarisi(abone){
   const eski = document.getElementById('abone-uyari'); if(eski) eski.remove()
-  if(!abone || abone.durum !== 'aktif' || !abone.bitis_tarihi) return
+  if(!abone || !abone.bitis_tarihi) return
+  if(abone.durum !== 'aktif' && abone.durum !== 'suresi_doldu') return
 
   const kalan = Math.ceil((new Date(abone.bitis_tarihi) - new Date()) / 86400000)
   if(kalan > 7) return
