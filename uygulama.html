@@ -650,6 +650,7 @@ var sb = window.sb
       <span id="senkron-rozet" style="font-size:11.5px;color:#8D99AE;display:flex;align-items:center;gap:5px;white-space:nowrap" title="Bulut senkronizasyon durumu"><i class="ti ti-cloud"></i></span>
       <button class="tbtn" onclick="showModal('muvekkil')"><i class="ti ti-user-plus"></i><span class="tbtn-ad">Müvekkil Ekle</span></button>
       <button class="tbtn primary" onclick="showModal('dava')"><i class="ti ti-plus"></i><span class="tbtn-ad">Yeni Dava</span></button>
+      <button class="tbtn" id="cikis-btn" onclick="cikisOnayla()" title="Çıkış yap" aria-label="Çıkış yap"><i class="ti ti-logout"></i><span class="tbtn-ad">Çıkış</span></button>
     </div>
   </div>
 
@@ -6386,12 +6387,30 @@ async function authCikis() {
   location.reload()
 }
 
+/* Üst bardaki çıkış düğmesi buraya bağlı — yanlışlıkla tıklanmaya karşı onay sorar */
+window.cikisOnayla = async function(){
+  if (window.d360Onay) {
+    const ok = await window.d360Onay('Çıkış yapılsın mı?',
+      'Oturumunuz kapatılacak. Kaydedilmemiş bir işleminiz varsa önce tamamlayın.',
+      { onay: 'Çıkış yap' })
+    if (!ok) return
+  }
+  await authCikis()
+}
+
 // Oturum kontrol - varsa direkt aç, yoksa ana sayfaya yönlendir
 sb.auth.getSession().then(async ({ data: { session } }) => {
   if (session?.user) {
     await uygulamaAc(session.user)
   } else {
-    window.location.href = 'index.html'
+    /* Oturum yok — ana sayfaya atmak yerine kendi giriş ekranımızı göster.
+       Böylece ana sayfa bakımda olsa bile buradan giriş yapılabiliyor. */
+    const ge = document.getElementById('giris-ekrani')
+    if (ge) ge.style.display = ''
+    const au = document.getElementById('ana-uygulama')
+    if (au) au.style.display = 'none'
+    const alan = document.getElementById('giris-email')
+    if (alan) setTimeout(function(){ try{ alan.focus() }catch(e){} }, 120)
   }
 })
 
