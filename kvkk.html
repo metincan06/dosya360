@@ -68,6 +68,11 @@ tr:nth-child(even) td{background:#FAFAFA}
 footer{background:var(--navy);padding:28px 24px;text-align:center}
 .footer-text{font-size:12px;color:rgba(255,255,255,0.3)}
 .footer-logo{font-size:15px;font-weight:600;color:var(--gold);margin-bottom:8px}
+.footer-sos{display:flex;gap:8px;justify-content:center;margin:0 0 12px}
+.footer-sos a{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
+  border:1px solid rgba(255,255,255,.17);border-radius:9px;color:rgba(255,255,255,.72);
+  transition:color .16s,border-color .16s,background .16s}
+.footer-sos a:hover{color:var(--gold);border-color:rgba(201,168,76,.5);background:rgba(255,255,255,.05)}
 </style>
 </head>
 <body>
@@ -115,11 +120,12 @@ footer{background:var(--navy);padding:28px 24px;text-align:center}
     <div class="section-title">Veri Sorumlusunun Kimliği</div>
     <p>KVKK kapsamında veri sorumlusu sıfatını taşıyan kişi aşağıda belirtilmiştir:</p>
     <div class="contact-card">
-      <div class="contact-row"><span class="contact-label">Ad Soyad</span><span class="contact-val">Metin Can Akçil</span></div>
-      <div class="contact-row"><span class="contact-label">Ticari Unvan</span><span class="contact-val">Ötüken Medya</span></div>
-      <div class="contact-row"><span class="contact-label">Adres</span><span class="contact-val">Etimesgut, Ankara, Türkiye</span></div>
+      <div class="contact-row"><span class="contact-label">Veri Sorumlusu</span><span class="contact-val">Metin Can Akçil</span></div>
+      <div class="contact-row"><span class="contact-label">Markası</span><span class="contact-val">Dosya360</span></div>
+      <div class="contact-row"><span class="contact-label">Adres</span><span class="contact-val">Kocatepe Mah. Mithatpaşa Cad. No: 48/9, Birlik İş Hanı, Çankaya / Ankara</span></div>
+      <div class="contact-row"><span class="contact-label">Vergi Dairesi / No</span><span class="contact-val">Mithatpaşa V.D. — 0201122449</span></div>
       <div class="contact-row"><span class="contact-label">E-posta</span><span class="contact-val">hello@dosya360.com</span></div>
-      <div class="contact-row"><span class="contact-label">Telefon</span><span class="contact-val">+90 543 927 49 06</span></div>
+      <div class="contact-row"><span class="contact-label">Telefon</span><span class="contact-val">+90 547 762 17 10</span></div>
       <div class="contact-row"><span class="contact-label">Web Sitesi</span><span class="contact-val">dosya360.com</span></div>
     </div>
   </div>
@@ -286,10 +292,11 @@ footer{background:var(--navy);padding:28px 24px;text-align:center}
     <div class="section-title">İletişim</div>
     <p>KVKK kapsamındaki talepleriniz ve sorularınız için bizimle iletişime geçebilirsiniz:</p>
     <div class="contact-card">
-      <div class="contact-row"><span class="contact-label">Veri Sorumlusu</span><span class="contact-val">Metin Can Akçil — Ötüken Medya</span></div>
+      <div class="contact-row"><span class="contact-label">Veri Sorumlusu</span><span class="contact-val">Metin Can Akçil (Dosya360)</span></div>
       <div class="contact-row"><span class="contact-label">E-posta</span><span class="contact-val">hello@dosya360.com</span></div>
-      <div class="contact-row"><span class="contact-label">WhatsApp</span><span class="contact-val">+90 543 927 49 06</span></div>
-      <div class="contact-row"><span class="contact-label">Adres</span><span class="contact-val">Etimesgut, Ankara, Türkiye</span></div>
+      <div class="contact-row"><span class="contact-label">WhatsApp</span><span class="contact-val">+90 547 762 17 10</span></div>
+      <div class="contact-row"><span class="contact-label">Adres</span><span class="contact-val">Kocatepe Mah. Mithatpaşa Cad. No: 48/9, Birlik İş Hanı, Çankaya / Ankara</span></div>
+      <div class="contact-row"><span class="contact-label">Vergi Dairesi / No</span><span class="contact-val">Mithatpaşa V.D. — 0201122449</span></div>
     </div>
     <p style="margin-top:16px">Başvurunuzun tarafımıza ulaşmasından itibaren <strong>en geç 30 gün</strong> içinde ücretsiz olarak yanıt verilecektir. Talebin ayrıca bir maliyet gerektirmesi hâlinde Kişisel Verileri Koruma Kurulu tarafından belirlenen tarifedeki ücret alınabilir.</p>
     <p>Başvurunuzun reddedilmesi, verilen cevabın yetersiz bulunması veya süresinde cevap verilmemesi hâlinde <strong>Kişisel Verileri Koruma Kurulu</strong>'na şikâyette bulunma hakkınız saklıdır.</p>
@@ -298,8 +305,12 @@ footer{background:var(--navy);padding:28px 24px;text-align:center}
 </div>
 
 <footer>
-  <div class="footer-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.125em;flex-shrink:0"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l3 6a3 3 0 0 1-6 0z"/></svg> Dosya360</div>
-  <div class="footer-text">© 2026 Dosya360 — Bir Ötüken Medya yazılımıdır · Bu metin en son Temmuz 2026 tarihinde güncellenmiştir.</div>
+  <div class="footer-logo"><img src="/dosya360-logo.png" alt="" style="height:24px;width:auto;vertical-align:-6px"> Dosya360</div>
+  <div class="footer-sos">
+    <a href="https://www.instagram.com/dosya360com/" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.6"/><circle cx="17" cy="7" r="1" fill="currentColor" stroke="none"/></svg></a>
+    <a href="https://www.linkedin.com/posts/dosya360-legaltech-hukukteknolojileri-share-7487523820686172161-B9KS/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M8 10.5v6M8 7.6v.1M12 16.5v-3.4a2.1 2.1 0 0 1 4.2 0v3.4M12 10.5v6"/></svg></a>
+  </div>
+  <div class="footer-text">© 2026 Dosya360 — Bir Ötüken Medya yazılımıdır · Bu metin en son Kasım 2026 tarihinde güncellenmiştir.</div>
 </footer>
 
 </body>
